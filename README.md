@@ -19,10 +19,10 @@ Other image processing tips can also be reflected in this software, such as clip
 - [x] Send email
 - [x] Save as multi-formats contents
 
-## How to build and install in Ubunty Environments
+## How to build and install in Ubuntu Environments
 ``` bash
 # Git clone
-$ git clone https://github.com/yusq77/kylin-scanner.git
+$ git clone https://github.com/ubuntukylin/kylin-scanner.git
 
 # Go to root dir /kylin-scanner/ and build
 $ cd kylin-scanner/
@@ -49,4 +49,4 @@ $ firefox docs/html/index.html
 ```
 
 ## Report bugs
-Bugs should be report to the kylin-scanner bug tracking system: https://github.com/yusq77/kylin-scanner
+Bugs should be report to the kylin-scanner bug tracking system: https://github.com/ubuntukylin/kylin-scanner
