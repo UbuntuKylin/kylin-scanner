@@ -350,7 +350,11 @@ void ScanSet::setKylinScanSetNotEnable()
         btnMail->setEnabled(false);
         btnSave->setEnabled(false);
 
-        textDevice->setStyleSheet("QLabel{border:1px solid #0D0400;background-color:rgb(15,08,01);color:gray;border-radius:4px;}");
+//        textDevice->setStyleSheet("QLabel{border:1px solid #0D0400;background-color:rgb(15,08,01);color:gray;border-radius:4px;}");
+//        textDevice->setEnabled(false);
+//        textDevice->colorGray();
+
+        textType->setEnabled(false);
         textType->setStyleSheet("QLabel{border:1px solid #0D0400;background-color:rgb(15,08,01);color:gray;border-radius:4px;}");
     }
 }
@@ -364,6 +368,9 @@ void ScanSet::setKylinScanSetEnable()
 
     if(device_status)
     {
+        textDevice->setEnabled(true);
+        textDevice->colorNormal();
+
         textColor->setEnabled(true);
         textColor->colorNormal();
 

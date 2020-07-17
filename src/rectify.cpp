@@ -121,7 +121,7 @@ double CalcDegree(const Mat &srcImage, Mat &dst)
 }
 
 
-int ImageRectify(char * pInFileName)
+int ImageRectify(const char * pInFileName)
 {
     double degree;
 

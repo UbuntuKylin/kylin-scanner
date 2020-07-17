@@ -339,11 +339,13 @@ void Widget::scan_result_detail(bool ret)
 void Widget::set_mask_clear()
 {
     clearMask();
+    pScandisplay->updateWindowSize();
 
 }
 void Widget::set_mask()
 {
         clearMask();
+        pScandisplay->updateWindowSize();
         QBitmap bitMap(860,680); // A bit map has the same size with current widget
 
         bitMap.fill();
