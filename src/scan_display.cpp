@@ -27,128 +27,120 @@ scan_display::scan_display(QWidget *parent)
 {
 
     setMinimumSize(600,567);
-    labDisplayInit = new QLabel();
-    labDisplayConnectError = new QLabel();
-    labDisplay3 = new QLabel();
-    labDisplay4 = new QLabel();
-    labDisplay5 = new QLabel();
-    labDisplay6 = new QLabel();
-    labDisplay7 = new QLabel();
+    labInit = new QLabel();
+    labConnectError = new QLabel();
+    labConnectErrorText = new QLabel();
+    labNormalLeft = new QLabel();
+    labNormalRight = new QLabel();
+    labEditLayout = new QLabel();
 
-    btnTool = new QPushButton();
-    btnTool1 = new QPushButton();
+    btnNormal = new QPushButton();
+    btnEditLayout = new QPushButton();
 
-    myWidget = new QWidget();
-    myWidget1 = new QWidget();
-    myWidget2 = new QWidget();
+    widgetConnectError = new QWidget();
+    widgetNormal = new QWidget();
+    widgetEditLayout = new QWidget();
 
-    img = new QImage();
-    img1 = new QImage();
-    img2 = new QImage();
-    img4 = new QImage();
-    img5 = new QImage();
+    imgConnectError = new QImage();
+    imgEditLayout = new QImage();
+    imgStack = new QImage();
+    imgNormal = new QImage();
     imgBeautify = new QImage();
     imgRectify = new QImage();
-    vBoxScanSet = new QVBoxLayout();
-    vBoxScanSet1 = new QVBoxLayout(this);
-    vBoxScanSet2 = new QVBoxLayout();
-    hBoxScanSet = new QHBoxLayout();
-    hBoxScanSet1 = new QHBoxLayout();
+    vBoxConnectError = new QVBoxLayout();
+    vBoxScanSet = new QVBoxLayout(this);
+    hBoxNormal = new QHBoxLayout();
+    hBoxEditLayout = new QHBoxLayout();
 
     vStackedLayout = new QStackedLayout();
 
-    labDisplayConnectError->setParent(myWidget);
-    labDisplay3->setParent(myWidget);
-    labDisplayInit->setMinimumSize(600,567);
-    labDisplayConnectError->setMinimumSize(600,320);
-    labDisplay3->setMinimumSize(600,231);
-    labDisplay4->setMinimumSize(600,567);
-    labDisplay5->setMinimumSize(360,490);
-    labDisplay6->setFixedWidth(40);
-    labDisplay7->setMinimumSize(360,490);
+    labConnectError->setParent(widgetConnectError);
+    labConnectErrorText->setParent(widgetConnectError);
+    labInit->setMinimumSize(600,567);
+    labConnectError->setMinimumSize(600,320);
+    labConnectErrorText->setMinimumSize(600,231);
+    labNormalLeft->setMinimumSize(360,490);
+    labNormalRight->setFixedWidth(40);
+    labEditLayout->setMinimumSize(360,490);
 
 
-    labDisplayInit->setText(" ");
+    labInit->setText(" ");
 
 
-    img->load(":/icon/icon/connect_device.png");
-    labDisplayConnectError->setPixmap(QPixmap::fromImage(*img));
-    labDisplayConnectError->setAlignment(Qt::AlignHCenter|Qt::AlignBottom);
+    imgConnectError->load(":/icon/icon/connect_device.png");
+    labConnectError->setPixmap(QPixmap::fromImage(*imgConnectError));
+    labConnectError->setAlignment(Qt::AlignHCenter|Qt::AlignBottom);
 
-//    img1->load("/home/test/e.png");
-    img1->load("scan.pnm");
-    labDisplay4->setPixmap(QPixmap::fromImage(*img1));
-    labDisplay4->setAlignment(Qt::AlignCenter);
+
     QFont ft;
     ft.setPointSize(24);
-    labDisplay3->setFont(ft);
+    labConnectErrorText->setFont(ft);
     QPalette pa;
     pa.setColor(QPalette::WindowText,QColor(232,232,232));
-    labDisplay3->setPalette(pa);
-    labDisplay3->setText(tr("Please connect to a scan device firstly !"));
-    labDisplay3->setAlignment(Qt::AlignHCenter|Qt::AlignTop);
+    labConnectErrorText->setPalette(pa);
+    labConnectErrorText->setText(tr("Please connect to a scan device firstly !"));
+    labConnectErrorText->setAlignment(Qt::AlignHCenter|Qt::AlignTop);
 
-    vBoxScanSet->setSpacing(0);
-    vBoxScanSet->addStretch();
-    vBoxScanSet->addWidget(labDisplayConnectError);
-    vBoxScanSet->addSpacing(16);
-    vBoxScanSet->addWidget(labDisplay3);
-    vBoxScanSet->addStretch();
-    vBoxScanSet->setContentsMargins(0,0,0,0);
-    myWidget->setLayout(vBoxScanSet);
+    vBoxConnectError->setSpacing(0);
+    vBoxConnectError->addStretch();
+    vBoxConnectError->addWidget(labConnectError);
+    vBoxConnectError->addSpacing(16);
+    vBoxConnectError->addWidget(labConnectErrorText);
+    vBoxConnectError->addStretch();
+    vBoxConnectError->setContentsMargins(0,0,0,0);
+    widgetConnectError->setLayout(vBoxConnectError);
 
-    labDisplay5->setParent(myWidget1);
-    labDisplay6->setParent(myWidget1);
-    btnTool->setParent(myWidget1);
-    btnTool->setFixedSize(12,30);
-    btnTool->setStyleSheet("QPushButton{border-image: url(:/icon/icon/toolbutton.png);border:none;background-color:#0f0801;border-radius:0px;}");
+    labNormalLeft->setParent(widgetNormal);
+    labNormalRight->setParent(widgetNormal);
+    btnNormal->setParent(widgetNormal);
+    btnNormal->setFixedSize(12,30);
+    btnNormal->setStyleSheet("QPushButton{border-image: url(:/icon/icon/toolbutton.png);border:none;background-color:#0f0801;border-radius:0px;}");
 
-    labDisplay5->setAlignment(Qt::AlignCenter);
-    labDisplay6->setStyleSheet("QLabel{background-color:#0f0801;}");
+    labNormalLeft->setAlignment(Qt::AlignCenter);
+    labNormalRight->setStyleSheet("QLabel{background-color:#0f0801;}");
 
-    hBoxScanSet->setSpacing(0);
-    hBoxScanSet->addSpacing(93);
-    hBoxScanSet->addStretch();
-    hBoxScanSet->addWidget(labDisplay5);
-    hBoxScanSet->addStretch();
-    hBoxScanSet->addSpacing(93);
-    hBoxScanSet->addWidget(labDisplay6);
-    hBoxScanSet->addSpacing(2);
-    hBoxScanSet->addWidget(btnTool);
-    hBoxScanSet->setContentsMargins(0,45,0,32);
-    myWidget1->setLayout(hBoxScanSet);
-
-
-    editlayout = new edit_bar();
-    labDisplay7->setParent(myWidget2);
-    btnTool1->setParent(myWidget2);
-    editlayout->setParent(myWidget2);
+    hBoxNormal->setSpacing(0);
+    hBoxNormal->addSpacing(93);
+    hBoxNormal->addStretch();
+    hBoxNormal->addWidget(labNormalLeft);
+    hBoxNormal->addStretch();
+    hBoxNormal->addSpacing(93);
+    hBoxNormal->addWidget(labNormalRight);
+    hBoxNormal->addSpacing(2);
+    hBoxNormal->addWidget(btnNormal);
+    hBoxNormal->setContentsMargins(0,45,0,32);
+    widgetNormal->setLayout(hBoxNormal);
 
 
-    labDisplay7->setAlignment(Qt::AlignCenter);
+    editLayout = new edit_bar();
+    labEditLayout->setParent(widgetEditLayout);
+    btnEditLayout->setParent(widgetEditLayout);
+    editLayout->setParent(widgetEditLayout);
 
 
-    btnTool1->setFixedSize(12,30);
-    btnTool1->setStyleSheet("QPushButton{border-image: url(:/icon/icon/toolbutton1.png);border:none;background-color:#0f0801;border-radius:0px;}");
-
-    hBoxScanSet1->setSpacing(0);
-    hBoxScanSet1->addSpacing(93);
-    hBoxScanSet1->addStretch();
-    hBoxScanSet1->addWidget(labDisplay7);
-    hBoxScanSet1->addStretch();
-    hBoxScanSet1->addSpacing(93);
-    hBoxScanSet1->addWidget(editlayout);
-    hBoxScanSet1->addSpacing(2);
-    hBoxScanSet1->addWidget(btnTool1);
-    hBoxScanSet1->setContentsMargins(0,45,0,32);
-    myWidget2->setLayout(hBoxScanSet1);
+    labEditLayout->setAlignment(Qt::AlignCenter);
 
 
-    vStackedLayout->addWidget(myWidget1);
-    vStackedLayout->addWidget(myWidget2);
-    vStackedLayout->addWidget(myWidget);
-    vStackedLayout->addWidget(labDisplayInit);
-    vStackedLayout->addWidget(labDisplay4);
+    btnEditLayout->setFixedSize(12,30);
+    btnEditLayout->setStyleSheet("QPushButton{border-image: url(:/icon/icon/toolbutton1.png);border:none;background-color:#0f0801;border-radius:0px;}");
+
+    hBoxEditLayout->setSpacing(0);
+    hBoxEditLayout->addSpacing(93);
+    hBoxEditLayout->addStretch();
+    hBoxEditLayout->addWidget(labEditLayout);
+    hBoxEditLayout->addStretch();
+    hBoxEditLayout->addSpacing(93);
+    hBoxEditLayout->addWidget(editLayout);
+    hBoxEditLayout->addSpacing(2);
+    hBoxEditLayout->addWidget(btnEditLayout);
+    hBoxEditLayout->setContentsMargins(0,45,0,32);
+    widgetEditLayout->setLayout(hBoxEditLayout);
+
+
+    vStackedLayout->addWidget(widgetNormal);
+    vStackedLayout->addWidget(widgetEditLayout);
+    vStackedLayout->addWidget(widgetConnectError);
+    vStackedLayout->addWidget(labInit);
 
     QPalette pal(palette());
     pal.setColor(QPalette::Background, QColor(15, 8, 1));
@@ -156,28 +148,28 @@ scan_display::scan_display(QWidget *parent)
     setPalette(pal);
     setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
-    vBoxScanSet1->setSpacing(0);
-    vBoxScanSet1->addLayout(vStackedLayout);
-    vBoxScanSet1->setContentsMargins(0,0,0,0);
-    setLayout(vBoxScanSet1);
-    vStackedLayout->setCurrentWidget(labDisplayInit);
+    vBoxScanSet->setSpacing(0);
+    vBoxScanSet->addLayout(vStackedLayout);
+    vBoxScanSet->setContentsMargins(0,0,0,0);
+    setLayout(vBoxScanSet);
+    vStackedLayout->setCurrentWidget(labInit);
     vStackedLayout->setContentsMargins(0,0,0,0);
 
     // For switch page
-    connect(btnTool,SIGNAL(clicked()),this,SLOT(switchPage()));
-    connect(btnTool1,SIGNAL(clicked()),this,SLOT(switchPage()));
+    connect(btnNormal,SIGNAL(clicked()),this,SLOT(switchPage()));
+    connect(btnEditLayout,SIGNAL(clicked()),this,SLOT(switchPage()));
 
     //For rotate
-    connect(editlayout->btnRotate,SIGNAL(clicked()),this,SLOT(rotating()));
+    connect(editLayout->btnRotate,SIGNAL(clicked()),this,SLOT(rotating()));
 
     // For tailor
-    connect(editlayout->btnTailor,SIGNAL(clicked()),this,SLOT(switchPage1()));
+    connect(editLayout->btnTailor,SIGNAL(clicked()),this,SLOT(tailor()));
 
     // For symmetry
-    connect(editlayout->btnSymmetry,SIGNAL(clicked()),this,SLOT(symmetry()));
+    connect(editLayout->btnSymmetry,SIGNAL(clicked()),this,SLOT(symmetry()));
 
     // For watermark
-    connect(editlayout->btnWatermark,SIGNAL(clicked()),this,SLOT(addmark()));
+    connect(editLayout->btnWatermark,SIGNAL(clicked()),this,SLOT(addmark()));
 
     // For ORC
     connect(&thread,SIGNAL(orcFinished()),this,SLOT(orcText()));
@@ -185,49 +177,49 @@ scan_display::scan_display(QWidget *parent)
 
 void scan_display::keyPressEvent(QKeyEvent *e)
 {
-    if (((e->key() == Qt::Key_Return) || (e->key() == 0x20)) && (vStackedLayout->currentWidget() == myWidget3))
+    if (((e->key() == Qt::Key_Return) || (e->key() == 0x20)) && (vStackedLayout->currentWidget() == widgetTailor))
     {
         QImage newimage;
         int x1,y1,x2,y2;
-        if(labDisplay8->getX1() <= labDisplay8->getX2())
+        if(labTailor->getX1() <= labTailor->getX2())
         {
-             x1 = labDisplay8->getX1() - ((labDisplay8->width() - img2->width()*scaledNum) / 2);
-             x2 = labDisplay8->getX2() - ((labDisplay8->width() - img2->width()*scaledNum) / 2);
+             x1 = labTailor->getX1() - ((labTailor->width() - imgEditLayout->width()*scaledNum) / 2);
+             x2 = labTailor->getX2() - ((labTailor->width() - imgEditLayout->width()*scaledNum) / 2);
         }
         else
         {
-            x1 = labDisplay8->getX2() - ((labDisplay8->width() - img2->width()*scaledNum) / 2);
-            x2 = labDisplay8->getX1() - ((labDisplay8->width() - img2->width()*scaledNum) / 2);
+            x1 = labTailor->getX2() - ((labTailor->width() - imgEditLayout->width()*scaledNum) / 2);
+            x2 = labTailor->getX1() - ((labTailor->width() - imgEditLayout->width()*scaledNum) / 2);
         }
 
-        if(labDisplay8->getY1() <= labDisplay8->getY2())
+        if(labTailor->getY1() <= labTailor->getY2())
         {
-            y1 = labDisplay8->getY1() - ((labDisplay8->height() - img2->height()*scaledNum) / 2);
-            y2 = labDisplay8->getY2() - ((labDisplay8->height() - img2->height()*scaledNum) / 2);
+            y1 = labTailor->getY1() - ((labTailor->height() - imgEditLayout->height()*scaledNum) / 2);
+            y2 = labTailor->getY2() - ((labTailor->height() - imgEditLayout->height()*scaledNum) / 2);
         }
         else
         {
-            y1 = labDisplay8->getY2() - ((labDisplay8->height() - img2->height()*scaledNum) / 2);
-            y2 = labDisplay8->getY1() - ((labDisplay8->height() - img2->height()*scaledNum) / 2);
+            y1 = labTailor->getY2() - ((labTailor->height() - imgEditLayout->height()*scaledNum) / 2);
+            y2 = labTailor->getY1() - ((labTailor->height() - imgEditLayout->height()*scaledNum) / 2);
         }
 
-        newimage = img2->copy(x1/scaledNum,y1/scaledNum,(x2-x1)/scaledNum,(y2-y1)/scaledNum);
-        *img2 = newimage;
-        pixmap_scaled(*img2,labDisplay7);
-        *img5 = img2->copy();
-        pixmap_scaled(*img5,labDisplay5);
+        newimage = imgEditLayout->copy(x1/scaledNum,y1/scaledNum,(x2-x1)/scaledNum,(y2-y1)/scaledNum);
+        *imgEditLayout = newimage;
+        pixmap_scaled(*imgEditLayout,labEditLayout);
+        *imgNormal = imgEditLayout->copy();
+        pixmap_scaled(*imgNormal,labNormalLeft);
         vStackedLayout->setCurrentIndex(index);
-        vStackedLayout->removeWidget(myWidget3);
+        vStackedLayout->removeWidget(widgetTailor);
 
     }
     if(e->key() == Qt::Key_Z && e->modifiers() ==  Qt::ControlModifier)
     {
         if(!stack.isEmpty())
         {
-            *img2 = stack.pop();
-            pixmap_scaled(*img2,labDisplay7);
-            *img5 = img2->copy();
-            pixmap_scaled(*img5,labDisplay5);
+            *imgEditLayout = stack.pop();
+            pixmap_scaled(*imgEditLayout,labEditLayout);
+            *imgNormal = imgEditLayout->copy();
+            pixmap_scaled(*imgNormal,labNormalLeft);
             vStackedLayout->setCurrentIndex(index);
         }
     }
@@ -237,11 +229,11 @@ QImage *scan_display::imageSave(QString fileName)
 {
     if(flagOrc == 0)
     {
-        *img2 = img5->copy();
+        *imgEditLayout = imgNormal->copy();
         if(fileName.endsWith(".pdf"))
-            return img2;
+            return imgEditLayout;
         if(fileName.endsWith(".png") || fileName.endsWith(".jpg") || fileName.endsWith(".bmp"))
-            img2->save(fileName);
+            imgEditLayout->save(fileName);
     }
     else {
         if(!fileName.endsWith(".txt"))
@@ -257,12 +249,12 @@ QImage *scan_display::imageSave(QString fileName)
 
 void scan_display::set_no_device()
 {
-    vStackedLayout->setCurrentWidget(myWidget);
+    vStackedLayout->setCurrentWidget(widgetConnectError);
 }
 
 void scan_display::set_init_device()
 {
-    vStackedLayout->setCurrentWidget(labDisplayInit);
+    vStackedLayout->setCurrentWidget(labInit);
 }
 
 void scan_display::set_pixmap(QImage img, QLabel *lab)
@@ -270,15 +262,17 @@ void scan_display::set_pixmap(QImage img, QLabel *lab)
     int width = lab->width();
     int height = lab->height();
     QPixmap pixmap = QPixmap::fromImage(img);
-    QPixmap fitpixmap = pixmap.scaled(width, height, Qt::KeepAspectRatioByExpanding, Qt::FastTransformation);  // 按比例缩放
+    QPixmap fitpixmap = pixmap.scaled(width, height, Qt::KeepAspectRatioByExpanding, Qt::SmoothTransformation);  // 按比例缩放
     lab->setPixmap(fitpixmap);
     lab->setAlignment(Qt::AlignCenter);
 }
 
 float scan_display::pixmap_scaled(QImage img, QLabel *lab)
 {
-    float labWidth = lab->width();
-    float labHeight = lab->height();
+//    float labWidth = lab->width();
+//    float labHeight = lab->height();
+    float labWidth = this->width() - 240;
+    float labHeight = this->height() - 77;
     float imgWidth = img.width();
     float imgHeight = img.height();
     float num = 1;
@@ -290,34 +284,42 @@ float scan_display::pixmap_scaled(QImage img, QLabel *lab)
     width = imgWidth * num;
     height = imgHeight * num;
     QPixmap pixmap = QPixmap::fromImage(img);
-    QPixmap fitpixmap = pixmap.scaled(width, height, Qt::KeepAspectRatioByExpanding, Qt::FastTransformation);  // 按比例缩放
+    QPixmap fitpixmap = pixmap.scaled(width, height, Qt::KeepAspectRatioByExpanding, Qt::SmoothTransformation);  // 按比例缩放
     lab->setPixmap(fitpixmap);
     lab->setAlignment(Qt::AlignCenter);
     return num;
+}
+
+void scan_display::updateWindowSize()
+{
+
+    pixmap_scaled(*imgNormal,labNormalLeft);
+    pixmap_scaled(*imgEditLayout,labEditLayout);
+
 }
 
 void scan_display::rotating()
 {
 
     QMatrix matrix;
-    *img4 = img2->copy();
-    stack.push(*img4);
+    *imgStack = imgEditLayout->copy();
+    stack.push(*imgStack);
     matrix.rotate(270);
-    *img2 = img2->transformed(matrix);
-    pixmap_scaled(*img2,labDisplay7);
-    *img5 = img2->copy();
-    pixmap_scaled(*img5,labDisplay5);
+    *imgEditLayout = imgEditLayout->transformed(matrix);
+    pixmap_scaled(*imgEditLayout,labEditLayout);
+    *imgNormal = imgEditLayout->copy();
+    pixmap_scaled(*imgNormal,labNormalLeft);
 
 }
 
 void scan_display::symmetry()
 {
-    *img4 = img2->copy();
-    stack.push(*img4);
-    *img2=img2->mirrored(true,false);
-    pixmap_scaled(*img2,labDisplay7);
-    *img5 = img2->copy();
-    pixmap_scaled(*img5,labDisplay5);
+    *imgStack = imgEditLayout->copy();
+    stack.push(*imgStack);
+    *imgEditLayout=imgEditLayout->mirrored(true,false);
+    pixmap_scaled(*imgEditLayout,labEditLayout);
+    *imgNormal = imgEditLayout->copy();
+    pixmap_scaled(*imgNormal,labNormalLeft);
 }
 
 void scan_display::addmark()
@@ -326,8 +328,8 @@ void scan_display::addmark()
     if(n == 0)
     {
         n = 1;
-        img6 = new QImage();
-        *img6 = img2->copy();
+        imgBackup = new QImage();
+        *imgBackup = imgEditLayout->copy();
     }
     QString text;
     mark_dialog *dialog = new mark_dialog(this);
@@ -335,10 +337,10 @@ void scan_display::addmark()
     if (ret==QDialog::Accepted) //OK键被按下,对话框关闭，若设置了setAttribute(Qt::WA_DeleteOnClose)，对话框被释放，无法获得返回值
     { //OK键被按下，获取对话框上的输入，设置行数和列数
         text = dialog->get_lineedit();
-        *img4 = img2->copy();
-        stack.push(*img4);
-        *img2 = img6->copy();
-        QPainter painter(img2);
+        *imgStack = imgEditLayout->copy();
+        stack.push(*imgStack);
+        *imgEditLayout = imgBackup->copy();
+        QPainter painter(imgEditLayout);
         int fontSize = 70, spacing = 20;
         QFont font("华文黑体", fontSize, QFont::Thin);
         font.setLetterSpacing(QFont::AbsoluteSpacing, spacing);
@@ -347,7 +349,7 @@ void scan_display::addmark()
         //painter.translate(img2->width() / 2, -img2->width() / 2);//调整位置
         painter.rotate(15);
 
-        int squareEdgeSize = img2->width() * sin(45) + img2->height() * sin(45);//对角线长度
+        int squareEdgeSize = imgEditLayout->width() * sin(45) + imgEditLayout->height() * sin(45);//对角线长度
         int hCount = squareEdgeSize / ((fontSize + spacing) * (text.size() + 1)) + 1;
         int x = squareEdgeSize / hCount + (fontSize + spacing) * 3;
         int y = x / 2;
@@ -359,9 +361,9 @@ void scan_display::addmark()
                painter.drawText(x * i, y * j,text);
             }
         }
-        pixmap_scaled(*img2,labDisplay7);
-        *img5 = img2->copy();
-        pixmap_scaled(*img5,labDisplay5);
+        pixmap_scaled(*imgEditLayout,labEditLayout);
+        *imgNormal = imgEditLayout->copy();
+        pixmap_scaled(*imgNormal,labNormalLeft);
     }
     delete dialog; //删除对话框
 
@@ -369,7 +371,7 @@ void scan_display::addmark()
 
 void scan_display::orcText()
 {
-    labDisplay10->setText(outText);
+    labOrcRight->setText(outText);
     qDebug()<<outText;
 }
 
@@ -379,49 +381,49 @@ void scan_display::orc()
     {
         flagOrc = 1;
         widgetindex = vStackedLayout->currentIndex();
-        labDisplay9 = new QLabel();
-        labDisplay10 = new QLabel();
-        img6 = new QImage();
-        vBoxScanSet3 = new QVBoxLayout();
-        hBoxScanSet3 = new QHBoxLayout();
-        myWidget4 = new QWidget();
+        labOrcLeft = new QLabel();
+        labOrcRight = new QLabel();
+        imgBackup = new QImage();
+        vBoxOrc = new QVBoxLayout();
+        hBoxOrc = new QHBoxLayout();
+        widgetOrc = new QWidget();
         scrollArea = new QScrollArea();
 
-        labDisplay9->setFixedWidth(120);
-        *img2 = img5->copy();
-        img2->save("/tmp/scanner/scan1.png");
-        *img6 = img2->copy();
+        labOrcLeft->setFixedWidth(120);
+        *imgEditLayout = imgNormal->copy();
+        imgEditLayout->save("/tmp/scanner/scan1.png");
+        *imgBackup = imgEditLayout->copy();
         thread.start();
-        *img6 = img6->scaled(120,166);
+        *imgBackup = imgBackup->scaled(120,166);
         QPalette palette;
         palette.setColor(QPalette::Background, QColor(192,253,123,100));
-        labDisplay9->setPalette(palette);
-        labDisplay9->setPixmap(QPixmap::fromImage(*img6));
-        labDisplay9->setAlignment(Qt::AlignTop);
+        labOrcLeft->setPalette(palette);
+        labOrcLeft->setPixmap(QPixmap::fromImage(*imgBackup));
+        labOrcLeft->setAlignment(Qt::AlignTop);
 
         outText = tr("Try to ocr ...");
         QFont ft1;
         ft1.setPointSize(14);
-        labDisplay10->setFont(ft1);
+        labOrcRight->setFont(ft1);
         QPalette pa1;
         pa1.setColor(QPalette::WindowText,QColor(255,255,255));
-        labDisplay10->setPalette(pa1);
-        labDisplay10->setText(outText);
-        labDisplay10->setStyleSheet("background-color:#2f2c2b;border:1px solid #717171;");
-        labDisplay10->setMargin(20);
-        labDisplay10->setAlignment(Qt::AlignTop);
-        labDisplay10->setWordWrap(true);
-        labDisplay9->setParent(myWidget4);
-        labDisplay10->setParent(myWidget4);
-        vBoxScanSet3->setSpacing(0);
-        vBoxScanSet3->addWidget(labDisplay10);
-        vBoxScanSet3->setContentsMargins(0,0,0,0);
-        scrollArea->setParent(myWidget4);
+        labOrcRight->setPalette(pa1);
+        labOrcRight->setText(outText);
+        labOrcRight->setStyleSheet("background-color:#2f2c2b;border:1px solid #717171;");
+        labOrcRight->setMargin(20);
+        labOrcRight->setAlignment(Qt::AlignTop);
+        labOrcRight->setWordWrap(true);
+        labOrcLeft->setParent(widgetOrc);
+        labOrcRight->setParent(widgetOrc);
+        vBoxOrc->setSpacing(0);
+        vBoxOrc->addWidget(labOrcRight);
+        vBoxOrc->setContentsMargins(0,0,0,0);
+        scrollArea->setParent(widgetOrc);
         QWidget *widget = new QWidget();
 
-        widget->setMinimumHeight(labDisplay10->height());
+        widget->setMinimumHeight(labOrcRight->height());
         widget->setWindowFlags(Qt::FramelessWindowHint | Qt::Tool | Qt::WindowStaysOnTopHint); // 去掉标题栏,去掉任务栏显示，窗口置顶
-        widget->setLayout(vBoxScanSet3);
+        widget->setLayout(vBoxOrc);
         widget->setContentsMargins(0,0,0,0);
         scrollArea->setFixedWidth(392);
         scrollArea->setMinimumHeight(503);
@@ -461,16 +463,16 @@ void scan_display::orc()
                                   "subcontrol-position:top;"
                                   "}"
                                   );
-        hBoxScanSet3->setSpacing(0);
-        hBoxScanSet3->addStretch();
-        hBoxScanSet3->addWidget(labDisplay9);
-        hBoxScanSet3->addSpacing(24);
-        hBoxScanSet3->addWidget(scrollArea);
-        hBoxScanSet3->addStretch();
-        hBoxScanSet3->setContentsMargins(32,32,32,32);
-        myWidget4->setLayout(hBoxScanSet3);
-        vStackedLayout->addWidget(myWidget4);
-        vStackedLayout->setCurrentWidget(myWidget4);
+        hBoxOrc->setSpacing(0);
+        hBoxOrc->addStretch();
+        hBoxOrc->addWidget(labOrcLeft);
+        hBoxOrc->addSpacing(24);
+        hBoxOrc->addWidget(scrollArea);
+        hBoxOrc->addStretch();
+        hBoxOrc->setContentsMargins(32,32,32,32);
+        widgetOrc->setLayout(hBoxOrc);
+        vStackedLayout->addWidget(widgetOrc);
+        vStackedLayout->setCurrentWidget(widgetOrc);
     }
     else
     {
@@ -492,11 +494,11 @@ void scan_display::scan()
     flagRectify = 0;
     flagBeautify = 0;
 
-    img5->load("/tmp/scanner/scan.pnm");
-    pixmap_scaled(*img5,labDisplay5);
-    vStackedLayout->setCurrentWidget(myWidget1);
-    *img2 = img5->copy();
-    pixmap_scaled(*img2,labDisplay7);
+    imgNormal->load("/tmp/scanner/scan.pnm");
+    pixmap_scaled(*imgNormal,labNormalLeft);
+    vStackedLayout->setCurrentWidget(widgetNormal);
+    *imgEditLayout = imgNormal->copy();
+    pixmap_scaled(*imgEditLayout,labEditLayout);
 }
 
 void scan_display::rectify()
@@ -505,77 +507,77 @@ void scan_display::rectify()
     if(flagRectify == 0)
     {
         flagRectify = 1;
-        if(vStackedLayout->currentWidget() == myWidget1)
+        if(vStackedLayout->currentWidget() == widgetNormal)
         {
-            img5->save("/tmp/scanner/scan1.png");
-            *imgRectify = img5->copy();
+            imgNormal->save("/tmp/scanner/scan1.png");
+            *imgRectify = imgNormal->copy();
             list.append("Rectify");
             ImageRectify("/tmp/scanner/scan1.png");
-            img5->load("/tmp/scanner/scan1.png");
-            pixmap_scaled(*img5,labDisplay5);
-            *img2 = img5->copy();
-            pixmap_scaled(*img2,labDisplay7);
+            imgNormal->load("/tmp/scanner/scan1.png");
+            pixmap_scaled(*imgNormal,labNormalLeft);
+            *imgEditLayout = imgNormal->copy();
+            pixmap_scaled(*imgEditLayout,labEditLayout);
         }
         else
         {
-            img2->save("/tmp/scanner/scan1.png");
-            *imgRectify = img2->copy();
+            imgEditLayout->save("/tmp/scanner/scan1.png");
+            *imgRectify = imgEditLayout->copy();
             list.append("Rectify");
             ImageRectify("/tmp/scanner/scan1.png");
-            img2->load("/tmp/scanner/scan1.png");
-            pixmap_scaled(*img2,labDisplay7);
-            *img5 = img2->copy();
-            pixmap_scaled(*img5,labDisplay5);
+            imgEditLayout->load("/tmp/scanner/scan1.png");
+            pixmap_scaled(*imgEditLayout,labEditLayout);
+            *imgNormal = imgEditLayout->copy();
+            pixmap_scaled(*imgNormal,labNormalLeft);
         }
     }
     else
     {
         flagRectify = 0;
-        if(vStackedLayout->currentWidget() == myWidget1)
+        if(vStackedLayout->currentWidget() == widgetNormal)
         {
-            *img5 = imgRectify->copy();
+            *imgNormal = imgRectify->copy();
             if(list.count() == 2)
             {
                 if(list[0] == "Rectify")
                 {
                     list.clear();
-                    img5->save("/tmp/scanner/scan1.png");
-                    *imgBeautify = img5->copy();
+                    imgNormal->save("/tmp/scanner/scan1.png");
+                    *imgBeautify = imgNormal->copy();
                     list.append("Beautify");
                     oneClickEmbelish("/tmp/scanner/scan1.png");
-                    img5->load("/tmp/scanner/scan1.png");
+                    imgNormal->load("/tmp/scanner/scan1.png");
                 }
                 else
                     list.removeLast();
             }
             else
                 list.clear();
-            pixmap_scaled(*img5,labDisplay5);
-            *img2 = img5->copy();
-            pixmap_scaled(*img2,labDisplay7);
+            pixmap_scaled(*imgNormal,labNormalLeft);
+            *imgEditLayout = imgNormal->copy();
+            pixmap_scaled(*imgEditLayout,labEditLayout);
         }
         else
         {
-            *img2 = imgRectify->copy();
+            *imgEditLayout = imgRectify->copy();
             if(list.count() == 2)
             {
                 if(list[0] == "Rectify")
                 {
                     list.clear();
-                    img2->save("/tmp/scanner/scan1.png");
-                    *imgBeautify = img2->copy();
+                    imgEditLayout->save("/tmp/scanner/scan1.png");
+                    *imgBeautify = imgEditLayout->copy();
                     list.append("Beautify");
                     oneClickEmbelish("/tmp/scanner/scan1.png");
-                    img2->load("/tmp/scanner/scan1.png");
+                    imgEditLayout->load("/tmp/scanner/scan1.png");
                 }
                 else
                     list.removeLast();
             }
             else
                 list.clear();
-            pixmap_scaled(*img2,labDisplay7);
-            *img5 = img2->copy();
-            pixmap_scaled(*img5,labDisplay5);
+            pixmap_scaled(*imgEditLayout,labEditLayout);
+            *imgNormal = imgEditLayout->copy();
+            pixmap_scaled(*imgNormal,labNormalLeft);
         }
     }
 }
@@ -586,77 +588,77 @@ void scan_display::beautify()
     if(flagBeautify == 0)
     {
         flagBeautify = 1;
-        if(vStackedLayout->currentWidget() == myWidget1)
+        if(vStackedLayout->currentWidget() == widgetNormal)
         {
-            img5->save("/tmp/scanner/scan1.png");
-            *imgBeautify = img5->copy();
+            imgNormal->save("/tmp/scanner/scan1.png");
+            *imgBeautify = imgNormal->copy();
             list.append("Beautify");
             oneClickEmbelish("/tmp/scanner/scan1.png");
-            img5->load("/tmp/scanner/scan1.png");
-            pixmap_scaled(*img5,labDisplay5);
-            *img2 = img5->copy();
-            pixmap_scaled(*img2,labDisplay7);
+            imgNormal->load("/tmp/scanner/scan1.png");
+            pixmap_scaled(*imgNormal,labNormalLeft);
+            *imgEditLayout = imgNormal->copy();
+            pixmap_scaled(*imgEditLayout,labEditLayout);
         }
         else
         {
-            img2->save("/tmp/scanner/scan1.png");
-            *imgBeautify = img2->copy();
+            imgEditLayout->save("/tmp/scanner/scan1.png");
+            *imgBeautify = imgEditLayout->copy();
             list.append("Beautify");
             oneClickEmbelish("/tmp/scanner/scan1.png");
-            img2->load("/tmp/scanner/scan1.png");
-            pixmap_scaled(*img2,labDisplay7);
-            *img5 = img2->copy();
-            pixmap_scaled(*img5,labDisplay5);
+            imgEditLayout->load("/tmp/scanner/scan1.png");
+            pixmap_scaled(*imgEditLayout,labEditLayout);
+            *imgNormal = imgEditLayout->copy();
+            pixmap_scaled(*imgNormal,labNormalLeft);
         }
     }
     else
     {
         flagBeautify = 0;
-        if(vStackedLayout->currentWidget() == myWidget1)
+        if(vStackedLayout->currentWidget() == widgetNormal)
         {
-            *img5 = imgBeautify->copy();
+            *imgNormal = imgBeautify->copy();
             if(list.count() == 2)
             {
                 if(list[0] == "Beautify")
                 {
                     list.clear();
-                    img5->save("/tmp/scanner/scan1.png");
-                    *imgRectify = img5->copy();
+                    imgNormal->save("/tmp/scanner/scan1.png");
+                    *imgRectify = imgNormal->copy();
                     list.append("Rectify");
                     ImageRectify("/tmp/scanner/scan1.png");
-                    img5->load("/tmp/scanner/scan1.png");
+                    imgNormal->load("/tmp/scanner/scan1.png");
                 }
                 else
                     list.removeLast();
             }
             else
                 list.clear();
-            pixmap_scaled(*img5,labDisplay5);
-            *img2 = img5->copy();
-            pixmap_scaled(*img2,labDisplay7);
+            pixmap_scaled(*imgNormal,labNormalLeft);
+            *imgEditLayout = imgNormal->copy();
+            pixmap_scaled(*imgEditLayout,labEditLayout);
         }
         else
         {
-            *img2 = imgBeautify->copy();
+            *imgEditLayout = imgBeautify->copy();
             if(list.count() == 2)
             {
                 if(list[0] == "Beautify")
                 {
                     list.clear();
-                    img2->save("/tmp/scanner/scan1.png");
-                    *imgRectify = img2->copy();
+                    imgEditLayout->save("/tmp/scanner/scan1.png");
+                    *imgRectify = imgEditLayout->copy();
                     list.append("Rectify");
                     ImageRectify("/tmp/scanner/scan1.png");
-                    img2->load("/tmp/scanner/scan1.png");
+                    imgEditLayout->load("/tmp/scanner/scan1.png");
                 }
                 else
                     list.removeLast();
             }
             else
                 list.clear();
-            pixmap_scaled(*img2,labDisplay7);
-            *img5 = img2->copy();
-            pixmap_scaled(*img5,labDisplay5);
+            pixmap_scaled(*imgEditLayout,labEditLayout);
+            *imgNormal = imgEditLayout->copy();
+            pixmap_scaled(*imgNormal,labNormalLeft);
         }
     }
 }
@@ -667,51 +669,51 @@ void scan_display::switchPage()
     if(index > 1)
     {
         index = 0;
-        *img5 = img2->copy();
-        pixmap_scaled(*img5,labDisplay5);
+        *imgNormal = imgEditLayout->copy();
+        pixmap_scaled(*imgNormal,labNormalLeft);
     }
     else
     {
-        *img2 = img5->copy();
-        pixmap_scaled(*img2,labDisplay7);
+        *imgEditLayout = imgNormal->copy();
+        pixmap_scaled(*imgEditLayout,labEditLayout);
     }
     vStackedLayout->setCurrentIndex(index);
 }
 
-void scan_display::switchPage1()
+void scan_display::tailor()
 {
-    btnTool2 = new QPushButton();
-    labDisplay8 = new my_label();
-    editlayout1 = new edit_bar();
-    myWidget3 = new QWidget();
-    hBoxScanSet2 = new QHBoxLayout();
-    img3 = new QImage();
-    labDisplay8->setMinimumSize(360,490);
-    labDisplay8->setParent(myWidget3);
-    btnTool2->setParent(myWidget3);
-    editlayout1->setParent(myWidget3);
-    labDisplay8->setAlignment(Qt::AlignCenter);
+    btnTailor = new QPushButton();
+    labTailor = new my_label();
+    editLayoutTailor = new edit_bar();
+    widgetTailor = new QWidget();
+    hBoxTailor = new QHBoxLayout();
+    imgTailor = new QImage();
+    labTailor->setMinimumSize(360,490);
+    labTailor->setParent(widgetTailor);
+    btnTailor->setParent(widgetTailor);
+    editLayoutTailor->setParent(widgetTailor);
+    labTailor->setAlignment(Qt::AlignCenter);
 
-    btnTool2->setFixedSize(12,30);
-    btnTool2->setStyleSheet("QPushButton{border-image: url(:/icon/icon/toolbutton1.png);border:none;background-color:#0f0801;border-radius:0px;}");
+    btnTailor->setFixedSize(12,30);
+    btnTailor->setStyleSheet("QPushButton{border-image: url(:/icon/icon/toolbutton1.png);border:none;background-color:#0f0801;border-radius:0px;}");
 
-    hBoxScanSet2->setSpacing(0);
-    hBoxScanSet2->addSpacing(93);
-    hBoxScanSet2->addStretch();
-    hBoxScanSet2->addWidget(labDisplay8);
-    hBoxScanSet2->addStretch();
-    hBoxScanSet2->addSpacing(93);
-    hBoxScanSet2->addWidget(editlayout1);
-    hBoxScanSet2->addSpacing(2);
-    hBoxScanSet2->addWidget(btnTool2);
-    hBoxScanSet2->setContentsMargins(0,45,0,32);
-    myWidget3->setLayout(hBoxScanSet2);
-    vStackedLayout->addWidget(myWidget3);
-    vStackedLayout->setCurrentWidget(myWidget3);
-    *img3 = img2->copy();
-    *img4 = img2->copy();
-    stack.push(*img4);
-    scaledNum = pixmap_scaled(*img3,labDisplay8);
+    hBoxTailor->setSpacing(0);
+    hBoxTailor->addSpacing(93);
+    hBoxTailor->addStretch();
+    hBoxTailor->addWidget(labTailor);
+    hBoxTailor->addStretch();
+    hBoxTailor->addSpacing(93);
+    hBoxTailor->addWidget(editLayoutTailor);
+    hBoxTailor->addSpacing(2);
+    hBoxTailor->addWidget(btnTailor);
+    hBoxTailor->setContentsMargins(0,45,0,32);
+    widgetTailor->setLayout(hBoxTailor);
+    vStackedLayout->addWidget(widgetTailor);
+    vStackedLayout->setCurrentWidget(widgetTailor);
+    *imgTailor = imgEditLayout->copy();
+    *imgStack = imgEditLayout->copy();
+    stack.push(*imgStack);
+    scaledNum = pixmap_scaled(*imgTailor,labTailor);
 }
 
 edit_bar::edit_bar(QWidget *parent)

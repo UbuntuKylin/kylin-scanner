@@ -76,6 +76,7 @@ public:
     void set_init_device();
     void set_pixmap(QImage img, QLabel *lab);
     float pixmap_scaled(QImage img, QLabel *lab);
+    void updateWindowSize();
     int flagBeautify = 0; //一键美化标志
     int flagRectify = 0; //智能纠偏标志
     int flagOrc = 0; //文字识别标志
@@ -84,48 +85,43 @@ public:
     int n = 0;
 
 private:
-    QLabel *labDisplayInit; // 初始化界面，即空白界面
-    QLabel *labDisplayConnectError; // 连接或者打开扫描仪出错界面
-    QLabel *labDisplay3;
-    QLabel *labDisplay4;
-    QLabel *labDisplay5;
-    QLabel *labDisplay6;
-    QLabel *labDisplay7;
-    my_label *labDisplay8;
-    QLabel *labDisplay9;
-    QLabel *labDisplay10;
-    QPushButton *btnTool;
-    QPushButton *btnTool1;
-    QPushButton *btnTool2;
+    QLabel *labInit; // 初始化界面，即空白界面
+    QLabel *labConnectError; // 连接或者打开扫描仪出错界面
+    QLabel *labConnectErrorText; //连接或者打开扫描仪出错界面
+    QLabel *labNormalLeft;       //正常显示界面左部分
+    QLabel *labNormalRight;      //正常显示界面右部分
+    QLabel *labEditLayout;       //编辑栏展开界面的显示部分
+    my_label *labTailor;         //编辑栏
+    QLabel *labOrcLeft;          //文字识别图片显示部分
+    QLabel *labOrcRight;         //文字识别文字显示部分
+    QPushButton *btnNormal;      //正长显示界面按钮
+    QPushButton *btnEditLayout;  //编辑栏展开界面按钮
+    QPushButton *btnTailor;      //裁剪界面按钮
 
-    QImage *img;
-    QImage *img1;
-    QImage *img2;
-    QImage *img3;
-    QImage *img4;
-    QImage *img5;
-    QImage *img6;
-    QImage *img7;
-    QImage *imgBeautify;
-    QImage *imgRectify;
-    QStack<QImage> stack;
+    QImage *imgConnectError;     // 连接或者打开扫描仪出错界面显示图片
+    QImage *imgEditLayout;       //编辑栏展开界面图片
+    QImage *imgTailor;           //裁剪界面图片
+    QImage *imgStack;            //栈中保存图片
+    QImage *imgNormal;           //正常显示界面图片
+    QImage *imgBackup;           //添加水印时图片
+    QImage *imgBeautify;         //一键美化图片
+    QImage *imgRectify;          //智能纠偏图片
+    QStack<QImage> stack;        //用于保存图片
+    QVBoxLayout *vBoxConnectError;
     QVBoxLayout *vBoxScanSet;
-    QVBoxLayout *vBoxScanSet1;
-    QVBoxLayout *vBoxScanSet2;
-    QVBoxLayout *vBoxScanSet3;
-    QHBoxLayout *hBoxScanSet;
-    QHBoxLayout *hBoxScanSet1;
-    QHBoxLayout *hBoxScanSet2;
-    QHBoxLayout *hBoxScanSet3;
-    QWidget *myWidget;
-    QWidget *myWidget1;
-    QWidget *myWidget2;
-    QWidget *myWidget3;
-    QWidget *myWidget4;
+    QVBoxLayout *vBoxOrc;
+    QHBoxLayout *hBoxNormal;
+    QHBoxLayout *hBoxEditLayout;
+    QHBoxLayout *hBoxTailor;
+    QHBoxLayout *hBoxOrc;
+    QWidget *widgetConnectError;
+    QWidget *widgetNormal;
+    QWidget *widgetEditLayout;
+    QWidget *widgetTailor;
+    QWidget *widgetOrc;
     QStackedLayout *vStackedLayout;
-    edit_bar *editlayout;
-    edit_bar *editlayout1;
-    edit_bar *editlayout2;
+    edit_bar *editLayout;
+    edit_bar *editLayoutTailor;
     myThread thread;
     QScrollArea *scrollArea;
     int widgetindex;
@@ -139,7 +135,7 @@ public slots:
 
 private slots:
     void switchPage();
-    void switchPage1();
+    void tailor();
     void rotating();
     void symmetry();
     void addmark();

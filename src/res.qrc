@@ -31,5 +31,9 @@
         <file>icon/max.svg</file>
         <file>icon/close.svg</file>
         <file>icon/down.svg</file>
+        <file>icon/revert_white.svg</file>
+        <file>icon/min_white.svg</file>
+        <file>icon/max_white.svg</file>
+        <file>icon/close_white.svg</file>
     </qresource>
 </RCC>

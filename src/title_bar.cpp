@@ -44,17 +44,17 @@ TitleBar::TitleBar(QWidget *parent)
     m_pMaximizeButton->setToolTip("Maximize");
     m_pCloseButton->setToolTip("Close");
 
-    m_pMinimizeButton->setStyleSheet("QPushButton{border-image: url(:/icon/icon/min.svg);border:none;background-color:rgb(47,44,43);border-radius:4px;}"
-                              "QPushButton:hover{border-image: url(:/icon/icon/min.svg);border:none;background-color:rgb(61,107,229);border-radius:4px;}"
-                                "QPushButton:checked{border-image: url(:/icon/icon/min.svg);border:none;background-color:rgb(50,87,202);border-radius:4px;}");
+    m_pMinimizeButton->setStyleSheet("QPushButton{border-image: url(:/icon/icon/min_white.svg);border:none;background-color:rgb(47,44,43);border-radius:4px;}"
+                              "QPushButton:hover{border-image: url(:/icon/icon/min_white.svg);border:none;background-color:rgb(61,107,229);border-radius:4px;}"
+                                "QPushButton:checked{border-image: url(:/icon/icon/min_white.svg);border:none;background-color:rgb(50,87,202);border-radius:4px;}");
 
-    m_pMaximizeButton->setStyleSheet("QPushButton{border-image: url(:/icon/icon/max.svg);border:none;background-color:rgb(47,44,43);border-radius:4px;}"
-                              "QPushButton:hover{border-image: url(:/icon/icon/max.svg);border:none;background-color:rgb(61,107,229);border-radius:4px;}"
-                                "QPushButton:checked{border-image: url(:/icon/icon/max.svg);border:none;background-color:rgb(50,87,202);border-radius:4px;}");
+    m_pMaximizeButton->setStyleSheet("QPushButton{border-image: url(:/icon/icon/max_white.svg);border:none;background-color:rgb(47,44,43);border-radius:4px;}"
+                              "QPushButton:hover{border-image: url(:/icon/icon/max_white.svg);border:none;background-color:rgb(61,107,229);border-radius:4px;}"
+                                "QPushButton:checked{border-image: url(:/icon/icon/max_white.svg);border:none;background-color:rgb(50,87,202);border-radius:4px;}");
 
-    m_pCloseButton->setStyleSheet("QPushButton{border-image: url(:/icon/icon/close.svg);border:none;background-color:rgb(47,44,43);border-radius:4px;}"
-                              "QPushButton:hover{border-image: url(:/icon/icon/close.svg);border:none;background-color:rgb(240,65,52);border-radius:4px;}"
-                                "QPushButton:checked{border-image: url(:/icon/icon/close.svg);border:none;background-color:rgb(215,52,53);border-radius:4px;}");
+    m_pCloseButton->setStyleSheet("QPushButton{border-image: url(:/icon/icon/close_white.svg);border:none;background-color:rgb(47,44,43);border-radius:4px;}"
+                              "QPushButton:hover{border-image: url(:/icon/icon/close_white.svg);border:none;background-color:rgb(240,65,52);border-radius:4px;}"
+                                "QPushButton:checked{border-image: url(:/icon/icon/close_white.svg);border:none;background-color:rgb(215,52,53);border-radius:4px;}");
 
     QHBoxLayout *pLayout = new QHBoxLayout(this);
 
@@ -140,6 +140,8 @@ bool TitleBar::eventFilter(QObject *obj, QEvent *event)
     case QEvent::Resize:
         updateMaximize();
         return true;
+    default:
+        break;
     }
     return QWidget::eventFilter(obj, event);
 }
@@ -157,10 +159,6 @@ void TitleBar::onClicked()
         else if (pButton == m_pMaximizeButton)
         {
             pWindow->isMaximized() ? pWindow->showNormal() : pWindow->showMaximized();
-            if(pWindow->isMaximized())
-                emit isMax();
-            else
-                emit isNormal();
         }
         else if (pButton == m_pCloseButton)
         {
@@ -168,7 +166,6 @@ void TitleBar::onClicked()
             pWindow->close();
         }
     }
-//    emit m_pMaximizeButtonClicked();
 }
 
 void TitleBar::updateMaximize()
@@ -181,17 +178,19 @@ void TitleBar::updateMaximize()
         {
             m_pMaximizeButton->setToolTip(tr("Restore"));
             m_pMaximizeButton->setProperty("maximizeProperty", "restore");
-            m_pMaximizeButton->setStyleSheet("QPushButton{border-image: url(:/icon/icon/revert.svg);border:none;background-color:rgb(47,44,43);border-radius:4px;}"
-                                      "QPushButton:hover{border-image: url(:/icon/icon/revert.svg);border:none;background-color:rgb(61,107,229);border-radius:4px;}"
-                                        "QPushButton:checked{border-image: url(:/icon/icon/revert.svg);border:none;background-color:rgb(50,87,202);border-radius:4px;}");
+            m_pMaximizeButton->setStyleSheet("QPushButton{border-image: url(:/icon/icon/revert_white.svg);border:none;background-color:rgb(47,44,43);border-radius:4px;}"
+                                      "QPushButton:hover{border-image: url(:/icon/icon/revert_white.svg);border:none;background-color:rgb(61,107,229);border-radius:4px;}"
+                                        "QPushButton:checked{border-image: url(:/icon/icon/revert_white.svg);border:none;background-color:rgb(50,87,202);border-radius:4px;}");
+        emit isMax();
         }
         else
         {
             m_pMaximizeButton->setProperty("maximizeProperty", "maximize");
             m_pMaximizeButton->setToolTip(tr("Maximize"));
-            m_pMaximizeButton->setStyleSheet("QPushButton{border-image: url(:/icon/icon/max.svg);border:none;background-color:rgb(47,44,43);border-radius:4px;}"
-                                      "QPushButton:hover{border-image: url(:/icon/icon/max.svg);border:none;background-color:rgb(61,107,229);border-radius:4px;}"
-                                        "QPushButton:checked{border-image: url(:/icon/icon/max.svg);border:none;background-color:rgb(50,87,202);border-radius:4px;}");
+            m_pMaximizeButton->setStyleSheet("QPushButton{border-image: url(:/icon/icon/max_white.svg);border:none;background-color:rgb(47,44,43);border-radius:4px;}"
+                                      "QPushButton:hover{border-image: url(:/icon/icon/max_white.svg);border:none;background-color:rgb(61,107,229);border-radius:4px;}"
+                                        "QPushButton:checked{border-image: url(:/icon/icon/max_white.svg);border:none;background-color:rgb(50,87,202);border-radius:4px;}");
+        emit isNormal();
         }
 
         m_pMaximizeButton->setStyle(QApplication::style());
