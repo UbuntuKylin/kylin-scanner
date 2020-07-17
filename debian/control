@@ -1,0 +1,31 @@
+Source: kylin-scanner
+Section: devel
+Priority: optional
+Maintainer: yushuoqi <shuoqi.yu@kylinos.cn>, mahailiang <hailiang.ma@kylinos.cn>
+Build-Depends: debhelper (>=11~),
+               libglib2.0-dev,
+               libleptonica-dev,
+               libopencv-dev,
+               libsane,
+               libsane-dev,
+               libtesseract-dev,
+               liblept5,
+               qt5-qmake,
+               qtbase5-dev,
+               qtbase5-dev-tools,
+               qtchooser,
+               qttools5-dev-tools,
+               tesseract-ocr,
+               tesseract-ocr-chi-sim,
+               tesseract-ocr-eng
+
+Standards-Version: 4.1.4
+Homepage: https://github.com/yusq/kylin-scanner
+Package: kylin-scanner
+Architecture: any
+Depends: ${misc:Depends}, ${shlibs:Depends}
+Description: An interface-friendly scanning software
+ This software can scan according to the resolution, size and color mode of the scanning device itself.
+ At the same time, It Increases post-processing of scanned pictures, including one-click beautification,
+ intelligent correction and text recognition. Other image processing tips can also be reflected in this software,
+ such as clipping, rotation, etc.

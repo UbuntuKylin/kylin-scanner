@@ -1,0 +1,35 @@
+<RCC>
+    <qresource prefix="/icon">
+        <file>icon/close-click.png</file>
+        <file>icon/close.png</file>
+        <file>icon/max.png</file>
+        <file>icon/min-click.png</file>
+        <file>icon/min.png</file>
+        <file>icon/scanner.gif</file>
+        <file>icon/max-click.png</file>
+        <file>icon/beautify.png</file>
+        <file>icon/norscan.png</file>
+        <file>icon/rectify.png</file>
+        <file>icon/orc.png</file>
+        <file>icon/down.png</file>
+        <file>icon/connect_device.png</file>
+        <file>icon/normal.png</file>
+        <file>icon/normal-click.png</file>
+        <file>icon/a.png</file>
+        <file>icon/toolbutton1.png</file>
+        <file>icon/toolbutton.png</file>
+        <file>icon/watermark.png</file>
+        <file>icon/watermark-click.png</file>
+        <file>icon/symmetry.png</file>
+        <file>icon/symmetry-click.png</file>
+        <file>icon/rotate-click.png</file>
+        <file>icon/rotate.png</file>
+        <file>icon/tailor.png</file>
+        <file>icon/tailor-click.png</file>
+        <file>icon/revert.svg</file>
+        <file>icon/min.svg</file>
+        <file>icon/max.svg</file>
+        <file>icon/close.svg</file>
+        <file>icon/down.svg</file>
+    </qresource>
+</RCC>

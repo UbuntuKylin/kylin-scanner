@@ -1,0 +1,5 @@
+kylin-scanner (1.0.0) unstable; urgency=low
+
+  * Initial release. Closes: #000001
+
+ -- kylin-scanner <yushuoqi@kylinos.cn>  Sun, 28 Jun 2020 11:01:49 +0800
