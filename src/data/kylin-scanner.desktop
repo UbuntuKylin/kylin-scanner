@@ -1,14 +1,12 @@
 [Desktop Entry]
-Type=Application
 Name=Kylin Scanner
 Name[zh_CN]=麒麟扫描
-GenericName=UKUI Scanner
+GenericName=kylin-scanner
 GenericName[zh_CN]=麒麟扫描
 Comment=A program to work with scanner. Can be used as a scanning, OCR, email tools.
-comment[zh_CN]=麒麟扫描具有普通扫描，文字识别，智能纠偏，发送邮件等功能。
-Exec=kylin-scanner
-Icon=/usr/share/pixmaps/scanner.png
-Terminal=false
-Categories=Application;Graphics;Qt5;RasterGraphics;Scanning;OCR;2DGraphics;
+Exec=kylin-scanner %U
+Icon=scanner.png
+Type=Application
+Categories=Application;Graphics;RasterGraphics;Scanning;OCR;2DGraphics;
 Keywords=scannerfrontend
 StartupNotify=true

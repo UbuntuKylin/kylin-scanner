@@ -20,12 +20,15 @@ Other image processing tips can also be reflected in this software, such as clip
 - [x] Save as multi-formats contents
 
 ## How to build and install in Ubuntu Environments
+1. Build and Install via **debuild**
 ``` bash
 # Git clone
 $ git clone https://github.com/ubuntukylin/kylin-scanner.git
 
 # Go to root dir /kylin-scanner/ and build
 $ cd kylin-scanner/
+
+# build
 $ debuild
 
 # Use dpkg to install
@@ -38,6 +41,23 @@ $ sudo dpkg -i ../kylin-scanner_1.0.0_amd64.deb
 $ kylin-scanner
 or
 open and search "kylin scanner" after enter Win key
+```
+
+2. Build and Install via **qmake**
+``` bash
+# Git clone
+$ git clone https://github.com/ubuntukylin/kylin-scanner.git
+
+# Go to root dir /kylin-scanner/
+$ cd kylin-scanner/
+
+# build
+$ qmake
+$ make
+
+# install
+$ sudo make install
+
 ```
 
 ## How to make helpful docs
