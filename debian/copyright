@@ -1,6 +1,7 @@
 Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
 Upstream-Name: kylin-scanner
-Source: <url://example.com>
+Upstream-Contact: yushuoqi <yushuoqi@kylinos.cn>
+Source: https://github.com/ukui/kylin-scanner
 #
 # Please double check copyright with the licensecheck(1) command.
 
@@ -45,8 +46,10 @@ Files:     Doxyfile
            src/icon/×î´ó»¯.png
            src/src.pro
            src/translations/generate_translations_pm.sh
-Copyright: __NO_COPYRIGHT_NOR_LICENSE__
-License:   __NO_COPYRIGHT_NOR_LICENSE__
+Copyright: yushuoqi <yushuoqi@kylinos.cn>
+           mahailiang <mahailiang@kylinos.cn>
+           2020, KylinSoft Co., Ltd.
+License:   GPL-3.0+
 
 Files:     src/embelish.cpp
            src/embelish.h
@@ -73,7 +76,7 @@ Files:     src/embelish.cpp
            src/title_bar.h
            src/widget.cpp
            src/widget.h
-Copyright: 2020, Tianjin KYLIN Information Technology Co., Ltd.
+Copyright: 2020, KylinSoft Co., Ltd.
 License:   GPL-3.0+
  This program is free software; you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
