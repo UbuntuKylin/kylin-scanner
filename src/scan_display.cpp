@@ -25,7 +25,6 @@ QString outText;
 scan_display::scan_display(QWidget *parent)
     : QWidget(parent)
 {
-
     setMinimumSize(600,567);
     labInit = new QLabel();
     labConnectError = new QLabel();
@@ -70,7 +69,6 @@ scan_display::scan_display(QWidget *parent)
     imgConnectError->load(":/icon/icon/connect_device.png");
     labConnectError->setPixmap(QPixmap::fromImage(*imgConnectError));
     labConnectError->setAlignment(Qt::AlignHCenter|Qt::AlignBottom);
-
 
     QFont ft;
     ft.setPointSize(24);
@@ -481,6 +479,9 @@ void scan_display::orc()
     }
 }
 
+/**
+ * @brief scan_display::scan 扫描功能
+ */
 void scan_display::scan()
 {
     vStackedLayout->setCurrentIndex(0);
@@ -488,6 +489,7 @@ void scan_display::scan()
     vStackedLayout->setCurrentIndex(2);
     vStackedLayout->setCurrentIndex(3);
 
+    // 重新扫描时，应该都初始化，避免撤销到之前的图片情况
     stack.clear();
     list.clear();
     flagOrc = 0;
@@ -501,15 +503,20 @@ void scan_display::scan()
     pixmap_scaled(*imgEditLayout,labEditLayout);
 }
 
+/**
+ * @brief scan_display::rectify 智能纠偏
+ */
 void scan_display::rectify()
 {
     qDebug()<<"rectify\n";
     if(flagRectify == 0)
     {
+        // 此时代表用户点击了智能纠偏按钮
         flagRectify = 1;
         if(vStackedLayout->currentWidget() == widgetNormal)
         {
             imgNormal->save("/tmp/scanner/scan1.png");
+            // 为了撤销
             *imgRectify = imgNormal->copy();
             list.append("Rectify");
             ImageRectify("/tmp/scanner/scan1.png");
@@ -532,12 +539,18 @@ void scan_display::rectify()
     }
     else
     {
+        // 此时代表用户重复点击智能纠偏按钮，应该进行撤销操作
         flagRectify = 0;
         if(vStackedLayout->currentWidget() == widgetNormal)
         {
             *imgNormal = imgRectify->copy();
+            /**
+             * 2代表点击了先智能纠偏和后一键美化：
+             * 有2种情况： 1）先撤销一键美化 2）先撤销智能纠偏
+             */
             if(list.count() == 2)
             {
+                // 撤销的是智能纠偏：先全部清空，后把一键美化的加上
                 if(list[0] == "Rectify")
                 {
                     list.clear();
@@ -548,7 +561,10 @@ void scan_display::rectify()
                     imgNormal->load("/tmp/scanner/scan1.png");
                 }
                 else
+                {
+                    // 撤销的是一键美化：撤销到之前一个就行
                     list.removeLast();
+                }
             }
             else
                 list.clear();
@@ -582,6 +598,9 @@ void scan_display::rectify()
     }
 }
 
+/**
+ * @brief scan_display::beautify 一键美化
+ */
 void scan_display::beautify()
 {
     qDebug() << "beauty()";
@@ -663,23 +682,31 @@ void scan_display::beautify()
     }
 }
 
+/**
+ * @brief scan_display::switchPage 用于右侧工具栏切换页面
+ */
 void scan_display::switchPage()
 {
     index++;
     if(index > 1)
     {
+        qDebug() << "1 switchPage index = " << index;
         index = 0;
         *imgNormal = imgEditLayout->copy();
         pixmap_scaled(*imgNormal,labNormalLeft);
     }
     else
     {
+        qDebug() << "2 switchPage index = " << index;
         *imgEditLayout = imgNormal->copy();
         pixmap_scaled(*imgEditLayout,labEditLayout);
     }
     vStackedLayout->setCurrentIndex(index);
 }
 
+/**
+ * @brief scan_display::tailor 工具栏裁切、裁剪
+ */
 void scan_display::tailor()
 {
     btnTailor = new QPushButton();
@@ -716,6 +743,10 @@ void scan_display::tailor()
     scaledNum = pixmap_scaled(*imgTailor,labTailor);
 }
 
+/**
+ * @brief edit_bar::edit_bar 工具栏
+ * @param parent
+ */
 edit_bar::edit_bar(QWidget *parent)
     : QWidget(parent)
 {
@@ -764,6 +795,9 @@ edit_bar::edit_bar(QWidget *parent)
 
 }
 
+/**
+ * @brief myThread::run 文字识别线程
+ */
 void myThread::run()
 {
     tesseract::TessBaseAPI *api = new tesseract::TessBaseAPI();
@@ -795,4 +829,3 @@ void myThread::run()
     pixDestroy(&image);
     quit();
 }
-

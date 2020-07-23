@@ -21,34 +21,55 @@
 #include <QBitmap>
 #include <QFileInfo>
 #include <QFileIconProvider>
+#include <qmath.h>
 
 no_mail::no_mail(QWidget *parent) :
     QDialog(parent)
 {
-    setWindowFlags(Qt::FramelessWindowHint | Qt::Dialog);
-    setFixedSize(320,250);
+    setWindowFlags(Qt::FramelessWindowHint | Qt::Dialog); // 自定义设置窗口
+    //setAttribute(Qt::WA_TranslucentBackground); // 保证不被绘制上的部分透明
+    setFixedSize(320,260); // 窗口固定大小
+
+    btnClose = new QPushButton();
     labTitle = new QLabel();
     textEdit = new QTextEdit();
     line = new QFrame();
     btnOk = new QPushButton();
     btnCancel = new QPushButton();
     hBoxLayout = new QHBoxLayout();
+    hBoxLayoutClose = new QHBoxLayout();
     vBoxLayout = new QVBoxLayout(this);
+
+
+    btnClose->setFixedSize(30, 30);
+    btnClose->setToolTip("Close");
+    btnClose->setStyleSheet("QPushButton{border-image: url(:/icon/icon/close_white.svg);border:none;background-color:rgb(47,44,43);border-radius:4px;}"
+                              "QPushButton:hover{border-image: url(:/icon/icon/close_white.svg);border:none;background-color:rgb(240,65,52);border-radius:4px;}"
+                                "QPushButton:checked{border-image: url(:/icon/icon/close_white.svg);border:none;background-color:rgb(215,52,53);border-radius:4px;}");
+
+    hBoxLayoutClose->setSpacing(0);
+    hBoxLayoutClose->addStretch();
+    hBoxLayoutClose->addWidget(btnClose);
+    //hBoxLayoutClose->setSpacing(2);
+    hBoxLayoutClose->setAlignment(Qt::AlignCenter);
+    hBoxLayoutClose->setContentsMargins(0, 0, 0, 0);
 
     labTitle->setText(tr("No email client"));
     labTitle->setAlignment(Qt::AlignLeft|Qt::AlignVCenter);
-    labTitle->setStyleSheet("color:rgb(232,232,232)");
+    labTitle->setStyleSheet("color:#D9FFFFFF"); // 85% => D9, 255,255,255 => FFFFFF
     labTitle->setFixedSize(260,32);
     QFont ft;
-    ft.setPointSize(16);
+    ft.setPixelSize(24);
     labTitle->setFont(ft);
 
     QFont ft1;
-    ft1.setPointSize(10);
+    ft1.setPixelSize(14);
+    //ft1.setPointSize(14);
     textEdit->setFont(ft1);
     textEdit->setText(tr("Not find email client in the system, please download and install email client firstly."));
-    textEdit->setStyleSheet("QTextEdit{background-color:rgb(47,44,43);color:rgb(232,232,232);border:0px}");
-    textEdit->setFixedSize(260,50);
+    textEdit->setStyleSheet("QTextEdit{background-color:rgb(47,44,43);color:#D9FFFFFF;border:0px}");
+    int textEditSizeX = 320 - 32 - 32;
+    textEdit->setFixedSize(textEditSizeX,50);
     textEdit->setReadOnly(true);
 
     line = new QFrame();
@@ -83,12 +104,14 @@ no_mail::no_mail(QWidget *parent) :
     setPalette(pal);
 
     vBoxLayout->setSpacing(0);
+    vBoxLayout->addLayout(hBoxLayoutClose);
+    vBoxLayout->addSpacing(48);
     vBoxLayout->addWidget(labTitle);
-    vBoxLayout->addSpacing(22);
+    vBoxLayout->addSpacing(24);
     vBoxLayout->addWidget(textEdit);
-    vBoxLayout->addSpacing(22);
+    vBoxLayout->addSpacing(40);
     vBoxLayout->addLayout(hBoxLayout);
-    vBoxLayout->setContentsMargins(30,30,30,30);
+    vBoxLayout->setContentsMargins(32,0,32,48);
 
     QBitmap bitMap(width(),height()); // A bit map has the same size with current widget
 
@@ -107,8 +130,15 @@ no_mail::no_mail(QWidget *parent) :
     setMask(bitMap);
 
     setLayout(vBoxLayout);
+
+    // For ok button
     connect(btnOk,SIGNAL(clicked()),this,SLOT(accept()));
+
+    // For cancel button
     connect(btnCancel,SIGNAL(clicked()),this,SLOT(reject()));
+
+    // For close button
+    connect(btnClose, SIGNAL(clicked()), this, SLOT(reject()));
 }
 
 no_mail::~no_mail()
@@ -303,6 +333,29 @@ void send_mail::open_email(QString name)
         QProcess *process = new QProcess();
         process->start(str);
 
+}
+
+void send_mail::paintEvent(QPaintEvent *event)
+{
+    QPainterPath path;
+    path.setFillRule(Qt::WindingFill);
+    QPainter painter(this);
+    /*
+    path.addRect(10, 10, this->width()-20, this->height()-20);
+    painter.setRenderHint(QPainter::Antialiasing, true);
+    painter.fillPath(path, QBrush(Qt::white));
+    */
+
+    QColor color(0, 0, 0, 51);
+    for(int i=0; i<10; i++)
+    {
+        QPainterPath path;
+        path.setFillRule(Qt::WindingFill);
+        path.addRect(10-i, 10-i, this->width()-(10-i)*2, this->height()-(10-i)*2);
+        color.setAlpha(150 - qSqrt(i)*50);
+        painter.setPen(color);
+        painter.drawPath(path);
+    }
 }
 
 void send_mail::on_btn_clicked()

@@ -8,47 +8,28 @@ Source: https://github.com/ukui/kylin-scanner
 Files:     Doxyfile
            README.md
            README_CN.md
+           AUTHORS
+           ChangeLog
+           COPYING
+           NEWS
            autodoxygen.sh
+           autogen.sh
+           debian/*
+           man/*
+           docs/*
+           src/icon/*.gif
+           src/icon/*.png
+           src/icon/*.svg
+           src/translations/*
+           src/res.qrc
+           src/data/*
            clear.sh
-           docs/scan.jpg
            kylin-scanner.pro
-           sider.yml
-           src/data/kylin-scanner.desktop
-           src/data/scanner.png
-           src/icon/a.png
-           src/icon/beautify.png
-           src/icon/close-click.png
-           src/icon/close.png
-           src/icon/connect_device.png
-           src/icon/down.png
-           src/icon/max-click.png
-           src/icon/max.png
-           src/icon/min-click.png
-           src/icon/min.png
-           src/icon/normal-click.png
-           src/icon/normal.png
-           src/icon/norscan.png
-           src/icon/orc.png
-           src/icon/rectify.png
-           src/icon/rotate-click.png
-           src/icon/rotate.png
-           src/icon/scan.gif
-           src/icon/scanner.gif
-           src/icon/symmetry-click.png
-           src/icon/symmetry.png
-           src/icon/tailor-click.png
-           src/icon/tailor.png
-           src/icon/toolbutton.png
-           src/icon/toolbutton1.png
-           src/icon/watermark-click.png
-           src/icon/watermark.png
-           src/icon/×î´ó»¯-hover-click.png
-           src/icon/×î´ó»¯.png
            src/src.pro
-           src/translations/generate_translations_pm.sh
+           sider.yml
 Copyright: yushuoqi <yushuoqi@kylinos.cn>
            2020, KylinSoft Co., Ltd.
-License:   GPL-3
+License:   GPL-3.0
  This program is free software; you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
  the Free Software Foundation; either version 3, or (at your option)
@@ -80,7 +61,7 @@ Files:     src/embelish.cpp
            src/widget.cpp
            src/widget.h
 Copyright: 2020, KylinSoft Co., Ltd.
-License:   GPL-3
+License:   GPL+-3.0
  This program is free software; you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
  the Free Software Foundation; either version 3, or (at your option)
