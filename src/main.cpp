@@ -19,10 +19,23 @@
 #include <QApplication>
 #include <QLabel>
 #include <QTranslator>
+#include <QLockFile>
 
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
+
+    // Prevent multiple open
+    QLockFile *lockFile = new QLockFile ("/tmp/kylin-scanner.lock");
+    if (!lockFile->tryLock(2000))
+    {
+        return 0;
+    }
+    else
+    {
+        qDebug() << "kylin-scanner is not running.";
+    }
+    QApplication::setWindowIcon(QIcon::fromTheme("kylin-scanner", QIcon(":/icon/icon/scanner.png")));
 
     // For translations with different language environments
     QTranslator translator;

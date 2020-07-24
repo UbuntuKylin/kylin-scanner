@@ -52,7 +52,7 @@ no_mail::no_mail(QWidget *parent) :
     hBoxLayoutClose->addWidget(btnClose);
     //hBoxLayoutClose->setSpacing(2);
     hBoxLayoutClose->setAlignment(Qt::AlignCenter);
-    hBoxLayoutClose->setContentsMargins(0, 0, 0, 0);
+    hBoxLayoutClose->setContentsMargins(0, 0, 2, 0);
 
     labTitle->setText(tr("No email client"));
     labTitle->setAlignment(Qt::AlignLeft|Qt::AlignVCenter);
@@ -83,7 +83,7 @@ no_mail::no_mail(QWidget *parent) :
     btnOk->setText(tr("Go to install"));
     btnOk->setFixedSize(120,36);
     btnCancel->setText(tr("Cancel"));
-    btnCancel->setFixedSize(100,36);
+    btnCancel->setFixedSize(120,36);
 
     btnOk->setStyleSheet("QPushButton{background-color:rgb(32,30,29);border:1px solid #939393;color:rgb(232,232,232);border-radius:18px;}"
                               "QPushButton:hover{border:none;background-color:rgb(39,208,127);border:rgb(147,147,147);color:rgb(232,232,232);border-radius:18px;}"
@@ -96,7 +96,7 @@ no_mail::no_mail(QWidget *parent) :
     hBoxLayout->addWidget(btnOk);
     hBoxLayout->addSpacing(16);
     hBoxLayout->addWidget(btnCancel);
-    hBoxLayout->setContentsMargins(16,0,16,0);
+    hBoxLayout->setContentsMargins(0,0,32,0);
 
     QPalette pal(palette());
     pal.setColor(QPalette::Background, QColor(47, 44, 43));
@@ -105,13 +105,13 @@ no_mail::no_mail(QWidget *parent) :
 
     vBoxLayout->setSpacing(0);
     vBoxLayout->addLayout(hBoxLayoutClose);
-    vBoxLayout->addSpacing(48);
+    vBoxLayout->addSpacing(48 - 30);
     vBoxLayout->addWidget(labTitle);
     vBoxLayout->addSpacing(24);
     vBoxLayout->addWidget(textEdit);
     vBoxLayout->addSpacing(40);
     vBoxLayout->addLayout(hBoxLayout);
-    vBoxLayout->setContentsMargins(32,0,32,48);
+    vBoxLayout->setContentsMargins(32,0,0,48);
 
     QBitmap bitMap(width(),height()); // A bit map has the same size with current widget
 

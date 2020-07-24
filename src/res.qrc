@@ -35,5 +35,6 @@
         <file>icon/min_white.svg</file>
         <file>icon/max_white.svg</file>
         <file>icon/close_white.svg</file>
+        <file>icon/scanner.png</file>
     </qresource>
 </RCC>

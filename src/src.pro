@@ -96,6 +96,7 @@ desktop.path = /usr/share/applications/
 INSTALLS += target icons desktop qm_files
 
 DISTFILES += \
+    icon/scanner.png \
     translations/generate_translations_pm.sh \
     translations/local.zh_CN.qm
 
