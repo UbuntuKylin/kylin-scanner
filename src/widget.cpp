@@ -1,5 +1,5 @@
 /*
-* Copyright (C) 2020, Tianjin KYLIN Information Technology Co., Ltd.
+* Copyright (C) 2020, KylinSoft Co., Ltd.
 *
 * This program is free software; you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
@@ -31,6 +31,7 @@ bool device = true;
 Widget::Widget(QWidget *parent)
     : QWidget(parent)
 {
+    // 自定义设置窗口
     setWindowFlags(Qt::FramelessWindowHint | windowFlags());
 
     thread.start();
@@ -40,6 +41,7 @@ Widget::Widget(QWidget *parent)
     resize(860, 680);
 
 //    setStyleSheet("QWidget{border-bottom-left-radius:5px;border-bottom-right-radius:5px;}");
+    // 设置窗口背景
     QPalette pal(palette());
     pal.setColor(QPalette::Background, QColor(47, 44, 43));
     setAutoFillBackground(true);
@@ -48,8 +50,7 @@ Widget::Widget(QWidget *parent)
     line =  new QFrame();
     line->setObjectName(QString::fromUtf8("line"));
     line->setGeometry(QRect(0, 32, 860, 1));
-    line->setFrameShape(QFrame::HLine);
-    line->setStyleSheet("QFrame{color:rgb(32,30,29)}");
+    line->setFrameShape(QFrame::HLine); line->setStyleSheet("QFrame{color:rgb(32,30,29)}");
 
 
     pFuncBar = new  FuncBar();
@@ -59,10 +60,10 @@ Widget::Widget(QWidget *parent)
     pScandisplay = new scan_display();
 
     pHboxLayout = new QHBoxLayout();
-    pHboxLayout->setSpacing(0);
+    pHboxLayout->setSpacing(0); // 需要先清空spacing，不然addSpacing会出问题
     pHboxLayout->addWidget(pScanSet);
     pHboxLayout->addWidget(pScandisplay);
-    pHboxLayout->setContentsMargins(0,0,0,0);
+    pHboxLayout->setContentsMargins(0,0,0,0); // 设置窗口左上右下边距
 
     pLayout = new QVBoxLayout();
     pLayout->setSpacing(0);
@@ -72,7 +73,9 @@ Widget::Widget(QWidget *parent)
     pLayout->addLayout(pHboxLayout);
     pLayout->setContentsMargins(0, 0, 0, 0);
 
+    // 设置窗口圆角
     set_mask();
+
     setLayout(pLayout);
 
     // For save
@@ -105,6 +108,7 @@ Widget::~Widget()
 {
 
 }
+
 int toUnicode(QString str)
 {
     char*  ch;
@@ -215,8 +219,6 @@ void Widget::result_detail(bool ret)
         pFuncBar->setKylinScanSetNotEnable();
         pScanSet->setKylinScanSetNotEnable();
     }
-
-
 }
 
 void Widget::save_image(QString fileName)
@@ -342,6 +344,10 @@ void Widget::set_mask_clear()
     pScandisplay->updateWindowSize();
 
 }
+
+/**
+ * @brief Widget::set_mask 设置窗口圆角
+ */
 void Widget::set_mask()
 {
         clearMask();

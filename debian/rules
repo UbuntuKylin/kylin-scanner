@@ -1,9 +1,38 @@
 #!/usr/bin/make -f
-# You must remove unused comment lines for the released package.
-#export DH_VERBOSE = 1
-#export DEB_BUILD_MAINT_OPTIONS = hardening=+all
-#export DEB_CFLAGS_MAINT_APPEND  = -Wall -pedantic
-#export DEB_LDFLAGS_MAINT_APPEND = -Wl,--as-needed
+
+export QT_SELECT=5
+export DEB_BUILD_MAINT_OPTIONS = hardening=+all
+
+QMAKE_OPTS = DEFINES+=NO_DEBUG_ON_CONSOLE
+MAKE_OPTS  = PREFIX=/usr QMAKE=qmake LRELEASE=lrelease QMAKE_OPTS="$(QMAKE_OPTS)"
+
+override_dh_auto_configure:
+	QT_SELECT=qt5 dh_auto_configure \
+                -- "QMAKE_CXXFLAGS=$(CFLAGS)" \
+                kylin-scanner.pro
 
 %:
 	dh $@
+
+override_dh_install:
+#	./autogen.sh
+	dh_install
+
+override_dh_missing:
+	dh_missing --fail-missing
+
+override_dh_auto_clean:
+	[ ! -d src/.moc ] || $(RM) -r src/.moc
+	[ ! -d src/.obj ] || $(RM) -r src/.obj
+	[ ! -d src/.ui ] || $(RM) -r src/.ui
+	[ ! -f src/Makefile ] || dh_auto_clean
+
+override_dh_auto_build:
+	dh_auto_build -- $(MAKE_OPTS)
+
+#override_dh_auto_build:
+#	dh_auto_build -- $(MAKE_OPTS) DOC_PATH=\\\"/usr/share/doc/kylin-scanner\\\"
+
+#override_dh_auto_install:
+#	dh_auto_install -- $(MAKE_OPTS) DOC_PATH=/usr/share/doc/kylin-scanner
+#	rm -f debian/tmp/usr/share/doc/kylin-scanner/Copying.txt

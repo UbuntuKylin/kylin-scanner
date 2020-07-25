@@ -1,5 +1,5 @@
 /*
-* Copyright (C) 2020, Tianjin KYLIN Information Technology Co., Ltd.
+* Copyright (C) 2020, KylinSoft Co., Ltd.
 *
 * This program is free software; you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
@@ -19,10 +19,23 @@
 #include <QApplication>
 #include <QLabel>
 #include <QTranslator>
+#include <QLockFile>
 
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
+
+    // Prevent multiple open
+    QLockFile *lockFile = new QLockFile ("/tmp/kylin-scanner.lock");
+    if (!lockFile->tryLock(2000))
+    {
+        return 0;
+    }
+    else
+    {
+        qDebug() << "kylin-scanner is not running.";
+    }
+    QApplication::setWindowIcon(QIcon::fromTheme("kylin-scanner", QIcon(":/icon/icon/scanner.png")));
 
     // For translations with different language environments
     QTranslator translator;

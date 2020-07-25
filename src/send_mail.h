@@ -1,5 +1,5 @@
 /*
-* Copyright (C) 2020, Tianjin KYLIN Information Technology Co., Ltd.
+* Copyright (C) 2020, KylinSoft Co., Ltd.
 *
 * This program is free software; you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
@@ -27,6 +27,7 @@
 #include <QVBoxLayout>
 #include <QScrollArea>
 #include <QProcess>
+#include <QPaintEvent>
 
 #ifdef signals
 #undef signals
@@ -47,6 +48,7 @@ typedef struct _AppInfo
 {
     GAppInfo *item;
 }Appinfo;//用于存放应用列表信息
+
 class no_mail : public QDialog
 {
     Q_OBJECT
@@ -54,15 +56,15 @@ public:
     explicit no_mail(QWidget *parent = nullptr);
     ~no_mail();
 private:
+    QPushButton *btnClose;
     QLabel *labTitle;
     QTextEdit *textEdit;
     QFrame *line;
     QPushButton *btnOk;
     QPushButton *btnCancel;
     QHBoxLayout *hBoxLayout;
+    QHBoxLayout *hBoxLayoutClose; // 关闭按钮水平布局
     QVBoxLayout *vBoxLayout;
-
-
 };
 
 class send_mail : public QDialog
@@ -73,11 +75,15 @@ public:
     void set_btnList();
     void open_email(QString name);
 
+    //void paintEvent(QPaintEvent *event); // 窗口阴影
+
 private:
+    QPushButton *btnClose;
     QLabel *labTitle;
     QPushButton *btnCancel;
     QHBoxLayout *hBoxLayout;
     QHBoxLayout *hBoxLayout1;
+    QHBoxLayout *hBoxLayoutClose; // 关闭按钮水平布局
     QVBoxLayout *vBoxLayout;
     QVBoxLayout *vBoxLayout1;
     QScrollArea *scrollArea;
