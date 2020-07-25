@@ -65,8 +65,6 @@ private:
     QHBoxLayout *hBoxLayout;
     QHBoxLayout *hBoxLayoutClose; // 关闭按钮水平布局
     QVBoxLayout *vBoxLayout;
-
-
 };
 
 class send_mail : public QDialog
@@ -77,13 +75,15 @@ public:
     void set_btnList();
     void open_email(QString name);
 
-    void paintEvent(QPaintEvent *event); // 窗口阴影
+    //void paintEvent(QPaintEvent *event); // 窗口阴影
 
 private:
+    QPushButton *btnClose;
     QLabel *labTitle;
     QPushButton *btnCancel;
     QHBoxLayout *hBoxLayout;
     QHBoxLayout *hBoxLayout1;
+    QHBoxLayout *hBoxLayoutClose; // 关闭按钮水平布局
     QVBoxLayout *vBoxLayout;
     QVBoxLayout *vBoxLayout1;
     QScrollArea *scrollArea;

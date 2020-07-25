@@ -52,7 +52,7 @@ no_mail::no_mail(QWidget *parent) :
     hBoxLayoutClose->addWidget(btnClose);
     //hBoxLayoutClose->setSpacing(2);
     hBoxLayoutClose->setAlignment(Qt::AlignCenter);
-    hBoxLayoutClose->setContentsMargins(0, 0, 2, 0);
+    hBoxLayoutClose->setContentsMargins(0, 0, 5, 0);
 
     labTitle->setText(tr("No email client"));
     labTitle->setAlignment(Qt::AlignLeft|Qt::AlignVCenter);
@@ -152,47 +152,56 @@ send_mail::send_mail(QWidget *parent) :
 {
     setWindowFlags(Qt::FramelessWindowHint | Qt::Dialog);
     setFixedSize(320,350);
+
+    //btnClose = new QPushButton();
     labTitle = new QLabel();
     btnCancel = new QPushButton();
     hBoxLayout = new QHBoxLayout();
     hBoxLayout1 = new QHBoxLayout();
+    //hBoxLayoutClose = new QHBoxLayout();
     vBoxLayout = new QVBoxLayout();
     vBoxLayout1 = new QVBoxLayout();
     scrollArea = new QScrollArea();
     widget = new QWidget();
 
-    widget->setFixedSize(300,270);
+    widget->setFixedSize(320,260);
     widget->setWindowFlags(Qt::FramelessWindowHint | Qt::Tool | Qt::WindowStaysOnTopHint); // 去掉标题栏,去掉任务栏显示，窗口置顶
+
+    btnCancel->setFixedSize(30,30);
+    btnCancel->setStyleSheet("QPushButton{border-image: url(:/icon/icon/close_white.svg);border:none;background-color:rgb(47,44,43);border-radius:4px;}"
+                              "QPushButton:hover{border-image: url(:/icon/icon/close_white.svg);border:none;background-color:rgb(240,65,52);border-radius:4px;}"
+                                "QPushButton:checked{border-image: url(:/icon/icon/close_white.svg);border:none;background-color:rgb(215,52,53);border-radius:4px;}");
+    hBoxLayout->setSpacing(0);
+    hBoxLayout->addStretch();
+    hBoxLayout->addWidget(btnCancel);
+    hBoxLayout->setAlignment(Qt::AlignCenter);
+    hBoxLayout->setContentsMargins(0,0,5,0);
 
     labTitle->setText(tr("Select email client"));
     labTitle->setAlignment(Qt::AlignLeft|Qt::AlignVCenter);
-    labTitle->setStyleSheet("color:rgb(232,232,232)");
-    labTitle->setFixedSize(190,32);
+    labTitle->setStyleSheet("color:#D9FFFFFF"); // 85% => D9, 255,255,255 => FFFFFF
+    labTitle->setFixedSize(260, 32);
     QFont ft;
-    ft.setPointSize(16);
+    ft.setPixelSize(24);
     labTitle->setFont(ft);
 
-    btnCancel->setFixedSize(12,12);
-    btnCancel->setStyleSheet("QPushButton{border-image: url(:/icon/icon/close.png);border:none;background-color:rgb(47,44,43);border-radius:0px;}"
-                              "QPushButton:hover{border-image: url(:/icon/icon/close-click.png);border:none;background-color:rgb(47,44,43);border-radius:0px;}"
-                                "QPushButton:checked{border-image: url(:/icon/icon/close-click.png);border:none;background-color:rgb(47,44,43);border-radius:0px;}");
-    hBoxLayout->addStretch();
-    hBoxLayout->addWidget(btnCancel);
-    hBoxLayout->setContentsMargins(0,0,5,0);
     hBoxLayout1->addStretch();
     hBoxLayout1->addWidget(labTitle);
     hBoxLayout1->addStretch();
-    hBoxLayout1->setContentsMargins(0,0,0,0);
+    hBoxLayout1->setContentsMargins(0, 0, 0, 0);
+
     QPalette pal(palette());
     pal.setColor(QPalette::Background, QColor(47, 44, 43));
     setAutoFillBackground(true);
     setPalette(pal);
 
     vBoxLayout->setSpacing(0);
+    //vBoxLayout->addLayout(hBoxLayoutClose);
     vBoxLayout->addLayout(hBoxLayout);
-    vBoxLayout->addSpacing(6);
+    //vBoxLayout->addSpacing(24);
+    //vBoxLayout->addWidget(labTitle);
     vBoxLayout->addLayout(hBoxLayout1);
-    vBoxLayout->setContentsMargins(0,5,0,0);
+    vBoxLayout->setContentsMargins(0,0,0,0);
     setLayout(vBoxLayout);
 
     QBitmap bitMap(width(),height()); // A bit map has the same size with current widget
@@ -210,14 +219,22 @@ send_mail::send_mail(QWidget *parent) :
     painter.drawRoundedRect(bitMap.rect(),6,6); //设置圆角弧度
 
     setMask(bitMap);
+
+    // For cancel button
     connect(btnCancel,SIGNAL(clicked()),this,SLOT(reject()));
+
+    // For close button
+    //connect(btnClose, SIGNAL(clicked()), this, SLOT(reject()));
 }
-Appinfo * _getAppList(const char *contentType){
+
+Appinfo * _getAppList(const char *contentType)
+{
     GList *applist;
     applist = g_app_info_get_all_for_type(contentType);
     GAppInfo * item;
 
-    if(applist != NULL){
+    if (applist != NULL)
+    {
         int len = g_list_length(applist);
         Appinfo * appinfo=(Appinfo *)malloc(sizeof(Appinfo)*(len+1));
 
@@ -229,28 +246,39 @@ Appinfo * _getAppList(const char *contentType){
         appinfo[len].item=NULL;
         return appinfo;
 
-    } else {
+    }
+    else
+    {
         return NULL;
     }
 }
 
-AppList * getAppIdList(const char *contentType){
+AppList * getAppIdList(const char *contentType)
+{
     Appinfo *appinfo = _getAppList(contentType);
-    if(appinfo != NULL){
+    if(appinfo != NULL)
+    {
         int i = 0;
-        while(appinfo[i].item != NULL)
+
+        while (appinfo[i].item != NULL)
             i++;
-        AppList *list = (AppList *)malloc(sizeof(AppList)*(i+1));
+
         int count = i;
         int index = 0;
-        for(gint j = 0;appinfo[j].item != NULL;j++){
+        AppList *list = (AppList *)malloc(sizeof(AppList)*(i+1));
+
+        for (gint j = 0;appinfo[j].item != NULL;j++)
+        {
             const char *id = g_app_info_get_id(appinfo[j].item);
-            if(id != NULL){
+            if(id != NULL)
+            {
                 int len = strlen(id);
                 list[index].appid = (char *)malloc(sizeof(char)*(len+1));
                 strcpy(list[index].appid,id);
                 index++;
-            } else {
+            }
+            else
+            {
                 free(list+count);
                 count--;
             }
@@ -258,14 +286,17 @@ AppList * getAppIdList(const char *contentType){
         list[count].appid=NULL;
         free(appinfo);
         return list;
-    } else {
+    }
+    else
+    {
         return NULL;
     }
 }
 void send_mail::set_btnList()
 {
     AppList * maillist = getAppIdList(MAILTYPE);
-    if (maillist){
+    if (maillist)
+    {
         vBoxLayout1->setSpacing(0);
         vBoxLayout1->setContentsMargins(0,0,0,0);
         for (int i = 0; maillist[i].appid != NULL; i++)
@@ -281,22 +312,30 @@ void send_mail::set_btnList()
                 appicon = QIcon::fromTheme(QString(iconname));
             QPushButton *btn = new QPushButton();
             QFont ft;
-            ft.setPointSize(11);
+            ft.setPixelSize(14);
             btn->setFont(ft);
             btn->setText(appname);
-            btn->setFixedSize(190,40);
-            btn->setStyleSheet("QPushButton{background-color:rgb(68,66,72);background-position:left;text-align:left;border:none;color:rgb(232,232,232);border-radius:6px;}"
-                                "QPushButton:hover{border:none;background-color:rgb(39,208,127);color:rgb(232,232,232);border-radius:6px;}"
-                                 "QPushButton:checked{border:none;background-color:rgb(39,208,127);color:rgb(232,232,232)border-radius:6px;}");
+            btn->setFixedSize(256, 56);
+            btn->setStyleSheet("QPushButton{background-color:rgb(68,66,72);background-position:left;text-align:left;border:none;color:rgb(232,232,232);border-radius:4px;}"
+                                "QPushButton:hover{border:none;background-color:rgb(39,208,127);color:#F0FFFFFF;border-radius:4px;}"
+                                 "QPushButton:checked{border:none;background-color:rgb(39,208,127);color:#F7FFFFFF;border-radius:4px;}");
             btn->setIcon(appicon);
+            btn->setIconSize(QSize(40,40)); // 应用图标尺寸
             btn->setCheckable(true);
             btnList.append(btn);
             QHBoxLayout *hBoxLayout1 = new QHBoxLayout();
             hBoxLayout1->addStretch();
             hBoxLayout1->addWidget(btnList[i]);
             hBoxLayout1->addStretch();
-            hBoxLayout1->setContentsMargins(0,0,0,0);
-            vBoxLayout1->addSpacing(10);
+            if (i == 0)
+            {
+                hBoxLayout1->setContentsMargins(0, 16, 0, 0);
+            }
+            else
+            {
+                hBoxLayout1->setContentsMargins(0,0,0,0);
+            }
+            vBoxLayout1->addSpacing(4);
             vBoxLayout1->addLayout(hBoxLayout1);
             connect(btnList[i],SIGNAL(toggled(bool)),this,SLOT(on_btn_clicked()));
 
@@ -322,7 +361,7 @@ void send_mail::open_email(QString name)
         QTextStream aStream(&aFile);
         QString str;
         aStream.setAutoDetectUnicode(true);
-        while(!aStream.atEnd())
+        while (!aStream.atEnd())
         {
             str = aStream.readLine();
             if(str.startsWith("Exec=",Qt::CaseSensitive))
@@ -332,19 +371,14 @@ void send_mail::open_email(QString name)
         str = str.section(" ",0,0);
         QProcess *process = new QProcess();
         process->start(str);
-
 }
 
+/*
 void send_mail::paintEvent(QPaintEvent *event)
 {
     QPainterPath path;
     path.setFillRule(Qt::WindingFill);
     QPainter painter(this);
-    /*
-    path.addRect(10, 10, this->width()-20, this->height()-20);
-    painter.setRenderHint(QPainter::Antialiasing, true);
-    painter.fillPath(path, QBrush(Qt::white));
-    */
 
     QColor color(0, 0, 0, 51);
     for(int i=0; i<10; i++)
@@ -357,6 +391,7 @@ void send_mail::paintEvent(QPaintEvent *event)
         painter.drawPath(path);
     }
 }
+*/
 
 void send_mail::on_btn_clicked()
 {
