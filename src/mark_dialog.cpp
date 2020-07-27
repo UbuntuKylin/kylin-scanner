@@ -16,8 +16,7 @@
 *
 */
 #include "mark_dialog.h"
-#include <QPainter>
-#include <QBitmap>
+
 mark_dialog::mark_dialog(QWidget *parent) :
     QDialog(parent)
 {

@@ -17,15 +17,17 @@
 */
 #ifndef MARK_DIALOG_H
 #define MARK_DIALOG_H
-#include <QDialog>
+
+#include <QPushButton>
 #include <QLabel>
 #include <QLineEdit>
-#include <QPushButton>
+#include <QDialog>
 #include <QFrame>
 #include <QString>
 #include <QHBoxLayout>
 #include <QVBoxLayout>
-
+#include <QPainter>
+#include <QBitmap>
 
 class mark_dialog : public QDialog
 {

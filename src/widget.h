@@ -18,16 +18,14 @@
 #ifndef WIDGET_H
 #define WIDGET_H
 
-#include <QWidget>
-#include <QLabel>
-#include <QString>
 #include <QPdfWriter>
-#include <QPainter>
 #include <QMap>
+#include <QIcon>
+#include <QSplitter>
+#include <QLine>
 #include "scan_display.h"
-#include <scan_set.h>
+#include "scan_set.h"
 #include "title_bar.h"
-#include "func_bar.h"
 
 class scanThread : public QThread
 {

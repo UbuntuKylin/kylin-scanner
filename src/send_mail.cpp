@@ -16,12 +16,6 @@
 *
 */
 #include "send_mail.h"
-#include <QPainter>
-#include <QDebug>
-#include <QBitmap>
-#include <QFileInfo>
-#include <QFileIconProvider>
-#include <qmath.h>
 
 no_mail::no_mail(QWidget *parent) :
     QDialog(parent)

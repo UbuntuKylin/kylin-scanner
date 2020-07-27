@@ -16,12 +16,9 @@
 *
 */
 #include "scan_display.h"
-#include "func_bar.h"
-#include <QDebug>
-#include <QToolTip>
-#include <QTextEdit>
-#include "kylin_sane.h"
+
 QString outText;
+
 scan_display::scan_display(QWidget *parent)
     : QWidget(parent)
 {

@@ -18,21 +18,18 @@
 #ifndef EMBELISH_H
 #define EMBELISH_H
 
+#include <vector>
+#include <iostream>
+#include <fstream>
 #include <QWidget>
-
 #include <QPainter>
-
+#include <QDebug>
 #include <opencv2/core/utility.hpp>
 #include <opencv2/photo.hpp>
 #include <opencv2/imgcodecs.hpp>
 #include <opencv2/imgproc.hpp>
 #include <opencv2/highgui.hpp>
-#include "opencv2/imgproc/imgproc_c.h"
-
-#include <vector>
-#include <iostream>
-#include <fstream>
-#include <QDebug>
+#include <opencv2/imgproc/imgproc_c.h>
 using namespace cv;
 using namespace std;
 

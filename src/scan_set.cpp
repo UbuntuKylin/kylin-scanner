@@ -16,7 +16,9 @@
 *
 */
 #include "scan_set.h"
+
 QString curPath;
+
 ScanSet::ScanSet(QWidget *parent)
     : QWidget(parent)
 {

@@ -26,17 +26,14 @@
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/stat.h>
-
+#include <sane/sane.h>
+#include <sane/saneopts.h>
+#include <iostream>
 #include <QObject>
 #include <QWidget>
 #include <QDebug>
 #include <QString>
 #include <QStringList>
-
-#include "sane/sane.h"
-#include "sane/saneopts.h"
-
-#include <iostream>
 using namespace std;
 
 #ifndef PATH_MAX
@@ -135,7 +132,6 @@ void my_sane_exit(); // Release scan resources
 SANE_Status kylin_display_scan_parameters(SANE_Handle device); // display parameters
 
 void kylinNorScanFindDevice(); // open scan device
-
 
 #ifdef __cplusplus
 }

@@ -18,26 +18,14 @@
 #ifndef SCAN_SET_H
 #define SCAN_SET_H
 
-#include <QObject>
-#include <QWidget>
-#include <QLabel>
-#include <QComboBox>
-#include <QVBoxLayout>
-#include <QHBoxLayout>
-#include <QString>
-#include <QDebug>
-#include <QPushButton>
 #include <QStyledItemDelegate>
 #include <QListView>
-#include <QDialog>
 #include <QFileDialog>
 #include <QCoreApplication>
 #include <QFont>
 #include <QPixmap>
 #include <QLineEdit>
-#include <QProcess>
 #include <QFile>
-
 #include "kylincombobox.h"
 #include "send_mail.h"
 #include "kylin_sane.h"

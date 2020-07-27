@@ -16,15 +16,6 @@
 *
 */
 #include "widget.h"
-#include <QVBoxLayout>
-#include <QIcon>
-#include <QPushButton>
-#include <QSplitter>
-#include <QLine>
-#include <QFrame>
-#include <QDebug>
-#include <QBitmap>
-#include "kylin_sane.h"
 
 bool device = true;
 

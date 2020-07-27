@@ -37,6 +37,7 @@ void rotateImage(Mat src, Mat& img_rotate, double degree)
 
     int length = 0;
     length = sqrt(src.cols*src.cols + src.rows*src.rows);
+    qDebug() << "length = " << length;
     //计算二维旋转的仿射变换矩阵
     Mat M = getRotationMatrix2D(center, degree, 1);
 //    warpAffine(src, img_rotate, M, Size(length, length), 1, 0, Scalar(255,255,255));//仿射变换，背景色填充为白色

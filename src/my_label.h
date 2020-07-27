@@ -17,10 +17,18 @@
 */
 #ifndef MY_LABEL_H
 #define MY_LABEL_H
+
 #include <QLabel>
 #include <QMouseEvent>
 #include <QString>
 #include <QShowEvent>
+#include <QPainter>
+#include <QPen>
+#include <QRect>
+#include <QCursor>
+#include <QApplication>
+#include <QPixmap>
+#include <QImage>
 
 class my_label  :   public QLabel
 {
