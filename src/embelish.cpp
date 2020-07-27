@@ -227,7 +227,7 @@ void psSharpenCV(Mat src, Mat &dst)
     Point2i anchor(-1,-1);
     double delta = 0;
 
-    Mat kernel = (Mat_<char>(3, 3) <<
+    const Mat kernel = (Mat_<char>(3, 3) <<
                   0, -1, 0,
                   -1, 5, -1,
                   0, -1, 0);
@@ -297,23 +297,23 @@ void psHslCV(Mat src, Mat &dst)
 
     for ( i= 0; i<size.height; ++i)
     {
-        unsigned char* src = (unsigned char*)temp.data+temp.step*i;
+        unsigned char* srcHSL = (unsigned char*)temp.data+temp.step*i;
         for ( j=0; j<size.width; ++j)
         {
-            float val = src[j*chns]+hue;
+            float val = srcHSL[j*chns]+hue;
             if ( val < 0) val = 0.0;
             if ( val > 180 ) val = 180;
-            src[j*chns] = static_cast<unsigned char>(val);
+            srcHSL[j*chns] = static_cast<unsigned char>(val);
 
-            val = src[j*chns+1]+saturation;
+            val = srcHSL[j*chns+1]+saturation;
             if ( val < 0) val = 0;
             if ( val > 255 ) val = 255;
-            src[j*chns+1] = static_cast<unsigned char>(val);
+            srcHSL[j*chns+1] = static_cast<unsigned char>(val);
 
-            val = src[j*chns+2]+lumination;
+            val = srcHSL[j*chns+2]+lumination;
             if ( val < 0) val = 0;
             if ( val > 255 ) val = 255;
-            src[j*chns+2] = static_cast<unsigned char>(val);
+            srcHSL[j*chns+2] = static_cast<unsigned char>(val);
         }
     }
 
@@ -338,8 +338,7 @@ void psLuminanceContrastCV(Mat src, Mat &dst)
     Mat new_image = Mat::zeros(src.size(), src.type());
     double alpha = 1.0; // contrast
     int beta = 5;       // brightness
-    int i=0, j=0;
-    int c=0;
+    int i, j, c;
 
     for (i=0; i<src.rows; i++)
     {
@@ -499,7 +498,7 @@ void psHistogramEqualizationCV(Mat src, Mat &dst)
  */
 void psContrastCV(Mat src, Mat & dst)
 {
-    Mat kernel = (Mat_<float>(3, 3) <<
+    const Mat kernel = (Mat_<float>(3, 3) <<
                                       0, -1, 0,
                                       0, 5, 0,
                                       0, -1, 0);
@@ -524,9 +523,9 @@ void psLogarithmCV(Mat src, Mat &dst)
     {
         for (int j = 0; j < src.cols; j++)
         {
-            imageLog.at<Vec3f>(i, j)[0] = log(1 + src.at<Vec3b>(i, j)[0]);
-            imageLog.at<Vec3f>(i, j)[1] = log(1 + src.at<Vec3b>(i, j)[1]);
-            imageLog.at<Vec3f>(i, j)[2] = log(1 + src.at<Vec3b>(i, j)[2]);
+            imageLog.at<Vec3f>(i, j)[0] = log1p(src.at<Vec3b>(i, j)[0]);
+            imageLog.at<Vec3f>(i, j)[1] = log1p(src.at<Vec3b>(i, j)[1]);
+            imageLog.at<Vec3f>(i, j)[2] = log1p(src.at<Vec3b>(i, j)[2]);
         }
     }
     //归一化到0~255

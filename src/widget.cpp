@@ -289,8 +289,8 @@ void Widget::scan_result(bool ret)
         pScanSet->setKylinComboBoxScanDeviceName();
         instance.open_device(0);
 
-        bool ret = instance.getKylinSaneStatus();
-        result_detail(ret);
+        bool retStatus = instance.getKylinSaneStatus();
+        result_detail(retStatus);
 
         /*
         pScanSet->setKylinComboBox();
@@ -372,7 +372,7 @@ void Widget::set_mask()
 void scanThread::run()
 {
     KylinSane &instance = KylinSane::getInstance();
-again:
+//again:
     do {
         instance.find_device();
 
