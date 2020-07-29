@@ -15,16 +15,7 @@
 * along with this program; if not, see <http://www.gnu.org/licenses/&gt;.
 *
 */
-#include <QLabel>
-#include <QPushButton>
-#include <QHBoxLayout>
-#include <QEvent>
-#include <QMouseEvent>
-#include <QApplication>
 #include "title_bar.h"
-
-#include <QDebug>
-#include <QPainter>
 
 TitleBar::TitleBar(QWidget *parent)
     : QWidget(parent)

@@ -18,29 +18,20 @@
 #ifndef SCAN_DISPLAY_H
 #define SCAN_DISPLAY_H
 
-#include <QObject>
-#include <QWidget>
-#include <QLabel>
-#include <QVBoxLayout>
-#include <QStackedLayout>
-#include <QImage>
-#include <QPushButton>
-#include <QPixmap>
-#include <QPainter>
-#include <QString>
-#include <QInputDialog>
 #include <qmath.h>
-#include <QStack>
-#include <QThread>
+#include <QStackedLayout>
+#include <QInputDialog>
 #include <QScrollArea>
 #include <tesseract/baseapi.h>
 #include <leptonica/allheaders.h>
+#include <QToolTip>
+#include <QTextEdit>
 #include "my_label.h"
 #include "mark_dialog.h"
 #include "func_bar.h"
-#include <QWidget>
 #include "rectify.h"
 #include "embelish.h"
+#include "kylin_sane.h"
 
 class myThread : public QThread
 {

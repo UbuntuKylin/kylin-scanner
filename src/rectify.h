@@ -18,10 +18,10 @@
 #ifndef RECTIFY_H
 #define RECTIFY_H
 
-#include "opencv2/imgproc.hpp"
-#include "opencv2/highgui.hpp"
 #include <cmath>
 #include <iostream>
+#include <opencv2/imgproc.hpp>
+#include <opencv2/highgui.hpp>
 #include <QImage>
 #include <QPixmap>
 #include <QDebug>

@@ -17,17 +17,24 @@
 */
 #ifndef SEND_MAIL_H
 #define SEND_MAIL_H
-#include <QDialog>
+
 #include <QLabel>
-#include <QTextEdit>
 #include <QPushButton>
+#include <QTextEdit>
 #include <QFrame>
+#include <QDialog>
 #include <QString>
 #include <QHBoxLayout>
 #include <QVBoxLayout>
 #include <QScrollArea>
 #include <QProcess>
 #include <QPaintEvent>
+#include <QPainter>
+#include <QDebug>
+#include <QBitmap>
+#include <QFileInfo>
+#include <QFileIconProvider>
+#include <qmath.h>
 
 #ifdef signals
 #undef signals
@@ -97,4 +104,5 @@ private slots:
 };
 Appinfo * _getAppList(const char *contentType);
 AppList * getAppIdList(const char *contentType);
+
 #endif // MARK_DIALOG_H

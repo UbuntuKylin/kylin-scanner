@@ -16,15 +16,9 @@
 *
 */
 #include "my_label.h"
-#include <QPainter>
-#include <QPen>
-#include <QRect>
-#include <QCursor>
-#include <QApplication>
-#include <QPixmap>
-#include <QImage>
 
 my_label::my_label(QLabel *parent)
+    : QLabel(parent)
 {
     x1 = 0;
     y1 = 0;

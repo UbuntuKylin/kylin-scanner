@@ -16,7 +16,9 @@
 *
 */
 #include "scan_set.h"
+
 QString curPath;
+
 ScanSet::ScanSet(QWidget *parent)
     : QWidget(parent)
 {
@@ -153,6 +155,7 @@ ScanSet::ScanSet(QWidget *parent)
     {
         instance.userInfo.color = "Gray";
     }
+    qDebug() << "userInfo.color = " << instance.userInfo.color;
     instance.userInfo.color = curColor;
 
     curResolution = textResolution->currentText();

@@ -385,6 +385,7 @@ void FuncBar::on_btnBeauty_clicked()
 
 void FuncBar::scan_result(int ret)
 {
+    qDebug() << ret;
     btnScan->setText("扫描");
     btnScan->setStyleSheet("QPushButton{background-color: rgb(232,160,73);border-radius:28px;color:rgb(232,232,232);}");
     emit send_Scan_End();
