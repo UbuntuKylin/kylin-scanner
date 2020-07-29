@@ -70,7 +70,7 @@ ScanSet::ScanSet(QWidget *parent)
     line3->setMaximumWidth(230);
     line3->setMinimumWidth(230);
     line3->setFrameShape(QFrame::HLine);
-    line3->setStyleSheet("QFrame{color:rgb(32,30,29)}");
+    line3->setStyleSheet("QFrame{color:rgb(32,30,29)}"); // 分割线的颜色
 
     line4 = new QFrame();
     line4->setObjectName(QString::fromUtf8("line4"));
@@ -448,7 +448,7 @@ void ScanSet::setKylinLable()
     }
     textType->setFixedSize(180,32);
 
-    textName->setText(tr("Scan filename"));
+    textName->setText("scanner01");
     textName->setStyleSheet("QLineEdit{border:1px solid #0D0400;background-color:rgb(15,08,01);color:rgb(232,232,232);border-radius:4px;}");
     textName->setFixedSize(180,32);
 }

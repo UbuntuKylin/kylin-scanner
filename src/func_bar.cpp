@@ -39,6 +39,17 @@ FuncBar::FuncBar(QWidget *parent)
     labRectify = new QLabel();
     labOrc = new QLabel();
 
+    labMovieScan = new QLabel();
+    //labMovieScan->resize(56, 56); // 最开始则隐藏
+    labMovieScan->setFixedSize(56, 56);
+    labMovieScan->hide();
+    movieScan = new QMovie;
+    movieScan->setFileName(":/icon/icon/scanner.gif");
+    movieScan->setCacheMode(QMovie::CacheAll);
+    QSize size = labMovieScan->size();
+    movieScan->setScaledSize(size);
+    labMovieScan->setMovie(movieScan);
+
     setFontSize(labNorScan,10);
     setFontSize(labBeautify,10);
     setFontSize(labRectify,10);
@@ -156,6 +167,8 @@ FuncBar::FuncBar(QWidget *parent)
     hBoxLay2->setContentsMargins(26,0,30,0);
 
     hBoxLay3->setSpacing(0);
+    hBoxLay3->addWidget(labMovieScan);
+    hBoxLay3->addSpacing(0);
     hBoxLay3->addWidget(btnScan);
     hBoxLay3->setContentsMargins(30,0,189,0);
     hBoxLay3->addStretch();
@@ -333,8 +346,17 @@ void FuncBar::on_btnScan_clicked()
     if(instance.getKylinSaneStatus() == true)
     {
         thread.start();
-        btnScan->setText(" ");
-        btnScan->setStyleSheet("QPushButton{image: url(:/icon/icon/scanner.gif);border-radius:28px;}");
+        qDebug() << "btnScan: " << btnScan->size() << btnScan->pos() << btnScan->geometry();
+
+        btnScan->hide();
+        btnScan->resize(0,0);
+        labMovieScan->resize(56, 56);
+        labMovieScan->show();
+        movieScan->start();
+
+//        btnScan->setText(" ");
+//        btnScan->setStyleSheet("QPushButton{image: url(:/icon/icon/scanner.gif);border-radius:28px;}");
+
         cout << "scan()" <<endl;
     }
 
@@ -386,8 +408,14 @@ void FuncBar::on_btnBeauty_clicked()
 void FuncBar::scan_result(int ret)
 {
     qDebug() << ret;
+    btnScan->show();
     btnScan->setText("扫描");
     btnScan->setStyleSheet("QPushButton{background-color: rgb(232,160,73);border-radius:28px;color:rgb(232,232,232);}");
+
+    movieScan->stop();
+    labMovieScan->resize(0, 0);
+    labMovieScan->hide();
+
     emit send_Scan_End();
 }
 

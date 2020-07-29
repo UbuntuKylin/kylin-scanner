@@ -41,7 +41,8 @@ Widget::Widget(QWidget *parent)
     line =  new QFrame();
     line->setObjectName(QString::fromUtf8("line"));
     line->setGeometry(QRect(0, 32, 860, 1));
-    line->setFrameShape(QFrame::HLine); line->setStyleSheet("QFrame{color:rgb(32,30,29)}");
+    line->setFrameShape(QFrame::HLine);
+    line->setStyleSheet("QFrame{color:rgb(32,30,29)}");
 
 
     pFuncBar = new  FuncBar();

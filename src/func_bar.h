@@ -30,6 +30,8 @@
 #include <QInputEvent>
 #include <QStack>
 #include <QThread>
+#include <QMovie>
+#include <QTextDocument>
 #include "kylin_sane.h"
 #include "embelish.h"
 
@@ -40,6 +42,44 @@ public:
     void run() Q_DECL_OVERRIDE;
 signals:
     void scanFinished(int);
+};
+
+class TOOTBtn : public QPushButton
+{
+    Q_OBJECT
+public:
+    TOOTBtn(const QString &imgPath, const QString &label, QWidget *parent = 0 )
+        : QPushButton(parent), _label(label)
+    {
+        if(!imgPath.isEmpty()){
+        _movie = new QMovie(imgPath, QByteArray(), this);
+        connect(_movie, SIGNAL(frameChanged(int)), this, SLOT(iconChged(int)));
+        _movie->start();
+       }
+    }
+
+private slots:
+    void iconChged(int)
+    {
+        QTextDocument Text;
+        Text.setHtml(_label);
+
+
+        QPixmap currFrame = _movie->currentPixmap();
+        QPixmap pixmap(Text.size().width(), currFrame.height());
+        pixmap.fill( Qt::transparent );
+        QPainter painter( &pixmap );
+        painter.drawPixmap(( pixmap.width()-currFrame.width()) / 2  ,
+                           ( pixmap.height()-currFrame.height()) / 2, currFrame );
+        Text.drawContents(&painter, pixmap.rect());
+
+        setIcon(QIcon( pixmap));
+        setIconSize(pixmap.rect().size());
+    }
+
+private:
+    QMovie *_movie;
+    QString _label;
 };
 
 class FuncBar : public QWidget
@@ -66,6 +106,8 @@ private:
     QPushButton *btnRectify;
     QPushButton *btnOrc;
     QPushButton *btnScan;
+    QMovie *movieScan; // 加载扫描动态图片GIF
+    QLabel *labMovieScan; // 加载扫描动态图片标签
     QLabel *labNorScan;
     QLabel *labBeautify;
     QLabel *labRectify;

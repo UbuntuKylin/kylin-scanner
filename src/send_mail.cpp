@@ -72,7 +72,7 @@ no_mail::no_mail(QWidget *parent) :
     line->setMaximumWidth(260);
     line->setMinimumWidth(260);
     line->setFrameShape(QFrame::HLine);
-    line->setStyleSheet("QLabel{color:rgb(32,30,29)}");
+    line->setStyleSheet("QFrame{color:rgb(32,30,29)}");
 
     btnOk->setText(tr("Go to install"));
     btnOk->setFixedSize(120,36);

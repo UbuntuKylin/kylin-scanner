@@ -48,7 +48,7 @@ mark_dialog::mark_dialog(QWidget *parent) :
     line->setMaximumWidth(288);
     line->setMinimumWidth(288);
     line->setFrameShape(QFrame::HLine);
-    line->setStyleSheet("QLabel{color:rgb(32,30,29)}");
+    line->setStyleSheet("QFrame{color:rgb(32,30,29)}");
 
     btnOk->setText(tr("Confirm"));
     btnOk->setFixedSize(120,36);
