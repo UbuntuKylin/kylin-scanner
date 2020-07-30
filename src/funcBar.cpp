@@ -15,7 +15,7 @@
 * along with this program; if not, see <http://www.gnu.org/licenses/&gt;.
 *
 */
-#include "func_bar.h"
+#include "funcBar.h"
 
 FuncBar::FuncBar(QWidget *parent)
     : QWidget(parent)
@@ -182,17 +182,17 @@ FuncBar::FuncBar(QWidget *parent)
     setLayout(hBoxLay4);
 
     // For orc
-    connect(btnOrc,SIGNAL(clicked()),this,SLOT(on_btnOrc_clicked()));
+    connect(btnOrc,SIGNAL(clicked()),this,SLOT(onBtnOrcClicked()));
 
     // For scan
-    connect(btnScan, SIGNAL(clicked()), this, SLOT(on_btnScan_clicked()));
+    connect(btnScan, SIGNAL(clicked()), this, SLOT(onBtnScanClicked()));
 
     // For rectify
-    connect(btnRectify, SIGNAL(clicked()), this, SLOT(on_btnRectify_clicked()));
+    connect(btnRectify, SIGNAL(clicked()), this, SLOT(onBtnRectifyClicked()));
 
     // For beauty
-    connect(btnBeautify, SIGNAL(clicked()), this, SLOT(on_btnBeauty_clicked()));
-    connect(&thread,SIGNAL(scanFinished(int)),this,SLOT(scan_result(int)));
+    connect(btnBeautify, SIGNAL(clicked()), this, SLOT(onBtnBeautyClicked()));
+    connect(&thread,SIGNAL(scanFinishedFuncBar(int)),this,SLOT(scanResult(int)));
 }
 
 FuncBar::~FuncBar()
@@ -214,7 +214,7 @@ void FuncBar::keyPressEvent(QKeyEvent *e)
                                           "QPushButton:hover{image: url(:/icon/icon/orc.png);border:none;background-color:rgb(39,208,127);border-radius:6px;}"
                                             "QPushButton:checked{image: url(:/icon/icon/orc.png);border:none;background-color:rgb(39,208,127);border-radius:6px;}");
 
-                emit send_Orc_End();
+                emit sendOrcEnd();
             }
             if(flagName == "flagBeautify")
             {
@@ -222,7 +222,7 @@ void FuncBar::keyPressEvent(QKeyEvent *e)
                 btnBeautify->setStyleSheet("QPushButton{image: url(:/icon/icon/beautify.png);border:none;background-color:rgb(15,08,01);border-radius:6px;}"
                                           "QPushButton:hover{image: url(:/icon/icon/beautify.png);border:none;background-color:rgb(39,208,127);border-radius:6px;}"
                                             "QPushButton:checked{image: url(:/icon/icon/beautify.png);border:none;background-color:rgb(39,208,127);border-radius:6px;}");
-                emit send_Beautify_End();
+                emit sendBeautifyEnd();
             }
             if(flagName == "flagRectify")
             {
@@ -230,7 +230,7 @@ void FuncBar::keyPressEvent(QKeyEvent *e)
                 btnRectify->setStyleSheet("QPushButton{image: url(:/icon/icon/rectify.png);border:none;background-color:rgb(15,08,01);border-radius:6px;}"
                                           "QPushButton:hover{image: url(:/icon/icon/rectify.png);border:none;background-color:rgb(39,208,127);border-radius:6px;}"
                                             "QPushButton:checked{image: url(:/icon/icon/rectify.png);border:none;background-color:rgb(39,208,127);border-radius:6px;}");
-                send_Rectify_End();
+                sendRectifyEnd();
             }
         }
     }
@@ -318,7 +318,7 @@ void FuncBar::setStackClear()
 }
 
 //QString orc_text;
-void FuncBar::on_btnOrc_clicked()
+void FuncBar::onBtnOrcClicked()
 {
     if(flagOrc == 0)
     {
@@ -326,7 +326,7 @@ void FuncBar::on_btnOrc_clicked()
         stack.push("flagOrc");
         btnOrc->setStyleSheet("QPushButton{image: url(:/icon/icon/orc.png);border:none;background-color:rgb(39,208,127);border-radius:6px;}");
 
-        emit send_Orc_Begin();
+        emit sendOrcBegin();
     }
     else
     {
@@ -336,11 +336,11 @@ void FuncBar::on_btnOrc_clicked()
                                   "QPushButton:hover{image: url(:/icon/icon/orc.png);border:none;background-color:rgb(39,208,127);border-radius:6px;}"
                                     "QPushButton:checked{image: url(:/icon/icon/orc.png);border:none;background-color:rgb(39,208,127);border-radius:6px;}");
 
-        emit send_Orc_End();
+        emit sendOrcEnd();
     }
 }
 
-void FuncBar::on_btnScan_clicked()
+void FuncBar::onBtnScanClicked()
 {
     KylinSane& instance = KylinSane::getInstance();
     if(instance.getKylinSaneStatus() == true)
@@ -362,7 +362,7 @@ void FuncBar::on_btnScan_clicked()
 
 }
 
-void FuncBar::on_btnRectify_clicked()
+void FuncBar::onBtnRectifyClicked()
 {
     qDebug()<<"send_Rectify_Begin"<<endl;
     if(flagRectify == 0)
@@ -370,7 +370,7 @@ void FuncBar::on_btnRectify_clicked()
         flagRectify = 1;
         stack.push("flagRectify");
         btnRectify->setStyleSheet("QPushButton{image: url(:/icon/icon/rectify.png);border:none;background-color:rgb(39,208,127);border-radius:6px;}");
-        emit send_Rectify_Begin();
+        emit sendRectifyBegin();
     }
     else
     {
@@ -379,12 +379,12 @@ void FuncBar::on_btnRectify_clicked()
         btnRectify->setStyleSheet("QPushButton{image: url(:/icon/icon/rectify.png);border:none;background-color:rgb(15,08,01);border-radius:6px;}"
                                   "QPushButton:hover{image: url(:/icon/icon/rectify.png);border:none;background-color:rgb(39,208,127);border-radius:6px;}"
                                     "QPushButton:checked{image: url(:/icon/icon/rectify.png);border:none;background-color:rgb(39,208,127);border-radius:6px;}");
-        emit send_Rectify_End();
+        emit sendRectifyEnd();
     }
 }
 
 
-void FuncBar::on_btnBeauty_clicked()
+void FuncBar::onBtnBeautyClicked()
 {
     qDebug() << "flagBeauty = " << flagBeautify;
     if(flagBeautify == 0)
@@ -392,7 +392,7 @@ void FuncBar::on_btnBeauty_clicked()
         flagBeautify = 1;
         stack.push("flagBeautify");
         btnBeautify->setStyleSheet("QPushButton{image: url(:/icon/icon/beautify.png);border:none;background-color:rgb(39,208,127);border-radius:6px;}");
-        emit send_Beautify_Begin();
+        emit sendBeautifyBegin();
     }
     else
     {
@@ -401,11 +401,11 @@ void FuncBar::on_btnBeauty_clicked()
         btnBeautify->setStyleSheet("QPushButton{image: url(:/icon/icon/beautify.png);border:none;background-color:rgb(15,08,01);border-radius:6px;}"
                                   "QPushButton:hover{image: url(:/icon/icon/beautify.png);border:none;background-color:rgb(39,208,127);border-radius:6px;}"
                                     "QPushButton:checked{image: url(:/icon/icon/beautify.png);border:none;background-color:rgb(39,208,127);border-radius:6px;}");
-        emit send_Beautify_End();
+        emit sendBeautifyEnd();
     }
 }
 
-void FuncBar::scan_result(int ret)
+void FuncBar::scanResult(int ret)
 {
     qDebug() << ret;
     btnScan->show();
@@ -416,18 +416,18 @@ void FuncBar::scan_result(int ret)
     labMovieScan->resize(0, 0);
     labMovieScan->hide();
 
-    emit send_Scan_End();
+    emit sendScanEnd();
 }
 
-void threadScan::run()
+void ThreadScanFuncBar::run()
 {
     KylinSane& instance = KylinSane::getInstance();
     if(instance.getKylinSaneStatus() == true)
     {
         int ret = 0;
-        ret = instance.start_scanning(instance.userInfo);
+        ret = instance.startScanning(instance.userInfo);
         qDebug()<<"start_scanning end!!!";
-        emit scanFinished(ret);
+        emit scanFinishedFuncBar(ret);
     }
     quit();
 }

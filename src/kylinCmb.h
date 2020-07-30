@@ -21,12 +21,13 @@
 #include <QComboBox>
 #include <QMouseEvent>
 
-class KylinComboBox : public QComboBox
+class KylinCmb : public QComboBox
 {
     Q_OBJECT
+
 public:
-    explicit KylinComboBox(QWidget *parent = nullptr);
-    ~KylinComboBox();
+    explicit KylinCmb(QWidget *parent = nullptr);
+    ~KylinCmb();
 
     void colorGray();
     void colorNormal();
@@ -40,7 +41,6 @@ protected:
 signals:
     void clicked();  // 自定义点击信号，在mousePressEvent事件发生时触发
 
-public slots:
 };
 
 #endif // KYLINCOMBOBOX_H

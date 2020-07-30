@@ -15,9 +15,9 @@
 * along with this program; if not, see <http://www.gnu.org/licenses/&gt;.
 *
 */
-#include "mark_dialog.h"
+#include "waterMarkDlg.h"
 
-mark_dialog::mark_dialog(QWidget *parent) :
+WaterMarkDialog::WaterMarkDialog(QWidget *parent) :
     QDialog(parent)
 {
     setWindowFlags(Qt::FramelessWindowHint | Qt::Dialog);
@@ -68,7 +68,7 @@ mark_dialog::mark_dialog(QWidget *parent) :
     hBoxLayout->addWidget(btnCancel);
     hBoxLayout->setContentsMargins(16,0,16,0);
 
-    QPalette pal(palette());
+    QPalette pal(palette()); // 水印对话框背景
     pal.setColor(QPalette::Background, QColor(47, 44, 43));
     setAutoFillBackground(true);
     setPalette(pal);
@@ -86,17 +86,11 @@ mark_dialog::mark_dialog(QWidget *parent) :
     QBitmap bitMap(width(),height()); // A bit map has the same size with current widget
 
     bitMap.fill();
-
     QPainter painter(&bitMap);
-
-    painter.setBrush(Qt::black);
-
+    painter.setBrush(Qt::red);
     painter.setPen(Qt::NoPen); // Any color that is not QRgb(0,0,0) is right
-
     painter.setRenderHint(QPainter::Antialiasing);
-
     painter.drawRoundedRect(bitMap.rect(),6,6); //设置圆角弧度
-
     setMask(bitMap);
 
     setLayout(vBoxLayout);
@@ -104,12 +98,12 @@ mark_dialog::mark_dialog(QWidget *parent) :
     connect(btnCancel,SIGNAL(clicked()),this,SLOT(reject()));
 }
 
-mark_dialog::~mark_dialog()
+WaterMarkDialog::~WaterMarkDialog()
 {
 
 }
 
-QString mark_dialog::get_lineedit()
+QString WaterMarkDialog::getLineEdit()
 {
     return lineedit->text();
 }

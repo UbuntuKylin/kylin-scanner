@@ -26,9 +26,9 @@
 #include <QPixmap>
 #include <QLineEdit>
 #include <QFile>
-#include "kylincombobox.h"
-#include "send_mail.h"
-#include "kylin_sane.h"
+#include "kylinCmb.h"
+#include "sendMail.h"
+#include "kylinSane.h"
 
 class ScanSet  : public QWidget
 {
@@ -38,67 +38,27 @@ public:
     explicit ScanSet(QWidget *parent = nullptr);
     ~ScanSet();
 
-    /**
-     * @brief setKylinComboBox 统一设置麒麟扫描组合框ComboBox
-     */
     void setKylinComboBox(bool curIndexChanged);
-
-    /**
-     * @brief setKylinComboBoxScanName 设置麒麟扫描组合框的扫描设备名
-     */
     void setKylinComboBoxScanDeviceName();
-
     void setKylinScanSetNotEnable();
     void setKylinScanSetEnable();
-
-    /**
-     * @brief setKylinComboBoxAttributes 设置组合框属性
-     * @param combo 需要属性设置的组合框
-     * @param strList 组合框中文本框值
-     */
-    void setKylinComboBoxAttributes(KylinComboBox *combo, QStringList strList);
-
-    /**
-     * @brief setKylinLable 统一设置麒麟扫描标签Label
-     */
+    void setKylinComboBoxAttributes(KylinCmb *combo, QStringList strList);
     void setKylinLable();
-
-    /**
-     * @brief setKylinLabelAttributes 设置标签属性
-     * @param label 需要属性设置的标签
-     */
     void setKylinLabelAttributes(QLabel *label);
-
-    /**
-     * @brief setKylinHBoxLayout 统一设置麒麟扫描水平布局HBoxLayout
-     */
     void setKylinHBoxLayout();
-
-    /**
-     * @brief setKylinHBoxLayoutAttributes 设置水平布局属性： 标签1和标签2
-     * @param layout 需要设置的水平布局
-     * @param labelFirst 水平布局中的第一个标签
-     * @param labelSecond 水平布局中的第二个标签
-     */
     void setKylinHBoxLayoutAttributes(QHBoxLayout *layout, QLabel *labelFirst, QLabel *labelSecond);
-    /**
-     * @brief setKylinHBoxLayoutAttributes 重载设置水平布局属性： 标签和组合框
-     * @param layout 需要设置的水平布局
-     * @param labelFirst 水平布局中的标签
-     * @param combo 水平布局中的组合框
-     */
-    void setKylinHBoxLayoutAttributes(QHBoxLayout *layout, QLabel *labelFirst, KylinComboBox *combo);
+    void setKylinHBoxLayoutAttributes(QHBoxLayout *layout, QLabel *labelFirst, KylinCmb *combo);
+    void setFontSize(QLabel *label, int n);
+
     QString getTextResolution();
     QString getTextSize();
     QString getTextFormat();
     QString getTextName();
     QString getTextLocation();
-    void setFontSize(QLabel *label, int n);
 
 Q_SIGNALS:
-//signals:
-    void save_image_signal(QString);
-    void open_device_status(bool);
+    void saveImageSignal(QString);
+    void openDeviceStatusSignal(bool);
 
 private:
     QLabel *labDevice;              /**< 设备标签 */
@@ -117,14 +77,13 @@ private:
     QPushButton *btnSave;           /**< 另存为 */
     QPushButton *btnLocation;       /**< 扫描至 */
 
-    KylinComboBox *textDevice;      /**< 设备 */
+    KylinCmb *textDevice;      /**< 设备 */
     QLabel *textType;               /**< 类型 */
-    KylinComboBox *textColor;       /**< 色彩 */
-    KylinComboBox *textResolution;  /**< 分辨率 */
-    KylinComboBox *textSize;        /**< 尺寸 */
-    KylinComboBox *textFormat;      /**< 格式 */
+    KylinCmb *textColor;       /**< 色彩 */
+    KylinCmb *textResolution;  /**< 分辨率 */
+    KylinCmb *textSize;        /**< 尺寸 */
+    KylinCmb *textFormat;      /**< 格式 */
     QLineEdit *textName;            /**< 名称 */
-
 
     QHBoxLayout *hBoxDevice;
     QHBoxLayout *hBoxType;
@@ -143,17 +102,16 @@ private:
     int flag = 0;
 
 public slots:
-    void modify_save_button();
+    void modifyBtnSave();
 
 private slots:
-    void on_btnLocation_clicked();
-    void on_btnMail_clicked();
-    void on_btnSave_clicked();
-
-    void on_textDevice_current_text_changed(QString device);
-    void on_textColor_current_text_changed(QString color);
-    void on_textResolution_current_text_changed(QString resolution);
-    void on_textSize_current_text_changed(QString size);
+    void onBtnLocationClicked();
+    void onBtnMailClicked();
+    void onBtnSaveClicked();
+    void onTextDeviceCurrentTextChanged(QString device);
+    void onTextColorCurrentTextChanged(QString color);
+    void onTextResolutionCurrentTextChanged(QString resolution);
+    void onTextSizeCurrentTextChanged(QString size);
 };
 
 #endif // SCAN_SET_H

@@ -29,13 +29,15 @@
 #include <QPainter>
 #include <QBitmap>
 
-class mark_dialog : public QDialog
+class WaterMarkDialog : public QDialog
 {
     Q_OBJECT
+
 public:
-    explicit mark_dialog(QWidget *parent = nullptr);
-    ~mark_dialog();
-    QString get_lineedit();
+    explicit WaterMarkDialog(QWidget *parent = nullptr);
+    ~WaterMarkDialog();
+    QString getLineEdit();
+
 private:
     QLabel *label;
     QLineEdit *lineedit;
@@ -44,8 +46,6 @@ private:
     QPushButton *btnCancel;
     QHBoxLayout *hBoxLayout;
     QVBoxLayout *vBoxLayout;
-
-
 };
 
 #endif // MARK_DIALOG_H

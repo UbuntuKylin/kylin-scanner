@@ -33,32 +33,32 @@ LIBS +=-llept
 LIBS +=-ltesseract
 
 SOURCES += \
-    kylincombobox.cpp \
+    funcBar.cpp \
+    kylinCmb.cpp \
+    kylinLbl.cpp \
+    kylinSane.cpp \
         main.cpp \
     rectify.cpp \
+    scanDisplay.cpp \
+    scanSet.cpp \
+    sendMail.cpp \
+    titleBar.cpp \
+    waterMarkDlg.cpp \
         widget.cpp \
-    title_bar.cpp \
-    func_bar.cpp \
-    scan_set.cpp \
-    scan_display.cpp \
-    my_label.cpp \
-    mark_dialog.cpp \
-    send_mail.cpp \
-    kylin_sane.cpp \
     embelish.cpp
 
 HEADERS += \
-    kylincombobox.h \
+    funcBar.h \
+    kylinCmb.h \
+    kylinLbl.h \
+    kylinSane.h \
     rectify.h \
+    scanDisplay.h \
+    scanSet.h \
+    sendMail.h \
+    titleBar.h \
+    waterMarkDlg.h \
         widget.h \
-    title_bar.h \
-    func_bar.h \
-    scan_set.h \
-    scan_display.h \
-    my_label.h \
-    mark_dialog.h \
-    send_mail.h \
-    kylin_sane.h \
     embelish.h
 
 # Default rules for deployment.

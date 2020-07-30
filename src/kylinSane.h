@@ -40,7 +40,7 @@ using namespace std;
 #define PATH_MAX 1024
 #endif
 
-struct device_info
+struct ScanDeviceInfo
 {
     bool status;			// 是否存在设备，存在status值为true，否则为false
     QStringList name;		// 设备名
@@ -50,7 +50,7 @@ struct device_info
     QStringList size; 		// 设备支持的尺寸
 };
 
-struct user_selected_info
+struct UserSelectedInfo
 {
     QString name;			// 用户选择设备名
     QString color;			// 用户选择色彩
@@ -97,15 +97,15 @@ public:
     void setKylinSaneSizes(QStringList size);
     void setKylinSaneColors(QStringList color);
 
-    device_info find_device();
-    device_info open_device(int index);
-    int start_scanning(user_selected_info info);
+    ScanDeviceInfo findScanDevice();
+    ScanDeviceInfo openScanDevice(int index);
+    int startScanning(UserSelectedInfo info);
 
     SANE_Handle handle;
-    struct user_selected_info userInfo;
+    struct UserSelectedInfo userInfo;
 
 private:
-    struct device_info devicesInfo;
+    struct ScanDeviceInfo devicesInfo;
 
 public slots:
 };
@@ -114,22 +114,6 @@ public slots:
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-void init(); // init scan
-
-SANE_Status get_devices(const SANE_Device ***device_list); // Get all devices
-
-SANE_Status open_sane_device(SANE_Device *device, SANE_Handle *sane_handle); // Open a device
-
-SANE_Status start_scan(SANE_Handle sane_handle, SANE_String_Const fileName); // start scanning
-
-void cancle_scan(SANE_Handle sane_handle); // cancel scanning
-
-void close_device(SANE_Handle sane_handle); // close scan device
-
-void my_sane_exit(); // Release scan resources
-
-SANE_Status kylin_display_scan_parameters(SANE_Handle device); // display parameters
 
 void kylinNorScanFindDevice(); // open scan device
 

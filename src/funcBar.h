@@ -32,54 +32,18 @@
 #include <QThread>
 #include <QMovie>
 #include <QTextDocument>
-#include "kylin_sane.h"
+#include "kylinSane.h"
 #include "embelish.h"
 
-class threadScan : public QThread
+class ThreadScanFuncBar : public QThread
 {
     Q_OBJECT
+
 public:
     void run() Q_DECL_OVERRIDE;
+
 signals:
-    void scanFinished(int);
-};
-
-class TOOTBtn : public QPushButton
-{
-    Q_OBJECT
-public:
-    TOOTBtn(const QString &imgPath, const QString &label, QWidget *parent = 0 )
-        : QPushButton(parent), _label(label)
-    {
-        if(!imgPath.isEmpty()){
-        _movie = new QMovie(imgPath, QByteArray(), this);
-        connect(_movie, SIGNAL(frameChanged(int)), this, SLOT(iconChged(int)));
-        _movie->start();
-       }
-    }
-
-private slots:
-    void iconChged(int)
-    {
-        QTextDocument Text;
-        Text.setHtml(_label);
-
-
-        QPixmap currFrame = _movie->currentPixmap();
-        QPixmap pixmap(Text.size().width(), currFrame.height());
-        pixmap.fill( Qt::transparent );
-        QPainter painter( &pixmap );
-        painter.drawPixmap(( pixmap.width()-currFrame.width()) / 2  ,
-                           ( pixmap.height()-currFrame.height()) / 2, currFrame );
-        Text.drawContents(&painter, pixmap.rect());
-
-        setIcon(QIcon( pixmap));
-        setIconSize(pixmap.rect().size());
-    }
-
-private:
-    QMovie *_movie;
-    QString _label;
+    void scanFinishedFuncBar(int);
 };
 
 class FuncBar : public QWidget
@@ -89,16 +53,17 @@ class FuncBar : public QWidget
 public:
     explicit FuncBar(QWidget *parent = nullptr);
     ~FuncBar();
+
+    int flagBeautify = 0; //一键美化标志
+    int flagRectify = 0; //智能纠偏标志
+    int flagOrc = 0; //文字识别标志
+
     void keyPressEvent(QKeyEvent *e);
     void setKylinScanSetNotEnable();
     void setKylinScanSetEnable();
     void setBtnScanEnable();
     void setFontSize(QLabel *label, int n);
     void setStackClear();
-    int flagBeautify = 0; //一键美化标志
-    int flagRectify = 0; //智能纠偏标志
-    int flagOrc = 0; //文字识别标志
-
 
 private:
     QPushButton *btnNorScan ;
@@ -123,24 +88,23 @@ private:
     QHBoxLayout *hBoxLay3;
     QHBoxLayout *hBoxLay4;
     QStack<QString> stack;
-    threadScan thread;
-
+    ThreadScanFuncBar thread;
 
 private slots:
-    void on_btnOrc_clicked();
-    void on_btnScan_clicked();
-    void on_btnRectify_clicked();
-    void on_btnBeauty_clicked();
-    void scan_result(int ret);
+    void onBtnOrcClicked();
+    void onBtnScanClicked();
+    void onBtnRectifyClicked();
+    void onBtnBeautyClicked();
+    void scanResult(int ret);
 
 Q_SIGNALS:
-    void send_Orc_Begin();
-    void send_Orc_End();
-    void send_Scan_End();
-    void send_Rectify_Begin();
-    void send_Rectify_End();
-    void send_Beautify_Begin();
-    void send_Beautify_End();
+    void sendOrcBegin();
+    void sendOrcEnd();
+    void sendScanEnd();
+    void sendRectifyBegin();
+    void sendRectifyEnd();
+    void sendBeautifyBegin();
+    void sendBeautifyEnd();
 
 };
 #endif // FUNC_BAR_H

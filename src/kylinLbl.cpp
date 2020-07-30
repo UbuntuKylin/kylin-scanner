@@ -15,9 +15,9 @@
 * along with this program; if not, see <http://www.gnu.org/licenses/&gt;.
 *
 */
-#include "my_label.h"
+#include "kylinLbl.h"
 
-my_label::my_label(QLabel *parent)
+KylinLbl::KylinLbl(QLabel *parent)
     : QLabel(parent)
 {
     x1 = 0;
@@ -26,18 +26,16 @@ my_label::my_label(QLabel *parent)
     y2 = 0;
 }
 
-void my_label::paintEvent(QPaintEvent *event)
+void KylinLbl::paintEvent(QPaintEvent *event)
 {
     //comment before
     QLabel::paintEvent(event); //绘制背景的图片
-
     QPainter painter(this);
-
     painter.setPen(QPen(Qt::green, 1));
     painter.drawRect(QRect(x1, y1, x2 - x1, y2 - y1));
 }
 
-void my_label::mousePressEvent(QMouseEvent *event)
+void KylinLbl::mousePressEvent(QMouseEvent *event)
 {
     x1 = event->pos().x();
     y1 = event->pos().y();
@@ -46,7 +44,7 @@ void my_label::mousePressEvent(QMouseEvent *event)
     QApplication::setOverrideCursor(cursor);
 }
 
-void my_label::mouseReleaseEvent(QMouseEvent *event)
+void KylinLbl::mouseReleaseEvent(QMouseEvent *event)
 {
     x2 = event->pos().x(); //鼠标相对于所在控件的位置
     y2 = event->pos().y();
@@ -54,7 +52,7 @@ void my_label::mouseReleaseEvent(QMouseEvent *event)
     QApplication::restoreOverrideCursor();
 }
 
-void my_label::mouseMoveEvent(QMouseEvent *event)
+void KylinLbl::mouseMoveEvent(QMouseEvent *event)
 {
     if (event->buttons() & Qt::LeftButton) {
         x2 = event->pos().x(); //鼠标相对于所在控件的位置
@@ -62,7 +60,3 @@ void my_label::mouseMoveEvent(QMouseEvent *event)
         update();
     }
 }
-
-
-
-

@@ -30,17 +30,19 @@
 #include <QPixmap>
 #include <QImage>
 
-class my_label  :   public QLabel
+class KylinLbl  :   public QLabel
 {
-//    Q_OBJECT
+    Q_OBJECT
+
 public:
-    my_label(QLabel *parent = nullptr);
+    KylinLbl(QLabel *parent = nullptr);
+
+    int x1, y1, x2, y2;
+
     void paintEvent(QPaintEvent* event);
     void mousePressEvent(QMouseEvent* event);
     void mouseReleaseEvent(QMouseEvent* event);
     void mouseMoveEvent(QMouseEvent* event);
-    int x1, y1, x2, y2;
-
     void savePicture(QString path, int filename);
 
 public:
@@ -48,7 +50,6 @@ public:
     int getY1() {return y1;}
     int getX2() {return x2;}
     int getY2() {return y2;}
-
 };
 
 #endif // MY_LABEL_H

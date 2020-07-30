@@ -15,7 +15,7 @@
 * along with this program; if not, see <http://www.gnu.org/licenses/&gt;.
 *
 */
-#include "title_bar.h"
+#include "titleBar.h"
 
 TitleBar::TitleBar(QWidget *parent)
     : QWidget(parent)

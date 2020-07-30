@@ -15,14 +15,13 @@
 * along with this program; if not, see <http://www.gnu.org/licenses/&gt;.
 *
 */
-#include "scan_set.h"
+#include "scanSet.h"
 
 QString curPath;
 
 ScanSet::ScanSet(QWidget *parent)
     : QWidget(parent)
 {
-
     setFixedWidth(260);
   //  setFixedHeight(567);
     labDevice = new QLabel();
@@ -41,12 +40,12 @@ ScanSet::ScanSet(QWidget *parent)
     btnSave = new QPushButton();
     btnLocation = new QPushButton();
 
-    textDevice = new KylinComboBox();
+    textDevice = new KylinCmb();
     textType = new QLabel();
-    textColor = new KylinComboBox();
-    textResolution = new KylinComboBox();
-    textSize = new KylinComboBox();
-    textFormat = new KylinComboBox();
+    textColor = new KylinCmb();
+    textResolution = new KylinCmb();
+    textSize = new KylinCmb();
+    textFormat = new KylinCmb();
     textName = new QLineEdit();
 
     hBoxDevice = new QHBoxLayout();
@@ -162,25 +161,25 @@ ScanSet::ScanSet(QWidget *parent)
     instance.userInfo.resolution = curResolution;
 
     // For save location
-    connect(btnLocation,SIGNAL(clicked()),this,SLOT(on_btnLocation_clicked()));
+    connect(btnLocation,SIGNAL(clicked()),this,SLOT(onBtnLocationClicked()));
 
     // For send email
-    connect(btnMail,SIGNAL(clicked()),this,SLOT(on_btnMail_clicked()));
+    connect(btnMail,SIGNAL(clicked()),this,SLOT(onBtnMailClicked()));
 
     // For save file
-    connect(btnSave,SIGNAL(clicked()),this,SLOT(on_btnSave_clicked()));
+    connect(btnSave,SIGNAL(clicked()),this,SLOT(onBtnSaveClicked()));
 
     // For device name changed
-    connect(textDevice, SIGNAL(currentTextChanged(QString)), this, SLOT(on_textDevice_current_text_changed(QString)));
+    connect(textDevice, SIGNAL(currentTextChanged(QString)), this, SLOT(onTextDeviceCurrentTextChanged(QString)));
 
     // For color mode changed
-    connect(textColor, SIGNAL(currentTextChanged(QString)), this, SLOT(on_textColor_current_text_changed(QString)));
+    connect(textColor, SIGNAL(currentTextChanged(QString)), this, SLOT(onTextColorCurrentTextChanged(QString)));
 
     // For resolution changed
-    connect(textResolution, SIGNAL(currentTextChanged(QString)), this, SLOT(on_textResolution_current_text_changed(QString)));
+    connect(textResolution, SIGNAL(currentTextChanged(QString)), this, SLOT(onTextResolutionCurrentTextChanged(QString)));
 
     // For size changed
-    connect(textSize, SIGNAL(currentTextChanged(QString)), this, SLOT(on_textSize_current_text_changed(QString)));
+    connect(textSize, SIGNAL(currentTextChanged(QString)), this, SLOT(onTextSizeCurrentTextChanged(QString)));
 }
 
 ScanSet::~ScanSet()
@@ -188,7 +187,12 @@ ScanSet::~ScanSet()
 
 }
 
-void ScanSet::setKylinComboBoxAttributes(KylinComboBox *combo, QStringList strList)
+/**
+ * @brief setKylinComboBoxAttributes 设置组合框属性
+ * @param combo 需要属性设置的组合框
+ * @param strList 组合框中文本框值
+ */
+void ScanSet::setKylinComboBoxAttributes(KylinCmb *combo, QStringList strList)
 {
     QListView *listView = new QListView;
 
@@ -201,6 +205,9 @@ void ScanSet::setKylinComboBoxAttributes(KylinComboBox *combo, QStringList strLi
     combo->setView(listView);   //使下拉选项样式生效
 }
  
+/**
+ * @brief setKylinComboBox 统一设置麒麟扫描组合框ComboBox
+ */
 void ScanSet::setKylinComboBox(bool curIndexChanged)
 {
     QStringList strListDevice, strListColor, strListResolution, strListFormat, strListSize,strListLocation;
@@ -300,6 +307,9 @@ void ScanSet::setKylinComboBox(bool curIndexChanged)
     setKylinComboBoxAttributes(textFormat, strListFormat);
 }
 
+/**
+* @brief setKylinComboBoxScanName 设置麒麟扫描组合框的扫描设备名
+ */
 void ScanSet::setKylinComboBoxScanDeviceName()
 {
     QStringList strListDevice;
@@ -396,6 +406,9 @@ void ScanSet::setKylinScanSetEnable()
     }
 }
 
+/**
+ * @brief setKylinLable 统一设置麒麟扫描标签Label
+ */
 void ScanSet::setKylinLable()
 {
     KylinSane& instance = KylinSane::getInstance();
@@ -453,6 +466,10 @@ void ScanSet::setKylinLable()
     textName->setFixedSize(180,32);
 }
 
+/**
+ * @brief setKylinLabelAttributes 设置标签属性
+ * @param label 需要属性设置的标签
+ */
 void ScanSet::setKylinLabelAttributes(QLabel *label)
 {
     label->setAlignment(Qt::AlignRight|Qt::AlignVCenter);
@@ -461,6 +478,9 @@ void ScanSet::setKylinLabelAttributes(QLabel *label)
 }
 
 
+/**
+ * @brief setKylinHBoxLayout 统一设置麒麟扫描水平布局HBoxLayout
+ */
 void ScanSet::setKylinHBoxLayout()
 {
     setKylinHBoxLayoutAttributes(hBoxDevice, labDevice, textDevice);
@@ -516,6 +536,12 @@ void ScanSet::setKylinHBoxLayout()
 
 }
 
+/**
+ * @brief setKylinHBoxLayoutAttributes 设置水平布局属性： 标签1和标签2
+ * @param layout 需要设置的水平布局
+ * @param labelFirst 水平布局中的第一个标签
+ * @param labelSecond 水平布局中的第二个标签
+ */
 void ScanSet::setKylinHBoxLayoutAttributes(QHBoxLayout *layout, QLabel *labelFirst, QLabel *labelSecond)
 {
     layout->setSpacing(0);
@@ -526,7 +552,14 @@ void ScanSet::setKylinHBoxLayoutAttributes(QHBoxLayout *layout, QLabel *labelFir
     layout->addSpacing(16);
 }
 
-void ScanSet::setKylinHBoxLayoutAttributes(QHBoxLayout *layout, QLabel *labelFirst, KylinComboBox *combo)
+
+/**
+ * @brief setKylinHBoxLayoutAttributes 重载设置水平布局属性： 标签和组合框
+ * @param layout 需要设置的水平布局
+ * @param labelFirst 水平布局中的标签
+ * @param combo 水平布局中的组合框
+ */
+void ScanSet::setKylinHBoxLayoutAttributes(QHBoxLayout *layout, QLabel *labelFirst, KylinCmb *combo)
 {
     layout->setSpacing(0);
     layout->addSpacing(16);
@@ -568,7 +601,7 @@ void ScanSet::setFontSize(QLabel *label, int n)
     label->setFont(ft);
 }
 
-void ScanSet::on_btnLocation_clicked()
+void ScanSet::onBtnLocationClicked()
 {
     if(curPath.isEmpty())
         curPath=QDir::homePath() ; //获取家目录的路径
@@ -583,12 +616,12 @@ void ScanSet::on_btnLocation_clicked()
     }
 }
 
-void ScanSet::on_btnMail_clicked()
+void ScanSet::onBtnMailClicked()
 {
     AppList * maillist = getAppIdList(MAILTYPE);
     if(!maillist)
     {
-        no_mail *dialog = new no_mail(this);
+        NoMail *dialog = new NoMail(this);
         int ret= dialog->exec();// 以模态方式显示对话框，用户关闭对话框时返回 DialogCode值
         if(ret==QDialog::Accepted)
         {
@@ -599,15 +632,15 @@ void ScanSet::on_btnMail_clicked()
     }
     else
     {
-        send_mail *dialog = new send_mail(this);
-        dialog->set_btnList();
+        SendMail *dialog = new SendMail(this);
+        dialog->setBtnList();
         dialog->exec();
     }
 }
 
 QString filter="*.jpg;;*.png;;*.pdf;;*.bmp"; //文件过滤器
 
-void ScanSet::on_btnSave_clicked()
+void ScanSet::onBtnSaveClicked()
 {
     //保存文件
     QString dlgTitle=tr("Save as ..."); //对话框标题
@@ -615,10 +648,10 @@ void ScanSet::on_btnSave_clicked()
     QString pathName = curPath + "/" + textName->text();
     QString aFileName=QFileDialog::getSaveFileName(this,dlgTitle,pathName,filter);
     if (!aFileName.isEmpty())
-        emit save_image_signal(aFileName);
+        emit saveImageSignal(aFileName);
 }
 
-void ScanSet::on_textDevice_current_text_changed(QString device)
+void ScanSet::onTextDeviceCurrentTextChanged(QString device)
 {
     bool status = true;
 
@@ -635,22 +668,22 @@ void ScanSet::on_textDevice_current_text_changed(QString device)
     //char *deviceName =
 
     //int index = 1;
-    instance.open_device(index);
+    instance.openScanDevice(index);
 
     status = instance.getKylinSaneStatus();
     if (status)
     {
         qDebug() << "open_device true";
-        emit open_device_status(true);
+        emit openDeviceStatusSignal(true);
     }
     else
     {
         qDebug() << "open_device false";
-        emit open_device_status(false);
+        emit openDeviceStatusSignal(false);
     }
 }
 
-void ScanSet::modify_save_button()
+void ScanSet::modifyBtnSave()
 {
     if(flag == 0)
     {
@@ -665,7 +698,7 @@ void ScanSet::modify_save_button()
     }
 }
 
-void ScanSet::on_textColor_current_text_changed(QString color)
+void ScanSet::onTextColorCurrentTextChanged(QString color)
 {
     KylinSane & instance = KylinSane::getInstance();
 
@@ -685,14 +718,14 @@ void ScanSet::on_textColor_current_text_changed(QString color)
     qDebug() << "color: "<< instance.userInfo.color;
 }
 
-void ScanSet::on_textResolution_current_text_changed(QString resolution)
+void ScanSet::onTextResolutionCurrentTextChanged(QString resolution)
 {
     KylinSane & instance = KylinSane::getInstance();
     instance.userInfo.resolution = resolution;
     qDebug() << "resolution: "<< instance.userInfo.resolution;
 }
 
-void ScanSet::on_textSize_current_text_changed(QString size)
+void ScanSet::onTextSizeCurrentTextChanged(QString size)
 {
     KylinSane & instance = KylinSane::getInstance();
     instance.userInfo.size = size;
