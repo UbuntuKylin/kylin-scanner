@@ -32,16 +32,17 @@
 #include "rectify.h"
 #include "embelish.h"
 #include "kylinSane.h"
+#include "realTimelbl.h"
 
 class myThread : public QThread
 {
     Q_OBJECT
 public:
     void run() Q_DECL_OVERRIDE;
+
 signals:
     void orcFinished();
 };
-
 
 class EditBar  :   public QWidget
 {
@@ -80,7 +81,13 @@ public:
     float setPixmapScaled(QImage img, QLabel *lab);
     void updateWindowSize();
 
+    int m_timerNum = 0; // 计时器执行次数
+    int m_timeScanId; // 正常扫描结束后显示扫描结果定时器id
+//    void showEvent(QShowEvent *event);
+    void timerEvent(QTimerEvent *e);
+
 private:
+    QTimer *timerScan; // 实时显示扫描结果定时器
     QLabel *labInit; // 初始化界面，即空白界面
     QLabel *labConnectError; // 连接或者打开扫描仪出错界面
     QLabel *labConnectErrorText; //连接或者打开扫描仪出错界面
@@ -90,7 +97,7 @@ private:
     KylinLbl *labTailor;         //编辑栏
     QLabel *labOrcLeft;          //文字识别图片显示部分
     QLabel *labOrcRight;         //文字识别文字显示部分
-    QPushButton *btnNormal;      //正长显示界面按钮
+    QPushButton *btnNormal;      //正常显示界面按钮
     QPushButton *btnEditLayout;  //编辑栏展开界面按钮
     QPushButton *btnTailor;      //裁剪界面按钮
 
@@ -129,6 +136,7 @@ public slots:
     void onRectify();
     void onBeautify();
     void switchPage();
+    void timerScanUpdate();
 
 private slots:
     void tailor();
@@ -136,6 +144,9 @@ private slots:
     void symmetry();
     void addWatermark();
     void orcText();
+
+signals:
+    void scanTimerFinished();
 };
 
 #endif // SCAN_DISPLAY_H

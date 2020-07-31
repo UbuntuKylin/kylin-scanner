@@ -30,6 +30,8 @@ ScanDisplay::ScanDisplay(QWidget *parent)
     labNormalRight = new QLabel();
     labEditLayout = new QLabel();
 
+    timerScan = new QTimer(this);
+
     btnNormal = new QPushButton();
     btnEditLayout = new QPushButton();
 
@@ -59,9 +61,7 @@ ScanDisplay::ScanDisplay(QWidget *parent)
     labNormalRight->setFixedWidth(40);
     labEditLayout->setMinimumSize(360,490);
 
-
     labInit->setText(" ");
-
 
     imgConnectError->load(":/icon/icon/connect_device.png");
     labConnectError->setPixmap(QPixmap::fromImage(*imgConnectError));
@@ -89,7 +89,12 @@ ScanDisplay::ScanDisplay(QWidget *parent)
     labNormalRight->setParent(widgetNormal);
     btnNormal->setParent(widgetNormal);
     btnNormal->setFixedSize(12,30);
-    btnNormal->setStyleSheet("QPushButton{border-image: url(:/icon/icon/toolbutton.png);border:none;background-color:#0f0801;border-radius:0px;}");
+    btnNormal->setStyleSheet("QPushButton{ "
+                                 "border-image: url(:/icon/icon/toolbutton.png);"
+                                 "border:none;"
+                                 "background-color:#0f0801;"
+                                 "border-radius:0px;"
+                                 "}");
 
     labNormalLeft->setAlignment(Qt::AlignCenter);
     labNormalRight->setStyleSheet("QLabel{background-color:#0f0801;}");
@@ -169,6 +174,9 @@ ScanDisplay::ScanDisplay(QWidget *parent)
 
     // For ORC
     connect(&thread,SIGNAL(orcFinished()),this,SLOT(orcText()));
+
+    // For timerScan
+    connect(timerScan, SIGNAL(timeout()), this, SLOT(timerScanUpdate()));
 }
 
 void ScanDisplay::keyPressEvent(QKeyEvent *e)
@@ -288,10 +296,23 @@ float ScanDisplay::setPixmapScaled(QImage img, QLabel *lab)
 
 void ScanDisplay::updateWindowSize()
 {
-
     setPixmapScaled(*imgNormal,labNormalLeft);
     setPixmapScaled(*imgEditLayout,labEditLayout);
+}
 
+
+void ScanDisplay::timerEvent(QTimerEvent *e)
+{
+    int id = e->timerId();
+
+    if (id == m_timeScanId)
+    {
+        qDebug() << "timeScanId";
+//            labNormalLeft->height = 490;
+
+//            labNormalLeft->data = NULL; //图像信息
+//            labNormalLeft->update();
+    }
 }
 
 void ScanDisplay::rotating()
@@ -480,7 +501,7 @@ void ScanDisplay::onOrc()
 }
 
 /**
- * @brief scan_display::scan 扫描功能
+ * @brief scan_display::scan 扫描功能结束后显示图片
  */
 void ScanDisplay::onScan()
 {
@@ -495,6 +516,8 @@ void ScanDisplay::onScan()
     flagOrc = 0;
     flagRectify = 0;
     flagBeautify = 0;
+
+    timerScan->start(100);
 
     imgNormal->load("/tmp/scanner/scan.pnm");
     setPixmapScaled(*imgNormal,labNormalLeft);
@@ -702,6 +725,22 @@ void ScanDisplay::switchPage()
         setPixmapScaled(*imgEditLayout,labEditLayout);
     }
     vStackedLayout->setCurrentIndex(index);
+}
+
+/**
+ * @brief ScanDisplay::timerScanUpdate 定时器事件
+ */
+void ScanDisplay::timerScanUpdate()
+{
+    m_timerNum++;
+    qDebug() << "timerScanUpdate";
+    qDebug() << m_timerNum << "timer";
+    if (m_timerNum == 50)
+    {
+        timerScan->stop();
+        qDebug() << "timer stop";
+        emit scanTimerFinished();
+    }
 }
 
 /**

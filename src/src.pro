@@ -38,6 +38,7 @@ SOURCES += \
     kylinLbl.cpp \
     kylinSane.cpp \
         main.cpp \
+    realTimelbl.cpp \
     rectify.cpp \
     scanDisplay.cpp \
     scanSet.cpp \
@@ -52,6 +53,7 @@ HEADERS += \
     kylinCmb.h \
     kylinLbl.h \
     kylinSane.h \
+    realTimelbl.h \
     rectify.h \
     scanDisplay.h \
     scanSet.h \

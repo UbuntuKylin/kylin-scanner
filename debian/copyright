@@ -37,6 +37,8 @@ License:   GPL-3.0
 
 Files:     src/embelish.cpp
            src/embelish.h
+           src/realTimelbl.cpp
+           src/realTimelbl.h
            src/funcBar.cpp
            src/funcBar.h
            src/kylinCmb.cpp
