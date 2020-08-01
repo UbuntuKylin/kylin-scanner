@@ -26,28 +26,32 @@
 #include <leptonica/allheaders.h>
 #include <QToolTip>
 #include <QTextEdit>
-#include "my_label.h"
-#include "mark_dialog.h"
-#include "func_bar.h"
+#include "kylinLbl.h"
+#include "waterMarkDlg.h"
+#include "funcBar.h"
 #include "rectify.h"
 #include "embelish.h"
-#include "kylin_sane.h"
+#include "kylinSane.h"
+#include "realTimelbl.h"
 
 class myThread : public QThread
 {
     Q_OBJECT
 public:
     void run() Q_DECL_OVERRIDE;
+
 signals:
     void orcFinished();
 };
 
-
-class edit_bar  :   public QWidget
+class EditBar  :   public QWidget
 {
     Q_OBJECT
+
 public:
-    edit_bar(QWidget *parent = nullptr);
+    EditBar(QWidget *parent = nullptr);
+
+    void setEditBarWindowBorderRadius();
 //private:
     QPushButton *btnTailor;
     QPushButton *btnRotate;
@@ -56,18 +60,11 @@ public:
     QVBoxLayout *vBoxEditBar;
 };
 
-class scan_display  : public QWidget
+class ScanDisplay  : public QWidget
 {
     Q_OBJECT
+
 public:
-    scan_display(QWidget *parent = nullptr);
-    void keyPressEvent(QKeyEvent *e);
-    QImage *imageSave(QString fileName);
-    void set_no_device();
-    void set_init_device();
-    void set_pixmap(QImage img, QLabel *lab);
-    float pixmap_scaled(QImage img, QLabel *lab);
-    void updateWindowSize();
     int flagBeautify = 0; //一键美化标志
     int flagRectify = 0; //智能纠偏标志
     int flagOrc = 0; //文字识别标志
@@ -75,17 +72,32 @@ public:
     int index = 0;
     int n = 0;
 
+    ScanDisplay(QWidget *parent = nullptr);
+    void keyPressEvent(QKeyEvent *e);
+    QImage *imageSave(QString fileName);
+    void setNoDevice();
+    void setInitDevice();
+    void setPixmap(QImage img, QLabel *lab);
+    float setPixmapScaled(QImage img, QLabel *lab);
+    void updateWindowSize();
+
+    int m_timerNum = 0; // 计时器执行次数
+    int m_timeScanId; // 正常扫描结束后显示扫描结果定时器id
+//    void showEvent(QShowEvent *event);
+    void timerEvent(QTimerEvent *e);
+
 private:
+    QTimer *timerScan; // 实时显示扫描结果定时器
     QLabel *labInit; // 初始化界面，即空白界面
     QLabel *labConnectError; // 连接或者打开扫描仪出错界面
     QLabel *labConnectErrorText; //连接或者打开扫描仪出错界面
     QLabel *labNormalLeft;       //正常显示界面左部分
     QLabel *labNormalRight;      //正常显示界面右部分
     QLabel *labEditLayout;       //编辑栏展开界面的显示部分
-    my_label *labTailor;         //编辑栏
+    KylinLbl *labTailor;         //编辑栏
     QLabel *labOrcLeft;          //文字识别图片显示部分
     QLabel *labOrcRight;         //文字识别文字显示部分
-    QPushButton *btnNormal;      //正长显示界面按钮
+    QPushButton *btnNormal;      //正常显示界面按钮
     QPushButton *btnEditLayout;  //编辑栏展开界面按钮
     QPushButton *btnTailor;      //裁剪界面按钮
 
@@ -111,26 +123,30 @@ private:
     QWidget *widgetTailor;
     QWidget *widgetOrc;
     QStackedLayout *vStackedLayout;
-    edit_bar *editLayout;
-    edit_bar *editLayoutTailor;
+    EditBar *editLayout;
+    EditBar *editLayoutTailor;
     myThread thread;
     QScrollArea *scrollArea;
     int widgetindex;
     QList<QString> list;
 
 public slots:
-    void orc();
-    void scan();
-    void rectify();
-    void beautify();
+    void onOrc();
+    void onScan();
+    void onRectify();
+    void onBeautify();
+    void switchPage();
+    void timerScanUpdate();
 
 private slots:
-    void switchPage();
     void tailor();
     void rotating();
     void symmetry();
-    void addmark();
+    void addWatermark();
     void orcText();
+
+signals:
+    void scanTimerFinished();
 };
 
 #endif // SCAN_DISPLAY_H

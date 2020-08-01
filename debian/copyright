@@ -37,27 +37,29 @@ License:   GPL-3.0
 
 Files:     src/embelish.cpp
            src/embelish.h
-           src/func_bar.cpp
-           src/func_bar.h
-           src/kylin_sane.cpp
-           src/kylin_sane.h
-           src/kylincombobox.cpp
-           src/kylincombobox.h
+           src/realTimelbl.cpp
+           src/realTimelbl.h
+           src/funcBar.cpp
+           src/funcBar.h
+           src/kylinCmb.cpp
+           src/kylinCmb.h
+           src/kylinLbl.cpp
+           src/kylinLbl.h
+           src/kylinSane.cpp
+           src/kylinSane.h
            src/main.cpp
-           src/mark_dialog.cpp
-           src/mark_dialog.h
-           src/my_label.cpp
-           src/my_label.h
            src/rectify.cpp
            src/rectify.h
-           src/scan_display.cpp
-           src/scan_display.h
-           src/scan_set.cpp
-           src/scan_set.h
-           src/send_mail.cpp
-           src/send_mail.h
-           src/title_bar.cpp
-           src/title_bar.h
+           src/scanDisplay.cpp
+           src/scanDisplay.h
+           src/scanSet.cpp
+           src/scanSet.h
+           src/sendMail.cpp
+           src/sendMail.h
+           src/titleBar.cpp
+           src/titleBar.h
+           src/waterMarkDlg.cpp
+           src/waterMarkDlg.h
            src/widget.cpp
            src/widget.h
 Copyright: 2020, KylinSoft Co., Ltd.

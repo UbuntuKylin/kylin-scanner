@@ -15,9 +15,9 @@
 * along with this program; if not, see <http://www.gnu.org/licenses/&gt;.
 *
 */
-#include "kylincombobox.h"
+#include "kylinCmb.h"
 
-KylinComboBox::KylinComboBox(QWidget *parent) : QComboBox(parent)
+KylinCmb::KylinCmb(QWidget *parent) : QComboBox(parent)
 {
     QComboBox::setStyleSheet(
                 "QComboBox{border-radius:4px;background-color:#0D0400;color:white;}"
@@ -31,12 +31,12 @@ KylinComboBox::KylinComboBox(QWidget *parent) : QComboBox(parent)
                 );
     QComboBox::setEditable(false);
 }
-KylinComboBox::~KylinComboBox()
+KylinCmb::~KylinCmb()
 {
 
 }
 
-void KylinComboBox::mousePressEvent(QMouseEvent *event)
+void KylinCmb::mousePressEvent(QMouseEvent *event)
 {
     if (event->button() == Qt::LeftButton)
     {
@@ -46,7 +46,7 @@ void KylinComboBox::mousePressEvent(QMouseEvent *event)
     QComboBox::mousePressEvent(event);  //将该事件传给父类处理，这句话很重要，如果没有，父类无法处理本来的点击事件
 }
 
-void KylinComboBox::hidePopup()
+void KylinCmb::hidePopup()
 {
     QComboBox::setEditable(false);
     QComboBox::setStyleSheet(
@@ -63,7 +63,7 @@ void KylinComboBox::hidePopup()
     QComboBox::hidePopup();
 }
 
-void KylinComboBox::showPopup()
+void KylinCmb::showPopup()
 {
     QComboBox::setEditable(true);
     QComboBox::setStyleSheet(
@@ -80,7 +80,7 @@ void KylinComboBox::showPopup()
     QComboBox::showPopup();
 }
 
-void KylinComboBox::colorGray()
+void KylinCmb::colorGray()
 {
     this->setStyleSheet(
                 "QComboBox{border-radius:4px;background-color:#0D0400;color:gray;}"
@@ -96,7 +96,7 @@ void KylinComboBox::colorGray()
     this->setFocusPolicy(Qt::NoFocus);
 }
 
-void KylinComboBox::colorNormal()
+void KylinCmb::colorNormal()
 {
     this->setStyleSheet(
                 "QComboBox{border-radius:4px;background-color:#0D0400;color:white;}"

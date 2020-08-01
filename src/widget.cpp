@@ -41,14 +41,15 @@ Widget::Widget(QWidget *parent)
     line =  new QFrame();
     line->setObjectName(QString::fromUtf8("line"));
     line->setGeometry(QRect(0, 32, 860, 1));
-    line->setFrameShape(QFrame::HLine); line->setStyleSheet("QFrame{color:rgb(32,30,29)}");
+    line->setFrameShape(QFrame::HLine);
+    line->setStyleSheet("QFrame{color:rgb(32,30,29)}");
 
 
     pFuncBar = new  FuncBar();
     installEventFilter(pFuncBar);
     pScanSet = new ScanSet() ;
     installEventFilter(pScanSet);
-    pScandisplay = new scan_display();
+    pScandisplay = new ScanDisplay();
 
     pHboxLayout = new QHBoxLayout();
     pHboxLayout->setSpacing(0); // 需要先清空spacing，不然addSpacing会出问题
@@ -65,34 +66,37 @@ Widget::Widget(QWidget *parent)
     pLayout->setContentsMargins(0, 0, 0, 0);
 
     // 设置窗口圆角
-    set_mask();
+    setWindowBorderRadius();
 
     setLayout(pLayout);
 
     // For save
-    connect(pScanSet,&ScanSet::save_image_signal,this,&Widget::save_image);
+    connect(pScanSet,&ScanSet::saveImageSignal,this,&Widget::saveImage);
 
     // For ORC
-    connect(pFuncBar,&FuncBar::send_Orc_Begin,pScandisplay,&scan_display::orc);
-    connect(pFuncBar,&FuncBar::send_Orc_End,pScandisplay,&scan_display::orc);
-    connect(pFuncBar,&FuncBar::send_Orc_Begin,pScanSet,&ScanSet::modify_save_button);
-    connect(pFuncBar,&FuncBar::send_Orc_End,pScanSet,&ScanSet::modify_save_button);
+    connect(pFuncBar,&FuncBar::sendOrcBegin,pScandisplay,&ScanDisplay::onOrc);
+    connect(pFuncBar,&FuncBar::sendOrcEnd,pScandisplay,&ScanDisplay::onOrc);
+    connect(pFuncBar,&FuncBar::sendOrcBegin,pScanSet,&ScanSet::modifyBtnSave);
+    connect(pFuncBar,&FuncBar::sendOrcEnd,pScanSet,&ScanSet::modifyBtnSave);
+
+    // 文件扫描成功后默认显示全部编辑框
+    //connect(pFuncBar,&FuncBar::sendScanEnd, pScandisplay, &ScanDisplay::switchPage);
 
     // For scan
-    connect(&thread,SIGNAL(scan_finished(bool)),this,SLOT(scan_result(bool)));
-    connect(pScanSet, SIGNAL(open_device_status(bool)), this, SLOT(scan_result_detail(bool)));
-    connect(pFuncBar,&FuncBar::send_Scan_End,pScandisplay,&scan_display::scan);
-    connect(pFuncBar,&FuncBar::send_Scan_End,this,&Widget::save_scan_file);
+    connect(&thread,SIGNAL(scanFinished(bool)),this,SLOT(scanResult(bool)));
+    connect(pScanSet,SIGNAL(openDeviceStatusSignal(bool)),this,SLOT(scanResultDetail(bool)));
+    connect(pFuncBar,&FuncBar::sendScanEnd,pScandisplay,&ScanDisplay::onScan);
+    connect(pFuncBar,&FuncBar::sendScanEnd,this,&Widget::saveScanFile);
 
     // For rectify
-    connect(pFuncBar,&FuncBar::send_Rectify_Begin,pScandisplay,&scan_display::rectify);
-    connect(pFuncBar,&FuncBar::send_Rectify_End,pScandisplay,&scan_display::rectify);
+    connect(pFuncBar,&FuncBar::sendRectifyBegin,pScandisplay,&ScanDisplay::onRectify);
+    connect(pFuncBar,&FuncBar::sendRectifyEnd,pScandisplay,&ScanDisplay::onRectify);
 
     // For beauty
-    connect(pFuncBar, &FuncBar::send_Beautify_Begin, pScandisplay, &scan_display::beautify);
-    connect(pFuncBar, &FuncBar::send_Beautify_End, pScandisplay, &scan_display::beautify);
-    connect(pTitleBar,&TitleBar::isNormal,this,&Widget::set_mask);
-    connect(pTitleBar,&TitleBar::isMax,this,&Widget::set_mask_clear);
+    connect(pFuncBar, &FuncBar::sendBeautifyBegin, pScandisplay, &ScanDisplay::onBeautify);
+    connect(pFuncBar, &FuncBar::sendBeautifyEnd, pScandisplay, &ScanDisplay::onBeautify);
+    connect(pTitleBar,&TitleBar::isNormal,this,&Widget::setWindowBorderRadius);
+    connect(pTitleBar,&TitleBar::isMax,this,&Widget::setMaskClear);
 }
 
 Widget::~Widget()
@@ -113,7 +117,7 @@ constexpr inline int U(const char* str)
     return str[0] + (str[1] ? U(str + 1) : 0);
 }
 
-void Widget::set_pdf_size(QPdfWriter *pdfWriter, QString size)
+void Widget::setPdfSize(QPdfWriter *pdfWriter, QString size)
 {
     switch (toUnicode(size))
     {
@@ -153,13 +157,13 @@ void Widget::set_pdf_size(QPdfWriter *pdfWriter, QString size)
     }
 }
 
-void Widget::save_to_pdf(QImage img, QString pathName)
+void Widget::saveToPdf(QImage img, QString pathName)
 {
 
     QFile pdfFile(pathName);
     pdfFile.open(QIODevice::WriteOnly);
     QPdfWriter *pdfWriter = new QPdfWriter(&pdfFile);
-    set_pdf_size(pdfWriter,pScanSet->getTextSize());
+    setPdfSize(pdfWriter,pScanSet->getTextSize());
     int resolution = pScanSet->getTextResolution().toInt();
     pdfWriter->setResolution(resolution);//像素
 
@@ -190,7 +194,7 @@ void Widget::save_to_pdf(QImage img, QString pathName)
  * 初始化时，应该根据获取的扫描信息进行设置textDevice，所以应该为setKylinComboBox 的参数为 false
  * @param ret 获取的扫描结果状态
  */
-void Widget::result_detail(bool ret)
+void Widget::resultDetail(bool ret)
 {
     qDebug()<<"result_detail"<<endl;
 
@@ -206,24 +210,24 @@ void Widget::result_detail(bool ret)
     else
     {
         device = false;
-        pScandisplay->set_no_device();
+        pScandisplay->setNoDevice();
         pFuncBar->setKylinScanSetNotEnable();
         pScanSet->setKylinScanSetNotEnable();
     }
 }
 
-void Widget::save_image(QString fileName)
+void Widget::saveImage(QString fileName)
 {
     QImage *img = NULL;
     img = pScandisplay->imageSave(fileName);
     if(img)
-        save_to_pdf(*img,fileName);
+        saveToPdf(*img,fileName);
 }
 
 /**
  * @brief Widget::save_scan_file存储为不同的格式
  */
-void Widget::save_scan_file()
+void Widget::saveScanFile()
 {
     QImage img;
 
@@ -257,7 +261,7 @@ void Widget::save_scan_file()
             pathName += newformat;
             qDebug()<<"pathName:"<<pathName;
         }
-        save_to_pdf(img,pathName);
+        saveToPdf(img,pathName);
     }
 }
 
@@ -268,7 +272,7 @@ void Widget::save_scan_file()
  *
  * @param ret 线程的处理结果
  */
-void Widget::scan_result(bool ret)
+void Widget::scanResult(bool ret)
 {
     qDebug()<<"scan_result"<<endl;
     KylinSane &instance = KylinSane::getInstance();
@@ -278,10 +282,10 @@ void Widget::scan_result(bool ret)
         device = true;
 
         pScanSet->setKylinComboBoxScanDeviceName();
-        instance.open_device(0);
+        instance.openScanDevice(0);
 
         bool retStatus = instance.getKylinSaneStatus();
-        result_detail(retStatus);
+        resultDetail(retStatus);
 
         /*
         pScanSet->setKylinComboBox();
@@ -293,11 +297,10 @@ void Widget::scan_result(bool ret)
     else
     {
         device = false;
-        pScandisplay->set_no_device();
+        pScandisplay->setNoDevice();
         pFuncBar->setKylinScanSetNotEnable();
         pScanSet->setKylinScanSetNotEnable();
     }
-
 }
 
 /**
@@ -306,14 +309,14 @@ void Widget::scan_result(bool ret)
  * 此时不应该重新设置该字段，所以应该为setKylinComboBox 的参数为 true 进行跳过设置该字段
  * @param ret
  */
-void Widget::scan_result_detail(bool ret)
+void Widget::scanResultDetail(bool ret)
 {
     qDebug()<<"scan_result_detail"<<endl;
 
     if(ret)
     {
         device = true;
-        pScandisplay->set_init_device();
+        pScandisplay->setInitDevice();
         pScanSet->setKylinComboBox(true);
         pScanSet->setKylinLable();
         pFuncBar->setBtnScanEnable();
@@ -322,62 +325,54 @@ void Widget::scan_result_detail(bool ret)
     else
     {
         device = false;
-        pScandisplay->set_no_device();
+        pScandisplay->setNoDevice();
         pFuncBar->setKylinScanSetNotEnable();
         pScanSet->setKylinScanSetNotEnable();
     }
-
 }
 
-void Widget::set_mask_clear()
+void Widget::setMaskClear()
 {
     clearMask();
     pScandisplay->updateWindowSize();
-
 }
 
 /**
  * @brief Widget::set_mask 设置窗口圆角
  */
-void Widget::set_mask()
+void Widget::setWindowBorderRadius()
 {
         clearMask();
         pScandisplay->updateWindowSize();
         QBitmap bitMap(860,680); // A bit map has the same size with current widget
 
         bitMap.fill();
-
         QPainter painter(&bitMap);
-
         painter.setBrush(Qt::black);
-
         painter.setPen(Qt::NoPen); // Any color that is not QRgb(0,0,0) is right
-
         painter.setRenderHint(QPainter::Antialiasing, true);
-
         painter.drawRoundedRect(bitMap.rect(),6,6); //设置圆角弧度
-
         setMask(bitMap);
 }
 
-void scanThread::run()
+void CommonScanThread::run()
 {
     KylinSane &instance = KylinSane::getInstance();
 //again:
     do {
-        instance.find_device();
+        instance.findScanDevice();
 
         //instance.open_device(0);
 
         //qDebug() << instance.getKylinSaneResolutions();
         if(instance.getKylinSaneStatus() == false)
         {
-            emit scan_finished(false);
+            emit scanFinished(false);
             qDebug() << "scan finished!";
         }
         else
         {
-            emit scan_finished(true);
+            emit scanFinished(true);
         }
     } while (!instance.getKylinSaneStatus());
 

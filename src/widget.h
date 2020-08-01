@@ -23,11 +23,11 @@
 #include <QIcon>
 #include <QSplitter>
 #include <QLine>
-#include "scan_display.h"
-#include "scan_set.h"
-#include "title_bar.h"
+#include "scanDisplay.h"
+#include "scanSet.h"
+#include "titleBar.h"
 
-class scanThread : public QThread
+class CommonScanThread : public QThread
 {
     Q_OBJECT
 public:
@@ -36,7 +36,7 @@ public:
 
 Q_SIGNALS:
     // 此结束信号，用来处理是否获取到设备信息的界面操作
-    void scan_finished(bool);
+    void scanFinished(bool);
 };
 
 class Widget : public QWidget
@@ -47,30 +47,30 @@ public:
     Widget(QWidget *parent = 0);
     ~Widget();
 
-    void set_pdf_size(QPdfWriter *pdfWriter,QString size);
-    void save_to_pdf(QImage img, QString pathName);
-    void result_detail(bool ret);
+    void setPdfSize(QPdfWriter *pdfWriter,QString size);
+    void saveToPdf(QImage img, QString pathName);
+    void resultDetail(bool ret);
 
 private:
     TitleBar *pTitleBar;
     QFrame *line;
     FuncBar *pFuncBar;
     ScanSet *pScanSet;
-    scan_display *pScandisplay;
+    ScanDisplay *pScandisplay;
     QHBoxLayout *pHboxLayout;
     QVBoxLayout *pLayout;
-    scanThread thread;
+    CommonScanThread thread;
 
 Q_SIGNALS:
-    void open_scan_device_finished(bool);
+    void openScanDeviceFinished(bool);
 
 private slots:
-    void save_image(QString fileName);
-    void save_scan_file();
-    void scan_result(bool ret);
-    void scan_result_detail(bool ret);
-    void set_mask_clear();
-    void set_mask();
+    void saveImage(QString fileName);
+    void saveScanFile();
+    void scanResult(bool ret);
+    void scanResultDetail(bool ret);
+    void setMaskClear();
+    void setWindowBorderRadius();
 };
 
 #endif // WIDGET_H

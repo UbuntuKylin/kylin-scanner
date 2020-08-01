@@ -38,7 +38,6 @@ public:
     ~TitleBar();
 
 protected:
-
     // 双击标题栏进行界面的最大化/还原
     virtual void mouseDoubleClickEvent(QMouseEvent *event);
 
@@ -47,23 +46,13 @@ protected:
     virtual void mousePressEvent(QMouseEvent *event);
     virtual void mouseReleaseEvent(QMouseEvent *event);
 
-
     // 设置界面标题与图标
     virtual bool eventFilter(QObject *obj, QEvent *event);
 
-private slots:
-
-    // 进行最小化、最大化/还原、关闭操作
-    void onClicked();
-
 private:
-
     // 最大化/还原
     void updateMaximize();
-Q_SIGNALS:
-    void isNormal();
-    void isMax();
-private:
+
     bool mMoving;
     QPoint mLastMousePosition;
     QLabel *m_pIconLabel;
@@ -72,5 +61,12 @@ private:
     QPushButton *m_pMaximizeButton;
     QPushButton *m_pCloseButton;
 
+private slots:
+    // 进行最小化、最大化/还原、关闭操作
+    void onClicked();
+
+Q_SIGNALS:
+    void isNormal();
+    void isMax();
 };
 #endif // TITLE_BAR_H

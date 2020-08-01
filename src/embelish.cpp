@@ -17,14 +17,13 @@
 */
 #include "embelish.h"
 
-embelish::embelish(QWidget *parent) : QWidget(parent)
+Embelish::Embelish(QWidget *parent) : QWidget(parent)
 {
 
 }
 
 int readImagesAndTimesOne(Mat src, vector<Mat> &images, vector<float> &times)
 {
-
   static const float timesArray = 1/0.03f;
 
   images.push_back(src);

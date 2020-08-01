@@ -15,9 +15,9 @@
 * along with this program; if not, see <http://www.gnu.org/licenses/&gt;.
 *
 */
-#include "send_mail.h"
+#include "sendMail.h"
 
-no_mail::no_mail(QWidget *parent) :
+NoMail::NoMail(QWidget *parent) :
     QDialog(parent)
 {
     setWindowFlags(Qt::FramelessWindowHint | Qt::Dialog); // 自定义设置窗口
@@ -72,7 +72,7 @@ no_mail::no_mail(QWidget *parent) :
     line->setMaximumWidth(260);
     line->setMinimumWidth(260);
     line->setFrameShape(QFrame::HLine);
-    line->setStyleSheet("QLabel{color:rgb(32,30,29)}");
+    line->setStyleSheet("QFrame{color:rgb(32,30,29)}");
 
     btnOk->setText(tr("Go to install"));
     btnOk->setFixedSize(120,36);
@@ -108,21 +108,13 @@ no_mail::no_mail(QWidget *parent) :
     vBoxLayout->setContentsMargins(32,0,0,48);
 
     QBitmap bitMap(width(),height()); // A bit map has the same size with current widget
-
     bitMap.fill();
-
     QPainter painter(&bitMap);
-
     painter.setBrush(Qt::black);
-
     painter.setPen(Qt::NoPen); // Any color that is not QRgb(0,0,0) is right
-
     painter.setRenderHint(QPainter::Antialiasing);
-
     painter.drawRoundedRect(bitMap.rect(),6,6); //设置圆角弧度
-
     setMask(bitMap);
-
     setLayout(vBoxLayout);
 
     // For ok button
@@ -135,13 +127,13 @@ no_mail::no_mail(QWidget *parent) :
     connect(btnClose, SIGNAL(clicked()), this, SLOT(reject()));
 }
 
-no_mail::~no_mail()
+NoMail::~NoMail()
 {
 
 }
 
 
-send_mail::send_mail(QWidget *parent) :
+SendMail::SendMail(QWidget *parent) :
     QDialog(parent)
 {
     setWindowFlags(Qt::FramelessWindowHint | Qt::Dialog);
@@ -286,7 +278,7 @@ AppList * getAppIdList(const char *contentType)
         return NULL;
     }
 }
-void send_mail::set_btnList()
+void SendMail::setBtnList()
 {
     AppList * maillist = getAppIdList(MAILTYPE);
     if (maillist)
@@ -331,7 +323,7 @@ void send_mail::set_btnList()
             }
             vBoxLayout1->addSpacing(4);
             vBoxLayout1->addLayout(hBoxLayout1);
-            connect(btnList[i],SIGNAL(toggled(bool)),this,SLOT(on_btn_clicked()));
+            connect(btnList[i],SIGNAL(toggled(bool)),this,SLOT(onBtnClicked()));
 
             free(maillist[i].appid);
         }
@@ -345,7 +337,7 @@ void send_mail::set_btnList()
     setLayout(vBoxLayout);
 }
 
-void send_mail::open_email(QString name)
+void SendMail::openMail(QString name)
 {
     QFile aFile(DESKTOPPATH+name);
         if(!aFile.exists())
@@ -387,13 +379,13 @@ void send_mail::paintEvent(QPaintEvent *event)
 }
 */
 
-void send_mail::on_btn_clicked()
+void SendMail::onBtnClicked()
 {
     for (int i = 0;i < btnList.size();i++)
     {
         if(btnList[i]->isChecked())
         {
-            open_email(desktopName[i]);
+            openMail(desktopName[i]);
             reject();
             break;
         }

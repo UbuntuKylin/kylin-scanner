@@ -129,15 +129,13 @@ void oneClickEmbelish(const char *filename);
 
 
 
-class embelish : public QWidget
+class Embelish : public QWidget
 {
     Q_OBJECT
+
 public:
-    explicit embelish(QWidget *parent = nullptr);
+    explicit Embelish(QWidget *parent = nullptr);
 
-signals:
-
-public slots:
 };
 
 #endif // EMBELISH_H

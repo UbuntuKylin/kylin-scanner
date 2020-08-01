@@ -15,7 +15,7 @@
 * along with this program; if not, see <http://www.gnu.org/licenses/&gt;.
 *
 */
-#include "title_bar.h"
+#include "titleBar.h"
 
 TitleBar::TitleBar(QWidget *parent)
     : QWidget(parent)
@@ -31,9 +31,9 @@ TitleBar::TitleBar(QWidget *parent)
     m_pMaximizeButton->setFixedSize(30, 30);
     m_pCloseButton->setFixedSize(30, 30);
 
-    m_pMinimizeButton->setToolTip("Minimize");
-    m_pMaximizeButton->setToolTip("Maximize");
-    m_pCloseButton->setToolTip("Close");
+    m_pMinimizeButton->setToolTip(tr("Minimize"));
+    m_pMaximizeButton->setToolTip(tr("Maximize"));
+    m_pCloseButton->setToolTip(tr("Close"));
 
     m_pMinimizeButton->setStyleSheet("QPushButton{border-image: url(:/icon/icon/min_white.svg);border:none;background-color:rgb(47,44,43);border-radius:4px;}"
                               "QPushButton:hover{border-image: url(:/icon/icon/min_white.svg);border:none;background-color:rgb(61,107,229);border-radius:4px;}"

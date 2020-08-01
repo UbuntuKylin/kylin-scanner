@@ -44,24 +44,28 @@ extern "C" {
 #include <gio/gio.h>
 #include <gio/gdesktopappinfo.h>
 }
+
 #define MAILTYPE "x-scheme-handler/mailto"
 #define DESKTOPPATH "/usr/share/applications/"
+
 typedef struct _Applist
 {
     char *appid;
 }AppList;//用于存放应用列表
+AppList * getAppIdList(const char *contentType);
 
 typedef struct _AppInfo
 {
     GAppInfo *item;
 }Appinfo;//用于存放应用列表信息
+Appinfo * _getAppList(const char *contentType);
 
-class no_mail : public QDialog
+class NoMail : public QDialog
 {
     Q_OBJECT
 public:
-    explicit no_mail(QWidget *parent = nullptr);
-    ~no_mail();
+    explicit NoMail(QWidget *parent = nullptr);
+    ~NoMail();
 private:
     QPushButton *btnClose;
     QLabel *labTitle;
@@ -74,14 +78,14 @@ private:
     QVBoxLayout *vBoxLayout;
 };
 
-class send_mail : public QDialog
+class SendMail : public QDialog
 {
     Q_OBJECT
-public:
-    explicit send_mail(QWidget *parent = nullptr);
-    void set_btnList();
-    void open_email(QString name);
 
+public:
+    explicit SendMail(QWidget *parent = nullptr);
+    void setBtnList();
+    void openMail(QString name);
     //void paintEvent(QPaintEvent *event); // 窗口阴影
 
 private:
@@ -99,10 +103,9 @@ private:
     QList<QString> desktopName;
 
 private slots:
-    void on_btn_clicked(void);
+    void onBtnClicked(void);
 
 };
-Appinfo * _getAppList(const char *contentType);
-AppList * getAppIdList(const char *contentType);
+
 
 #endif // MARK_DIALOG_H
