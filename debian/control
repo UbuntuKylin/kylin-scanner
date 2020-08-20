@@ -3,7 +3,7 @@ Section: devel
 Priority: optional
 Maintainer: yushuoqi <yushuoqi@kylinos.cn>
 Uploaders: handsome_feng <jianfengli@ubuntukylin.com>
-Build-Depends: debhelper (>=11~),
+Build-Depends: debhelper-compat (=13),
                libglib2.0-dev,
                libleptonica-dev,
                libopencv-dev,
@@ -19,7 +19,7 @@ Build-Depends: debhelper (>=11~),
                tesseract-ocr,
                tesseract-ocr-chi-sim,
                tesseract-ocr-eng
-Standards-Version: 4.4.0
+Standards-Version: 4.5.0
 Rules-Requires-Root: no
 Homepage: https://github.com/yusq/kylin-scanner
 Vcs-Git: https://github.com/ukui/kylin-scanner.git
