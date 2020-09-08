@@ -24,10 +24,8 @@ Architecture: any
 Depends: ${misc:Depends},
          ${shlibs:Depends},
 Description: Scanning utility based on SANE
- This software can scan according to the resolution, size and color mode of
- the scanning device itself.
- At the same time, It increases post-processing of scanned pictures,
- including one-click beautification, intelligent correction and text
- recognition.
- Other image processing tips can also be reflected in this software,
- such as clipping, rotation, etc.
+ Kylin-scanner can scan according to the resolution, size and color
+ mode of the scanning device.
+ And it provides post-processing features for scanned images, such as
+ clipping, rotation, one-click beautification, intelligent correction
+ and text recognition, etc.
