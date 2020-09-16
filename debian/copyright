@@ -20,6 +20,10 @@ Files:     Doxyfile
            src/icon/*.gif
            src/icon/*.png
            src/icon/*.svg
+           src/editBar/*.png
+           src/editBar/*.svg
+           src/waiting/*.png
+           src/waiting/*.svg
            src/translations/*
            src/res.qrc
            src/data/*

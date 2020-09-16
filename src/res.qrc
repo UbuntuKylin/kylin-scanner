@@ -16,16 +16,6 @@
         <file>icon/normal.png</file>
         <file>icon/normal-click.png</file>
         <file>icon/a.png</file>
-        <file>icon/toolbutton1.png</file>
-        <file>icon/toolbutton.png</file>
-        <file>icon/watermark.png</file>
-        <file>icon/watermark-click.png</file>
-        <file>icon/symmetry.png</file>
-        <file>icon/symmetry-click.png</file>
-        <file>icon/rotate-click.png</file>
-        <file>icon/rotate.png</file>
-        <file>icon/tailor.png</file>
-        <file>icon/tailor-click.png</file>
         <file>icon/revert.svg</file>
         <file>icon/min.svg</file>
         <file>icon/max.svg</file>
@@ -36,5 +26,52 @@
         <file>icon/max_white.svg</file>
         <file>icon/close_white.svg</file>
         <file>icon/scanner.png</file>
+        <file>icon/editBar/rotate-2x.png</file>
+        <file>icon/editBar/rotate-click-2x.png</file>
+        <file>icon/editBar/rotate-click.png</file>
+        <file>icon/editBar/rotate-click.svg</file>
+        <file>icon/editBar/rotate.png</file>
+        <file>icon/editBar/rotate.svg</file>
+        <file>icon/editBar/shrink-editLayout-2x.png</file>
+        <file>icon/editBar/shrink-editLayout.png</file>
+        <file>icon/editBar/shrink-editLayout.svg</file>
+        <file>icon/editBar/shrink-normal-2x.png</file>
+        <file>icon/editBar/shrink-normal.png</file>
+        <file>icon/editBar/shrink-normal.svg</file>
+        <file>icon/editBar/symmetry-2x.png</file>
+        <file>icon/editBar/symmetry-click-2x.png</file>
+        <file>icon/editBar/symmetry-click.png</file>
+        <file>icon/editBar/symmetry-click.svg</file>
+        <file>icon/editBar/tailor-2x.png</file>
+        <file>icon/editBar/tailor-click-2x.png</file>
+        <file>icon/editBar/tailor-click.png</file>
+        <file>icon/editBar/tailor-click.svg</file>
+        <file>icon/editBar/tailor.png</file>
+        <file>icon/editBar/tailor.svg</file>
+        <file>icon/editBar/watermark-2x.png</file>
+        <file>icon/editBar/watermark-click-2x.png</file>
+        <file>icon/editBar/watermark-click.png</file>
+        <file>icon/editBar/watermark-click.svg</file>
+        <file>icon/editBar/watermark.png</file>
+        <file>icon/editBar/watermark.svg</file>
+        <file>icon/editBar/symmetry.svg</file>
+        <file>icon/editBar/symmetry.png</file>
+        <file>icon/waiting/loading1.png</file>
+        <file>icon/waiting/loading1.svg</file>
+        <file>icon/waiting/loading2.png</file>
+        <file>icon/waiting/loading2.svg</file>
+        <file>icon/waiting/loading3.png</file>
+        <file>icon/waiting/loading3.svg</file>
+        <file>icon/waiting/loading4.png</file>
+        <file>icon/waiting/loading4.svg</file>
+        <file>icon/waiting/loading5.png</file>
+        <file>icon/waiting/loading5.svg</file>
+        <file>icon/waiting/loading6.png</file>
+        <file>icon/waiting/loading6.svg</file>
+        <file>icon/waiting/loading7.png</file>
+        <file>icon/waiting/loading7.svg</file>
+        <file>icon/waiting/warn.png</file>
+        <file>icon/waiting/warn.svg</file>
     </qresource>
+    <qresource prefix="/"/>
 </RCC>
