@@ -657,8 +657,20 @@ void ScanSet::onTextDeviceCurrentTextChanged(QString device)
 
     KylinSane & instance = KylinSane::getInstance();
     instance.userInfo.name = device;
-    qDebug() << "device name: "<< instance.userInfo.name;
+    int curTextLen = textDevice->currentText().length();
 
+    qDebug() << "device name: "<< instance.userInfo.name;
+    qDebug() << "textDevice->currentText = " << textDevice->currentText()
+             << "length = " << curTextLen;
+
+    if ( curTextLen >= 20)
+    {
+        textDevice->setToolTip(textDevice->currentText());
+    }
+    else
+    {
+        textDevice->setToolTip("");
+    }
     int index = textDevice->currentIndex(); // index是根据所选的进行判断,或者open_device直接根据所选进行判断
     if (index == -1)
     {

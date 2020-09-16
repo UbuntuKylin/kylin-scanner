@@ -646,7 +646,10 @@ SANE_Status get_option_sources(SANE_Handle sane_handle, int optnum)
         status = SANE_STATUS_GOOD;
 
         qDebug("optnum[%d] sources string: %s \n", optnum, tmp);
-        if (!strcmp("Flatbed", tmp))
+        const char *p = strstr(tmp, "multi-function peripheral");
+        qDebug("p = %s\n", p);
+
+        if (!strcmp("Flatbed", tmp) || *strstr(tmp, "multi-function peripheral"))
         {
             type = QObject::tr("Flatbed"); //平板式
             flag = 1;
@@ -1388,6 +1391,7 @@ void kylinNorScanFindDevice()
 {
     KylinSane& instance = KylinSane::getInstance();
     QStringList names;
+    QString type;
 
     SANE_Status sane_status;
     char name[512] = {0};
@@ -1445,7 +1449,18 @@ void kylinNorScanFindDevice()
             if (i == 0)
             {
                 // Same device have same type
-                instance.setKylinSaneType(gs_deviceList[i]->type);
+                qDebug("gs_deviceList[%d]->type = %s\n", i, gs_deviceList[i]->type);
+                if (!strcmp("Flatbed", gs_deviceList[i]->type)
+                        || *strstr(gs_deviceList[i]->type, "multi-function peripheral"))
+                {
+                    type = QObject::tr("Flatbed"); //平板式
+                }
+                else
+                {
+                    type = QObject::tr("Transparency Adapter"); //馈纸式
+                }
+                instance.setKylinSaneType(type);
+
             }
             //break;
         }
@@ -1481,6 +1496,7 @@ void kylinNorScanOpenDevice(int index)
 {
     KylinSane& instance = KylinSane::getInstance();
     QStringList names;
+    QString type;
 
     SANE_Status sane_status;
     char name[512] = {0};
@@ -1504,7 +1520,17 @@ void kylinNorScanOpenDevice(int index)
             if (i == 0)
             {
                 // Same device have same type
-                instance.setKylinSaneType(gs_deviceList[i]->type);
+                qDebug("gs_deviceList[%d]->type = %s\n", i, gs_deviceList[i]->type);
+                if (!strcmp("Flatbed", gs_deviceList[i]->type)
+                        || *strstr(gs_deviceList[i]->type, "multi-function peripheral"))
+                {
+                    type = QObject::tr("Flatbed"); //平板式
+                }
+                else
+                {
+                    type = QObject::tr("Transparency Adapter"); //馈纸式
+                }
+                instance.setKylinSaneType(type);
             }
             //break;
         }

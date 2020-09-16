@@ -210,7 +210,7 @@ SendMail::SendMail(QWidget *parent) :
     connect(btnCancel,SIGNAL(clicked()),this,SLOT(reject()));
 
     // For close button
-    //connect(btnClose, SIGNAL(clicked()), this, SLOT(reject()));
+    connect(btnClose, SIGNAL(clicked()), this, SLOT(reject()));
 }
 
 Appinfo * _getAppList(const char *contentType)

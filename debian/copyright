@@ -60,6 +60,8 @@ Files:     src/embelish.cpp
            src/titleBar.h
            src/waterMarkDlg.cpp
            src/waterMarkDlg.h
+           src/interruptDlg.cpp
+           src/interruptDlg.h
            src/widget.cpp
            src/widget.h
 Copyright: 2020, KylinSoft Co., Ltd.

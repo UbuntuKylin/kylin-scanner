@@ -33,6 +33,7 @@
 #include "embelish.h"
 #include "kylinSane.h"
 #include "realTimelbl.h"
+#include "interruptDlg.h"
 
 class myThread : public QThread
 {

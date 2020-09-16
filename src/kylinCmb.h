@@ -20,6 +20,7 @@
 
 #include <QComboBox>
 #include <QMouseEvent>
+#include <QToolTip>
 
 class KylinCmb : public QComboBox
 {
