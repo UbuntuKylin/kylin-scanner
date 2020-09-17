@@ -649,7 +649,9 @@ SANE_Status get_option_sources(SANE_Handle sane_handle, int optnum)
         const char *p = strstr(tmp, "multi-function peripheral");
         qDebug("p = %s\n", p);
 
-        if (!strcmp("Flatbed", tmp) || *strstr(tmp, "multi-function peripheral"))
+        if (!strcmp("Flatbed", tmp)
+                || strstr(tmp, "flatbed")
+                || strstr(tmp, "multi-function peripheral"))
         {
             type = QObject::tr("Flatbed"); //平板式
             flag = 1;
@@ -1451,7 +1453,8 @@ void kylinNorScanFindDevice()
                 // Same device have same type
                 qDebug("gs_deviceList[%d]->type = %s\n", i, gs_deviceList[i]->type);
                 if (!strcmp("Flatbed", gs_deviceList[i]->type)
-                        || *strstr(gs_deviceList[i]->type, "multi-function peripheral"))
+                        || strstr(gs_deviceList[i]->type, "flatbed")
+                        || strstr(gs_deviceList[i]->type, "multi-function peripheral"))
                 {
                     type = QObject::tr("Flatbed"); //平板式
                 }
@@ -1522,7 +1525,8 @@ void kylinNorScanOpenDevice(int index)
                 // Same device have same type
                 qDebug("gs_deviceList[%d]->type = %s\n", i, gs_deviceList[i]->type);
                 if (!strcmp("Flatbed", gs_deviceList[i]->type)
-                        || *strstr(gs_deviceList[i]->type, "multi-function peripheral"))
+                        || strstr(gs_deviceList[i]->type, "flatbed")
+                        || strstr(gs_deviceList[i]->type, "multi-function peripheral"))
                 {
                     type = QObject::tr("Flatbed"); //平板式
                 }
