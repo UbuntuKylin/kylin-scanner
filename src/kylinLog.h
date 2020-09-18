@@ -15,34 +15,12 @@
 * along with this program; if not, see <http://www.gnu.org/licenses/&gt;.
 *
 */
-#ifndef REALTIMELBL_H
-#define REALTIMELBL_H
+#ifndef KYLINLOG_H
+#define KYLINLOG_H
 
-#include <QWidget>
-#include <QtGui>
-#include <QQueue>
-#include <QLabel>
-#include <QPainter>
-#include <QPicture>
-#include "kylinLog.h"
+#include <QDebug>
+#include <QDateTime>
+#define MYLOG qDebug() << QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss:zzz") \
+    << ":" << __FILE__ << ":" << __LINE__ << ":" << __func__ << "# "
 
-class RealTimeLbl : public QLabel
-{
-    Q_OBJECT
-
-public:
-    explicit RealTimeLbl(QWidget *parent = nullptr);
-    ~RealTimeLbl();
-
-    int width;
-    int height;
-    const uchar * data;   //图像信息
-
-protected:
-    void paintEvent(QPaintEvent *event);
-
-signals:
-
-};
-
-#endif // REALTIMELBL_H
+#endif // KYLINLOG_H

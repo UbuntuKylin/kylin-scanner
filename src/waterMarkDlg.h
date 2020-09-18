@@ -28,6 +28,7 @@
 #include <QVBoxLayout>
 #include <QPainter>
 #include <QBitmap>
+#include "kylinLog.h"
 
 class WaterMarkDialog : public QDialog
 {

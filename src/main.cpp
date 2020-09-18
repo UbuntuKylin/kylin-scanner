@@ -33,14 +33,14 @@ int main(int argc, char *argv[])
     }
     else
     {
-        qDebug() << "kylin-scanner is not running.";
+        MYLOG << "kylin-scanner is not running.";
     }
     QApplication::setWindowIcon(QIcon::fromTheme("kylin-scanner", QIcon(":/icon/icon/scanner.png")));
 
     // For translations with different language environments
     QTranslator translator;
     QString locale = "/usr/share/kylin-scanner/translations/kylin-scanner." + QLocale::system().name();
-    qDebug() << locale ;
+    MYLOG << locale ;
 
     translator.load(locale);
     a.installTranslator(&translator);

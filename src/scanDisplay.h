@@ -34,6 +34,7 @@
 #include "kylinSane.h"
 #include "realTimelbl.h"
 #include "interruptDlg.h"
+#include "kylinLog.h"
 
 class myThread : public QThread
 {

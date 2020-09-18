@@ -35,6 +35,7 @@ Files: Doxyfile
        src/kylinCmb.h
        src/kylinLbl.cpp
        src/kylinLbl.h
+       src/kylinLog.h
        src/kylinSane.cpp
        src/kylinSane.h
        src/main.cpp

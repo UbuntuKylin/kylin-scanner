@@ -31,6 +31,7 @@
 #include <QPushButton>
 #include <QLabel>
 #include <QString>
+#include "kylinLog.h"
 
 class InterruptDlg : public QDialog
 {

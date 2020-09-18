@@ -250,11 +250,20 @@ QImage *ScanDisplay::imageSave(QString fileName)
     return NULL;
 }
 
+/**
+ * @brief ScanDisplay::setNoDevice
+ * 设置无设备时的页面widget
+ * 对设计新的等待页面有作用
+ */
 void ScanDisplay::setNoDevice()
 {
     vStackedLayout->setCurrentWidget(widgetConnectError);
 }
 
+/**
+ * @brief ScanDisplay::setInitDevice
+ * 设置初始化页面widget
+ */
 void ScanDisplay::setInitDevice()
 {
     vStackedLayout->setCurrentWidget(labInit);
@@ -306,7 +315,7 @@ void ScanDisplay::timerEvent(QTimerEvent *e)
 
     if (id == m_timeScanId)
     {
-        qDebug() << "timeScanId";
+        MYLOG << "timeScanId";
 //            labNormalLeft->height = 490;
 
 //            labNormalLeft->data = NULL; //图像信息
@@ -390,7 +399,7 @@ void ScanDisplay::addWatermark()
 void ScanDisplay::orcText()
 {
     labOrcRight->setText(outText);
-    qDebug()<<outText;
+    MYLOG <<outText;
 }
 
 void ScanDisplay::onOrc()
@@ -530,7 +539,7 @@ void ScanDisplay::onScan()
  */
 void ScanDisplay::onRectify()
 {
-    qDebug()<<"rectify\n";
+    MYLOG <<"rectify\n";
     if(flagRectify == 0)
     {
         // 此时代表用户点击了智能纠偏按钮
@@ -625,7 +634,7 @@ void ScanDisplay::onRectify()
  */
 void ScanDisplay::onBeautify()
 {
-    qDebug() << "beauty()";
+    MYLOG << "beauty()";
     if(flagBeautify == 0)
     {
         flagBeautify = 1;
@@ -712,14 +721,14 @@ void ScanDisplay::switchPage()
     index++;
     if(index > 1)
     {
-        qDebug() << "1 switchPage index = " << index;
+        MYLOG << "1 switchPage index = " << index;
         index = 0;
         *imgNormal = imgEditLayout->copy();
         setPixmapScaled(*imgNormal,labNormalLeft);
     }
     else
     {
-        qDebug() << "2 switchPage index = " << index;
+        MYLOG << "2 switchPage index = " << index;
         *imgEditLayout = imgNormal->copy();
         setPixmapScaled(*imgEditLayout,labEditLayout);
     }
@@ -732,12 +741,11 @@ void ScanDisplay::switchPage()
 void ScanDisplay::timerScanUpdate()
 {
     m_timerNum++;
-    qDebug() << "timerScanUpdate";
-    qDebug() << m_timerNum << "timer";
+    MYLOG << m_timerNum << "timer";
     if (m_timerNum == 50)
     {
         timerScan->stop();
-        qDebug() << "timer stop";
+        MYLOG << "timer stop";
         emit scanTimerFinished();
     }
 }
@@ -859,10 +867,10 @@ void EditBar::setEditBarWindowBorderRadius()
 void myThread::run()
 {
     tesseract::TessBaseAPI *api = new tesseract::TessBaseAPI();
-    qDebug()<<"orc run!\n";
+    MYLOG <<"orc run!\n";
     //使用中文初始化tesseract-ocr，而不指定tessdata路径。正在识别中
     if (api->Init(NULL, "chi_sim")) {
-        qDebug()<<"Could not initialize tesseract.\n";
+        MYLOG <<"Could not initialize tesseract.\n";
         outText = "Unable to read text";
         exit(1);
     }
@@ -870,7 +878,7 @@ void myThread::run()
     Pix* image = pixRead("/tmp/scanner/scan1.png");
     if(!image)
     {
-        qDebug()<<"pixRead error!";
+        MYLOG <<"pixRead error!";
         outText = "Unable to read text";
         emit orcFinished();
         // 销毁使用过的对象并释放内存。

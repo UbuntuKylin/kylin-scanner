@@ -154,7 +154,7 @@ ScanSet::ScanSet(QWidget *parent)
     {
         instance.userInfo.color = "Gray";
     }
-    qDebug() << "userInfo.color = " << instance.userInfo.color;
+    MYLOG << "userInfo.color = " << instance.userInfo.color;
     instance.userInfo.color = curColor;
 
     curResolution = textResolution->currentText();
@@ -252,7 +252,7 @@ void ScanSet::setKylinComboBox(bool curIndexChanged)
     if (!curIndexChanged) // 当选择设备时，索引发生改变，此时不应该按照读取的字符串进行默认设置
     {
         strListDevice = instance.getKylinSaneNames();
-        qDebug() << "sane names: " << strListDevice;
+        MYLOG << "sane names: " << strListDevice;
         setKylinComboBoxAttributes(textDevice, strListDevice);
     }
 
@@ -329,7 +329,7 @@ void ScanSet::setKylinComboBoxScanDeviceName()
 
     // For  default device
     strListDevice = instance.getKylinSaneNames();
-    qDebug() << "sane names: " << strListDevice;
+    MYLOG << "sane names: " << strListDevice;
     setKylinComboBoxAttributes(textDevice, strListDevice);
 }
 
@@ -619,10 +619,14 @@ void ScanSet::onBtnLocationClicked()
 void ScanSet::onBtnMailClicked()
 {
     AppList * maillist = getAppIdList(MAILTYPE);
+    MYLOG << "Get Applist success.";
+
     if(!maillist)
     {
+        MYLOG << "maillist is null";
         NoMail *dialog = new NoMail(this);
         int ret= dialog->exec();// 以模态方式显示对话框，用户关闭对话框时返回 DialogCode值
+        MYLOG << "ret = " << ret;
         if(ret==QDialog::Accepted)
         {
             QProcess *process = new QProcess();
@@ -632,8 +636,11 @@ void ScanSet::onBtnMailClicked()
     }
     else
     {
+        MYLOG << "maillist is not null";
         SendMail *dialog = new SendMail(this);
+        MYLOG << "begin";
         dialog->setBtnList();
+        MYLOG << "after";
         dialog->exec();
     }
 }
@@ -659,8 +666,8 @@ void ScanSet::onTextDeviceCurrentTextChanged(QString device)
     instance.userInfo.name = device;
     int curTextLen = textDevice->currentText().length();
 
-    qDebug() << "device name: "<< instance.userInfo.name;
-    qDebug() << "textDevice->currentText = " << textDevice->currentText()
+    MYLOG << "device name: "<< instance.userInfo.name;
+    MYLOG << "textDevice->currentText = " << textDevice->currentText()
              << "length = " << curTextLen;
 
     if ( curTextLen >= 20)
@@ -676,7 +683,7 @@ void ScanSet::onTextDeviceCurrentTextChanged(QString device)
     {
         index = 0;
     }
-    qDebug() << "device index: " << index;
+    MYLOG << "device index: " << index;
     //char *deviceName =
 
     //int index = 1;
@@ -685,12 +692,12 @@ void ScanSet::onTextDeviceCurrentTextChanged(QString device)
     status = instance.getKylinSaneStatus();
     if (status)
     {
-        qDebug() << "open_device true";
+        MYLOG << "open_device true";
         emit openDeviceStatusSignal(true);
     }
     else
     {
-        qDebug() << "open_device false";
+        MYLOG << "open_device false";
         emit openDeviceStatusSignal(false);
     }
 }
@@ -727,19 +734,19 @@ void ScanSet::onTextColorCurrentTextChanged(QString color)
     {
         instance.userInfo.color = "Gray";
     }
-    qDebug() << "color: "<< instance.userInfo.color;
+    MYLOG << "color: "<< instance.userInfo.color;
 }
 
 void ScanSet::onTextResolutionCurrentTextChanged(QString resolution)
 {
     KylinSane & instance = KylinSane::getInstance();
     instance.userInfo.resolution = resolution;
-    qDebug() << "resolution: "<< instance.userInfo.resolution;
+    MYLOG << "resolution: "<< instance.userInfo.resolution;
 }
 
 void ScanSet::onTextSizeCurrentTextChanged(QString size)
 {
     KylinSane & instance = KylinSane::getInstance();
     instance.userInfo.size = size;
-    qDebug() << "size: "<< instance.userInfo.size;
+    MYLOG << "size: "<< instance.userInfo.size;
 }

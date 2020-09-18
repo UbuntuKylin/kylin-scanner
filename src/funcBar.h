@@ -34,6 +34,7 @@
 #include <QTextDocument>
 #include "kylinSane.h"
 #include "embelish.h"
+#include "kylinLog.h"
 
 class ThreadScanFuncBar : public QThread
 {

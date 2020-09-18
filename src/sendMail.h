@@ -35,6 +35,7 @@
 #include <QFileInfo>
 #include <QFileIconProvider>
 #include <qmath.h>
+#include "kylinLog.h"
 
 #ifdef signals
 #undef signals

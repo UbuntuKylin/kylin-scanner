@@ -26,6 +26,7 @@
 #include "scanDisplay.h"
 #include "scanSet.h"
 #include "titleBar.h"
+#include "kylinLog.h"
 
 class CommonScanThread : public QThread
 {

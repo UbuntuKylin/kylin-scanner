@@ -54,6 +54,7 @@ HEADERS += \
     interruptDlg.h \
     kylinCmb.h \
     kylinLbl.h \
+    kylinLog.h \
     kylinSane.h \
     realTimelbl.h \
     rectify.h \
