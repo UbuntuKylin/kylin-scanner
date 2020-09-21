@@ -103,8 +103,8 @@ private:
     QList<QPushButton *> btnList;
     QList<QString> desktopName;
 
-private slots:
-    void onBtnClicked(void);
+public slots:
+    void onBtnClicked();
 
 };
 
