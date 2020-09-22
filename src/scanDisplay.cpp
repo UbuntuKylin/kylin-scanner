@@ -359,9 +359,13 @@ void ScanDisplay::addWatermark()
     QString text;
     WaterMarkDialog *dialog = new WaterMarkDialog(this);
     int ret=dialog->exec();// 以模态方式显示对话框，用户关闭对话框时返回 DialogCode值
+    MYLOG << "ret = " << ret;
+
     if (ret==QDialog::Accepted) //OK键被按下,对话框关闭，若设置了setAttribute(Qt::WA_DeleteOnClose)，对话框被释放，无法获得返回值
     { //OK键被按下，获取对话框上的输入，设置行数和列数
         text = dialog->getLineEdit();
+        MYLOG << text;
+
         *imgStack = imgEditLayout->copy();
         stack.push(*imgStack);
         *imgEditLayout = imgBackup->copy();
@@ -369,7 +373,7 @@ void ScanDisplay::addWatermark()
         int fontSize = 70, spacing = 20;
         QFont font("华文黑体", fontSize, QFont::Thin);
         QColor colorFont(1, 1, 1);
-        colorFont.setAlphaF(0.4); // 设置水印字体颜色透明度
+        //colorFont.setAlphaF(0.4); // 设置水印字体颜色透明度,这个会导致字体不显示等一系列错误
         font.setLetterSpacing(QFont::AbsoluteSpacing, spacing);
         painter.setFont(font);
         painter.setPen(colorFont);
