@@ -35,6 +35,7 @@
 #include <QFileInfo>
 #include <QFileIconProvider>
 #include <qmath.h>
+#include "kylinLog.h"
 
 #ifdef signals
 #undef signals
@@ -102,8 +103,8 @@ private:
     QList<QPushButton *> btnList;
     QList<QString> desktopName;
 
-private slots:
-    void onBtnClicked(void);
+public slots:
+    void onBtnClicked();
 
 };
 

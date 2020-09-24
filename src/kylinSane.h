@@ -34,6 +34,7 @@
 #include <QDebug>
 #include <QString>
 #include <QStringList>
+#include "kylinLog.h"
 using namespace std;
 
 #ifndef PATH_MAX

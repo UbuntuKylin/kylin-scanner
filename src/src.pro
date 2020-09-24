@@ -34,6 +34,7 @@ LIBS +=-ltesseract
 
 SOURCES += \
     funcBar.cpp \
+    interruptDlg.cpp \
     kylinCmb.cpp \
     kylinLbl.cpp \
     kylinSane.cpp \
@@ -50,8 +51,10 @@ SOURCES += \
 
 HEADERS += \
     funcBar.h \
+    interruptDlg.h \
     kylinCmb.h \
     kylinLbl.h \
+    kylinLog.h \
     kylinSane.h \
     realTimelbl.h \
     rectify.h \

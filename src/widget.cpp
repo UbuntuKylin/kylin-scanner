@@ -196,7 +196,7 @@ void Widget::saveToPdf(QImage img, QString pathName)
  */
 void Widget::resultDetail(bool ret)
 {
-    qDebug()<<"result_detail"<<endl;
+    MYLOG <<"result_detail";
 
     if(ret)
     {
@@ -235,12 +235,12 @@ void Widget::saveScanFile()
     pFuncBar->setStackClear();
     img.load("/tmp/scanner/scan.pnm");
     QString pathName = pScanSet->getTextLocation() + "/" + pScanSet->getTextName();
-    qDebug()<<"pathName:"<<pathName;
+    MYLOG <<"pathName:"<<pathName;
     QString format = pScanSet->getTextFormat();
     if ((format == "jpg") || (format == "png") || (format == "bmp"))
     {
         QString newformat = "." + format;
-        qDebug()<<"newformat:"<<newformat;
+        MYLOG <<"newformat:"<<newformat;
         if (pathName.endsWith(newformat,Qt::CaseSensitive))
         {
             img.save(pathName);
@@ -248,18 +248,18 @@ void Widget::saveScanFile()
         else
         {
             pathName += newformat;
-            qDebug()<<"pathName:"<<pathName;
+            MYLOG <<"pathName:"<<pathName;
             img.save(pathName);
         }
     }
     else if (format == "pdf")
     {
         QString newformat = "." + format;
-        qDebug()<<"newformat:"<<newformat;
+        MYLOG <<"newformat:"<<newformat;
         if (!pathName.endsWith(newformat,Qt::CaseSensitive))
         {
             pathName += newformat;
-            qDebug()<<"pathName:"<<pathName;
+            MYLOG <<"pathName:"<<pathName;
         }
         saveToPdf(img,pathName);
     }
@@ -274,7 +274,7 @@ void Widget::saveScanFile()
  */
 void Widget::scanResult(bool ret)
 {
-    qDebug()<<"scan_result"<<endl;
+    MYLOG <<"scan_result";
     KylinSane &instance = KylinSane::getInstance();
 
     if(ret)
@@ -311,7 +311,7 @@ void Widget::scanResult(bool ret)
  */
 void Widget::scanResultDetail(bool ret)
 {
-    qDebug()<<"scan_result_detail"<<endl;
+    MYLOG <<"scan_result_detail";
 
     if(ret)
     {
@@ -364,11 +364,11 @@ void CommonScanThread::run()
 
         //instance.open_device(0);
 
-        //qDebug() << instance.getKylinSaneResolutions();
+        //MYLOG << instance.getKylinSaneResolutions();
         if(instance.getKylinSaneStatus() == false)
         {
             emit scanFinished(false);
-            qDebug() << "scan finished!";
+            MYLOG << "scan finished!";
         }
         else
         {

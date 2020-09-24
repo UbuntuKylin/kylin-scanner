@@ -29,6 +29,7 @@
 #include <QApplication>
 #include <QPixmap>
 #include <QImage>
+#include "kylinLog.h"
 
 class KylinLbl  :   public QLabel
 {

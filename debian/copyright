@@ -2,68 +2,61 @@ Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
 Upstream-Name: kylin-scanner
 Upstream-Contact: yushuoqi <yushuoqi@kylinos.cn>
 Source: https://github.com/ukui/kylin-scanner
-#
-# Please double check copyright with the licensecheck(1) command.
 
-Files:     Doxyfile
-           README.md
-           README_CN.md
-           AUTHORS
-           ChangeLog
-           COPYING
-           NEWS
-           autodoxygen.sh
-           autogen.sh
-           debian/*
-           man/*
-           docs/*
-           src/icon/*.gif
-           src/icon/*.png
-           src/icon/*.svg
-           src/translations/*
-           src/res.qrc
-           src/data/*
-           clear.sh
-           kylin-scanner.pro
-           src/src.pro
-           sider.yml
-Copyright: yushuoqi <yushuoqi@kylinos.cn>
-           2020, KylinSoft Co., Ltd.
-License:   GPL-3.0
- This program is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 3, or (at your option)
- any later version.
-
-Files:     src/embelish.cpp
-           src/embelish.h
-           src/realTimelbl.cpp
-           src/realTimelbl.h
-           src/funcBar.cpp
-           src/funcBar.h
-           src/kylinCmb.cpp
-           src/kylinCmb.h
-           src/kylinLbl.cpp
-           src/kylinLbl.h
-           src/kylinSane.cpp
-           src/kylinSane.h
-           src/main.cpp
-           src/rectify.cpp
-           src/rectify.h
-           src/scanDisplay.cpp
-           src/scanDisplay.h
-           src/scanSet.cpp
-           src/scanSet.h
-           src/sendMail.cpp
-           src/sendMail.h
-           src/titleBar.cpp
-           src/titleBar.h
-           src/waterMarkDlg.cpp
-           src/waterMarkDlg.h
-           src/widget.cpp
-           src/widget.h
+Files: Doxyfile
+       README.md
+       README_CN.md
+       AUTHORS
+       ChangeLog
+       NEWS
+       autodoxygen.sh
+       autogen.sh
+       debian/*
+       man/*
+       docs/*
+       src/icon/*.gif
+       src/icon/*.png
+       src/icon/*.svg
+       src/icon/waiting/*
+       src/icon/editBar/*
+       src/translations/*
+       src/res.qrc
+       src/data/*
+       clear.sh
+       kylin-scanner.pro
+       src/src.pro
+       src/embelish.cpp
+       src/embelish.h
+       src/realTimelbl.cpp
+       src/realTimelbl.h
+       src/funcBar.cpp
+       src/funcBar.h
+       src/kylinCmb.cpp
+       src/kylinCmb.h
+       src/kylinLbl.cpp
+       src/kylinLbl.h
+       src/kylinLog.h
+       src/kylinSane.cpp
+       src/kylinSane.h
+       src/main.cpp
+       src/rectify.cpp
+       src/rectify.h
+       src/scanDisplay.cpp
+       src/scanDisplay.h
+       src/scanSet.cpp
+       src/scanSet.h
+       src/sendMail.cpp
+       src/sendMail.h
+       src/titleBar.cpp
+       src/titleBar.h
+       src/waterMarkDlg.cpp
+       src/waterMarkDlg.h
+       src/interruptDlg.cpp
+       src/interruptDlg.h
+       src/widget.cpp
+       src/widget.h
 Copyright: 2020, KylinSoft Co., Ltd.
-License:   GPL+-3.0
+License: GPL-3+
  This program is free software; you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
  the Free Software Foundation; either version 3, or (at your option)

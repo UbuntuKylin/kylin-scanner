@@ -346,7 +346,7 @@ void FuncBar::onBtnScanClicked()
     if(instance.getKylinSaneStatus() == true)
     {
         thread.start();
-        qDebug() << "btnScan: " << btnScan->size() << btnScan->pos() << btnScan->geometry();
+        MYLOG << "btnScan: " << btnScan->size() << btnScan->pos() << btnScan->geometry();
 
         btnScan->hide();
         btnScan->resize(0,0);
@@ -357,14 +357,14 @@ void FuncBar::onBtnScanClicked()
 //        btnScan->setText(" ");
 //        btnScan->setStyleSheet("QPushButton{image: url(:/icon/icon/scanner.gif);border-radius:28px;}");
 
-        cout << "scan()" <<endl;
+        MYLOG << "scan()";
     }
 
 }
 
 void FuncBar::onBtnRectifyClicked()
 {
-    qDebug()<<"send_Rectify_Begin"<<endl;
+    MYLOG <<"send_Rectify_Begin";
     if(flagRectify == 0)
     {
         flagRectify = 1;
@@ -386,7 +386,7 @@ void FuncBar::onBtnRectifyClicked()
 
 void FuncBar::onBtnBeautyClicked()
 {
-    qDebug() << "flagBeauty = " << flagBeautify;
+    MYLOG << "flagBeauty = " << flagBeautify;
     if(flagBeautify == 0)
     {
         flagBeautify = 1;
@@ -407,7 +407,7 @@ void FuncBar::onBtnBeautyClicked()
 
 void FuncBar::scanResult(int ret)
 {
-    qDebug() << ret;
+    MYLOG << ret;
     btnScan->show();
     btnScan->setText("扫描");
     btnScan->setStyleSheet("QPushButton{background-color: rgb(232,160,73);border-radius:28px;color:rgb(232,232,232);}");
@@ -426,7 +426,7 @@ void ThreadScanFuncBar::run()
     {
         int ret = 0;
         ret = instance.startScanning(instance.userInfo);
-        qDebug()<<"start_scanning end!!!";
+        MYLOG <<"start_scanning end!!!";
         emit scanFinishedFuncBar(ret);
     }
     quit();
