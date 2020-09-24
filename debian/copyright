@@ -17,6 +17,8 @@ Files: Doxyfile
        src/icon/*.gif
        src/icon/*.png
        src/icon/*.svg
+       src/icon/waiting/*
+       src/icon/editBar/*
        src/translations/*
        src/res.qrc
        src/data/*
@@ -33,6 +35,7 @@ Files: Doxyfile
        src/kylinCmb.h
        src/kylinLbl.cpp
        src/kylinLbl.h
+       src/kylinLog.h
        src/kylinSane.cpp
        src/kylinSane.h
        src/main.cpp
@@ -48,6 +51,8 @@ Files: Doxyfile
        src/titleBar.h
        src/waterMarkDlg.cpp
        src/waterMarkDlg.h
+       src/interruptDlg.cpp
+       src/interruptDlg.h
        src/widget.cpp
        src/widget.h
 Copyright: 2020, KylinSoft Co., Ltd.

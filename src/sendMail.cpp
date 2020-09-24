@@ -283,6 +283,7 @@ void SendMail::setBtnList()
     AppList * maillist = getAppIdList(MAILTYPE);
     if (maillist)
     {
+        MYLOG << maillist;
         vBoxLayout1->setSpacing(0);
         vBoxLayout1->setContentsMargins(0,0,0,0);
         for (int i = 0; maillist[i].appid != NULL; i++)
@@ -341,9 +342,9 @@ void SendMail::openMail(QString name)
 {
     QFile aFile(DESKTOPPATH+name);
         if(!aFile.exists())
-            qDebug() << DESKTOPPATH << name << " no exists!";
+            MYLOG << DESKTOPPATH << name << " no exists!";
         if(!aFile.open(QIODevice::ReadOnly | QIODevice::Text))
-            qDebug() << DESKTOPPATH << name << " open false!";
+            MYLOG << DESKTOPPATH << name << " open false!";
         QTextStream aStream(&aFile);
         QString str;
         aStream.setAutoDetectUnicode(true);

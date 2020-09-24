@@ -27,6 +27,7 @@
 #include <QApplication>
 #include <QDebug>
 #include <QPainter>
+#include "kylinLog.h"
 //class QPushButton;
 
 class TitleBar : public QWidget

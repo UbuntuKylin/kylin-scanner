@@ -9,7 +9,6 @@ rm -f kylin-scanner.pro.user \
     src/kylin-scanner \
     debian/debhelper-build-stamp \
     debian/files \
-    debian/watch \
     debian/kylin-scanner.substvars \
     debian/README.Debian \
     debian/kylin-scanner.debhelper.log

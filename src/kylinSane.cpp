@@ -25,11 +25,11 @@ extern "C" {
 
 typedef struct
 {
-  uint8_t *data;
-  int width;
-  int height;
-  int x;
-  int y;
+    uint8_t *data;
+    int width;
+    int height;
+    int x;
+    int y;
 } Image;
 
 typedef struct
@@ -64,16 +64,21 @@ static void writePnmHeader (SANE_Frame format, int width, int height, int depth,
         case SANE_FRAME_RGB:
             fprintf(ofp, "P6\n# SANE data follows\n%d %d\n%d\n",
                     width, height, (depth <= 8) ? 255 : 65535);
+            MYLOG << "#P6 SANE data follows width = " << width << "height = " << height
+                  << "depth = " << ((depth <= 8) ? 255 : 65535);
             break;
         default:
             if (depth == 1)
             {
                 fprintf(ofp, "P4\n# SANE data follows\n%d %d\n", width, height);
+                MYLOG << "#P4 SANE data follows width = " << width << "height = " << height;
             }
             else
             {
                 fprintf(ofp, "P5\n# SANE data follows\n%d %d\n%d\n",
                         width, height,(depth <= 8) ? 255 : 65535);
+                MYLOG << "#P5 SANE data follows width = " << width << "height = " << height
+                      << "depth = " << ((depth <= 8) ? 255 : 65535);
             }
             break;
     }
@@ -110,8 +115,7 @@ static void * advance (Image * image)
 
     if (image->data == NULL)
     {
-        fprintf (stderr, "can't allocate image buffer (%dx%d)\n",
-                image->width, image->height);
+        MYLOG << "Can't allocate image buffer, width = " << image->width << "height = " << image->height;
     }
     return image->data;
 }
@@ -138,11 +142,13 @@ static SANE_Status onScanning(FILE *ofp)
         }
 
         status = sane_get_parameters (gs_device, &parm);
-        qDebug("Parm : stat=%s form=%d,lf=%d,bpl=%d,pixpl=%d,lin=%d,dep=%d\n",
-            sane_strstatus (status),
-            parm.format, parm.last_frame,
-            parm.bytes_per_line, parm.pixels_per_line,
-            parm.lines, parm.depth);
+        MYLOG << "Parm : status = " << sane_strstatus(status)
+              << "format = " << parm.format
+              << "last_frame = " << parm.last_frame
+              << "bytes_per_line = " << parm.bytes_per_line
+              << "pixels_per_line = " << parm.pixels_per_line
+              << "lines = " << parm.lines
+              << "depth = " << parm.depth;
 
         if (status != SANE_STATUS_GOOD)
         {
@@ -153,16 +159,13 @@ static SANE_Status onScanning(FILE *ofp)
         {
             if (parm.lines >= 0)
             {
-                 qDebug("scanning image of size %dx%d pixels at %d bits/pixel\n",
-                      parm.pixels_per_line, parm.lines,
-                      parm.depth * (SANE_FRAME_RGB == parm.format ? 3 : 1));
+                MYLOG << "Image's size(pixels): " << parm.pixels_per_line << parm.lines
+                      << "Bits/pixel: " <<  parm.depth * (SANE_FRAME_RGB == parm.format ? 3 : 1);
             }
             else
             {
-                 qDebug("scanning image %d pixels wide and "
-                      "variable height at %d bits/pixel\n",
-                      parm.pixels_per_line,
-                      parm.depth * (SANE_FRAME_RGB == parm.format ? 3 : 1));
+                MYLOG << "Image's wide pixels: " << parm.pixels_per_line
+                      << "Height for bits/pixel: " << parm.depth * (SANE_FRAME_RGB == parm.format ? 3 : 1);
             }
 
             switch (parm.format)
@@ -176,20 +179,18 @@ static SANE_Status onScanning(FILE *ofp)
                   break;
 
                 case SANE_FRAME_RGB:
-                  qDebug("SANE_FRAME_RGB\n");
+                    MYLOG << "SANE_FRAME_GRB";
                   //assert ((parm.depth == 8) || (parm.depth == 16));
 
                 case SANE_FRAME_GRAY:
                     assert ((parm.depth == 1) || (parm.depth == 8) || (parm.depth == 16));
                     if (parm.lines < 0)
                     {
-                        qDebug("parm.format = SANE_FRAME_GRAY, parm.lines < 0\n");
                         must_buffer = 1;
                         offset = 0;
                     }
                     else
                     {
-                        qDebug("SANE_FRAME_GRAY\n");
                         writePnmHeader (parm.format, parm.pixels_per_line, parm.lines, parm.depth, ofp);
                     }
                   break;
@@ -251,7 +252,7 @@ static SANE_Status onScanning(FILE *ofp)
 
             if (must_buffer)
             {
-                qDebug("must_buffer = %d\n", must_buffer);
+                MYLOG << "must_buffer = " << must_buffer;
                 switch (parm.format)
                 {
                     case SANE_FRAME_RED:
@@ -382,11 +383,13 @@ SANE_Status kylin_sane_get_parameters(SANE_Handle device)
     SANE_Parameters parm;
 
     status = sane_get_parameters (device, &parm);
-    qDebug("Parm : stat=%s form=%d,lf=%d,bpl=%d,pixpl=%d,lin=%d,dep=%d\n",
-        sane_strstatus (status),
-        parm.format, parm.last_frame,
-        parm.bytes_per_line, parm.pixels_per_line,
-        parm.lines, parm.depth);
+    MYLOG << "Parm : status = " << sane_strstatus(status)
+          << "format = " << parm.format
+          << "last_frame = " << parm.last_frame
+          << "bytes_per_line = " << parm.bytes_per_line
+          << "pixels_per_line = " << parm.pixels_per_line
+          << "lines = " << parm.lines
+          << "depth = " << parm.depth;
 
     return status;
 }
@@ -403,15 +406,15 @@ SANE_Status doScan(const char *fileName)
     string dir = "/tmp/scanner/";
     if (access(dir.c_str(), 0) == -1)
     {
-        cout << dir << "is not existing, now create it." << endl;
+        MYLOG << " /tmp/scanner/ is not existing, now create it.";
         int flag=mkdir(dir.c_str(), 0777);
         if (flag == 0)
         {
-            cout << "create successfully!" << endl;
+            MYLOG << "create successfully!" ;
         }
         else
         {
-            cout << "create failed!" << endl;
+            MYLOG << "create failed!" ;
         }
     }
 
@@ -420,11 +423,10 @@ SANE_Status doScan(const char *fileName)
         sprintf (path, "%s%s.pnm", dir.c_str(), fileName);
         strcpy (part_path, path);
         strcat (part_path, ".part");
-
-        qDebug("picture name: %s\n", path);
+        MYLOG << "part_path = " << part_path;
 
         status = sane_start (gs_device);
-        qDebug() << "status error: " << sane_strstatus(status);
+        MYLOG << "status error: " << sane_strstatus(status);
         if (status != SANE_STATUS_GOOD)
         {
             break;
@@ -485,7 +487,7 @@ SANE_Status doScan(const char *fileName)
 
 static void auth_callback (SANE_String_Const resource, SANE_Char * username, SANE_Char * password)
 {
-    qDebug() << "auth_callback" << resource << username << password;
+    MYLOG << "auth_callback" << resource << username << password;
 }
 
 /**
@@ -497,7 +499,7 @@ static void saneInit()
 
     sane_init (&version_code, auth_callback);
 
-    qDebug("SANE version code: %d\n", version_code);
+    MYLOG << "version_code = " << version_code;
 }
 
 /**
@@ -511,13 +513,13 @@ static SANE_Status getSaneDevices(const SANE_Device ***device_list)
 {
     SANE_Status status = SANE_STATUS_GOOD;
 
-    qDebug("Get all devices...\n");
+    MYLOG << "Get all scan devices, please waiting ...";
 
     status = sane_get_devices (device_list, SANE_FALSE);
 
     if (status)
     {
-        qDebug("sane_get_devices status: %s\n", sane_strstatus(status));
+        MYLOG << "status = " << sane_strstatus(status);
     }
     return status;
 }
@@ -532,13 +534,15 @@ SANE_Status openSaneDevice(SANE_Device *device, SANE_Handle *sane_handle)
 {
     SANE_Status status = SANE_STATUS_INVAL;
 
-    qDebug("Name: %s, vendor: %s, model: %s, type: %s\n",
-         device->name, device->model, device->vendor, device->type);
+    MYLOG << "name = " << device->name
+          << "model = " << device->model
+          << "vendor = " << device->vendor
+          << "type = " << device->type;
 
     status = sane_open(device->name, sane_handle);
     if (status)
     {
-        qDebug("sane_open status: %s\n", sane_strstatus(status));
+        MYLOG << "status = " << sane_strstatus(status);
     }
 
     return status;
@@ -562,16 +566,15 @@ SANE_Status get_option_colors(SANE_Handle sane_handle, int optnum)
     const SANE_Option_Descriptor *opt;
     SANE_Status status = SANE_STATUS_INVAL;
 
-    qDebug("begin get option[%d] colors\n", optnum);
+    MYLOG << "Get colors option = " << optnum;
 
     opt = sane_get_option_descriptor(sane_handle, optnum);
 
-    qDebug("begin print all colors:\n");
     for (int i=0; opt->constraint.string_list[i] != nullptr; i++)
     {
         const char *tmp = *(opt->constraint.string_list+i);
         status = SANE_STATUS_GOOD;
-        qDebug("optnum[%d] colors string: %s \n", optnum, *(opt->constraint.string_list+i));
+        MYLOG << "color strings = " << *(opt->constraint.string_list + i);
 
         if (!strcmp("Color", tmp))
         {
@@ -603,17 +606,18 @@ SANE_Status set_option_colors(SANE_Handle sane_handle, SANE_String val_color)
 {
     SANE_Status status = SANE_STATUS_INVAL;
 
-    qDebug("\nbegin set option[2] color: %s \n", val_color);
+    MYLOG << "Set color option = " << val_color;
 
     status = sane_control_option(sane_handle,  gs_optDesc.numColorMode,
             SANE_ACTION_SET_VALUE, val_color, nullptr);
     if (status != SANE_STATUS_GOOD)
     {
-        qDebug("Option did not set\n");
+        MYLOG << "status = " << status << "desc: " << sane_strstatus(status);
         return status;
     }
 
-    qDebug("set color option success!\n\n");
+    MYLOG << "Set color success.";
+
     return status;
 }
 
@@ -635,18 +639,19 @@ SANE_Status get_option_sources(SANE_Handle sane_handle, int optnum)
     const SANE_Option_Descriptor *opt;
     int flag = 0;
 
-    qDebug("begin get option[%d] sources\n", optnum);
+    MYLOG << "Get source option = " << optnum;
 
     opt = sane_get_option_descriptor(sane_handle, optnum);
 
-    qDebug("begin print all sources:\n");
     for (int i=0; opt->constraint.string_list[i] != nullptr; i++)
     {
         const char *tmp = *(opt->constraint.string_list+i);
         status = SANE_STATUS_GOOD;
 
-        qDebug("optnum[%d] sources string: %s \n", optnum, tmp);
-        if (!strcmp("Flatbed", tmp))
+        MYLOG << "source string = " << tmp;
+        if (!strcmp("Flatbed", tmp)
+                || strstr(tmp, "flatbed")
+                || strstr(tmp, "multi-function peripheral"))
         {
             type = QObject::tr("Flatbed"); //平板式
             flag = 1;
@@ -674,17 +679,16 @@ SANE_Status set_option_sources(SANE_Handle sane_handle, int optnum, SANE_String 
 {
     SANE_Status status = SANE_STATUS_GOOD;
 
-    qDebug("begin set option[%d] source: %s \n", optnum, val_source);
+    MYLOG << "Set source option = " << val_source;
 
     status = sane_control_option(sane_handle, optnum,
             SANE_ACTION_SET_VALUE, val_source, nullptr);
     if (status != SANE_STATUS_GOOD)
     {
-        qDebug("Option did not set\n");
+        MYLOG << "status = " << status << "desc: " << sane_strstatus(status);
         return status;
     }
 
-    qDebug("set source option success!\n\n");
     return status;
 }
 
@@ -705,16 +709,15 @@ static SANE_Status getOptionResolutions(SANE_Handle sane_handle, int optnum)
     SANE_Status status = SANE_STATUS_INVAL;
     const SANE_Option_Descriptor *opt;
 
-    qDebug("begin get option[%d] resolution \n", optnum);
+    MYLOG << "Get resolution option = " << optnum;
 
     opt = sane_get_option_descriptor(sane_handle, optnum);
 
-    qDebug("begin print all resolutions:\n");
     for (int i=0; opt->constraint.word_list[i]; i++)
     {
         int res = *(opt->constraint.word_list+i);
         status = SANE_STATUS_GOOD;
-        qDebug("optnum[%d] resolutions int: %d \n", optnum, res);
+        MYLOG << "resolution int = " << res;
 
         switch (res)
         {
@@ -765,17 +768,16 @@ SANE_Status set_option_resolutions(SANE_Handle sane_handle, SANE_Int val_resolut
 {
     SANE_Status status = SANE_STATUS_GOOD;
 
-    qDebug("\nbegin set option 6 resolution: %d \n", val_resolution);
+    MYLOG << "Set resolution option = " << val_resolution;
 
     status = sane_control_option(sane_handle, gs_optDesc.numResolution,
             SANE_ACTION_SET_VALUE, &val_resolution, nullptr);
     if (status != SANE_STATUS_GOOD)
     {
-        qDebug("Option did not set\n");
+        MYLOG << "status = " << status << "desc: " << sane_strstatus(status);
         return status;
     }
 
-    qDebug("set resolution option success!\n\n");
     return status;
 }
 
@@ -804,16 +806,13 @@ SANE_Status get_option_sizes(SANE_Handle sane_handle, int optnum)
     const SANE_Option_Descriptor *opt;
     SANE_Status status = SANE_STATUS_GOOD;
 
-    qDebug("begin get option[%d] size \n", optnum);
+    MYLOG << "Get size option = " << optnum;
 
     opt = sane_get_option_descriptor(sane_handle, optnum);
 
-    qDebug("begin print all sizes:\n");
     for (int i=0; opt->constraint.word_list[i]; i++)
     {
-        int res = 0;
-        res = *(opt->constraint.word_list+i);
-        qDebug("optnum[%d] sizes int: %d \n", optnum, res);
+        MYLOG << "int sizes = " << *(opt->constraint.word_list + i);
     }
     return status;
 }
@@ -833,17 +832,16 @@ SANE_Status set_option_sizes(SANE_Handle sane_handle, int optnum, SANE_Int val_s
 {
     SANE_Status status = SANE_STATUS_GOOD;
 
-    qDebug("\nbegin set option[%d] size: %d \n", optnum, val_size);
+    MYLOG << "Set size option = " << val_size;
 
     status = sane_control_option(sane_handle, optnum,
             SANE_ACTION_SET_VALUE, &val_size, nullptr);
     if (status != SANE_STATUS_GOOD)
     {
-        qDebug("Option did not set\n");
+        MYLOG << "status = " << status << "desc: " << sane_strstatus(status);
         return status;
     }
 
-    qDebug("set size option success!\n\n");
     return status;
 }
 
@@ -859,15 +857,19 @@ SANE_Status set_option_sizes(SANE_Handle sane_handle, int optnum, SANE_Int val_s
 SANE_Status set_option_sizes_real(SANE_Handle sane_handle, SANE_Int val_size_br_x, SANE_Int val_size_br_y)
 {
     SANE_Status status = SANE_STATUS_GOOD;
-    qDebug("size Bottom-right xy=[%d, %d]\n", val_size_br_x, val_size_br_y);
+    MYLOG << "Size bottom-right location(xy) = " << val_size_br_x << val_size_br_y;
 
     status = set_option_sizes(sane_handle, gs_optDesc.numSizeBrX, SANE_FIX(val_size_br_x));
     if (status != SANE_STATUS_GOOD)
     {
-        qDebug("br_xy did not set\n");
+        MYLOG << "status = " << sane_strstatus(status);
         return status;
     }
     status = set_option_sizes(sane_handle, gs_optDesc.numSizeBrY, SANE_FIX(val_size_br_y));
+    {
+        MYLOG << "status = " << sane_strstatus(status);
+        return status;
+    }
 
     return status;
 }
@@ -953,7 +955,7 @@ static const SANE_Option_Descriptor *get_optdesc_by_name(SANE_Handle device, con
     /* Get the number of options. */
     status = sane_control_option (device, 0,
             SANE_ACTION_GET_VALUE, &num_dev_options, nullptr);
-    qDebug("get option %s value (%s)\n", name, sane_strstatus(status));
+    MYLOG << "Get option name = " << name << "status = " << status;
 
     for (*option_num = 0; *option_num < num_dev_options; (*option_num)++)
     {
@@ -964,8 +966,7 @@ static const SANE_Option_Descriptor *get_optdesc_by_name(SANE_Handle device, con
 
         if (opt->name && strcmp(opt->name, name) == 0)
         {
-            qDebug("Get option desc for option %d, opt->name=%s name=%s\n",
-                    *option_num, opt->name, name);
+            MYLOG << "Get option desc for " << *option_num << "opt->name = " << opt->name << "name" << name;
             return(opt);
         }
     }
@@ -978,15 +979,14 @@ void display_option_value(SANE_Handle device, int optnum)
 
     opt = sane_get_option_descriptor(device, optnum);
 
-    qDebug("\n\nGet options %d:\n", optnum);
-    qDebug("opt name: %s\n",opt->name);
-    qDebug("opt title: %s\n",opt->title);
-    qDebug("opt type: %d \n",opt->type);
-    qDebug("opt description: %s\n",opt->desc);
-    qDebug("opt cap: %d \n", opt->cap);
-    qDebug("opt size: %d \n", opt->size);
-    qDebug("opt unit: %d \n", opt->unit);
-    qDebug("\n");
+    MYLOG << "Get options: optnum = " << optnum
+          << "name = " << opt->name
+          << "title = " << opt->title
+          << "type = " << opt->type
+          << "desc = " << opt->desc
+          << "cap = " << opt->cap
+          << "size = " << opt->size
+          << "unit = " << opt->unit;
 }
 
 
@@ -1013,7 +1013,7 @@ static SANE_Status getOptionValue(SANE_Handle device, const char *option_name)
     SANE_Word val_resolution; // 分辨率
 
     opt = get_optdesc_by_name(device, option_name, &optnum);
-    qDebug("optname = %s optnum = %d\n", option_name, optnum);
+    MYLOG << "optname = " << option_name << "optnum = " << optnum;
 
     if (opt)
     {
@@ -1025,14 +1025,14 @@ static SANE_Status getOptionValue(SANE_Handle device, const char *option_name)
 
         if (opt->desc != NULL)
         {
-            qDebug() << opt->desc;
+            MYLOG << opt->desc;
         }
 
-        qDebug("opt->type = %d\n", opt->type);
+        MYLOG << "opt->type = " << opt->type;
         switch (opt->type)
         {
             case SANE_TYPE_INT:
-                qDebug() << "type = int" << "size = " << opt->size;
+                MYLOG << "type = int" << "size = " << opt->size;
 
                 if (!strcmp(option_name, SANE_NAME_SCAN_RESOLUTION))
                 {
@@ -1043,8 +1043,9 @@ static SANE_Status getOptionValue(SANE_Handle device, const char *option_name)
                     {
                         status = getOptionResolutions(device, optnum);
                     }
-                    qDebug("optnum=%d resolution = %d constraint_type=%d\n",
-                            gs_optDesc.numResolution, val_resolution, opt->constraint_type);
+                    MYLOG << "optnum = " << gs_optDesc.numResolution
+                          << "resolution = " << val_resolution
+                          << "constraint_type = " << opt->constraint_type;
                 }
                 break;
             case SANE_TYPE_BOOL:
@@ -1056,10 +1057,10 @@ static SANE_Status getOptionValue(SANE_Handle device, const char *option_name)
                 {
                     strcpy(str, "TRUE");
                 }
-                qDebug() << "type = bool" << "size = " << opt->size << str;
+                MYLOG << "type = bool" << "size = " << opt->size << str;
                 break;
             case SANE_TYPE_FIXED:
-                qDebug() << "type = fixed" << "size = " << opt->size;
+                MYLOG << "type = fixed" << "size = " << opt->size;
 
                 val_size = SANE_UNFIX(*(SANE_Word*) optval);
                 if (opt->constraint_type == SANE_CONSTRAINT_RANGE)
@@ -1067,17 +1068,16 @@ static SANE_Status getOptionValue(SANE_Handle device, const char *option_name)
                     status = get_option_sizes(device, optnum);
                 }
 
-                qDebug() << "str_status = " << sane_strstatus(status);
+                MYLOG << "str_status = " << sane_strstatus(status);
 
                 if (!strcmp(option_name, SANE_NAME_SCAN_TL_X))
                 {
-                    qDebug("size tl_x = %d constraint_type=%d\n",
-                            val_size, opt->constraint_type);
+                    MYLOG << "size tl_x = " << val_size << "constraint_type = " << opt->constraint_type;
                 }
                 else if (!strcmp(option_name, SANE_NAME_SCAN_TL_Y))
                 {
-                    qDebug("size tl_y= %d constraint_type=%d\n",
-                            val_size, opt->constraint_type);
+                    MYLOG << "size tl_y = " << val_size << "constraint_type = " << opt->constraint_type;
+
                 }
                 else if (!strcmp(option_name, SANE_NAME_SCAN_BR_X))
                 {
@@ -1085,7 +1085,7 @@ static SANE_Status getOptionValue(SANE_Handle device, const char *option_name)
                     // Via br_x to decide scan sizes
                     int size_range = static_cast<int>( SANE_UNFIX(opt->constraint.range->max) \
                             - SANE_UNFIX(opt->constraint.range->min));
-                    qDebug() << "min = " << SANE_UNFIX(opt->constraint.range->min) \
+                    MYLOG << "min = " << SANE_UNFIX(opt->constraint.range->min) \
                              << "max = " << SANE_UNFIX(opt->constraint.range->max) \
                              << "size_range = " << size_range;
                     {
@@ -1101,35 +1101,39 @@ static SANE_Status getOptionValue(SANE_Handle device, const char *option_name)
                             sizes << "A6";
                     }
                     instance.setKylinSaneSizes(sizes);
-                    qDebug("size optnum=%d br_x = %d constraint_type=%d\n",
-                            gs_optDesc.numSizeBrX, val_size, opt->constraint_type);
+                    MYLOG << "size optnum = " << gs_optDesc.numSizeBrX
+                          << "br_x" << val_size
+                          << "constraint_type = " << opt->constraint_type;
                 }
                 else if (!strcmp(option_name, SANE_NAME_SCAN_BR_Y))
                 {
                     gs_optDesc.numSizeBrY = optnum;
-                    qDebug("size opt_num=%d br_y = %d constraint_type=%d\n",
-                            gs_optDesc.numSizeBrY, val_size, opt->constraint_type);
+                    MYLOG << "size optnum = " << gs_optDesc.numSizeBrY
+                          << "br_y" << val_size
+                          << "constraint_type = " << opt->constraint_type;
                 }
 
                 break;
             case SANE_TYPE_STRING:
-                qDebug() << "type = string" << "size = " << opt->size;
+                MYLOG << "type = string" << "size = " << opt->size;
 
                 if (!strcmp(option_name, SANE_NAME_SCAN_MODE))
                 {
                     val_string_color = static_cast<SANE_String>(optval);
                     gs_optDesc.numColorMode = optnum;
                     status = get_option_colors(device, optnum);
-                    qDebug("Default optnum=%d color= %s constraint_type=%d\n",
-                            gs_optDesc.numColorMode, val_string_color, opt->constraint_type);
+                    MYLOG << "Default optnum = " << gs_optDesc.numColorMode
+                          << "color = " << val_string_color
+                          << "constraint_type = " << opt->constraint_type;
                 }
                 else if (!strcmp(option_name, SANE_NAME_SCAN_SOURCE))
                 {
                     val_string_source = static_cast<SANE_String>(optval);
                     gs_optDesc.numSource = optnum;
                     status = get_option_sources(device, optnum);
-                    qDebug("Default optnum=%d source= %s constraint_type=%d\n",
-                           gs_optDesc.numSource, val_string_source, opt->constraint_type);
+                    MYLOG << "Default optnum = " << gs_optDesc.numSource
+                          << "source = " << val_string_source
+                          << "constraint_type = " << opt->constraint_type;
                 }
                 else
                 {
@@ -1138,41 +1142,41 @@ static SANE_Status getOptionValue(SANE_Handle device, const char *option_name)
                 }
                 break;
             case SANE_TYPE_BUTTON:
-                qDebug() << "type = button" << "size = " << opt->size;
+                MYLOG << "type = button" << "size = " << opt->size;
                 break;
             case SANE_TYPE_GROUP:
-                qDebug() << "type = button" << "size = " << opt->size;
+                MYLOG << "type = button" << "size = " << opt->size;
                 break;
             default:
-                qDebug() << "type = %d" << opt->type << "size = " << opt->size;
+                MYLOG << "type = %d" << opt->type << "size = " << opt->size;
                 break;
         }
 
         switch (opt->unit)
         {
             case SANE_UNIT_NONE:
-                qDebug() << "unit = none";
+                MYLOG << "unit = none";
                 break;
             case SANE_UNIT_PIXEL:
-                qDebug() << "unit = pixel";
+                MYLOG << "unit = pixel";
                 break;
             case SANE_UNIT_BIT:
-                qDebug() << "unit = bit";
+                MYLOG << "unit = bit";
                 break;
             case SANE_UNIT_MM:
-                qDebug() << "unit = mm";
+                MYLOG << "unit = mm";
                 break;
             case SANE_UNIT_DPI:
-                qDebug() << "unit = dpi";
+                MYLOG << "unit = dpi";
                 break;
             case SANE_UNIT_PERCENT:
-                qDebug() << "unit = percent";
+                MYLOG << "unit = percent";
                 break;
             case SANE_UNIT_MICROSECOND:
-                qDebug() << "unit = microsecond";
+                MYLOG << "unit = microsecond";
                 break;
             default:
-                qDebug() << "unit = " << opt->unit;
+                MYLOG << "unit = " << opt->unit;
                 break;
         }
 
@@ -1181,13 +1185,13 @@ static SANE_Status getOptionValue(SANE_Handle device, const char *option_name)
             case SANE_CONSTRAINT_RANGE:
                 if (opt->type == SANE_TYPE_FIXED)
                 {
-                    qDebug() << "min = " << SANE_UNFIX(opt->constraint.range->min) \
+                    MYLOG << "min = " << SANE_UNFIX(opt->constraint.range->min) \
                              << "max = " << SANE_UNFIX(opt->constraint.range->max) \
                              << "quant = " << opt->constraint.range->quant;
                 }
                 else
                 {
-                    qDebug() << "min = " << opt->constraint.range->min \
+                    MYLOG << "min = " << opt->constraint.range->min \
                              << "max = " << opt->constraint.range->max \
                              << "quant = " << SANE_UNFIX(opt->constraint.range->quant);
                 }
@@ -1197,22 +1201,22 @@ static SANE_Status getOptionValue(SANE_Handle device, const char *option_name)
                 {
                     if (opt->type == SANE_TYPE_INT)
                     {
-                        qDebug() << opt->constraint.word_list[i+1];
+                        MYLOG << opt->constraint.word_list[i+1];
                     }
                     else
                     {
-                        qDebug() << SANE_UNFIX(opt->constraint.word_list[i+1]);
+                        MYLOG << SANE_UNFIX(opt->constraint.word_list[i+1]);
                     }
                 }
                 break;
             case SANE_CONSTRAINT_STRING_LIST:
                 for (int i=0; opt->constraint.string_list[i] != NULL; i++)
                 {
-                    qDebug() << opt->constraint.string_list[i];
+                    MYLOG << opt->constraint.string_list[i];
                 }
                 break;
             default:
-                qDebug() << "case = %d not found" ;
+                MYLOG << "case = %d not found" ;
                 break;
         }
 
@@ -1229,7 +1233,7 @@ static SANE_Status getOptionValue(SANE_Handle device, const char *option_name)
         strcpy(str, "backend default");
     }
 
-    qDebug() << "option_name = " << option_name << "str = " << str;
+    MYLOG << "option_name = " << option_name << "str = " << str;
 
     return status;
 }
@@ -1253,7 +1257,7 @@ static SANE_Status kylinDisplayAllScanParams(SANE_Handle device)
     if (status != SANE_STATUS_GOOD)
     {
         status = SANE_STATUS_INVAL;
-        qDebug() << "source parameters error!";
+        MYLOG << "source parameters error!";
         return status;
     }
 
@@ -1262,7 +1266,7 @@ static SANE_Status kylinDisplayAllScanParams(SANE_Handle device)
     if (status != SANE_STATUS_GOOD)
     {
         status = SANE_STATUS_INVAL;
-        qDebug() << "color mode parameters error!";
+        MYLOG << "color mode parameters error!";
         return status;
     }
 
@@ -1271,7 +1275,7 @@ static SANE_Status kylinDisplayAllScanParams(SANE_Handle device)
     if (status != SANE_STATUS_GOOD)
     {
         status = SANE_STATUS_INVAL;
-        qDebug() << "resolution parameters error!";
+        MYLOG << "resolution parameters error!";
         return status;
     }
 
@@ -1280,7 +1284,7 @@ static SANE_Status kylinDisplayAllScanParams(SANE_Handle device)
     if (status != SANE_STATUS_GOOD)
     {
         status = SANE_STATUS_INVAL;
-        qDebug() << "tl_x parameters error!";
+        MYLOG << "tl_x parameters error!";
         return status;
     }
 
@@ -1288,7 +1292,7 @@ static SANE_Status kylinDisplayAllScanParams(SANE_Handle device)
     if (status != SANE_STATUS_GOOD)
     {
         status = SANE_STATUS_INVAL;
-        qDebug() << "tl_y parameters error!";
+        MYLOG << "tl_y parameters error!";
         return status;
     }
 
@@ -1302,7 +1306,7 @@ static SANE_Status kylinDisplayAllScanParams(SANE_Handle device)
     if (status != SANE_STATUS_GOOD)
     {
         status = SANE_STATUS_INVAL;
-        qDebug() << "br_x parameters error!";
+        MYLOG << "br_x parameters error!";
         return status;
     }
 
@@ -1310,7 +1314,7 @@ static SANE_Status kylinDisplayAllScanParams(SANE_Handle device)
     if (status != SANE_STATUS_GOOD)
     {
         status = SANE_STATUS_INVAL;
-        qDebug() << "br_y parameters error!";
+        MYLOG << "br_y parameters error!";
         return status;
     }
 
@@ -1363,7 +1367,6 @@ static void saneExit()
 static int checkSearchSaneDevices()
 {
     // 1. initialize SANE
-    qDebug("SANE Init\n");
     saneInit();
 
     // 2. get all devices
@@ -1373,7 +1376,6 @@ static int checkSearchSaneDevices()
     if (sane_status)
     {
         // 6. release resources
-        qDebug("Exit\n");
         saneExit();
         return -1;
     }
@@ -1388,12 +1390,13 @@ void kylinNorScanFindDevice()
 {
     KylinSane& instance = KylinSane::getInstance();
     QStringList names;
+    QString type;
 
     SANE_Status sane_status;
     char name[512] = {0};
 
     // 1. initialize SANE
-    qDebug("SANE Init\n");
+    MYLOG << "sane init";
     saneInit();
 
     do
@@ -1415,29 +1418,28 @@ void kylinNorScanFindDevice()
         {
             if (column + strlen (gs_deviceList[i]->name) + 1 >= 80)
             {
-                qDebug ("\n    ");
                 column = 4;
             }
             if (column > 4)
             {
-                fputc (' ', stdout);
                 column += 1;
             }
-            fputs (gs_deviceList[i]->name, stdout);
             column += strlen (gs_deviceList[i]->name);
+            MYLOG << "gs_deviceList->name" << gs_deviceList[i]->name
+                  << "column = " << column;
         }
-        fputc ('\n', stdout);
 
         for (i = 0; gs_deviceList[i]; ++i)
         {
-            qDebug ("device `%s' is a %s %s %s\n",
-                     gs_deviceList[i]->name, gs_deviceList[i]->vendor,
-                     gs_deviceList[i]->model, gs_deviceList[i]->type);
+            MYLOG << "deviceName = " << gs_deviceList[i]->name
+                  << "deviceVendor = " << gs_deviceList[i]->vendor
+                  << "deviceModel = " << gs_deviceList[i]->model
+                  << "deviceType = " << gs_deviceList[i]->type;
 
             // just for one scan device
             snprintf(name, 512, "%s %s",
                     gs_deviceList[i]->vendor, gs_deviceList[i]->model);
-            qDebug() << "device name:  " << name;
+            MYLOG << "device name:  " << name;
 
             names << name;
 
@@ -1445,18 +1447,30 @@ void kylinNorScanFindDevice()
             if (i == 0)
             {
                 // Same device have same type
-                instance.setKylinSaneType(gs_deviceList[i]->type);
+                MYLOG << "i = " << i << "deviceType = " << gs_deviceList[i]->type;
+                if (!strcmp("Flatbed", gs_deviceList[i]->type)
+                        || strstr(gs_deviceList[i]->type, "flatbed")
+                        || strstr(gs_deviceList[i]->type, "multi-function peripheral"))
+                {
+                    type = QObject::tr("Flatbed"); //平板式
+                }
+                else
+                {
+                    type = QObject::tr("Transparency Adapter"); //馈纸式
+                }
+                instance.setKylinSaneType(type);
+
             }
             //break;
         }
 
         // For devices name
-        qDebug() << names;
+        MYLOG << names;
         instance.setKylinSaneNames(names);
 
         if (!gs_deviceList[0])
         {
-            qDebug ("no SANE devices found\n");
+            MYLOG << "No scan devices !";
             sane_status = SANE_STATUS_UNSUPPORTED;
             instance.setKylinSaneStatus(false);
             break;
@@ -1469,7 +1483,7 @@ void kylinNorScanFindDevice()
     if (sane_status)
     {
         instance.setKylinSaneStatus(false);
-        qDebug() << "find device set status false";
+        MYLOG << "find device set status false";
     }
     else
     {
@@ -1481,6 +1495,7 @@ void kylinNorScanOpenDevice(int index)
 {
     KylinSane& instance = KylinSane::getInstance();
     QStringList names;
+    QString type;
 
     SANE_Status sane_status;
     char name[512] = {0};
@@ -1489,14 +1504,15 @@ void kylinNorScanOpenDevice(int index)
     {
         for (int i = 0; gs_deviceList[i]; ++i)
         {
-            qDebug ("device `%s' is a %s %s %s\n",
-                     gs_deviceList[i]->name, gs_deviceList[i]->vendor,
-                     gs_deviceList[i]->model, gs_deviceList[i]->type);
+            MYLOG << "deviceName = " << gs_deviceList[i]->name
+                  << "deviceVendor = " << gs_deviceList[i]->vendor
+                  << "deviceModel = " << gs_deviceList[i]->model
+                  << "deviceType = " << gs_deviceList[i]->type;
 
             // just for one scan device
             snprintf(name, 512, "%s %s",
                     gs_deviceList[i]->vendor, gs_deviceList[i]->model);
-            qDebug() << "device name:  " << name;
+            MYLOG << "device name:  " << name;
 
             names << name;
 
@@ -1504,30 +1520,41 @@ void kylinNorScanOpenDevice(int index)
             if (i == 0)
             {
                 // Same device have same type
-                instance.setKylinSaneType(gs_deviceList[i]->type);
+                MYLOG << "i = " << i << "deviceType = " << gs_deviceList[i]->type;
+                if (!strcmp("Flatbed", gs_deviceList[i]->type)
+                        || strstr(gs_deviceList[i]->type, "flatbed")
+                        || strstr(gs_deviceList[i]->type, "multi-function peripheral"))
+                {
+                    type = QObject::tr("Flatbed"); //平板式
+                }
+                else
+                {
+                    type = QObject::tr("Transparency Adapter"); //馈纸式
+                }
+                instance.setKylinSaneType(type);
             }
             //break;
         }
 
         // For devices name
-        qDebug() << names;
+        MYLOG << names;
         instance.setKylinSaneNames(names);
 
         if (!gs_deviceList[0])
         {
-            qDebug ("no SANE devices found\n");
+            MYLOG << "No scan devices !";
             sane_status = SANE_STATUS_UNSUPPORTED;
             instance.setKylinSaneStatus(false);
             break;
         }
 
         // 3. open a device
-        qDebug("Open a device\n");
+        MYLOG << "Open a scan device, plese waiting ...";
         SANE_Handle sane_handle;
         SANE_Device *saneDevice = const_cast<SANE_Device *>(*(gs_deviceList + index));
         if (!saneDevice)
         {
-            qDebug("No device connected!\n");
+            MYLOG << "No device connected!";
             sane_status = SANE_STATUS_UNSUPPORTED;
             instance.setKylinSaneStatus(false);
             break;
@@ -1536,14 +1563,14 @@ void kylinNorScanOpenDevice(int index)
         sane_status = openSaneDevice(saneDevice, &sane_handle);
         if (sane_status)
         {
-            qDebug("Open device failed!\n");
+            MYLOG << "Open a device failed!";
             instance.setKylinSaneStatus(false);
             break;
         }
         instance.handle = sane_handle;
 
         // 4. start scanning
-        qDebug("Scanning...\n");
+        MYLOG << "Start scanning, please waiting ...";
 
         // 此处可以获取页面设置所需的扫描信息
         sane_status = kylinDisplayAllScanParams(sane_handle);
@@ -1556,7 +1583,7 @@ void kylinNorScanOpenDevice(int index)
     if (sane_status)
     {
         instance.setKylinSaneStatus(false);
-        qDebug() << "open device set status false";
+        MYLOG << "open device set status false";
     }
     else
     {
@@ -1690,7 +1717,8 @@ int KylinSane::startScanning(UserSelectedInfo info)
     status = set_option_colors(instance.handle, s_color);
     if (status != SANE_STATUS_GOOD)
     {
-      qDebug("cannot set opt 2 to %s (%s)\n",s_color, sane_strstatus(status));
+        MYLOG << "Failed to set option color: " << s_color
+              << "status = " << sane_strstatus(status);
     }
 
     // For resolutions
@@ -1708,8 +1736,8 @@ int KylinSane::startScanning(UserSelectedInfo info)
     status = set_option_resolutions(instance.handle, i_resolution);
     if (status != SANE_STATUS_GOOD)
     {
-      qDebug("cannot set option 2 to %s (%s)\n",
-              s_resolution, sane_strstatus(status));
+        MYLOG << "Failed to set option resolution: " << s_resolution
+              << "status = " << sane_strstatus(status);
     }
 
     // For sizes
@@ -1738,9 +1766,11 @@ int KylinSane::startScanning(UserSelectedInfo info)
     status = set_option_sizes_all(instance.handle, type);
     if (status != SANE_STATUS_GOOD)
     {
-      qDebug("cannot set option 2 to %s (%s)\n",s_size, sane_strstatus(status));
+        MYLOG << "Failed to set option size: " << s_size
+              << "status = " << sane_strstatus(status);
     }
 
+    MYLOG << "Start scanning, please waiting ...";
     ret = startSaneScan(instance.handle, "scan");
 
     saneCancel(instance.handle);

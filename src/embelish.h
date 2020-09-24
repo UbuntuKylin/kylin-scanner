@@ -30,6 +30,7 @@
 #include <opencv2/imgproc.hpp>
 #include <opencv2/highgui.hpp>
 #include <opencv2/imgproc/imgproc_c.h>
+#include "kylinLog.h"
 using namespace cv;
 using namespace std;
 

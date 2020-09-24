@@ -3,12 +3,16 @@ Section: devel
 Priority: optional
 Maintainer: Kylin Team <team+kylin@tracker.debian.org>
 Uploaders: handsome_feng <jianfengli@ubuntukylin.com>
-Build-Depends: debhelper-compat (=13),
+Build-Depends: debhelper-compat (=12),
                libglib2.0-dev,
-               libleptonica-dev,
-               libopencv-dev,
                libsane-dev,
+               libopencv-dev,
                libtesseract-dev,
+               libleptonica-dev,
+               liblept5,
+               tesseract-ocr,
+               tesseract-ocr-eng,
+               tesseract-ocr-chi-sim,
                qt5-qmake,
                qtbase5-dev,
                qtbase5-dev-tools,

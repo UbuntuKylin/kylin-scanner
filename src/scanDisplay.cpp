@@ -90,7 +90,7 @@ ScanDisplay::ScanDisplay(QWidget *parent)
     btnNormal->setParent(widgetNormal);
     btnNormal->setFixedSize(12,30);
     btnNormal->setStyleSheet("QPushButton{ "
-                                 "border-image: url(:/icon/icon/toolbutton.png);"
+                                 "border-image: url(:/icon/icon/editBar/shrink-normal.svg);"
                                  "border:none;"
                                  "background-color:#0f0801;"
                                  "border-radius:0px;"
@@ -122,8 +122,7 @@ ScanDisplay::ScanDisplay(QWidget *parent)
 
 
     btnEditLayout->setFixedSize(12,30);
-    btnEditLayout->setStyleSheet("QPushButton{border-image: url(:/icon/icon/toolbutton1.png);border:none;background-color:#0f0801;border-radius:0px;}"
-                                  //"QPushButton:hover{border-image: url(:/icon/icon/toolbutton1.png);border:none;background-color:rgb(39,208,127);border:rgb(147,147,147);color:rgb(232,232,232);border-radius:4px;}"
+    btnEditLayout->setStyleSheet("QPushButton{border-image: url(:/icon/icon/editBar/shrink-editLayout.svg);border:none;background-color:#0f0801;border-radius:0px;}"
                                  );
 
     hBoxEditLayout->setSpacing(0);
@@ -251,11 +250,20 @@ QImage *ScanDisplay::imageSave(QString fileName)
     return NULL;
 }
 
+/**
+ * @brief ScanDisplay::setNoDevice
+ * 设置无设备时的页面widget
+ * 对设计新的等待页面有作用
+ */
 void ScanDisplay::setNoDevice()
 {
     vStackedLayout->setCurrentWidget(widgetConnectError);
 }
 
+/**
+ * @brief ScanDisplay::setInitDevice
+ * 设置初始化页面widget
+ */
 void ScanDisplay::setInitDevice()
 {
     vStackedLayout->setCurrentWidget(labInit);
@@ -307,7 +315,7 @@ void ScanDisplay::timerEvent(QTimerEvent *e)
 
     if (id == m_timeScanId)
     {
-        qDebug() << "timeScanId";
+        MYLOG << "timeScanId";
 //            labNormalLeft->height = 490;
 
 //            labNormalLeft->data = NULL; //图像信息
@@ -351,9 +359,13 @@ void ScanDisplay::addWatermark()
     QString text;
     WaterMarkDialog *dialog = new WaterMarkDialog(this);
     int ret=dialog->exec();// 以模态方式显示对话框，用户关闭对话框时返回 DialogCode值
+    MYLOG << "ret = " << ret;
+
     if (ret==QDialog::Accepted) //OK键被按下,对话框关闭，若设置了setAttribute(Qt::WA_DeleteOnClose)，对话框被释放，无法获得返回值
     { //OK键被按下，获取对话框上的输入，设置行数和列数
         text = dialog->getLineEdit();
+        MYLOG << text;
+
         *imgStack = imgEditLayout->copy();
         stack.push(*imgStack);
         *imgEditLayout = imgBackup->copy();
@@ -361,7 +373,7 @@ void ScanDisplay::addWatermark()
         int fontSize = 70, spacing = 20;
         QFont font("华文黑体", fontSize, QFont::Thin);
         QColor colorFont(1, 1, 1);
-        colorFont.setAlphaF(0.4); // 设置水印字体颜色透明度
+        //colorFont.setAlphaF(0.4); // 设置水印字体颜色透明度,这个会导致字体不显示等一系列错误
         font.setLetterSpacing(QFont::AbsoluteSpacing, spacing);
         painter.setFont(font);
         painter.setPen(colorFont);
@@ -391,7 +403,7 @@ void ScanDisplay::addWatermark()
 void ScanDisplay::orcText()
 {
     labOrcRight->setText(outText);
-    qDebug()<<outText;
+    MYLOG <<outText;
 }
 
 void ScanDisplay::onOrc()
@@ -531,7 +543,7 @@ void ScanDisplay::onScan()
  */
 void ScanDisplay::onRectify()
 {
-    qDebug()<<"rectify\n";
+    MYLOG <<"rectify\n";
     if(flagRectify == 0)
     {
         // 此时代表用户点击了智能纠偏按钮
@@ -626,7 +638,7 @@ void ScanDisplay::onRectify()
  */
 void ScanDisplay::onBeautify()
 {
-    qDebug() << "beauty()";
+    MYLOG << "beauty()";
     if(flagBeautify == 0)
     {
         flagBeautify = 1;
@@ -713,14 +725,14 @@ void ScanDisplay::switchPage()
     index++;
     if(index > 1)
     {
-        qDebug() << "1 switchPage index = " << index;
+        MYLOG << "1 switchPage index = " << index;
         index = 0;
         *imgNormal = imgEditLayout->copy();
         setPixmapScaled(*imgNormal,labNormalLeft);
     }
     else
     {
-        qDebug() << "2 switchPage index = " << index;
+        MYLOG << "2 switchPage index = " << index;
         *imgEditLayout = imgNormal->copy();
         setPixmapScaled(*imgEditLayout,labEditLayout);
     }
@@ -733,12 +745,11 @@ void ScanDisplay::switchPage()
 void ScanDisplay::timerScanUpdate()
 {
     m_timerNum++;
-    qDebug() << "timerScanUpdate";
-    qDebug() << m_timerNum << "timer";
+    MYLOG << m_timerNum << "timer";
     if (m_timerNum == 50)
     {
         timerScan->stop();
-        qDebug() << "timer stop";
+        MYLOG << "timer stop";
         emit scanTimerFinished();
     }
 }
@@ -761,7 +772,7 @@ void ScanDisplay::tailor()
     labTailor->setAlignment(Qt::AlignCenter);
 
     btnTailor->setFixedSize(12,30);
-    btnTailor->setStyleSheet("QPushButton{border-image: url(:/icon/icon/toolbutton1.png);border:none;background-color:#0f0801;border-radius:0px;}");
+    btnTailor->setStyleSheet("QPushButton{border-image: url(:/icon/icon/editBar/shrink-editLayout.svg);border:none;background-color:#0f0801;border-radius:0px;}");
 
     hBoxTailor->setSpacing(0);
     hBoxTailor->addSpacing(93);
@@ -812,18 +823,18 @@ EditBar::EditBar(QWidget *parent)
     btnWatermark->setToolTip(tr("watermark")); // 水印
     btnSymmetry->setToolTip(tr("symmetry")); // 对称翻转
 
-    btnRotate->setStyleSheet("QPushButton{border-image: url(:/icon/icon/rotate.png);border:none;background-color:rgb(232,232,232);border-radius:0px;}"
-                              "QPushButton:hover{border-image: url(:/icon/icon/rotate-click.png);border:none;background-color:rgb(232,232,232);border-radius:0px;}"
-                                "QPushButton:checked{border-image: url(:/icon/icon/rotate-click.png);border:none;background-color:rgb(232,232,232);border-radius:0px;}");
-    btnTailor->setStyleSheet("QPushButton{border-image: url(:/icon/icon/tailor.png);border:none;background-color:rgb(232,232,232);border-radius:0px;}"
-                              "QPushButton:hover{border-image: url(:/icon/icon/tailor-click.png);border:none;background-color:rgb(232,232,232);border-radius:0px;}"
-                                "QPushButton:checked{border-image: url(:/icon/icon/tailor-click.png);border:none;background-color:rgb(232,232,232);border-radius:0px;}");
-    btnSymmetry->setStyleSheet("QPushButton{border-image: url(:/icon/icon/symmetry.png);border:none;background-color:rgb(232,232,232);border-radius:0px;}"
-                              "QPushButton:hover{border-image: url(:/icon/icon/symmetry-click.png);border:none;background-color:rgb(232,232,232);border-radius:0px;}"
-                                "QPushButton:checked{border-image: url(:/icon/icon/symmetry-click.png);border:none;background-color:rgb(232,232,232);border-radius:0px;}");
-    btnWatermark->setStyleSheet("QPushButton{border-image: url(:/icon/icon/watermark.png);border:none;background-color:rgb(232,232,232);border-radius:0px;}"
-                              "QPushButton:hover{border-image: url(:/icon/icon/watermark-click.png);border:none;background-color:rgb(232,232,232);border-radius:0px;}"
-                                "QPushButton:checked{border-image: url(:/icon/icon/watermark-click.png);border:none;background-color:rgb(232,232,232);border-radius:0px;}");
+    btnRotate->setStyleSheet("QPushButton{border-image: url(:/icon/icon/editBar/rotate.svg);border:none;background-color:rgb(232,232,232);border-radius:0px;}"
+                              "QPushButton:hover{border-image: url(:/icon/icon/editBar/rotate-click.svg);border:none;background-color:rgb(232,232,232);border-radius:0px;}"
+                                "QPushButton:checked{border-image: url(:/icon/icon/editBar/rotate-click.svg);border:none;background-color:rgb(232,232,232);border-radius:0px;}");
+    btnTailor->setStyleSheet("QPushButton{border-image: url(:/icon/icon/editBar/tailor.svg);border:none;background-color:rgb(232,232,232);border-radius:0px;}"
+                              "QPushButton:hover{border-image: url(:/icon/icon/editBar/tailor-click.svg);border:none;background-color:rgb(232,232,232);border-radius:0px;}"
+                                "QPushButton:checked{border-image: url(:/icon/icon/editBar/tailor-click.svg);border:none;background-color:rgb(232,232,232);border-radius:0px;}");
+    btnSymmetry->setStyleSheet("QPushButton{border-image: url(:/icon/icon/editBar/symmetry.svg);border:none;background-color:rgb(232,232,232);border-radius:0px;}"
+                              "QPushButton:hover{border-image: url(:/icon/icon/editBar/symmetry-click.svg);border:none;background-color:rgb(232,232,232);border-radius:0px;}"
+                                "QPushButton:checked{border-image: url(:/icon/icon/editBar/symmetry-click.svg);border:none;background-color:rgb(232,232,232);border-radius:0px;}");
+    btnWatermark->setStyleSheet("QPushButton{border-image: url(:/icon/icon/editBar/watermark.svg);border:none;background-color:rgb(232,232,232);border-radius:0px;}"
+                              "QPushButton:hover{border-image: url(:/icon/icon/editBar/watermark-click.svg);border:none;background-color:rgb(232,232,232);border-radius:0px;}"
+                                "QPushButton:checked{border-image: url(:/icon/icon/editBarwatermark-click.svg);border:none;background-color:rgb(232,232,232);border-radius:0px;}");
     vBoxEditBar->setSpacing(0);
     vBoxEditBar->addSpacing(17);
     vBoxEditBar->addWidget(btnTailor);
@@ -860,10 +871,10 @@ void EditBar::setEditBarWindowBorderRadius()
 void myThread::run()
 {
     tesseract::TessBaseAPI *api = new tesseract::TessBaseAPI();
-    qDebug()<<"orc run!\n";
+    MYLOG <<"orc run!\n";
     //使用中文初始化tesseract-ocr，而不指定tessdata路径。正在识别中
     if (api->Init(NULL, "chi_sim")) {
-        qDebug()<<"Could not initialize tesseract.\n";
+        MYLOG <<"Could not initialize tesseract.\n";
         outText = "Unable to read text";
         exit(1);
     }
@@ -871,7 +882,7 @@ void myThread::run()
     Pix* image = pixRead("/tmp/scanner/scan1.png");
     if(!image)
     {
-        qDebug()<<"pixRead error!";
+        MYLOG <<"pixRead error!";
         outText = "Unable to read text";
         emit orcFinished();
         // 销毁使用过的对象并释放内存。

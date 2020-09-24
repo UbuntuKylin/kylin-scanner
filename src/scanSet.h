@@ -29,6 +29,7 @@
 #include "kylinCmb.h"
 #include "sendMail.h"
 #include "kylinSane.h"
+#include "kylinLog.h"
 
 class ScanSet  : public QWidget
 {
