@@ -3,7 +3,7 @@ Section: devel
 Priority: optional
 Maintainer: Kylin Team <team+kylin@tracker.debian.org>
 Uploaders: handsome_feng <jianfengli@ubuntukylin.com>
-Build-Depends: debhelper-compat (=12),
+Build-Depends: debhelper-compat (=13),
                libglib2.0-dev,
                libsane-dev,
                libopencv-dev,
@@ -17,6 +17,9 @@ Build-Depends: debhelper-compat (=12),
                qtbase5-dev,
                qtbase5-dev-tools,
                qttools5-dev-tools,
+               tesseract-ocr,
+               tesseract-ocr-chi-sim,
+               tesseract-ocr-eng
 Standards-Version: 4.5.0
 Rules-Requires-Root: no
 Homepage: https://github.com/ubuntukylin/kylin-scanner
