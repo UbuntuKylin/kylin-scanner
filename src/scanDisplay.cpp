@@ -550,6 +550,7 @@ void ScanDisplay::onRectify()
         flagRectify = 1;
         if(vStackedLayout->currentWidget() == widgetNormal)
         {
+            MYLOG << "currentWidget == widgetNormal";
             imgNormal->save("/tmp/scanner/scan1.png");
             // 为了撤销
             *imgRectify = imgNormal->copy();
@@ -578,11 +579,13 @@ void ScanDisplay::onRectify()
         flagRectify = 0;
         if(vStackedLayout->currentWidget() == widgetNormal)
         {
+            MYLOG << "currentWidget == widgetNormal";
             *imgNormal = imgRectify->copy();
             /**
              * 2代表点击了先智能纠偏和后一键美化：
              * 有2种情况： 1）先撤销一键美化 2）先撤销智能纠偏
              */
+            MYLOG << "list.count = " << list.count();
             if(list.count() == 2)
             {
                 // 撤销的是智能纠偏：先全部清空，后把一键美化的加上
@@ -610,10 +613,12 @@ void ScanDisplay::onRectify()
         else
         {
             *imgEditLayout = imgRectify->copy();
+            MYLOG << "list.count = " << list.count();
             if(list.count() == 2)
             {
                 if(list[0] == "Rectify")
                 {
+                    MYLOG << "list[0] = " << list[0];
                     list.clear();
                     imgEditLayout->save("/tmp/scanner/scan1.png");
                     *imgBeautify = imgEditLayout->copy();

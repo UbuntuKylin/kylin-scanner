@@ -130,6 +130,8 @@ int ImageRectify(const char * pInFileName)
     Mat dst;
     //倾斜角度矫正
     degree = CalcDegree(src,dst);
+    MYLOG << "degree = " << degree;
+
     if (degree == ERROR)
     {
         MYLOG << "矫正失败！" ;

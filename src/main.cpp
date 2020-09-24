@@ -25,6 +25,10 @@ int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
 
+    // For 4k
+    QApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+    QApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
+
     // Prevent multiple open
     QLockFile *lockFile = new QLockFile ("/tmp/kylin-scanner.lock");
     if (!lockFile->tryLock(2000))
