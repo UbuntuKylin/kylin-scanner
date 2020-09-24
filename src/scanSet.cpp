@@ -170,16 +170,20 @@ ScanSet::ScanSet(QWidget *parent)
     connect(btnSave,SIGNAL(clicked()),this,SLOT(onBtnSaveClicked()));
 
     // For device name changed
-    connect(textDevice, SIGNAL(currentTextChanged(QString)), this, SLOT(onTextDeviceCurrentTextChanged(QString)));
+    connect(textDevice, SIGNAL(currentTextChanged(QString)), this,
+            SLOT(onTextDeviceCurrentTextChanged(QString)));
 
     // For color mode changed
-    connect(textColor, SIGNAL(currentTextChanged(QString)), this, SLOT(onTextColorCurrentTextChanged(QString)));
+    connect(textColor, SIGNAL(currentTextChanged(QString)), this,
+            SLOT(onTextColorCurrentTextChanged(QString)));
 
     // For resolution changed
-    connect(textResolution, SIGNAL(currentTextChanged(QString)), this, SLOT(onTextResolutionCurrentTextChanged(QString)));
+    connect(textResolution, SIGNAL(currentTextChanged(QString)), this,
+            SLOT(onTextResolutionCurrentTextChanged(QString)));
 
     // For size changed
-    connect(textSize, SIGNAL(currentTextChanged(QString)), this, SLOT(onTextSizeCurrentTextChanged(QString)));
+    connect(textSize, SIGNAL(currentTextChanged(QString)), this,
+            SLOT(onTextSizeCurrentTextChanged(QString)));
 }
 
 ScanSet::~ScanSet()
