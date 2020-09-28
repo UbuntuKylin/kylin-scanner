@@ -25,6 +25,7 @@
 #include <tesseract/baseapi.h>
 #include <leptonica/allheaders.h>
 #include <QToolTip>
+#include <QSize>
 #include <QTextEdit>
 #include "kylinLbl.h"
 #include "waterMarkDlg.h"
@@ -60,6 +61,8 @@ public:
     QPushButton *btnSymmetry;
     QPushButton *btnWatermark;
     QVBoxLayout *vBoxEditBar;
+private slots:
+    void onBtnTailorClicked();
 };
 
 class ScanDisplay  : public QWidget
@@ -101,7 +104,7 @@ private:
     QLabel *labOrcRight;         //文字识别文字显示部分
     QPushButton *btnNormal;      //正常显示界面按钮
     QPushButton *btnEditLayout;  //编辑栏展开界面按钮
-    QPushButton *btnTailor;      //裁剪界面按钮
+    QPushButton *btnTailorLayout;      //裁剪界面按钮
 
     QImage *imgConnectError;     // 连接或者打开扫描仪出错界面显示图片
     QImage *imgEditLayout;       //编辑栏展开界面图片

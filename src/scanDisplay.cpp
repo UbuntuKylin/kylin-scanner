@@ -22,6 +22,7 @@ QString outText;
 ScanDisplay::ScanDisplay(QWidget *parent)
     : QWidget(parent)
 {
+    setFocusPolicy(Qt::StrongFocus);
     setMinimumSize(600,567);
     labInit = new QLabel();
     labConnectError = new QLabel();
@@ -178,10 +179,17 @@ ScanDisplay::ScanDisplay(QWidget *parent)
     connect(timerScan, SIGNAL(timeout()), this, SLOT(timerScanUpdate()));
 }
 
+/**
+ * @brief ScanDisplay::keyPressEvent 监听键盘事件
+ * @param e
+ */
 void ScanDisplay::keyPressEvent(QKeyEvent *e)
 {
-    if (((e->key() == Qt::Key_Return) || (e->key() == 0x20)) && (vStackedLayout->currentWidget() == widgetTailor))
+    MYLOG << "key() = " << e->key();
+    if ((e->key() == Qt::Key_Return || e->key() == Qt::Key_Enter  || e->key() == Qt::Key_Space)
+            && (vStackedLayout->currentWidget() == widgetTailor))
     {
+        MYLOG << "key() = " << e->key();
         QImage newimage;
         int x1,y1,x2,y2;
         if(labTailor->getX1() <= labTailor->getX2())
@@ -214,6 +222,10 @@ void ScanDisplay::keyPressEvent(QKeyEvent *e)
         vStackedLayout->setCurrentIndex(index);
         vStackedLayout->removeWidget(widgetTailor);
 
+        // 裁切完成后，btnTailor属性需要回到最开始的状态
+        editLayout->btnTailor->setStyleSheet("QPushButton{border-image: url(:/icon/icon/editBar/tailor.svg);border:none;background-color:rgb(232,232,232);border-radius:0px;}"
+                                  "QPushButton:hover{border-image: url(:/icon/icon/editBar/tailor-click.svg);border:none;background-color:rgb(232,232,232);border-radius:0px;}"
+                                    "QPushButton:checked{border-image: url(:/icon/icon/editBar/tailor-click.svg);border:none;background-color:rgb(232,232,232);border-radius:0px;}");
     }
     if(e->key() == Qt::Key_Z && e->modifiers() ==  Qt::ControlModifier)
     {
@@ -764,7 +776,8 @@ void ScanDisplay::timerScanUpdate()
  */
 void ScanDisplay::tailor()
 {
-    btnTailor = new QPushButton();
+    MYLOG << "begin";
+    btnTailorLayout = new QPushButton();
     labTailor = new KylinLbl();
     editLayoutTailor = new EditBar();
     widgetTailor = new QWidget();
@@ -772,12 +785,16 @@ void ScanDisplay::tailor()
     imgTailor = new QImage();
     labTailor->setMinimumSize(360,490);
     labTailor->setParent(widgetTailor);
-    btnTailor->setParent(widgetTailor);
+    btnTailorLayout->setParent(widgetTailor);
     editLayoutTailor->setParent(widgetTailor);
     labTailor->setAlignment(Qt::AlignCenter);
 
-    btnTailor->setFixedSize(12,30);
-    btnTailor->setStyleSheet("QPushButton{border-image: url(:/icon/icon/editBar/shrink-editLayout.svg);border:none;background-color:#0f0801;border-radius:0px;}");
+    btnTailorLayout->setFixedSize(12,30);
+    btnTailorLayout->setStyleSheet("QPushButton{border-image: url(:/icon/icon/editBar/shrink-editLayout.svg);border:none;background-color:#0f0801;border-radius:0px;}");
+
+    // 当点击裁切时，需要更换图片为点击时的状态，通过css不行，hover和clicked会冲突
+    editLayoutTailor->btnTailor->setIcon(QIcon(":/icon/icon/editBar/tailor-click.svg"));
+    editLayoutTailor->btnTailor->setIconSize (QSize(30, 30));
 
     hBoxTailor->setSpacing(0);
     hBoxTailor->addSpacing(93);
@@ -787,7 +804,7 @@ void ScanDisplay::tailor()
     hBoxTailor->addSpacing(93);
     hBoxTailor->addWidget(editLayoutTailor);
     hBoxTailor->addSpacing(2);
-    hBoxTailor->addWidget(btnTailor);
+    hBoxTailor->addWidget(btnTailorLayout);
     hBoxTailor->setContentsMargins(0,45,0,32);
     widgetTailor->setLayout(hBoxTailor);
     vStackedLayout->addWidget(widgetTailor);
@@ -853,6 +870,8 @@ EditBar::EditBar(QWidget *parent)
     vBoxEditBar->setContentsMargins(5,0,5,0);
     setLayout(vBoxEditBar);
 
+    connect(btnTailor, SIGNAL(clicked()), this, SLOT(onBtnTailorClicked()));
+
 }
 
 /**
@@ -868,6 +887,11 @@ void EditBar::setEditBarWindowBorderRadius()
     painter.setRenderHint(QPainter::Antialiasing);
     painter.drawRoundedRect(bitMap.rect(),4,4); //设置圆角弧度4px
     setMask(bitMap);
+}
+
+void EditBar::onBtnTailorClicked()
+{
+    MYLOG << "clicked";
 }
 
 /**
