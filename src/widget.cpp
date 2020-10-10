@@ -360,6 +360,7 @@ void CommonScanThread::run()
     KylinSane &instance = KylinSane::getInstance();
 //again:
     do {
+        MYLOG << "begin findScanDevice()";
         instance.findScanDevice();
 
         //instance.open_device(0);

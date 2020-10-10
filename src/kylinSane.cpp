@@ -516,6 +516,7 @@ static SANE_Status getSaneDevices(const SANE_Device ***device_list)
     MYLOG << "Get all scan devices, please waiting ...";
 
     status = sane_get_devices (device_list, SANE_FALSE);
+    MYLOG << "status = " << status;
 
     if (status)
     {
@@ -1406,6 +1407,7 @@ void kylinNorScanFindDevice()
         sane_status = getSaneDevices((&gs_deviceList));
         if (sane_status)
         {
+            MYLOG << "Cannot get scan devices, sane_status = " << sane_status;
             instance.setKylinSaneStatus(false);
             break;
         }
