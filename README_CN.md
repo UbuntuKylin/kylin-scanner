@@ -6,7 +6,7 @@
 ![Main Picture](docs/scan.jpg)
 
 ## 作者博客页面
-:point_right:  [yusq77](https://yusq77.github.io/)
+:point_right:  [Franklin-Qi](https://Franklin-Qi.github.io/)
 
 ## 功能列表
 - [x] 正常扫描（根据不同的设备类型，分辨率，尺寸，色彩模式，保存格式）
