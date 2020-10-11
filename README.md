@@ -8,7 +8,7 @@ Other image processing tips can also be reflected in this software, such as clip
 ![Main Picture](docs/scan.jpg)
 
 ## Author's Home page
-:point_right:  [yusq77](https://yusq77.github.io/)
+:point_right:  [Franklin-Qi](https://Franklin-Qi.github.io/)
 
 ## Function lists
 - [x] Normal scanning(different device, type, resolution, size, color mode, formats)
