@@ -17,7 +17,7 @@
 - [x] 发送邮件
 - [x] 另存为不同格式的内容
 
-## Ubunty 环境配置
+## Ubuntu 环境配置
 ``` bash
 # opencv essential
 sudo apt install libopencv-dev
