@@ -67,6 +67,7 @@ Q_SIGNALS:
 
 private slots:
     void saveImage(QString fileName);
+    void setScanSetBtnEnable();
     void saveScanFile();
     void scanResult(bool ret);
     void scanResultDetail(bool ret);

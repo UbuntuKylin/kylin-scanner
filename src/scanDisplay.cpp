@@ -529,6 +529,7 @@ void ScanDisplay::onOrc()
  */
 void ScanDisplay::onScan()
 {
+    MYLOG << "begin";
     vStackedLayout->setCurrentIndex(0);
     vStackedLayout->setCurrentIndex(1);
     vStackedLayout->setCurrentIndex(2);
@@ -543,7 +544,11 @@ void ScanDisplay::onScan()
 
     timerScan->start(100);
 
+#ifdef DEBUG_EDIT
     imgNormal->load("/tmp/scanner/scan.pnm");
+#else
+    imgNormal->load("/tmp/scanner/scan.pnm");
+#endif
     setPixmapScaled(*imgNormal,labNormalLeft);
     vStackedLayout->setCurrentWidget(widgetNormal);
     *imgEditLayout = imgNormal->copy();
@@ -762,11 +767,11 @@ void ScanDisplay::switchPage()
 void ScanDisplay::timerScanUpdate()
 {
     m_timerNum++;
-    MYLOG << m_timerNum << "timer";
+    //MYLOG << m_timerNum << "timer";
     if (m_timerNum == 50)
     {
         timerScan->stop();
-        MYLOG << "timer stop";
+        //MYLOG << "timer stop";
         emit scanTimerFinished();
     }
 }
@@ -786,7 +791,7 @@ void ScanDisplay::tailor()
     labTailor->setMinimumSize(360,490);
     labTailor->setParent(widgetTailor);
     btnTailorLayout->setParent(widgetTailor);
-    editLayoutTailor->setParent(widgetTailor);
+    editLayoutTailor->setParent(widgetTailor); // 编辑工具栏布局
     labTailor->setAlignment(Qt::AlignCenter);
 
     btnTailorLayout->setFixedSize(12,30);

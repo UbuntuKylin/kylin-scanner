@@ -365,7 +365,14 @@ void ScanSet::setKylinScanSetNotEnable()
         btnLocation->setStyleSheet("QPushButton{border:4px solid #0D0400;background-repeat:no-repeat;background-position:right;background-color:#0D0400;color:gray;border-radius:4px;text-align:left;}");
 
         btnMail->setEnabled(false);
+        btnMail->setStyleSheet("QPushButton{background-color:rgb(32,30,29);border:1px solid #939393;color:gray;border-radius:16px;}"
+                              "QPushButton:hover{border:none;background-color:rgb(39,208,127);border:rgb(147,147,147);color:rgb(232,232,232);border-radius:16px;}"
+                                "QPushButton:checked{border:none;background-color:rgb(39,208,127);border:rgb(147,147,147);color:rgb(232,232,232);border-radius:16px;}");
+
         btnSave->setEnabled(false);
+        btnSave->setStyleSheet("QPushButton{background-color:rgb(32,30,29);border:1px solid #939393;color:gray;border-radius:16px;}"
+                              "QPushButton:hover{border:none;background-color:rgb(39,208,127);border:rgb(147,147,147);color:rgb(232,232,232);border-radius:16px;}"
+                                "QPushButton:checked{border:none;background-color:rgb(39,208,127);border:rgb(147,147,147);color:rgb(232,232,232);border-radius:16px;}");
 
 //        textDevice->setStyleSheet("QLabel{border:1px solid #0D0400;background-color:rgb(15,08,01);color:gray;border-radius:4px;}");
 //        textDevice->setEnabled(false);
@@ -374,6 +381,36 @@ void ScanSet::setKylinScanSetNotEnable()
         textType->setEnabled(false);
         textType->setStyleSheet("QLabel{border:1px solid #0D0400;background-color:rgb(15,08,01);color:gray;border-radius:4px;}");
     }
+}
+
+/**
+ * @brief ScanSet::setKylinScanSetBtnNotEnable
+ * 发送邮件和另存为按钮置灰，不能点击
+ */
+void ScanSet::setKylinScanSetBtnNotEnable()
+{
+    btnMail->setEnabled(false);
+    btnMail->setStyleSheet("QPushButton{background-color:rgb(32,30,29);border:1px solid #939393;color:gray;border-radius:16px;}"
+                          "QPushButton:hover{border:none;background-color:rgb(39,208,127);border:rgb(147,147,147);color:rgb(232,232,232);border-radius:16px;}"
+                            "QPushButton:checked{border:none;background-color:rgb(39,208,127);border:rgb(147,147,147);color:rgb(232,232,232);border-radius:16px;}");
+
+    btnSave->setEnabled(false);
+    btnSave->setStyleSheet("QPushButton{background-color:rgb(32,30,29);border:1px solid #939393;color:gray;border-radius:16px;}"
+                          "QPushButton:hover{border:none;background-color:rgb(39,208,127);border:rgb(147,147,147);color:rgb(232,232,232);border-radius:16px;}"
+                            "QPushButton:checked{border:none;background-color:rgb(39,208,127);border:rgb(147,147,147);color:rgb(232,232,232);border-radius:16px;}");
+}
+
+void ScanSet::setKylinScanSetBtnEnable()
+{
+    btnMail->setEnabled(true);
+    btnMail->setStyleSheet("QPushButton{background-color:rgb(32,30,29);border:1px solid #939393;color:rgb(232,232,232);border-radius:16px;}"
+                              "QPushButton:hover{border:none;background-color:rgb(39,208,127);border:rgb(147,147,147);color:rgb(232,232,232);border-radius:16px;}"
+                                "QPushButton:checked{border:none;background-color:rgb(39,208,127);border:rgb(147,147,147);color:rgb(232,232,232);border-radius:16px;}");
+
+    btnSave->setEnabled(true);
+    btnSave->setStyleSheet("QPushButton{background-color:rgb(32,30,29);border:1px solid #939393;color:rgb(232,232,232);border-radius:16px;}"
+                              "QPushButton:hover{border:none;background-color:rgb(39,208,127);color:rgb(232,232,232);border-radius:16px;}"
+                                "QPushButton:checked{border:none;background-color:rgb(39,208,127);color:rgb(232,232,232)border-radius:16px;}");
 }
 
 void ScanSet::setKylinScanSetEnable()
@@ -405,8 +442,8 @@ void ScanSet::setKylinScanSetEnable()
         btnLocation->setEnabled(true);
         btnLocation->setStyleSheet("QPushButton{border:4px solid #0D0400;background-repeat:no-repeat;background-position:right;background-color:#0D0400;color:rgb(232,232,232);border-radius:4px;text-align:left;}");
 
-        btnMail->setEnabled(true);
-        btnSave->setEnabled(true);
+        //btnMail->setEnabled(true);
+        //btnSave->setEnabled(true);
     }
 }
 
@@ -651,13 +688,40 @@ void ScanSet::onBtnMailClicked()
 
 QString filter="*.jpg;;*.png;;*.pdf;;*.bmp"; //文件过滤器
 
+
 void ScanSet::onBtnSaveClicked()
 {
+    QString pathName;
+    QString aFileName;
+    QHash <int, QString> hashFormatFilter;
+
+    hashFormatFilter[0] = "*.jpg;;*.png;;*.pdf;;*.bmp";
+    hashFormatFilter[1] = "*.png;;*.jpg;;*.pdf;;*.bmp";
+    hashFormatFilter[2] = "*.pdf;;*.jpg;;*,png;;*.bmp";
+    hashFormatFilter[3] = "*.bmp;;*.jpg;;*.png;;*.pdf";
+    hashFormatFilter[5] = "*.txt"; // Far After OCR， save *.txt
+
     //保存文件
     QString dlgTitle=tr("Save as ..."); //对话框标题
     //QString filter="文本文件(*.txt);;h文件(*.h);;C++文件(.cpp);;所有文件(*.*)"; //文件过滤器
-    QString pathName = curPath + "/" + textName->text();
-    QString aFileName=QFileDialog::getSaveFileName(this,dlgTitle,pathName,filter);
+    MYLOG << "current format index = " << textFormat->currentIndex ()
+          << "current format: " << textFormat->currentText ();
+
+    MYLOG << "flagSave = " << flag;
+    if (flag == 1) // 进行OCR ，存储文本
+    {
+        pathName = curPath + "/" + textName->text() + ".txt";
+        aFileName =QFileDialog::getSaveFileName(this, dlgTitle, pathName,
+                                                       hashFormatFilter[5]);
+    }
+    else // 另存为
+    {
+        pathName = curPath + "/" + textName->text() + "." + textFormat->currentText();
+        aFileName =QFileDialog::getSaveFileName(this, dlgTitle, pathName,
+                                                       hashFormatFilter[textFormat->currentIndex ()]);
+    }
+
+    MYLOG << "Save as: " << aFileName;
     if (!aFileName.isEmpty())
         emit saveImageSignal(aFileName);
 }
@@ -708,13 +772,13 @@ void ScanSet::onTextDeviceCurrentTextChanged(QString device)
 
 void ScanSet::modifyBtnSave()
 {
-    if(flag == 0)
+    if(flag == 0) // 进行OCR，存储文本
     {
         flag = 1;
         btnSave->setText(tr("Store text"));
         filter ="*.txt";
     }
-    else {
+    else { // 另存为
         flag = 0;
         btnSave->setText(tr("Save as"));
         filter="*.jpg;;*.png;;*.pdf;;*.bmp;;"; //文件过滤器

@@ -26,6 +26,7 @@
 #include <QPixmap>
 #include <QLineEdit>
 #include <QFile>
+#include <QHash>
 #include "kylinCmb.h"
 #include "sendMail.h"
 #include "kylinSane.h"
@@ -42,6 +43,8 @@ public:
     void setKylinComboBox(bool curIndexChanged);
     void setKylinComboBoxScanDeviceName();
     void setKylinScanSetNotEnable();
+    void setKylinScanSetBtnNotEnable();
+    void setKylinScanSetBtnEnable();
     void setKylinScanSetEnable();
     void setKylinComboBoxAttributes(KylinCmb *combo, QStringList strList);
     void setKylinLable();
@@ -100,7 +103,7 @@ private:
     QVBoxLayout *vBoxScanSet;
     QVBoxLayout *vBoxScanSet1;
     QHBoxLayout *hBoxScanSet;
-    int flag = 0;
+    int flag = 0; // 当前按钮为另存为还是文字识别后的存储文本
 
 public slots:
     void modifyBtnSave();

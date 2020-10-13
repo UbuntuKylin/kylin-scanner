@@ -74,7 +74,7 @@ public:
     int flagRectify = 0; //智能纠偏标志
     int flagOrc = 0; //文字识别标志
     float scaledNum = 1; //缩放倍数
-    int index = 0;
+    int index = 0; // 控制工具栏的打开和关闭
     int n = 0;
 
     ScanDisplay(QWidget *parent = nullptr);

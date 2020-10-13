@@ -107,7 +107,10 @@ FuncBar::FuncBar(QWidget *parent)
     line2->setFrameStyle(QFrame::VLine);
     line2->setStyleSheet("QFrame{color:rgb(32,30,29)}");
 
+#ifdef DEBUG_EDIT
+#else
     setKylinScanSetNotEnable();
+#endif
 
     vBoxLay1 = new QVBoxLayout();
     vBoxLay2 = new QVBoxLayout();
@@ -186,13 +189,13 @@ FuncBar::FuncBar(QWidget *parent)
 
     // For scan
     connect(btnScan, SIGNAL(clicked()), this, SLOT(onBtnScanClicked()));
+    connect(&thread,SIGNAL(scanFinishedFuncBar(int)),this,SLOT(scanResult(int)));
 
     // For rectify
     connect(btnRectify, SIGNAL(clicked()), this, SLOT(onBtnRectifyClicked()));
 
     // For beauty
     connect(btnBeautify, SIGNAL(clicked()), this, SLOT(onBtnBeautyClicked()));
-    connect(&thread,SIGNAL(scanFinishedFuncBar(int)),this,SLOT(scanResult(int)));
 }
 
 FuncBar::~FuncBar()
@@ -342,6 +345,7 @@ void FuncBar::onBtnOrcClicked()
 
 void FuncBar::onBtnScanClicked()
 {
+    MYLOG << "clicked!";
     KylinSane& instance = KylinSane::getInstance();
     if(instance.getKylinSaneStatus() == true)
     {
@@ -422,13 +426,20 @@ void FuncBar::scanResult(int ret)
 void ThreadScanFuncBar::run()
 {
     KylinSane& instance = KylinSane::getInstance();
+    int ret;
+#ifdef DEBUG_EDIT
+
+    ret = 0
+    emit scanFinishedFuncBar(ret);
+    quit();
+#else
     if(instance.getKylinSaneStatus() == true)
     {
-        int ret = 0;
         ret = instance.startScanning(instance.userInfo);
         MYLOG <<"start_scanning end!!!";
         emit scanFinishedFuncBar(ret);
     }
     quit();
+#endif
 }
 

@@ -35,6 +35,11 @@ void KylinLbl::paintEvent(QPaintEvent *event)
     painter.drawRect(QRect(x1, y1, x2 - x1, y2 - y1));
 }
 
+/**
+ * @brief KylinLbl::mousePressEvent
+ * 裁切时的起始坐标
+ * @param event
+ */
 void KylinLbl::mousePressEvent(QMouseEvent *event)
 {
     x1 = event->pos().x();
@@ -44,6 +49,11 @@ void KylinLbl::mousePressEvent(QMouseEvent *event)
     QApplication::setOverrideCursor(cursor);
 }
 
+/**
+ * @brief KylinLbl::mouseReleaseEvent
+ * 裁切时的终止坐标
+ * @param event
+ */
 void KylinLbl::mouseReleaseEvent(QMouseEvent *event)
 {
     x2 = event->pos().x(); //鼠标相对于所在控件的位置
