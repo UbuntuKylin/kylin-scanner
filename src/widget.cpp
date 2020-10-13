@@ -25,7 +25,12 @@ Widget::Widget(QWidget *parent)
     // 自定义设置窗口
     setWindowFlags(Qt::FramelessWindowHint | windowFlags());
 
+#ifdef DEBUG_EDIT
+    KylinSane &instance = KylinSane::getInstance();
+    instance.setKylinSaneStatus (true);
+#else
     thread.start();
+#endif
 
     pTitleBar = new TitleBar(this);
     installEventFilter(pTitleBar);
@@ -71,8 +76,13 @@ Widget::Widget(QWidget *parent)
     setLayout(pLayout);
 
     // For save
+
+#ifdef DEBUG_EDIT
+#else
     // 未扫描时，左下角的发送邮件和另存为等所有设置都不能点击
     pScanSet->setKylinScanSetNotEnable();
+#endif
+
     connect(pScanSet,&ScanSet::saveImageSignal,this,&Widget::saveImage);
 
     // For ORC
@@ -246,7 +256,11 @@ void Widget::saveScanFile()
 
     pFuncBar->setKylinScanSetEnable();
     pFuncBar->setStackClear();
+#ifdef DEBUG_EDIT
     img.load("/tmp/scanner/scan.pnm");
+#else
+    img.load("/tmp/scanner/scan.pnm");
+#endif
     QString pathName = pScanSet->getTextLocation() + "/" + pScanSet->getTextName();
     MYLOG <<"pathName:"<<pathName;
     QString format = pScanSet->getTextFormat();
@@ -290,6 +304,17 @@ void Widget::scanResult(bool ret)
     MYLOG <<"scan_result";
     KylinSane &instance = KylinSane::getInstance();
 
+#ifdef DEBUG_EDIT
+    {
+        device = true;
+
+        pScanSet->setKylinComboBoxScanDeviceName();
+        instance.openScanDevice(0);
+
+        bool retStatus = instance.getKylinSaneStatus();
+        resultDetail(retStatus);
+    }
+#else
     if(ret)
     {
         device = true;
@@ -314,6 +339,7 @@ void Widget::scanResult(bool ret)
         pFuncBar->setKylinScanSetNotEnable();
         pScanSet->setKylinScanSetNotEnable();
     }
+#endif
 }
 
 /**
@@ -326,6 +352,16 @@ void Widget::scanResultDetail(bool ret)
 {
     MYLOG <<"scan_result_detail";
 
+#ifdef DEBUG_EDIT
+    {
+        device = true;
+        pScandisplay->setInitDevice();
+        pScanSet->setKylinComboBox(true);
+        pScanSet->setKylinLable();
+        pFuncBar->setBtnScanEnable();
+        pScanSet->setKylinScanSetEnable();
+    }
+#else
     if(ret)
     {
         device = true;
@@ -342,6 +378,7 @@ void Widget::scanResultDetail(bool ret)
         pFuncBar->setKylinScanSetNotEnable();
         pScanSet->setKylinScanSetNotEnable();
     }
+#endif
 }
 
 void Widget::setMaskClear()

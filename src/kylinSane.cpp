@@ -1704,6 +1704,7 @@ ScanDeviceInfo KylinSane::openScanDevice(int index)
  */
 int KylinSane::startScanning(UserSelectedInfo info)
 {
+    MYLOG << "startScanning";
     KylinSane& instance = KylinSane::getInstance();
     int ret = 0;
     SANE_Status status = SANE_STATUS_GOOD;
