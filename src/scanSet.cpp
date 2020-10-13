@@ -691,11 +691,15 @@ QString filter="*.jpg;;*.png;;*.pdf;;*.bmp"; //文件过滤器
 
 void ScanSet::onBtnSaveClicked()
 {
+    QString pathName;
+    QString aFileName;
     QHash <int, QString> hashFormatFilter;
+
     hashFormatFilter[0] = "*.jpg;;*.png;;*.pdf;;*.bmp";
     hashFormatFilter[1] = "*.png;;*.jpg;;*.pdf;;*.bmp";
     hashFormatFilter[2] = "*.pdf;;*.jpg;;*,png;;*.bmp";
     hashFormatFilter[3] = "*.bmp;;*.jpg;;*.png;;*.pdf";
+    hashFormatFilter[5] = "*.txt"; // Far After OCR， save *.txt
 
     //保存文件
     QString dlgTitle=tr("Save as ..."); //对话框标题
@@ -703,9 +707,20 @@ void ScanSet::onBtnSaveClicked()
     MYLOG << "current format index = " << textFormat->currentIndex ()
           << "current format: " << textFormat->currentText ();
 
-    QString pathName = curPath + "/" + textName->text() + "." + textFormat->currentText();
-    QString aFileName=QFileDialog::getSaveFileName(this, dlgTitle, pathName,
-                                                   hashFormatFilter[textFormat->currentIndex ()]);
+    MYLOG << "flagSave = " << flag;
+    if (flag == 1) // 进行OCR ，存储文本
+    {
+        pathName = curPath + "/" + textName->text() + ".txt";
+        aFileName =QFileDialog::getSaveFileName(this, dlgTitle, pathName,
+                                                       hashFormatFilter[5]);
+    }
+    else // 另存为
+    {
+        pathName = curPath + "/" + textName->text() + "." + textFormat->currentText();
+        aFileName =QFileDialog::getSaveFileName(this, dlgTitle, pathName,
+                                                       hashFormatFilter[textFormat->currentIndex ()]);
+    }
+
     MYLOG << "Save as: " << aFileName;
     if (!aFileName.isEmpty())
         emit saveImageSignal(aFileName);
@@ -757,13 +772,13 @@ void ScanSet::onTextDeviceCurrentTextChanged(QString device)
 
 void ScanSet::modifyBtnSave()
 {
-    if(flag == 0)
+    if(flag == 0) // 进行OCR，存储文本
     {
         flag = 1;
         btnSave->setText(tr("Store text"));
         filter ="*.txt";
     }
-    else {
+    else { // 另存为
         flag = 0;
         btnSave->setText(tr("Save as"));
         filter="*.jpg;;*.png;;*.pdf;;*.bmp;;"; //文件过滤器

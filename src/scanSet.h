@@ -103,7 +103,7 @@ private:
     QVBoxLayout *vBoxScanSet;
     QVBoxLayout *vBoxScanSet1;
     QHBoxLayout *hBoxScanSet;
-    int flag = 0;
+    int flag = 0; // 当前按钮为另存为还是文字识别后的存储文本
 
 public slots:
     void modifyBtnSave();
