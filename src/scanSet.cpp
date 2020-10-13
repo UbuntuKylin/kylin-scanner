@@ -365,7 +365,14 @@ void ScanSet::setKylinScanSetNotEnable()
         btnLocation->setStyleSheet("QPushButton{border:4px solid #0D0400;background-repeat:no-repeat;background-position:right;background-color:#0D0400;color:gray;border-radius:4px;text-align:left;}");
 
         btnMail->setEnabled(false);
+        btnMail->setStyleSheet("QPushButton{background-color:rgb(32,30,29);border:1px solid #939393;color:gray;border-radius:16px;}"
+                              "QPushButton:hover{border:none;background-color:rgb(39,208,127);border:rgb(147,147,147);color:rgb(232,232,232);border-radius:16px;}"
+                                "QPushButton:checked{border:none;background-color:rgb(39,208,127);border:rgb(147,147,147);color:rgb(232,232,232);border-radius:16px;}");
+
         btnSave->setEnabled(false);
+        btnSave->setStyleSheet("QPushButton{background-color:rgb(32,30,29);border:1px solid #939393;color:gray;border-radius:16px;}"
+                              "QPushButton:hover{border:none;background-color:rgb(39,208,127);border:rgb(147,147,147);color:rgb(232,232,232);border-radius:16px;}"
+                                "QPushButton:checked{border:none;background-color:rgb(39,208,127);border:rgb(147,147,147);color:rgb(232,232,232);border-radius:16px;}");
 
 //        textDevice->setStyleSheet("QLabel{border:1px solid #0D0400;background-color:rgb(15,08,01);color:gray;border-radius:4px;}");
 //        textDevice->setEnabled(false);
@@ -374,6 +381,36 @@ void ScanSet::setKylinScanSetNotEnable()
         textType->setEnabled(false);
         textType->setStyleSheet("QLabel{border:1px solid #0D0400;background-color:rgb(15,08,01);color:gray;border-radius:4px;}");
     }
+}
+
+/**
+ * @brief ScanSet::setKylinScanSetBtnNotEnable
+ * 发送邮件和另存为按钮置灰，不能点击
+ */
+void ScanSet::setKylinScanSetBtnNotEnable()
+{
+    btnMail->setEnabled(false);
+    btnMail->setStyleSheet("QPushButton{background-color:rgb(32,30,29);border:1px solid #939393;color:gray;border-radius:16px;}"
+                          "QPushButton:hover{border:none;background-color:rgb(39,208,127);border:rgb(147,147,147);color:rgb(232,232,232);border-radius:16px;}"
+                            "QPushButton:checked{border:none;background-color:rgb(39,208,127);border:rgb(147,147,147);color:rgb(232,232,232);border-radius:16px;}");
+
+    btnSave->setEnabled(false);
+    btnSave->setStyleSheet("QPushButton{background-color:rgb(32,30,29);border:1px solid #939393;color:gray;border-radius:16px;}"
+                          "QPushButton:hover{border:none;background-color:rgb(39,208,127);border:rgb(147,147,147);color:rgb(232,232,232);border-radius:16px;}"
+                            "QPushButton:checked{border:none;background-color:rgb(39,208,127);border:rgb(147,147,147);color:rgb(232,232,232);border-radius:16px;}");
+}
+
+void ScanSet::setKylinScanSetBtnEnable()
+{
+    btnMail->setEnabled(true);
+    btnMail->setStyleSheet("QPushButton{background-color:rgb(32,30,29);border:1px solid #939393;color:rgb(232,232,232);border-radius:16px;}"
+                              "QPushButton:hover{border:none;background-color:rgb(39,208,127);border:rgb(147,147,147);color:rgb(232,232,232);border-radius:16px;}"
+                                "QPushButton:checked{border:none;background-color:rgb(39,208,127);border:rgb(147,147,147);color:rgb(232,232,232);border-radius:16px;}");
+
+    btnSave->setEnabled(true);
+    btnSave->setStyleSheet("QPushButton{background-color:rgb(32,30,29);border:1px solid #939393;color:rgb(232,232,232);border-radius:16px;}"
+                              "QPushButton:hover{border:none;background-color:rgb(39,208,127);color:rgb(232,232,232);border-radius:16px;}"
+                                "QPushButton:checked{border:none;background-color:rgb(39,208,127);color:rgb(232,232,232)border-radius:16px;}");
 }
 
 void ScanSet::setKylinScanSetEnable()
@@ -405,8 +442,8 @@ void ScanSet::setKylinScanSetEnable()
         btnLocation->setEnabled(true);
         btnLocation->setStyleSheet("QPushButton{border:4px solid #0D0400;background-repeat:no-repeat;background-position:right;background-color:#0D0400;color:rgb(232,232,232);border-radius:4px;text-align:left;}");
 
-        btnMail->setEnabled(true);
-        btnSave->setEnabled(true);
+        //btnMail->setEnabled(true);
+        //btnSave->setEnabled(true);
     }
 }
 

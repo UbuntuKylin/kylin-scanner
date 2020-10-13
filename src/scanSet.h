@@ -42,6 +42,8 @@ public:
     void setKylinComboBox(bool curIndexChanged);
     void setKylinComboBoxScanDeviceName();
     void setKylinScanSetNotEnable();
+    void setKylinScanSetBtnNotEnable();
+    void setKylinScanSetBtnEnable();
     void setKylinScanSetEnable();
     void setKylinComboBoxAttributes(KylinCmb *combo, QStringList strList);
     void setKylinLable();

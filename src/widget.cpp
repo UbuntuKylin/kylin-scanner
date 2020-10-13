@@ -71,6 +71,8 @@ Widget::Widget(QWidget *parent)
     setLayout(pLayout);
 
     // For save
+    // 未扫描时，左下角的发送邮件和另存为等所有设置都不能点击
+    pScanSet->setKylinScanSetNotEnable();
     connect(pScanSet,&ScanSet::saveImageSignal,this,&Widget::saveImage);
 
     // For ORC
@@ -86,6 +88,7 @@ Widget::Widget(QWidget *parent)
     connect(&thread,SIGNAL(scanFinished(bool)),this,SLOT(scanResult(bool)));
     connect(pScanSet,SIGNAL(openDeviceStatusSignal(bool)),this,SLOT(scanResultDetail(bool)));
     connect(pFuncBar,&FuncBar::sendScanEnd,pScandisplay,&ScanDisplay::onScan);
+    connect(pFuncBar,&FuncBar::sendScanEnd,this,&Widget::setScanSetBtnEnable);
     connect(pFuncBar,&FuncBar::sendScanEnd,this,&Widget::saveScanFile);
 
     // For rectify
@@ -222,6 +225,15 @@ void Widget::saveImage(QString fileName)
     img = pScandisplay->imageSave(fileName);
     if(img)
         saveToPdf(*img,fileName);
+}
+
+/**
+ * @brief Widget::setScanSetBtnEnable
+ * 设置发邮件和另存为控件可用
+ */
+void Widget::setScanSetBtnEnable()
+{
+    pScanSet->setKylinScanSetBtnEnable();
 }
 
 /**

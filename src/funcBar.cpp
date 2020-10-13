@@ -186,13 +186,13 @@ FuncBar::FuncBar(QWidget *parent)
 
     // For scan
     connect(btnScan, SIGNAL(clicked()), this, SLOT(onBtnScanClicked()));
+    connect(&thread,SIGNAL(scanFinishedFuncBar(int)),this,SLOT(scanResult(int)));
 
     // For rectify
     connect(btnRectify, SIGNAL(clicked()), this, SLOT(onBtnRectifyClicked()));
 
     // For beauty
     connect(btnBeautify, SIGNAL(clicked()), this, SLOT(onBtnBeautyClicked()));
-    connect(&thread,SIGNAL(scanFinishedFuncBar(int)),this,SLOT(scanResult(int)));
 }
 
 FuncBar::~FuncBar()
