@@ -221,6 +221,7 @@ void Widget::resultDetail(bool ret)
 
 void Widget::saveImage(QString fileName)
 {
+    MYLOG << "Save filename: " << fileName;
     QImage *img = NULL;
     img = pScandisplay->imageSave(fileName);
     if(img)

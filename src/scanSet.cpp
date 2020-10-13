@@ -688,13 +688,25 @@ void ScanSet::onBtnMailClicked()
 
 QString filter="*.jpg;;*.png;;*.pdf;;*.bmp"; //文件过滤器
 
+
 void ScanSet::onBtnSaveClicked()
 {
+    QHash <int, QString> hashFormatFilter;
+    hashFormatFilter[0] = "*.jpg;;*.png;;*.pdf;;*.bmp";
+    hashFormatFilter[1] = "*.png;;*.jpg;;*.pdf;;*.bmp";
+    hashFormatFilter[2] = "*.pdf;;*.jpg;;*,png;;*.bmp";
+    hashFormatFilter[3] = "*.bmp;;*.jpg;;*.png;;*.pdf";
+
     //保存文件
     QString dlgTitle=tr("Save as ..."); //对话框标题
     //QString filter="文本文件(*.txt);;h文件(*.h);;C++文件(.cpp);;所有文件(*.*)"; //文件过滤器
-    QString pathName = curPath + "/" + textName->text();
-    QString aFileName=QFileDialog::getSaveFileName(this,dlgTitle,pathName,filter);
+    MYLOG << "current format index = " << textFormat->currentIndex ()
+          << "current format: " << textFormat->currentText ();
+
+    QString pathName = curPath + "/" + textName->text() + "." + textFormat->currentText();
+    QString aFileName=QFileDialog::getSaveFileName(this, dlgTitle, pathName,
+                                                   hashFormatFilter[textFormat->currentIndex ()]);
+    MYLOG << "Save as: " << aFileName;
     if (!aFileName.isEmpty())
         emit saveImageSignal(aFileName);
 }

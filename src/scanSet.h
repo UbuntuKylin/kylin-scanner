@@ -26,6 +26,7 @@
 #include <QPixmap>
 #include <QLineEdit>
 #include <QFile>
+#include <QHash>
 #include "kylinCmb.h"
 #include "sendMail.h"
 #include "kylinSane.h"
