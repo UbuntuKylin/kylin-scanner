@@ -429,7 +429,7 @@ void ThreadScanFuncBar::run()
     int ret;
 #ifdef DEBUG_EDIT
 
-    ret = 0
+    ret = 0;
     emit scanFinishedFuncBar(ret);
     quit();
 #else

@@ -20,14 +20,35 @@
 #include <QTranslator>
 #include <QLockFile>
 #include "widget.h"
+#include <QDesktopWidget>
+#include <X11/Xlib.h> // ought to put this file last
+
+int getScreenWidth() 
+{
+    Display *disp = XOpenDisplay(NULL);
+    Screen *scrn = DefaultScreenOfDisplay(disp);
+    if (NULL == scrn) {
+        return 0;
+    }
+    int width = scrn->width;
+
+    if (NULL != disp) {
+        XCloseDisplay(disp);
+    }
+    return width;
+}
 
 int main(int argc, char *argv[])
 {
-    QApplication a(argc, argv);
+    if (getScreenWidth() > 2560) {
+        #if (QT_VERSION >= QT_VERSION_CHECK(5, 6, 0))
+                QApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+                QApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
+        #endif
+    }
 
-    // For 4k
-    QApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
-    QApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
+    QApplication a(argc, argv);
+    QApplication::setWindowIcon(QIcon::fromTheme("kylin-scanner", QIcon(":/icon/icon/scanner.png")));
 
     // Prevent multiple open
     QLockFile *lockFile = new QLockFile ("/tmp/kylin-scanner.lock");
@@ -39,7 +60,6 @@ int main(int argc, char *argv[])
     {
         MYLOG << "kylin-scanner is not running.";
     }
-    QApplication::setWindowIcon(QIcon::fromTheme("kylin-scanner", QIcon(":/icon/icon/scanner.png")));
 
     // For translations with different language environments
     QTranslator translator;
