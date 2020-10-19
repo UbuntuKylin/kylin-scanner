@@ -16,12 +16,16 @@
 *
 */
 #include "widget.h"
+#include <QApplication>
+#include <QLabel>
+#include <QTranslator>
 
 bool device = true;
 
 Widget::Widget(QWidget *parent)
     : QWidget(parent)
 {
+
     // 自定义设置窗口
     setWindowFlags(Qt::FramelessWindowHint | windowFlags());
 
@@ -32,8 +36,6 @@ Widget::Widget(QWidget *parent)
     thread.start();
 #endif
 
-    pTitleBar = new TitleBar(this);
-    installEventFilter(pTitleBar);
     resize(860, 680);
 
 //    setStyleSheet("QWidget{border-bottom-left-radius:5px;border-bottom-right-radius:5px;}");
@@ -49,6 +51,8 @@ Widget::Widget(QWidget *parent)
     line->setFrameShape(QFrame::HLine);
     line->setStyleSheet("QFrame{color:rgb(32,30,29)}");
 
+    pTitleBar = new TitleBar();
+    installEventFilter(pTitleBar);
 
     pFuncBar = new  FuncBar();
     installEventFilter(pFuncBar);

@@ -24,7 +24,6 @@
 #include <QHBoxLayout>
 #include <QEvent>
 #include <QMouseEvent>
-#include <QApplication>
 #include <QDebug>
 #include <QPainter>
 #include "kylinLog.h"

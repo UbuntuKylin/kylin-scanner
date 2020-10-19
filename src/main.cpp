@@ -15,11 +15,12 @@
 * along with this program; if not, see <http://www.gnu.org/licenses/&gt;.
 *
 */
+#include "widget.h"
+#include "singleApplication.h"
 #include <QApplication>
 #include <QLabel>
 #include <QTranslator>
 #include <QLockFile>
-#include "widget.h"
 #include <QDesktopWidget>
 #include <X11/Xlib.h> // ought to put this file last
 
@@ -47,19 +48,8 @@ int main(int argc, char *argv[])
         #endif
     }
 
-    QApplication a(argc, argv);
+    SingleApplication a(argc, argv);
     QApplication::setWindowIcon(QIcon::fromTheme("kylin-scanner", QIcon(":/icon/icon/scanner.png")));
-
-    // Prevent multiple open
-    QLockFile *lockFile = new QLockFile ("/tmp/kylin-scanner.lock");
-    if (!lockFile->tryLock(2000))
-    {
-        return 0;
-    }
-    else
-    {
-        MYLOG << "kylin-scanner is not running.";
-    }
 
     // For translations with different language environments
     QTranslator translator;
@@ -69,20 +59,12 @@ int main(int argc, char *argv[])
     translator.load(locale);
     a.installTranslator(&translator);
 
-    /*
-    QTranslator qtTranslator;
-    QString dir = a.applicationDirPath() + "/" + "translations";
-
-    if (qtTranslator.load(QLocale(), "language", ".", dir, ".qm"))
-    {
-        a.installTranslator(&qtTranslator);
+    if (!a.isRunning()){
+        MYLOG << "isRunning = false.";
+        Widget w;
+        a.w = &w;
+        w.show();
+        return a.exec();
     }
-    */
-
-    Widget w;
-
-    w.show();
-
-
-    return a.exec();
+    return 0;
 }

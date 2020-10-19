@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui network
+QT       += core gui network printsupport concurrent
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -51,6 +51,7 @@ SOURCES += \
     scanDisplay.cpp \
     scanSet.cpp \
     sendMail.cpp \
+    singleApplication.cpp \
     titleBar.cpp \
     waterMarkDlg.cpp \
         widget.cpp \
@@ -68,6 +69,7 @@ HEADERS += \
     scanDisplay.h \
     scanSet.h \
     sendMail.h \
+    singleApplication.h \
     titleBar.h \
     waterMarkDlg.h \
         widget.h \
