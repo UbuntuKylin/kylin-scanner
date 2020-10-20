@@ -75,7 +75,7 @@ public:
     int flagOrc = 0; //文字识别标志
     float scaledNum = 1; //缩放倍数
     int index = 0; // 控制工具栏的打开和关闭
-    int n = 0;
+    int flagWaterMark = 0; // 用于扫描完成后添加水印时的覆盖问题
 
     ScanDisplay(QWidget *parent = nullptr);
     void keyPressEvent(QKeyEvent *e);
