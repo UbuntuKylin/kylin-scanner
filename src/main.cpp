@@ -15,30 +15,40 @@
 * along with this program; if not, see <http://www.gnu.org/licenses/&gt;.
 *
 */
+#include "widget.h"
+#include "singleApplication.h"
 #include <QApplication>
 #include <QLabel>
 #include <QTranslator>
 #include <QLockFile>
-#include "widget.h"
+#include <QDesktopWidget>
+#include <X11/Xlib.h> // ought to put this file last
+
+int getScreenWidth() 
+{
+    Display *disp = XOpenDisplay(NULL);
+    Screen *scrn = DefaultScreenOfDisplay(disp);
+    if (NULL == scrn) {
+        return 0;
+    }
+    int width = scrn->width;
+
+    if (NULL != disp) {
+        XCloseDisplay(disp);
+    }
+    return width;
+}
 
 int main(int argc, char *argv[])
 {
-    QApplication a(argc, argv);
-
-    // For 4k
-    QApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
-    QApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
-
-    // Prevent multiple open
-    QLockFile *lockFile = new QLockFile ("/tmp/kylin-scanner.lock");
-    if (!lockFile->tryLock(2000))
-    {
-        return 0;
+    if (getScreenWidth() > 2560) {
+        #if (QT_VERSION >= QT_VERSION_CHECK(5, 6, 0))
+                QApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+                QApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
+        #endif
     }
-    else
-    {
-        MYLOG << "kylin-scanner is not running.";
-    }
+
+    SingleApplication a(argc, argv);
     QApplication::setWindowIcon(QIcon::fromTheme("kylin-scanner", QIcon(":/icon/icon/scanner.png")));
 
     // For translations with different language environments
@@ -49,20 +59,12 @@ int main(int argc, char *argv[])
     translator.load(locale);
     a.installTranslator(&translator);
 
-    /*
-    QTranslator qtTranslator;
-    QString dir = a.applicationDirPath() + "/" + "translations";
-
-    if (qtTranslator.load(QLocale(), "language", ".", dir, ".qm"))
-    {
-        a.installTranslator(&qtTranslator);
+    if (!a.isRunning()){
+        MYLOG << "isRunning = false.";
+        Widget w;
+        a.w = &w;
+        w.show();
+        return a.exec();
     }
-    */
-
-    Widget w;
-
-    w.show();
-
-
-    return a.exec();
+    return 0;
 }

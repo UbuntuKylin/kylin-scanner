@@ -16,6 +16,7 @@
 *
 */
 #include "titleBar.h"
+#include <QApplication>
 
 TitleBar::TitleBar(QWidget *parent)
     : QWidget(parent)
@@ -108,31 +109,12 @@ bool TitleBar::eventFilter(QObject *obj, QEvent *event)
 {
     switch (event->type())
     {
-/*    case QEvent::WindowTitleChange:
-    {
-        QWidget *pWidget = qobject_cast<QWidget *>(obj);
-        if (pWidget)
-        {
-            m_pTitleLabel->setText(pWidget->windowTitle());
+        case QEvent::WindowStateChange:
+        case QEvent::Resize:
+            updateMaximize();
             return true;
-        }
-    }
-    case QEvent::WindowIconChange:
-    {
-        QWidget *pWidget = qobject_cast<QWidget *>(obj);
-        if (pWidget)
-        {
-            QIcon icon = pWidget->windowIcon();
-            m_pIconLabel->setPixmap(icon.pixmap(m_pIconLabel->size()));
-            return true;
-        }
-    }*/
-    case QEvent::WindowStateChange:
-    case QEvent::Resize:
-        updateMaximize();
-        return true;
-    default:
-        break;
+        default:
+            break;
     }
     return QWidget::eventFilter(obj, event);
 }
@@ -162,7 +144,8 @@ void TitleBar::onClicked()
 void TitleBar::updateMaximize()
 {
     QWidget *pWindow = this->window();
-    if (pWindow->isTopLevel())
+    //if (pWindow->isTopLevel())
+    if (pWindow->isWindow ())
     {
         bool bMaximize = pWindow->isMaximized();
         if (bMaximize)
@@ -172,7 +155,7 @@ void TitleBar::updateMaximize()
             m_pMaximizeButton->setStyleSheet("QPushButton{border-image: url(:/icon/icon/revert_white.svg);border:none;background-color:rgb(47,44,43);border-radius:4px;}"
                                       "QPushButton:hover{border-image: url(:/icon/icon/revert_white.svg);border:none;background-color:rgb(61,107,229);border-radius:4px;}"
                                         "QPushButton:checked{border-image: url(:/icon/icon/revert_white.svg);border:none;background-color:rgb(50,87,202);border-radius:4px;}");
-        emit isMax();
+            emit isMax();
         }
         else
         {
@@ -181,9 +164,10 @@ void TitleBar::updateMaximize()
             m_pMaximizeButton->setStyleSheet("QPushButton{border-image: url(:/icon/icon/max_white.svg);border:none;background-color:rgb(47,44,43);border-radius:4px;}"
                                       "QPushButton:hover{border-image: url(:/icon/icon/max_white.svg);border:none;background-color:rgb(61,107,229);border-radius:4px;}"
                                         "QPushButton:checked{border-image: url(:/icon/icon/max_white.svg);border:none;background-color:rgb(50,87,202);border-radius:4px;}");
-        emit isNormal();
+            emit isNormal();
         }
 
-        m_pMaximizeButton->setStyle(QApplication::style());
+        // 解决切换主题导致程序段错误
+        //m_pMaximizeButton->setStyle(QApplication::style());
     }
 }

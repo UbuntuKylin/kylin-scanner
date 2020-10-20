@@ -361,10 +361,10 @@ void ScanDisplay::symmetry()
 
 void ScanDisplay::addWatermark()
 {
-
-    if(n == 0)
+    MYLOG << "flagWaterMark   = " << flagWaterMark;
+    if (flagWaterMark  == 0)
     {
-        n = 1;
+        flagWaterMark = 1;
         imgBackup = new QImage();
         *imgBackup = imgEditLayout->copy();
     }
@@ -373,7 +373,7 @@ void ScanDisplay::addWatermark()
     int ret=dialog->exec();// 以模态方式显示对话框，用户关闭对话框时返回 DialogCode值
     MYLOG << "ret = " << ret;
 
-    if (ret==QDialog::Accepted) //OK键被按下,对话框关闭，若设置了setAttribute(Qt::WA_DeleteOnClose)，对话框被释放，无法获得返回值
+    if (ret == QDialog::Accepted) //OK键被按下,对话框关闭，若设置了setAttribute(Qt::WA_DeleteOnClose)，对话框被释放，无法获得返回值
     { //OK键被按下，获取对话框上的输入，设置行数和列数
         text = dialog->getLineEdit();
         MYLOG << text;
@@ -382,9 +382,9 @@ void ScanDisplay::addWatermark()
         stack.push(*imgStack);
         *imgEditLayout = imgBackup->copy();
         QPainter painter(imgEditLayout);
-        int fontSize = 70, spacing = 20;
+        int fontSize = 60, spacing = 20;
         QFont font("华文黑体", fontSize, QFont::Thin);
-        QColor colorFont(1, 1, 1);
+        QColor colorFont(1, 1, 1, 80);
         //colorFont.setAlphaF(0.4); // 设置水印字体颜色透明度,这个会导致字体不显示等一系列错误
         font.setLetterSpacing(QFont::AbsoluteSpacing, spacing);
         painter.setFont(font);
@@ -541,6 +541,7 @@ void ScanDisplay::onScan()
     flagOrc = 0;
     flagRectify = 0;
     flagBeautify = 0;
+    flagWaterMark = 0; // 需要置0，避免多次扫描造成水印的图片切换到上一次扫描的图片
 
     timerScan->start(100);
 

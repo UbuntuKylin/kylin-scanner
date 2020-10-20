@@ -53,6 +53,8 @@ Files: Doxyfile
        src/waterMarkDlg.h
        src/interruptDlg.cpp
        src/interruptDlg.h
+       src/singleApplication.cpp
+       src/singleApplication.h
        src/widget.cpp
        src/widget.h
 Copyright: 2020, KylinSoft Co., Ltd.

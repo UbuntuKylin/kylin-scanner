@@ -465,7 +465,7 @@ void ScanSet::setKylinLable()
     setFontSize(labType,10);
     setKylinLabelAttributes(labType);
 
-    labColor->setText(tr("Color"));
+    labColor->setText(tr("Colouration"));
     setFontSize(labColor,10);
     setKylinLabelAttributes(labColor);
 

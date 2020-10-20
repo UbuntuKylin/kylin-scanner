@@ -5,6 +5,7 @@ Maintainer: Kylin Team <team+kylin@tracker.debian.org>
 Uploaders: handsome_feng <jianfengli@ubuntukylin.com>
 Build-Depends: debhelper-compat (=12),
                libglib2.0-dev,
+               libx11-dev,
                libsane-dev,
                libopencv-dev,
                libtesseract-dev,
