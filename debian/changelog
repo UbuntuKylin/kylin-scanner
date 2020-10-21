@@ -1,3 +1,27 @@
+kylin-scanner (1.0.0-1kylin1.1) UNRELEASED; urgency=medium
+
+  * [English changelog]
+  * Fix #21143, handle watermarkDlg font's opacity and colouration chinese
+  * Fix #19671, handle do not fit 4k display screen
+  * Fix #21168, Save-as dialog cannot save file while lack of suffix
+  * Fix #21131, btnMail and btnSave could click before scan
+  * Fix segment while switch system theme; Add singleApplication class
+  * Add DEBUG_EDIT condition to compile while not finding a scanner in debug module
+  * Save it as a document for Chinese translation
+  * Modify tailor button click style and add press Key_Space to tailor
+  * 
+  *
+  * [Chinese changelog]
+  * Fix #21143, 处理水印透明度和中文汉化
+  * Fix #19671, 进行适配4k显示屏
+  * Fix #21168, 处理另存为按钮在缺少前缀时不能保存文件的问题
+  * Fix #21131, 发送邮件和另存为按钮在扫描开始前设置为不可点击
+  * 修复切换主题出现的段错误
+  * 修复另存为对话框的汉化问题
+  * 修复裁切按钮点击风格和增加空格键进行裁切选择
+
+ -- ukui-2004 <yusq@ubuntu>  Wed, 21 Oct 2020 12:30:20 +0800
+
 kylin-scanner (1.0.0-1kylin1) V101; urgency=medium
 
   * rebuild for kylin
