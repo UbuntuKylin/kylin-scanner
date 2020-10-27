@@ -1,4 +1,22 @@
-kylin-scanner (1.0.0-1kylin1.1) UNRELEASED; urgency=medium
+kylin-scanner (1.0.0-1kylin1k4) v101; urgency=medium
+
+  * Add gsettings-qt in src.pro 
+
+ -- yushuoqi <yushuoqi@kylinos.cn>  Wed, 21 Oct 2020 16:41:49 +0800
+
+kylin-scanner (1.0.0-1kylin1k3) v101; urgency=medium
+
+  * Add libgsettings-qt-dev depends
+
+ -- Derek-Wong <wangye@kylinos.cn>  Wed, 21 Oct 2020 16:05:16 +0800
+
+kylin-scanner (1.0.0-1kylin1k2) v101; urgency=medium
+
+  * comment "PKGCONFIG += gsettings-qt" in src/src.pro
+
+ -- Bi Wenjie <biwenjie@kylinos.cn>  Wed, 21 Oct 2020 13:53:48 +0800
+
+kylin-scanner (1.0.0-1kylin1k1) v101; urgency=medium
 
   * [English changelog]
   * Fix #21143, handle watermarkDlg font's opacity and colouration chinese
@@ -20,13 +38,13 @@ kylin-scanner (1.0.0-1kylin1.1) UNRELEASED; urgency=medium
   * 修复另存为对话框的汉化问题
   * 修复裁切按钮点击风格和增加空格键进行裁切选择
 
- -- ukui-2004 <yusq@ubuntu>  Wed, 21 Oct 2020 12:30:20 +0800
+ -- Bi Wenjie <biwenjie@kylinos.cn>  Wed, 21 Oct 2020 12:30:20 +0800
 
 kylin-scanner (1.0.0-1kylin1) V101; urgency=medium
 
   * rebuild for kylin
 
- -- Bi Wenjie <biwenjie.kylinos.cn>  Wed, 23 Sep 2020 10:31:34 +0800
+ -- Bi Wenjie <biwenjie@kylinos.cn>  Wed, 23 Sep 2020 10:31:34 +0800
 
 kylin-scanner (1.0.0-1) unstable; urgency=low
 

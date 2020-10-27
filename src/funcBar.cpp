@@ -76,17 +76,17 @@ FuncBar::FuncBar(QWidget *parent)
 
 
     btnNorScan->setStyleSheet("QPushButton{image: url(:/icon/icon/norscan.png);border:none;background-color:rgb(15,08,01);border-radius:6px;}"
-                              "QPushButton:hover{image: url(:/icon/icon/norscan.png);border:none;background-color:rgb(39,208,127);border-radius:6px;}"
-                                "QPushButton:checked{image: url(:/icon/icon/norscan.png);border:none;background-color:rgb(39,208,127);border-radius:6px;}");
+                              "QPushButton:hover{image: url(:/icon/icon/norscan.png);border:none;background-color:#3D6BE5;border-radius:6px;}"
+                                "QPushButton:checked{image: url(:/icon/icon/norscan.png);border:none;background-color:#3D6BE5;border-radius:6px;}");
     btnBeautify->setStyleSheet("QPushButton{image: url(:/icon/icon/beautify.png);border:none;background-color:rgb(15,08,01);border-radius:6px;}"
-                              "QPushButton:hover{image: url(:/icon/icon/beautify.png);border:none;background-color:rgb(39,208,127);border-radius:6px;}"
-                                "QPushButton:checked{image: url(:/icon/icon/beautify.png);border:none;background-color:rgb(39,208,127);border-radius:6px;}");
+                              "QPushButton:hover{image: url(:/icon/icon/beautify.png);border:none;background-color:#3D6BE5;border-radius:6px;}"
+                                "QPushButton:checked{image: url(:/icon/icon/beautify.png);border:none;background-color:#3D6BE5;border-radius:6px;}");
     btnRectify->setStyleSheet("QPushButton{image: url(:/icon/icon/rectify.png);border:none;background-color:rgb(15,08,01);border-radius:6px;}"
-                              "QPushButton:hover{image: url(:/icon/icon/rectify.png);border:none;background-color:rgb(39,208,127);border-radius:6px;}"
-                                "QPushButton:checked{image: url(:/icon/icon/rectify.png);border:none;background-color:rgb(39,208,127);border-radius:6px;}");
+                              "QPushButton:hover{image: url(:/icon/icon/rectify.png);border:none;background-color:#3D6BE5;border-radius:6px;}"
+                                "QPushButton:checked{image: url(:/icon/icon/rectify.png);border:none;background-color:#3D6BE5;border-radius:6px;}");
     btnOrc->setStyleSheet("QPushButton{image: url(:/icon/icon/orc.png);border:none;background-color:rgb(15,08,01);border-radius:6px;}"
-                              "QPushButton:hover{image: url(:/icon/icon/orc.png);border:none;background-color:rgb(39,208,127);border-radius:6px;}"
-                                "QPushButton:checked{image: url(:/icon/icon/orc.png);border:none;background-color:rgb(39,208,127);border-radius:6px;}");
+                              "QPushButton:hover{image: url(:/icon/icon/orc.png);border:none;background-color:#3D6BE5;border-radius:6px;}"
+                                "QPushButton:checked{image: url(:/icon/icon/orc.png);border:none;background-color:#3D6BE5;border-radius:6px;}");
 
     btnScan->setStyleSheet("QPushButton{background-color: rgb(232,160,73);border-radius:28px;color:rgb(232,232,232);}");
 
@@ -214,8 +214,8 @@ void FuncBar::keyPressEvent(QKeyEvent *e)
             {
                 flagOrc = 0;
                 btnOrc->setStyleSheet("QPushButton{image: url(:/icon/icon/orc.png);border:none;background-color:rgb(15,08,01);border-radius:6px;}"
-                                          "QPushButton:hover{image: url(:/icon/icon/orc.png);border:none;background-color:rgb(39,208,127);border-radius:6px;}"
-                                            "QPushButton:checked{image: url(:/icon/icon/orc.png);border:none;background-color:rgb(39,208,127);border-radius:6px;}");
+                                          "QPushButton:hover{image: url(:/icon/icon/orc.png);border:none;background-color:#3D6BE5;border-radius:6px;}"
+                                            "QPushButton:checked{image: url(:/icon/icon/orc.png);border:none;background-color:#3D6BE5;border-radius:6px;}");
 
                 emit sendOrcEnd();
             }
@@ -223,16 +223,16 @@ void FuncBar::keyPressEvent(QKeyEvent *e)
             {
                 flagBeautify = 0;
                 btnBeautify->setStyleSheet("QPushButton{image: url(:/icon/icon/beautify.png);border:none;background-color:rgb(15,08,01);border-radius:6px;}"
-                                          "QPushButton:hover{image: url(:/icon/icon/beautify.png);border:none;background-color:rgb(39,208,127);border-radius:6px;}"
-                                            "QPushButton:checked{image: url(:/icon/icon/beautify.png);border:none;background-color:rgb(39,208,127);border-radius:6px;}");
+                                          "QPushButton:hover{image: url(:/icon/icon/beautify.png);border:none;background-color:#3D6BE5;border-radius:6px;}"
+                                            "QPushButton:checked{image: url(:/icon/icon/beautify.png);border:none;background-color:#3D6BE5;border-radius:6px;}");
                 emit sendBeautifyEnd();
             }
             if(flagName == "flagRectify")
             {
                 flagRectify = 0;
                 btnRectify->setStyleSheet("QPushButton{image: url(:/icon/icon/rectify.png);border:none;background-color:rgb(15,08,01);border-radius:6px;}"
-                                          "QPushButton:hover{image: url(:/icon/icon/rectify.png);border:none;background-color:rgb(39,208,127);border-radius:6px;}"
-                                            "QPushButton:checked{image: url(:/icon/icon/rectify.png);border:none;background-color:rgb(39,208,127);border-radius:6px;}");
+                                          "QPushButton:hover{image: url(:/icon/icon/rectify.png);border:none;background-color:#3D6BE5;border-radius:6px;}"
+                                            "QPushButton:checked{image: url(:/icon/icon/rectify.png);border:none;background-color:#3D6BE5;border-radius:6px;}");
                 sendRectifyEnd();
             }
         }
@@ -308,16 +308,16 @@ void FuncBar::setStackClear()
         flagRectify = 0;
         flagBeautify = 0;
         btnOrc->setStyleSheet("QPushButton{image: url(:/icon/icon/orc.png);border:none;background-color:rgb(15,08,01);border-radius:6px;}"
-                                  "QPushButton:hover{image: url(:/icon/icon/orc.png);border:none;background-color:rgb(39,208,127);border-radius:6px;}"
-                                    "QPushButton:checked{image: url(:/icon/icon/orc.png);border:none;background-color:rgb(39,208,127);border-radius:6px;}");
+                                  "QPushButton:hover{image: url(:/icon/icon/orc.png);border:none;background-color:#3D6BE5;border-radius:6px;}"
+                                    "QPushButton:checked{image: url(:/icon/icon/orc.png);border:none;background-color:#3D6BE5;border-radius:6px;}");
 
         btnRectify->setStyleSheet("QPushButton{image: url(:/icon/icon/rectify.png);border:none;background-color:rgb(15,08,01);border-radius:6px;}"
-                                  "QPushButton:hover{image: url(:/icon/icon/rectify.png);border:none;background-color:rgb(39,208,127);border-radius:6px;}"
-                                    "QPushButton:checked{image: url(:/icon/icon/rectify.png);border:none;background-color:rgb(39,208,127);border-radius:6px;}");
+                                  "QPushButton:hover{image: url(:/icon/icon/rectify.png);border:none;background-color:#3D6BE5;border-radius:6px;}"
+                                    "QPushButton:checked{image: url(:/icon/icon/rectify.png);border:none;background-color:#3D6BE5;border-radius:6px;}");
 
         btnBeautify->setStyleSheet("QPushButton{image: url(:/icon/icon/beautify.png);border:none;background-color:rgb(15,08,01);border-radius:6px;}"
-                                  "QPushButton:hover{image: url(:/icon/icon/beautify.png);border:none;background-color:rgb(39,208,127);border-radius:6px;}"
-                                    "QPushButton:checked{image: url(:/icon/icon/beautify.png);border:none;background-color:rgb(39,208,127);border-radius:6px;}");
+                                  "QPushButton:hover{image: url(:/icon/icon/beautify.png);border:none;background-color:#3D6BE5;border-radius:6px;}"
+                                    "QPushButton:checked{image: url(:/icon/icon/beautify.png);border:none;background-color:#3D6BE5;border-radius:6px;}");
 }
 
 //QString orc_text;
@@ -327,7 +327,7 @@ void FuncBar::onBtnOrcClicked()
     {
         flagOrc = 1;
         stack.push("flagOrc");
-        btnOrc->setStyleSheet("QPushButton{image: url(:/icon/icon/orc.png);border:none;background-color:rgb(39,208,127);border-radius:6px;}");
+        btnOrc->setStyleSheet("QPushButton{image: url(:/icon/icon/orc.png);border:none;background-color:#3D6BE5;border-radius:6px;}");
 
         emit sendOrcBegin();
     }
@@ -336,8 +336,8 @@ void FuncBar::onBtnOrcClicked()
         flagOrc = 0;
         stack.pop();
         btnOrc->setStyleSheet("QPushButton{image: url(:/icon/icon/orc.png);border:none;background-color:rgb(15,08,01);border-radius:6px;}"
-                                  "QPushButton:hover{image: url(:/icon/icon/orc.png);border:none;background-color:rgb(39,208,127);border-radius:6px;}"
-                                    "QPushButton:checked{image: url(:/icon/icon/orc.png);border:none;background-color:rgb(39,208,127);border-radius:6px;}");
+                                  "QPushButton:hover{image: url(:/icon/icon/orc.png);border:none;background-color:#3D6BE5;border-radius:6px;}"
+                                    "QPushButton:checked{image: url(:/icon/icon/orc.png);border:none;background-color:#3D6BE5;border-radius:6px;}");
 
         emit sendOrcEnd();
     }
@@ -373,7 +373,7 @@ void FuncBar::onBtnRectifyClicked()
     {
         flagRectify = 1;
         stack.push("flagRectify");
-        btnRectify->setStyleSheet("QPushButton{image: url(:/icon/icon/rectify.png);border:none;background-color:rgb(39,208,127);border-radius:6px;}");
+        btnRectify->setStyleSheet("QPushButton{image: url(:/icon/icon/rectify.png);border:none;background-color:#3D6BE5;border-radius:6px;}");
         emit sendRectifyBegin();
     }
     else
@@ -381,8 +381,8 @@ void FuncBar::onBtnRectifyClicked()
         flagRectify = 0;
         stack.pop();
         btnRectify->setStyleSheet("QPushButton{image: url(:/icon/icon/rectify.png);border:none;background-color:rgb(15,08,01);border-radius:6px;}"
-                                  "QPushButton:hover{image: url(:/icon/icon/rectify.png);border:none;background-color:rgb(39,208,127);border-radius:6px;}"
-                                    "QPushButton:checked{image: url(:/icon/icon/rectify.png);border:none;background-color:rgb(39,208,127);border-radius:6px;}");
+                                  "QPushButton:hover{image: url(:/icon/icon/rectify.png);border:none;background-color:#3D6BE5;border-radius:6px;}"
+                                    "QPushButton:checked{image: url(:/icon/icon/rectify.png);border:none;background-color:#3D6BE5;border-radius:6px;}");
         emit sendRectifyEnd();
     }
 }
@@ -395,7 +395,7 @@ void FuncBar::onBtnBeautyClicked()
     {
         flagBeautify = 1;
         stack.push("flagBeautify");
-        btnBeautify->setStyleSheet("QPushButton{image: url(:/icon/icon/beautify.png);border:none;background-color:rgb(39,208,127);border-radius:6px;}");
+        btnBeautify->setStyleSheet("QPushButton{image: url(:/icon/icon/beautify.png);border:none;background-color:#3D6BE5;border-radius:6px;}");
         emit sendBeautifyBegin();
     }
     else
@@ -403,8 +403,8 @@ void FuncBar::onBtnBeautyClicked()
         flagBeautify = 0;
         stack.pop();
         btnBeautify->setStyleSheet("QPushButton{image: url(:/icon/icon/beautify.png);border:none;background-color:rgb(15,08,01);border-radius:6px;}"
-                                  "QPushButton:hover{image: url(:/icon/icon/beautify.png);border:none;background-color:rgb(39,208,127);border-radius:6px;}"
-                                    "QPushButton:checked{image: url(:/icon/icon/beautify.png);border:none;background-color:rgb(39,208,127);border-radius:6px;}");
+                                  "QPushButton:hover{image: url(:/icon/icon/beautify.png);border:none;background-color:#3D6BE5;border-radius:6px;}"
+                                    "QPushButton:checked{image: url(:/icon/icon/beautify.png);border:none;background-color:#3D6BE5;border-radius:6px;}");
         emit sendBeautifyEnd();
     }
 }

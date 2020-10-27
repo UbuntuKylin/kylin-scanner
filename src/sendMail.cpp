@@ -80,11 +80,11 @@ NoMail::NoMail(QWidget *parent) :
     btnCancel->setFixedSize(120,36);
 
     btnOk->setStyleSheet("QPushButton{background-color:rgb(32,30,29);border:1px solid #939393;color:rgb(232,232,232);border-radius:18px;}"
-                              "QPushButton:hover{border:none;background-color:rgb(39,208,127);border:rgb(147,147,147);color:rgb(232,232,232);border-radius:18px;}"
-                                "QPushButton:checked{border:none;background-color:rgb(39,208,127);border:rgb(147,147,147);color:rgb(232,232,232);border-radius:18px;}");
+                              "QPushButton:hover{border:none;background-color:#3D6BE5;border:rgb(147,147,147);color:rgb(232,232,232);border-radius:18px;}"
+                                "QPushButton:checked{border:none;background-color:#3D6BE5;border:rgb(147,147,147);color:rgb(232,232,232);border-radius:18px;}");
     btnCancel->setStyleSheet("QPushButton{background-color:rgb(32,30,29);border:1px solid #939393;color:rgb(232,232,232);border-radius:18px;}"
-                              "QPushButton:hover{border:none;background-color:rgb(39,208,127);color:rgb(232,232,232);border-radius:18px;}"
-                                "QPushButton:checked{border:none;background-color:rgb(39,208,127);color:rgb(232,232,232)border-radius:18px;}");
+                              "QPushButton:hover{border:none;background-color:#3D6BE5;color:rgb(232,232,232);border-radius:18px;}"
+                                "QPushButton:checked{border:none;background-color:#3D6BE5;color:rgb(232,232,232)border-radius:18px;}");
 
     hBoxLayout->setSpacing(0);
     hBoxLayout->addWidget(btnOk);
@@ -304,8 +304,8 @@ void SendMail::setBtnList()
             btn->setText(appname);
             btn->setFixedSize(256, 56);
             btn->setStyleSheet("QPushButton{background-color:rgb(68,66,72);background-position:left;text-align:left;border:none;color:rgb(232,232,232);border-radius:4px;}"
-                                "QPushButton:hover{border:none;background-color:rgb(39,208,127);color:#F0FFFFFF;border-radius:4px;}"
-                                 "QPushButton:checked{border:none;background-color:rgb(39,208,127);color:#F7FFFFFF;border-radius:4px;}");
+                                "QPushButton:hover{border:none;background-color:#3D6BE5;color:#F0FFFFFF;border-radius:4px;}"
+                                 "QPushButton:checked{border:none;background-color:#3D6BE5;color:#F7FFFFFF;border-radius:4px;}");
             btn->setIcon(appicon);
             btn->setIconSize(QSize(40,40)); // 应用图标尺寸
             btn->setCheckable(true);
