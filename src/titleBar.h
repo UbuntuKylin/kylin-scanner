@@ -55,6 +55,9 @@ private:
 
     bool mMoving;
     QPoint mLastMousePosition;
+
+    QLabel *m_logo;
+    QLabel *m_logoMsg;
     QLabel *m_pIconLabel;
     QLabel *m_pTitleLabel;
     QPushButton *m_pMinimizeButton;

@@ -23,6 +23,7 @@
 #include <QIcon>
 #include <QSplitter>
 #include <QLine>
+#include <QGSettings/qgsettings.h>
 #include "scanDisplay.h"
 #include "scanSet.h"
 #include "titleBar.h"
@@ -53,6 +54,8 @@ public:
     void resultDetail(bool ret);
 
 private:
+    QGSettings *style_settings;
+    QStringList stylelist;
     TitleBar *pTitleBar;
     QFrame *line;
     FuncBar *pFuncBar;
@@ -73,6 +76,7 @@ private slots:
     void scanResultDetail(bool ret);
     void setMaskClear();
     void setWindowBorderRadius();
+    void style_changed(QString); // 系统主题风格变化
 };
 
 #endif // WIDGET_H

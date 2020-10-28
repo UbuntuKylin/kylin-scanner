@@ -312,12 +312,12 @@ Do you want to delete it anyway?</source>
     </message>
     <message>
         <location line="+2"/>
-        <location line="+699"/>
+        <location line="+698"/>
         <source>Save as</source>
         <translation>另存为</translation>
     </message>
     <message>
-        <location line="-552"/>
+        <location line="-551"/>
         <source>Lineart</source>
         <translation>黑白</translation>
     </message>
@@ -392,7 +392,7 @@ Do you want to delete it anyway?</source>
         <translation type="vanished">扫描文件名</translation>
     </message>
     <message>
-        <location line="+155"/>
+        <location line="+154"/>
         <source>Select a directory</source>
         <translation>选择一个目录</translation>
     </message>
@@ -419,6 +419,11 @@ Do you want to delete it anyway?</source>
     <name>TitleBar</name>
     <message>
         <location filename="../titleBar.cpp" line="+35"/>
+        <source>kylin-scanner</source>
+        <translation>麒麟扫描</translation>
+    </message>
+    <message>
+        <location line="+6"/>
         <source>Minimize</source>
         <translation>最小化</translation>
     </message>
@@ -428,13 +433,13 @@ Do you want to delete it anyway?</source>
         <translation>关闭</translation>
     </message>
     <message>
-        <location line="+116"/>
+        <location line="+118"/>
         <source>Restore</source>
         <translation>还原</translation>
     </message>
     <message>
-        <location line="-117"/>
-        <location line="+127"/>
+        <location line="-119"/>
+        <location line="+129"/>
         <source>Maximize</source>
         <translation>最大化</translation>
     </message>

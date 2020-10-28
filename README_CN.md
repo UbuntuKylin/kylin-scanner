@@ -3,7 +3,7 @@
 同时增加了对扫描图片的后期处理（包括一键美化、智能纠偏和文字识别三大功能）。其他的一些图像处理小技巧也可以在此软件
 上体现，如裁切、旋转等。
 
-![Main Picture](docs/scan.jpg)
+![Main Picture](docs/scanner.png)
 
 ## 作者博客页面
 :point_right:  [Franklin-Qi](https://Franklin-Qi.github.io/)

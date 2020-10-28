@@ -24,9 +24,18 @@ TitleBar::TitleBar(QWidget *parent)
     setFixedHeight(32);
     setMinimumWidth(860);
 
+    m_logo = new QLabel();
+    m_logoMsg = new QLabel();
     m_pMinimizeButton = new QPushButton();
     m_pMaximizeButton = new QPushButton();
     m_pCloseButton = new QPushButton();
+
+    m_logo->setFixedSize (24, 24);
+    m_logo->setStyleSheet("QLabel{border-image:url(:/icon/icon/logo.png);border:1px solid #0D0400;background-color:rgb(15,08,01);;border-radius:4px;}");
+    m_logoMsg->setText (tr("kylin-scanner"));
+    m_logoMsg->setAlignment(Qt::AlignRight|Qt::AlignVCenter);
+    m_logoMsg->setStyleSheet("color:rgb(232,232,232)");
+    m_logoMsg->setFixedSize(56, 14);
 
     m_pMinimizeButton->setFixedSize(30, 30);
     m_pMaximizeButton->setFixedSize(30, 30);
@@ -51,13 +60,15 @@ TitleBar::TitleBar(QWidget *parent)
     QHBoxLayout *pLayout = new QHBoxLayout(this);
 
     pLayout->addSpacing(0);
+    pLayout->addWidget (m_logo);
+    pLayout->addWidget (m_logoMsg);
     pLayout->addStretch();
     pLayout->addWidget(m_pMinimizeButton);
     pLayout->addWidget(m_pMaximizeButton);
     pLayout->addWidget(m_pCloseButton);
     pLayout->setSpacing(7);
     pLayout->setAlignment(Qt::AlignCenter);
-    pLayout->setContentsMargins(0, 0, 7, 0);
+    pLayout->setContentsMargins(7, 0, 7, 0);
 
     setLayout(pLayout);
 

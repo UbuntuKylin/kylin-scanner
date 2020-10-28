@@ -28,7 +28,8 @@ KylinCmb::KylinCmb(QWidget *parent) : QComboBox(parent)
                 "QComboBox::down-arrow{border-radius:4px;border-image:url(:/icon/icon/down.svg);}"//下拉箭头
                 "QComboBox QAbstractItemView{margin-top:4px solid #0D0400;color:white;border-radius:4px;background-color:#888888;}"
                 "QComboBox QAbstractItemView::item{width:180px;height: 32px;border-radius:4px;}"//下拉列表框样式
-                "QComboBox QAbstractItemView::item:hover:selected{background-color:#6F6F6F;}"
+                "QComboBox QAbstractItemView::item:hover:selected{background-color:#3D6BE5;}"
+                //"QComboBox QAbstractItemView::item:checked:selected{background-color:#3D6BE5;opacity:0.7;}"
                 );
     QComboBox::setEditable(false);
 }
@@ -59,7 +60,7 @@ void KylinCmb::hidePopup()
                 "QComboBox::down-arrow{border-radius:4px;border-image:url(:/icon/icon/down.svg);}"//下拉箭头
                 "QComboBox QAbstractItemView{margin-top:4px solid #0D0400;color:white;border-radius:4px;background-color:#888888;}"
                 "QComboBox QAbstractItemView::item{width:180px;height: 32px;border-radius:4px;}"//下拉列表框样式
-                "QComboBox QAbstractItemView::item:hover:selected{background-color:#6F6F6F;}"
+                "QComboBox QAbstractItemView::item:hover:selected{background-color:#3D6BE5;}"
                 );
 
     QComboBox::hidePopup();
@@ -77,7 +78,7 @@ void KylinCmb::showPopup()
                 "QComboBox::down-arrow{border-radius:4px;border-image:url(:/icon/icon/down.svg);}"//下拉箭头
                 "QComboBox QAbstractItemView{margin-top:4px solid #0D0400;color:white;border-radius:4px;background-color:#888888;}"
                 "QComboBox QAbstractItemView::item{width:180px;height: 32px;border-radius:4px;}"//下拉列表框样式
-                "QComboBox QAbstractItemView::item:hover:selected{background-color:#6F6F6F;}"
+                "QComboBox QAbstractItemView::item:hover:selected{background-color:#3D6BE5;}"
                 );
 
     QComboBox::showPopup();
@@ -94,7 +95,7 @@ void KylinCmb::colorGray()
                 "QComboBox::down-arrow{border-radius:4px;border-image:url(:/icon/icon/down.svg);}"//下拉箭头
                 "QComboBox QAbstractItemView{margin-top:4px solid #0D0400;color:white;border-radius:4px;background-color:#888888;}"
                 "QComboBox QAbstractItemView::item{width:180px;height: 32px;border-radius:4px;}"//下拉列表框样式
-                "QComboBox QAbstractItemView::item:hover:selected{background-color:#6F6F6F;}"
+                "QComboBox QAbstractItemView::item:hover:selected{background-color:#3D6BE5;}"
                 );
     this->setEditable(false);
     this->setFocusPolicy(Qt::NoFocus);
@@ -111,7 +112,7 @@ void KylinCmb::colorNormal()
                 "QComboBox::down-arrow{border-radius:4px;border-image:url(:/icon/icon/down.svg);}"//下拉箭头
                 "QComboBox QAbstractItemView{margin-top:4px solid #0D0400;color:white;border-radius:4px;background-color:#888888;}"
                 "QComboBox QAbstractItemView::item{width:180px;height: 32px;border-radius:4px;}"//下拉列表框样式
-                "QComboBox QAbstractItemView::item:hover:selected{background-color:#6F6F6F;}"
+                "QComboBox QAbstractItemView::item:hover:selected{background-color:#3D6BE5;}"
                 );
     this->setEditable(false);
 }

@@ -5,7 +5,7 @@ the scanning device itself. At the same time, It Increases post-processing of sc
 including one-click beautification, intelligent correction and text recognition.
 Other image processing tips can also be reflected in this software, such as clipping, rotation, etc.
 
-![Main Picture](docs/scan.jpg)
+![Main Picture](docs/scanner.png)
 
 ## Author's Home page
 :point_right:  [Franklin-Qi](https://Franklin-Qi.github.io/)
