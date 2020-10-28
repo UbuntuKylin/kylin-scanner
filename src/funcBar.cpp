@@ -178,7 +178,7 @@ FuncBar::FuncBar(QWidget *parent)
 
     hBoxLay4->setSpacing(0);
     hBoxLay4->addLayout(hBoxLay1);
-    hBoxLay4->addWidget(line1);
+    //hBoxLay4->addWidget(line1);
     hBoxLay4->addLayout(hBoxLay2);
     hBoxLay4->addWidget(line2);
     hBoxLay4->addLayout(hBoxLay3);
