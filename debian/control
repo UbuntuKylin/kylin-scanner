@@ -12,16 +12,10 @@ Build-Depends: debhelper-compat (=12),
                libtesseract-dev,
                libleptonica-dev,
                liblept5,
-               tesseract-ocr,
-               tesseract-ocr-eng,
-               tesseract-ocr-chi-sim,
                qt5-qmake,
                qtbase5-dev,
                qtbase5-dev-tools,
-               qttools5-dev-tools,
-               tesseract-ocr,
-               tesseract-ocr-chi-sim,
-               tesseract-ocr-eng
+               qttools5-dev-tools
 Standards-Version: 4.5.0
 Rules-Requires-Root: no
 Homepage: https://github.com/ubuntukylin/kylin-scanner
@@ -32,6 +26,9 @@ Package: kylin-scanner
 Architecture: any
 Depends: ${misc:Depends},
          ${shlibs:Depends},
+         tesseract-ocr,
+         tesseract-ocr-chi-sim,
+         tesseract-ocr-eng,
 Description: Scanning utility based on SANE
  Kylin-scanner can scan according to the resolution, size and color
  mode of the scanning device.
