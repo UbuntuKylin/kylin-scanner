@@ -423,7 +423,7 @@ Do you want to delete it anyway?</source>
         <translation>麒麟扫描</translation>
     </message>
     <message>
-        <location line="+6"/>
+        <location line="+9"/>
         <source>Minimize</source>
         <translation>最小化</translation>
     </message>
@@ -460,6 +460,14 @@ Do you want to delete it anyway?</source>
         <location line="+2"/>
         <source>Cancel</source>
         <translation>取消</translation>
+    </message>
+</context>
+<context>
+    <name>Widget</name>
+    <message>
+        <location filename="../widget.cpp" line="+38"/>
+        <source>kylin-scanner</source>
+        <translation>麒麟扫描</translation>
     </message>
 </context>
 <context>
