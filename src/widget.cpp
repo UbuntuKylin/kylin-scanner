@@ -34,7 +34,8 @@ Widget::Widget(QWidget *parent)
     : QWidget(parent)
 {
     // 自定义设置窗口
-    setWindowFlags(Qt::FramelessWindowHint | windowFlags());
+    setWindowFlags (Qt::FramelessWindowHint | windowFlags());
+    setWindowTitle (tr("kylin-scanner")); // For system tray text
 
     style_settings = new QGSettings(ORG_UKUI_STYLE);
     stylelist << STYLE_NAME_KEY_DARK << STYLE_NAME_KEY_BLACK << STYLE_NAME_KEY_DEFAULT;
