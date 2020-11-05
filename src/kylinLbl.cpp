@@ -31,7 +31,7 @@ void KylinLbl::paintEvent(QPaintEvent *event)
     //comment before
     QLabel::paintEvent(event); //绘制背景的图片
     QPainter painter(this);
-    painter.setPen(QPen(Qt::green, 1));
+    painter.setPen(QPen(Qt::green, 2));
     painter.drawRect(QRect(x1, y1, x2 - x1, y2 - y1));
 }
 

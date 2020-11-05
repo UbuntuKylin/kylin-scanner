@@ -15,6 +15,7 @@
 * along with this program; if not, see <http://www.gnu.org/licenses/&gt;.
 *
 */
+
 #ifndef KYLINCOMBOBOX_H
 #define KYLINCOMBOBOX_H
 

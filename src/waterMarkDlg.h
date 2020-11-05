@@ -15,6 +15,7 @@
 * along with this program; if not, see <http://www.gnu.org/licenses/&gt;.
 *
 */
+
 #ifndef MARK_DIALOG_H
 #define MARK_DIALOG_H
 

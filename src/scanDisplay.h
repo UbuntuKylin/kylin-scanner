@@ -15,6 +15,7 @@
 * along with this program; if not, see <http://www.gnu.org/licenses/&gt;.
 *
 */
+
 #ifndef SCAN_DISPLAY_H
 #define SCAN_DISPLAY_H
 

@@ -16,6 +16,7 @@
 *
 */
 
+
 #include "kylinLog.h"
 #include "singleApplication.h"
 #include <QtNetwork/QLocalSocket>

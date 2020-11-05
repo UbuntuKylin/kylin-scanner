@@ -15,6 +15,7 @@
 * along with this program; if not, see <http://www.gnu.org/licenses/&gt;.
 *
 */
+
 #ifndef TITLE_BAR_H
 #define TITLE_BAR_H
 

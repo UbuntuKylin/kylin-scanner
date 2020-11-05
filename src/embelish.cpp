@@ -15,6 +15,7 @@
 * along with this program; if not, see <http://www.gnu.org/licenses/&gt;.
 *
 */
+
 #include "embelish.h"
 
 Embelish::Embelish(QWidget *parent) : QWidget(parent)

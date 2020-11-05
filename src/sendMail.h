@@ -15,6 +15,7 @@
 * along with this program; if not, see <http://www.gnu.org/licenses/&gt;.
 *
 */
+
 #ifndef SEND_MAIL_H
 #define SEND_MAIL_H
 
