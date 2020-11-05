@@ -28,6 +28,7 @@
 #include <QDebug>
 #include <QPainter>
 #include "kylinLog.h"
+#include "theme.h"
 //class QPushButton;
 
 class TitleBar : public QWidget
@@ -54,9 +55,13 @@ private:
     // 最大化/还原
     void updateMaximize();
 
+    QGSettings *style_settings;
+    QGSettings *icon_theme_settings;
+    QStringList stylelist;
+    QStringList iconthemelist;
+
     bool mMoving;
     QPoint mLastMousePosition;
-
     QLabel *m_logo;
     QLabel *m_logoMsg;
     QLabel *m_pIconLabel;
@@ -68,6 +73,7 @@ private:
 private slots:
     // 进行最小化、最大化/还原、关闭操作
     void onClicked();
+    void titlebar_icon_theme_changed(QString); // 系统图标主题风格变化
 
 Q_SIGNALS:
     void isNormal();

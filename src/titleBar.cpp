@@ -32,7 +32,17 @@ TitleBar::TitleBar(QWidget *parent)
     m_pCloseButton = new QPushButton();
 
     m_logo->setFixedSize (24, 24);
-    m_logo->setStyleSheet("QLabel{border-image:url(:/icon/icon/logo.png);border:1px solid #0D0400;background-color:rgb(15,08,01);;border-radius:4px;}");
+    icon_theme_settings = new QGSettings(ORG_UKUI_STYLE);
+    iconthemelist << ICON_THEME_KEY_BASIC << ICON_THEME_KEY_CLASSICAL << ICON_THEME_KEY_DEFAULT;
+    MYLOG << "icon-theme: " << icon_theme_settings->get(ICON_THEME_NAME).toString();
+    if ("ukui-icon-theme-basic" == icon_theme_settings->get(ICON_THEME_NAME).toString()) {
+        m_logo->setStyleSheet("QLabel{border-image:url(/usr/share/icons/ukui-icon-theme-basic/24x24/devices/scanner.png);border:1px solid #0D0400;background-color:rgb(15,08,01);;border-radius:4px;}");
+    } else if ("ukui-icon-theme-classical" == icon_theme_settings->get(ICON_THEME_NAME).toString()) {
+        m_logo->setStyleSheet("QLabel{border-image:url(/usr/share/icons/ukui-icon-theme-classical/24x24/devices/scanner.png);border:1px solid #0D0400;background-color:rgb(15,08,01);;border-radius:4px;}");
+    } else if ("ukui-icon-theme-default" == icon_theme_settings->get(ICON_THEME_NAME).toString()) {
+        m_logo->setStyleSheet("QLabel{border-image:url(/usr/share/icons/ukui-icon-theme-default/24x24/devices/scanner.png);border:1px solid #0D0400;background-color:rgb(15,08,01);;border-radius:4px;}");
+    }
+
     m_logoMsg->setText (tr("kylin-scanner"));
     m_logoMsg->setAlignment(Qt::AlignRight|Qt::AlignVCenter);
     m_logoMsg->setStyleSheet("color:rgb(232,232,232)");
@@ -150,6 +160,19 @@ void TitleBar::onClicked()
 
             pWindow->close();
         }
+    }
+}
+
+void TitleBar::titlebar_icon_theme_changed(QString)
+{
+    MYLOG << "icon-theme: " << icon_theme_settings->get(ICON_THEME_NAME).toString();
+
+    if ("ukui-icon-theme-basic" == icon_theme_settings->get(ICON_THEME_NAME).toString()) {
+        m_logo->setStyleSheet("QLabel{border-image:url(/usr/share/icons/ukui-icon-theme-basic/24x24/devices/scanner.png);border:1px solid #0D0400;background-color:rgb(15,08,01);;border-radius:4px;}");
+    } else if ("ukui-icon-theme-classical" == icon_theme_settings->get(ICON_THEME_NAME).toString()) {
+        m_logo->setStyleSheet("QLabel{border-image:url(/usr/share/icons/ukui-icon-theme-classical/24x24/devices/scanner.png);border:1px solid #0D0400;background-color:rgb(15,08,01);;border-radius:4px;}");
+    } else if ("ukui-icon-theme-default" == icon_theme_settings->get(ICON_THEME_NAME).toString()) {
+        m_logo->setStyleSheet("QLabel{border-image:url(/usr/share/icons/ukui-icon-theme-default/24x24/devices/scanner.png);border:1px solid #0D0400;background-color:rgb(15,08,01);;border-radius:4px;}");
     }
 }
 

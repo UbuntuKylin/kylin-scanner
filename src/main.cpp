@@ -49,7 +49,8 @@ int main(int argc, char *argv[])
     }
 
     SingleApplication a(argc, argv);
-    QApplication::setWindowIcon(QIcon::fromTheme("kylin-scanner", QIcon(":/icon/icon/scanner.png")));
+    //QApplication::setWindowIcon(QIcon::fromTheme("kylin-scanner", QIcon(":/icon/icon/scanner.png")));
+    QApplication::setWindowIcon(QIcon::fromTheme("scanner"));
 
     // For translations with different language environments
     QTranslator translator;

@@ -23,11 +23,11 @@
 #include <QIcon>
 #include <QSplitter>
 #include <QLine>
-#include <QGSettings/qgsettings.h>
 #include "scanDisplay.h"
 #include "scanSet.h"
 #include "titleBar.h"
 #include "kylinLog.h"
+#include "theme.h"
 
 class CommonScanThread : public QThread
 {
@@ -55,7 +55,9 @@ public:
 
 private:
     QGSettings *style_settings;
+    QGSettings *icon_theme_settings;
     QStringList stylelist;
+    QStringList iconthemelist;
     TitleBar *pTitleBar;
     QFrame *line;
     FuncBar *pFuncBar;
@@ -77,6 +79,7 @@ private slots:
     void setMaskClear();
     void setWindowBorderRadius();
     void style_changed(QString); // 系统主题风格变化
+    void icon_theme_changed(QString); // 系统图标主题风格变化
 };
 
 #endif // WIDGET_H
