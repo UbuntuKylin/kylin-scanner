@@ -20,7 +20,8 @@
 
 #include <QDebug>
 #include <QDateTime>
-#define MYLOG qDebug() << QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss:zzz") \
-    << ":" << __FILE__ << ":" << __LINE__ << ":" << __func__ << "# "
+#define MYLOG qDebug()
+//<< QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss:zzz") \
+ //   << ":" << __FILE__ << ":" << __LINE__ << ":" << __func__ << "# "
 
 #endif // KYLINLOG_H

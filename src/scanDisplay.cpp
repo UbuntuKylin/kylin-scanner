@@ -385,7 +385,7 @@ void ScanDisplay::addWatermark()
         QPainter painter(imgEditLayout);
         int fontSize = 60, spacing = 20;
         QFont font("华文黑体", fontSize, QFont::Thin);
-        QColor colorFont(1, 1, 1, 80);
+        QColor colorFont(47, 44, 43);
         //colorFont.setAlphaF(0.4); // 设置水印字体颜色透明度,这个会导致字体不显示等一系列错误
         font.setLetterSpacing(QFont::AbsoluteSpacing, spacing);
         painter.setFont(font);
@@ -403,6 +403,7 @@ void ScanDisplay::addWatermark()
             for (int j = 0; j < hCount * 2; j++)
             {
                painter.drawText(x * i, y * j,text);
+               qDebug() << "drawtext: " << text;
             }
         }
         setPixmapScaled(*imgEditLayout,labEditLayout);
@@ -562,7 +563,7 @@ void ScanDisplay::onScan()
  */
 void ScanDisplay::onRectify()
 {
-    MYLOG <<"rectify\n";
+    MYLOG <<"flagRectify = " << flagRectify;
     if(flagRectify == 0)
     {
         // 此时代表用户点击了智能纠偏按钮
