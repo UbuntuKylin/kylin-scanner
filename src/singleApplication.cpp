@@ -16,10 +16,12 @@
 *
 */
 
+
 #include "kylinLog.h"
 #include "singleApplication.h"
 #include <QtNetwork/QLocalSocket>
 #include <QFileInfo>
+#include <QLatin1String>
 
 #define TIME_OUT                (500)    // 500ms
 
@@ -27,10 +29,12 @@ SingleApplication::SingleApplication(int &argc, char **argv)
     : QApplication(argc, argv)
     , w(NULL)
     , _isRunning(false)
-    , _localServer(NULL) {
+    , _localServer(NULL)
+{
 
     // 取应用程序名作为LocalServer的名字
-    _serverName = QFileInfo(QCoreApplication::applicationFilePath()).fileName();
+    MYLOG << "DISPLAY: " << QLatin1String(getenv ("DISPLAY"));
+    _serverName = QFileInfo(QCoreApplication::applicationFilePath()).fileName() + QLatin1String(getenv("DISPLAY"));
 
     _initLocalConnection();
 }

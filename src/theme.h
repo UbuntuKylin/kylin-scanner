@@ -16,34 +16,23 @@
 *
 */
 
-#ifndef KYLINCOMBOBOX_H
-#define KYLINCOMBOBOX_H
+#ifndef THEME_H
+#define THEME_H
 
-#include <QComboBox>
-#include <QMouseEvent>
-#include <QToolTip>
-#include "kylinLog.h"
+#include <QGSettings/qgsettings.h>
 
-class KylinCmb : public QComboBox
-{
-    Q_OBJECT
+#define ORG_UKUI_STYLE            "org.ukui.style"
 
-public:
-    explicit KylinCmb(QWidget *parent = nullptr);
-    ~KylinCmb();
+#define STYLE_NAME                "styleName"
+#define STYLE_NAME_KEY_DARK       "ukui-dark"
+#define STYLE_NAME_KEY_DEFAULT    "ukui-default"
+#define STYLE_NAME_KEY_BLACK      "ukui-black"
+#define STYLE_NAME_KEY_LIGHT      "ukui-light"
+#define STYLE_NAME_KEY_WHITE      "ukui-white"
 
-    void colorGray();
-    void colorNormal();
+#define ICON_THEME_NAME           "iconThemeName"
+#define ICON_THEME_KEY_BASIC      "ukui-icon-theme-basic"
+#define ICON_THEME_KEY_CLASSICAL  "ukui-icon-theme-classical"
+#define ICON_THEME_KEY_DEFAULT    "ukui-icon-theme-default"
 
-protected:
-    virtual void mousePressEvent(QMouseEvent *e); // 添加鼠标点击事件
-    virtual void hidePopup(); // 重载隐藏下拉框
-    virtual void showPopup(); // 重载显示下拉框
-
-
-signals:
-    void clicked();  // 自定义点击信号，在mousePressEvent事件发生时触发
-
-};
-
-#endif // KYLINCOMBOBOX_H
+#endif // THEME_H

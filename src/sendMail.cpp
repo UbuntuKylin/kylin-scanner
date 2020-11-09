@@ -15,6 +15,7 @@
 * along with this program; if not, see <http://www.gnu.org/licenses/&gt;.
 *
 */
+
 #include "sendMail.h"
 
 NoMail::NoMail(QWidget *parent) :
@@ -356,6 +357,7 @@ void SendMail::openMail(QString name)
         }
         str = str.section("Exec=",1,1);
         str = str.section(" ",0,0);
+        MYLOG << "exec str = " << str;
         QProcess *process = new QProcess();
         process->start(str);
 }

@@ -15,6 +15,7 @@
 * along with this program; if not, see <http://www.gnu.org/licenses/&gt;.
 *
 */
+
 #include "widget.h"
 #include <QApplication>
 #include <QLabel>
@@ -22,23 +23,19 @@
 
 bool device = true;
 
-#define ORG_UKUI_STYLE            "org.ukui.style"
-#define STYLE_NAME                "styleName"
-#define STYLE_NAME_KEY_DARK       "ukui-dark"
-#define STYLE_NAME_KEY_DEFAULT    "ukui-default"
-#define STYLE_NAME_KEY_BLACK       "ukui-black"
-#define STYLE_NAME_KEY_LIGHT       "ukui-light"
-#define STYLE_NAME_KEY_WHITE       "ukui-white"
-
 Widget::Widget(QWidget *parent)
     : QWidget(parent)
 {
     // 自定义设置窗口
     setWindowFlags (Qt::FramelessWindowHint | windowFlags());
     setWindowTitle (tr("kylin-scanner")); // For system tray text
+    setWindowIcon (QIcon::fromTheme("scanner"));
 
     style_settings = new QGSettings(ORG_UKUI_STYLE);
     stylelist << STYLE_NAME_KEY_DARK << STYLE_NAME_KEY_BLACK << STYLE_NAME_KEY_DEFAULT;
+
+    icon_theme_settings = new QGSettings(ORG_UKUI_STYLE);
+    iconthemelist << ICON_THEME_KEY_BASIC << ICON_THEME_KEY_CLASSICAL << ICON_THEME_KEY_DEFAULT;
 
 #ifdef DEBUG_EDIT
     KylinSane &instance = KylinSane::getInstance();
@@ -128,6 +125,10 @@ Widget::Widget(QWidget *parent)
 
     // For white and black style
     connect(style_settings,SIGNAL(changed(QString)),this,SLOT(style_changed(QString)));
+
+    // For icon theme change style
+    connect(icon_theme_settings,SIGNAL(changed(QString)),this,SLOT(icon_theme_changed(QString)));
+    connect(icon_theme_settings,SIGNAL(changed(QString)), pTitleBar, SLOT(titlebar_icon_theme_changed(QString)));
 }
 
 Widget::~Widget()
@@ -432,6 +433,17 @@ void Widget::style_changed(QString)
     } else {
         // 白色主题
         MYLOG << "ukui-white";
+    }
+}
+
+void Widget::icon_theme_changed(QString)
+{
+    MYLOG << "icon_theme_changed";
+    if (iconthemelist.contains (icon_theme_settings->get(ICON_THEME_NAME).toString())) {
+        MYLOG << "icon-theme: " << icon_theme_settings->get(ICON_THEME_NAME).toString();
+        setWindowIcon (QIcon::fromTheme("scanner"));
+    } else {
+        MYLOG << "default eeed";
     }
 }
 

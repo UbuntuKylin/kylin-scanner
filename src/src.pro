@@ -70,6 +70,7 @@ HEADERS += \
     scanSet.h \
     sendMail.h \
     singleApplication.h \
+    theme.h \
     titleBar.h \
     waterMarkDlg.h \
         widget.h \

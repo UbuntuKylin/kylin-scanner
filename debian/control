@@ -25,10 +25,10 @@ Vcs-Browser: https://github.com/ubuntukylin/kylin-scanner
 Package: kylin-scanner
 Architecture: any
 Depends: ${misc:Depends},
-         ${shlibs:Depends},
          tesseract-ocr,
          tesseract-ocr-chi-sim,
          tesseract-ocr-eng,
+         ${shlibs:Depends}
 Description: Scanning utility based on SANE
  Kylin-scanner can scan according to the resolution, size and color
  mode of the scanning device.

@@ -15,6 +15,7 @@
 * along with this program; if not, see <http://www.gnu.org/licenses/&gt;.
 *
 */
+
 #include "rectify.h"
 
 //度数转换
@@ -70,6 +71,14 @@ double CalcDegree(const Mat &srcImage, Mat &dst)
     }
     if (!lines.size())
     {
+        HoughLines(midImage, lines, 1, CV_PI / 180, 100, 0, 0);
+    }
+    if (!lines.size())
+    {
+        HoughLines(midImage, lines, 1, CV_PI / 180, 50, 0, 0);
+    }
+    if (!lines.size())
+    {
         MYLOG << "没有检测到直线！" ;
         return ERROR;
     }
@@ -77,7 +86,9 @@ double CalcDegree(const Mat &srcImage, Mat &dst)
     float sum = 0;
     int n = 0;
     //依次画出每条线段
-    for (size_t i = 0; i < lines.size(); i++)
+    size_t i = 0;
+    qDebug() << "lines.size = " << lines.size ();
+    for (i = 0; i < lines.size(); i++)
     {
         float rho = lines[i][0];
         float theta = lines[i][1];
@@ -88,8 +99,10 @@ double CalcDegree(const Mat &srcImage, Mat &dst)
         pt1.y = cvRound(y0 + 1000 * (a));
         pt2.x = cvRound(x0 - 1000 * (-b));
         pt2.y = cvRound(y0 - 1000 * (a));
+        qDebug() << i << ", " << "DegreeTrans() = " << DegreeTrans (theta);
         //只选角度最小的作为旋转角度
-        if((DegreeTrans(theta) >= 88.5) && (DegreeTrans(theta) <= 91))
+        // 时常会遇到角度为10度返回内的图片，此时处理机制为默认已经高度校正，过滤该线条角度
+        if((DegreeTrans(theta) >= 80) && (DegreeTrans(theta) <= 95))
         {
             n +=1;
             continue;
@@ -99,23 +112,36 @@ double CalcDegree(const Mat &srcImage, Mat &dst)
             n +=1;
             continue;
         }
-        if((DegreeTrans(theta) <= 1))
+        if((DegreeTrans(theta) <= 8))
         {
             n +=1;
             continue;
         }
         sum += theta;
+        MYLOG << "sum = " << sum;
         line(dstImage, pt1, pt2, Scalar(55, 100, 195), 1, LINE_AA); //Scalar函数用于调节线段颜色
+    }
+
+    MYLOG << "sum = " << sum << "lines.size()" << lines.size () << "n = " << n;
+    if (lines.size () - n == 0 || sum == 0)
+    {
+        return 0.0;
     }
     float average = sum / (lines.size() - n); //对所有角度求平均，这样做旋转效果会更好
 
     double angle = DegreeTrans(average);
+    MYLOG << "angle = " << angle;
+
+    angle = angle - 90; // 经过多次反复测试，此处应该减90，整个线条接近水平，之后可以旋转进行校正。
+    /*
     if(angle >= 135)
         angle = angle - 180;
     else if(angle >= 90)
         angle =angle - 90;
     else if(angle >= 45)
         angle =  angle - 90;
+        */
+    MYLOG << "angle = " << angle;
 
     rotateImage(dstImage, dst, angle);
     return angle;
@@ -132,14 +158,14 @@ int ImageRectify(const char * pInFileName)
     degree = CalcDegree(src,dst);
     MYLOG << "degree = " << degree;
 
-    if (degree == ERROR)
+    if (fabs (degree - ERROR) < 1e-15)
     {
         MYLOG << "矫正失败！" ;
         return -1;
     }
-    if(abs(degree) < 0.4)
+    if(fabs(degree) < 1e-15 + 0.4)
     {
-        MYLOG <<"return";
+        MYLOG <<"already right, so return straight!";
         return -1;
 
     }

@@ -15,6 +15,7 @@
 * along with this program; if not, see <http://www.gnu.org/licenses/&gt;.
 *
 */
+
 #include "titleBar.h"
 #include <QApplication>
 
@@ -31,7 +32,17 @@ TitleBar::TitleBar(QWidget *parent)
     m_pCloseButton = new QPushButton();
 
     m_logo->setFixedSize (24, 24);
-    m_logo->setStyleSheet("QLabel{border-image:url(:/icon/icon/logo.png);border:1px solid #0D0400;background-color:rgb(15,08,01);;border-radius:4px;}");
+    icon_theme_settings = new QGSettings(ORG_UKUI_STYLE);
+    iconthemelist << ICON_THEME_KEY_BASIC << ICON_THEME_KEY_CLASSICAL << ICON_THEME_KEY_DEFAULT;
+    MYLOG << "icon-theme: " << icon_theme_settings->get(ICON_THEME_NAME).toString();
+    if ("ukui-icon-theme-basic" == icon_theme_settings->get(ICON_THEME_NAME).toString()) {
+        m_logo->setStyleSheet("QLabel{border-image:url(/usr/share/icons/ukui-icon-theme-basic/24x24/devices/scanner.png);border-radius:4px;}");
+    } else if ("ukui-icon-theme-classical" == icon_theme_settings->get(ICON_THEME_NAME).toString()) {
+        m_logo->setStyleSheet("QLabel{border-image:url(/usr/share/icons/ukui-icon-theme-classical/24x24/devices/scanner.png);border-radius:4px;}");
+    } else if ("ukui-icon-theme-default" == icon_theme_settings->get(ICON_THEME_NAME).toString()) {
+        m_logo->setStyleSheet("QLabel{border-image:url(/usr/share/icons/ukui-icon-theme-default/24x24/devices/scanner.png);border-radius:4px;}");
+    }
+
     m_logoMsg->setText (tr("kylin-scanner"));
     m_logoMsg->setAlignment(Qt::AlignRight|Qt::AlignVCenter);
     m_logoMsg->setStyleSheet("color:rgb(232,232,232)");
@@ -45,6 +56,11 @@ TitleBar::TitleBar(QWidget *parent)
     m_pMaximizeButton->setToolTip(tr("Maximize"));
     m_pCloseButton->setToolTip(tr("Close"));
 
+    /*
+    m_pMinimizeButton->setIcon (QIcon::fromTheme (":/icon/icon/min_white.svg"));
+    m_pMaximizeButton->setIcon (QIcon::fromTheme (":/icon/icon/max_white.svg"));
+    m_pCloseButton->setIcon (QIcon::fromTheme (":/icon/icon/close_white.svg"));
+    */
     m_pMinimizeButton->setStyleSheet("QPushButton{border-image: url(:/icon/icon/min_white.svg);border:none;background-color:rgb(47,44,43);border-radius:4px;}"
                               "QPushButton:hover{border-image: url(:/icon/icon/min_white.svg);border:none;background-color:rgb(61,107,229);border-radius:4px;}"
                                 "QPushButton:checked{border-image: url(:/icon/icon/min_white.svg);border:none;background-color:rgb(50,87,202);border-radius:4px;}");
@@ -152,6 +168,19 @@ void TitleBar::onClicked()
     }
 }
 
+void TitleBar::titlebar_icon_theme_changed(QString)
+{
+    MYLOG << "icon-theme: " << icon_theme_settings->get(ICON_THEME_NAME).toString();
+
+    if ("ukui-icon-theme-basic" == icon_theme_settings->get(ICON_THEME_NAME).toString()) {
+        m_logo->setStyleSheet("QLabel{border-image:url(/usr/share/icons/ukui-icon-theme-basic/24x24/devices/scanner.png);border-radius:4px;}");
+    } else if ("ukui-icon-theme-classical" == icon_theme_settings->get(ICON_THEME_NAME).toString()) {
+        m_logo->setStyleSheet("QLabel{border-image:url(/usr/share/icons/ukui-icon-theme-classical/24x24/devices/scanner.png);border-radius:4px;}");
+    } else if ("ukui-icon-theme-default" == icon_theme_settings->get(ICON_THEME_NAME).toString()) {
+        m_logo->setStyleSheet("QLabel{border-image:url(/usr/share/icons/ukui-icon-theme-default/24x24/devices/scanner.png);border-radius:4px;}");
+    }
+}
+
 void TitleBar::updateMaximize()
 {
     QWidget *pWindow = this->window();
@@ -163,6 +192,7 @@ void TitleBar::updateMaximize()
         {
             m_pMaximizeButton->setToolTip(tr("Restore"));
             m_pMaximizeButton->setProperty("maximizeProperty", "restore");
+            // m_pMaximizeButton->setIcon (QIcon::fromTheme (":/icon/icon/revert_white.svg"));
             m_pMaximizeButton->setStyleSheet("QPushButton{border-image: url(:/icon/icon/revert_white.svg);border:none;background-color:rgb(47,44,43);border-radius:4px;}"
                                       "QPushButton:hover{border-image: url(:/icon/icon/revert_white.svg);border:none;background-color:rgb(61,107,229);border-radius:4px;}"
                                         "QPushButton:checked{border-image: url(:/icon/icon/revert_white.svg);border:none;background-color:rgb(50,87,202);border-radius:4px;}");
@@ -172,6 +202,7 @@ void TitleBar::updateMaximize()
         {
             m_pMaximizeButton->setProperty("maximizeProperty", "maximize");
             m_pMaximizeButton->setToolTip(tr("Maximize"));
+            //m_pMaximizeButton->setIcon (QIcon::fromTheme (":/icon/icon/max_white.svg"));
             m_pMaximizeButton->setStyleSheet("QPushButton{border-image: url(:/icon/icon/max_white.svg);border:none;background-color:rgb(47,44,43);border-radius:4px;}"
                                       "QPushButton:hover{border-image: url(:/icon/icon/max_white.svg);border:none;background-color:rgb(61,107,229);border-radius:4px;}"
                                         "QPushButton:checked{border-image: url(:/icon/icon/max_white.svg);border:none;background-color:rgb(50,87,202);border-radius:4px;}");

@@ -47,6 +47,7 @@ Files: Doxyfile
        src/scanSet.h
        src/sendMail.cpp
        src/sendMail.h
+       src/theme.h
        src/titleBar.cpp
        src/titleBar.h
        src/waterMarkDlg.cpp

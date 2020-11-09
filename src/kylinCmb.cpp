@@ -15,6 +15,7 @@
 * along with this program; if not, see <http://www.gnu.org/licenses/&gt;.
 *
 */
+
 #include "kylinCmb.h"
 
 KylinCmb::KylinCmb(QWidget *parent) : QComboBox(parent)
