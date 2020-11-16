@@ -33,12 +33,12 @@ void rotateImage(Mat src, Mat& img_rotate, double degree)
     Point2f center;
     center.x = float(src.cols / 2.0);
     center.y = float(src.rows / 2.0);
-    MYLOG <<"center.x"<<center.x;
-    MYLOG <<"center.y"<<center.y;
+    qDebug() <<"center.x"<<center.x;
+    qDebug() <<"center.y"<<center.y;
 
     int length = 0;
     length = sqrt(src.cols*src.cols + src.rows*src.rows);
-    MYLOG << "length = " << length;
+    qDebug() << "length = " << length;
     //计算二维旋转的仿射变换矩阵
     Mat M = getRotationMatrix2D(center, degree, 1);
 //    warpAffine(src, img_rotate, M, Size(length, length), 1, 0, Scalar(255,255,255));//仿射变换，背景色填充为白色
@@ -55,7 +55,7 @@ double CalcDegree(const Mat &srcImage, Mat &dst)
     //通过霍夫变换检测直线
     vector<Vec2f> lines;
     HoughLines(midImage, lines, 1, CV_PI / 180, 300, 0, 0);//第5个参数就是阈值，阈值越大，检测精度越高
-    //MYLOG << lines.size() ;
+    //qDebug() << lines.size() ;
 
     //由于图像不同，阈值不好设定，因为阈值设定过高导致无法检测直线，阈值过低直线太多，速度很慢
     //所以根据阈值由大到小设置了三个阈值，如果经过大量试验后，可以固定一个适合的阈值。
@@ -79,7 +79,7 @@ double CalcDegree(const Mat &srcImage, Mat &dst)
     }
     if (!lines.size())
     {
-        MYLOG << "没有检测到直线！" ;
+        qDebug() << "没有检测到直线！" ;
         return ERROR;
     }
 
@@ -118,11 +118,11 @@ double CalcDegree(const Mat &srcImage, Mat &dst)
             continue;
         }
         sum += theta;
-        MYLOG << "sum = " << sum;
+        qDebug() << "sum = " << sum;
         line(dstImage, pt1, pt2, Scalar(55, 100, 195), 1, LINE_AA); //Scalar函数用于调节线段颜色
     }
 
-    MYLOG << "sum = " << sum << "lines.size()" << lines.size () << "n = " << n;
+    qDebug() << "sum = " << sum << "lines.size()" << lines.size () << "n = " << n;
     if (lines.size () - n == 0 || sum == 0)
     {
         return 0.0;
@@ -130,7 +130,7 @@ double CalcDegree(const Mat &srcImage, Mat &dst)
     float average = sum / (lines.size() - n); //对所有角度求平均，这样做旋转效果会更好
 
     double angle = DegreeTrans(average);
-    MYLOG << "angle = " << angle;
+    qDebug() << "angle = " << angle;
 
     angle = angle - 90; // 经过多次反复测试，此处应该减90，整个线条接近水平，之后可以旋转进行校正。
     /*
@@ -141,7 +141,7 @@ double CalcDegree(const Mat &srcImage, Mat &dst)
     else if(angle >= 45)
         angle =  angle - 90;
         */
-    MYLOG << "angle = " << angle;
+    qDebug() << "angle = " << angle;
 
     rotateImage(dstImage, dst, angle);
     return angle;
@@ -156,16 +156,16 @@ int ImageRectify(const char * pInFileName)
     Mat dst;
     //倾斜角度矫正
     degree = CalcDegree(src,dst);
-    MYLOG << "degree = " << degree;
+    qDebug() << "degree = " << degree;
 
     if (fabs (degree - ERROR) < 1e-15)
     {
-        MYLOG << "矫正失败！" ;
+        qDebug() << "矫正失败！" ;
         return -1;
     }
     if(fabs(degree) < 1e-15 + 0.4)
     {
-        MYLOG <<"already right, so return straight!";
+        qDebug() <<"already right, so return straight!";
         return -1;
 
     }

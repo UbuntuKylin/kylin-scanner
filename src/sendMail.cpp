@@ -20,27 +20,28 @@
 
 NoMail::NoMail(QWidget *parent) :
     QDialog(parent)
+    , style_settings (new QGSettings(ORG_UKUI_STYLE))
+    , icon_theme_settings (new QGSettings(ORG_UKUI_STYLE))
+    , btnClose (new QPushButton())
+    , labTitle (new QLabel())
+    , textEdit (new QTextEdit())
+    , line (new QFrame())
+    , btnOk (new QPushButton())
+    , btnCancel (new QPushButton())
+    , hBoxLayout (new QHBoxLayout())
+    , hBoxLayoutClose (new QHBoxLayout())
+    , vBoxLayout (new QVBoxLayout())
 {
     setWindowFlags(Qt::FramelessWindowHint | Qt::Dialog); // 自定义设置窗口
     //setAttribute(Qt::WA_TranslucentBackground); // 保证不被绘制上的部分透明
+    setWindowTitle (tr("No email client")); // For system tray text
     setFixedSize(320,260); // 窗口固定大小
 
-    btnClose = new QPushButton();
-    labTitle = new QLabel();
-    textEdit = new QTextEdit();
-    line = new QFrame();
-    btnOk = new QPushButton();
-    btnCancel = new QPushButton();
-    hBoxLayout = new QHBoxLayout();
-    hBoxLayoutClose = new QHBoxLayout();
-    vBoxLayout = new QVBoxLayout(this);
-
+    stylelist << STYLE_NAME_KEY_DARK << STYLE_NAME_KEY_BLACK << STYLE_NAME_KEY_DEFAULT;
+    iconthemelist << ICON_THEME_KEY_BASIC << ICON_THEME_KEY_CLASSICAL << ICON_THEME_KEY_DEFAULT;
 
     btnClose->setFixedSize(30, 30);
     btnClose->setToolTip("Close");
-    btnClose->setStyleSheet("QPushButton{border-image: url(:/icon/icon/close_white.svg);border:none;background-color:rgb(47,44,43);border-radius:4px;}"
-                              "QPushButton:hover{border-image: url(:/icon/icon/close_white.svg);border:none;background-color:rgb(240,65,52);border-radius:4px;}"
-                                "QPushButton:checked{border-image: url(:/icon/icon/close_white.svg);border:none;background-color:rgb(215,52,53);border-radius:4px;}");
 
     hBoxLayoutClose->setSpacing(0);
     hBoxLayoutClose->addStretch();
@@ -51,7 +52,6 @@ NoMail::NoMail(QWidget *parent) :
 
     labTitle->setText(tr("No email client"));
     labTitle->setAlignment(Qt::AlignLeft|Qt::AlignVCenter);
-    labTitle->setStyleSheet("color:#D9FFFFFF"); // 85% => D9, 255,255,255 => FFFFFF
     labTitle->setFixedSize(260,32);
     QFont ft;
     ft.setPixelSize(24);
@@ -62,30 +62,22 @@ NoMail::NoMail(QWidget *parent) :
     //ft1.setPointSize(14);
     textEdit->setFont(ft1);
     textEdit->setText(tr("Not find email client in the system, please download and install email client firstly."));
-    textEdit->setStyleSheet("QTextEdit{background-color:rgb(47,44,43);color:#D9FFFFFF;border:0px}");
+
     int textEditSizeX = 320 - 32 - 32;
     textEdit->setFixedSize(textEditSizeX,50);
     textEdit->setReadOnly(true);
 
-    line = new QFrame();
     line->setObjectName(QString::fromUtf8("line"));
     line->setMaximumHeight(1);
     line->setMaximumWidth(260);
     line->setMinimumWidth(260);
     line->setFrameShape(QFrame::HLine);
-    line->setStyleSheet("QFrame{color:rgb(32,30,29)}");
 
     btnOk->setText(tr("Go to install"));
     btnOk->setFixedSize(120,36);
     btnCancel->setText(tr("Cancel"));
     btnCancel->setFixedSize(120,36);
 
-    btnOk->setStyleSheet("QPushButton{background-color:rgb(32,30,29);border:1px solid #939393;color:rgb(232,232,232);border-radius:18px;}"
-                              "QPushButton:hover{border:none;background-color:#3D6BE5;border:rgb(147,147,147);color:rgb(232,232,232);border-radius:18px;}"
-                                "QPushButton:checked{border:none;background-color:#3D6BE5;border:rgb(147,147,147);color:rgb(232,232,232);border-radius:18px;}");
-    btnCancel->setStyleSheet("QPushButton{background-color:rgb(32,30,29);border:1px solid #939393;color:rgb(232,232,232);border-radius:18px;}"
-                              "QPushButton:hover{border:none;background-color:#3D6BE5;color:rgb(232,232,232);border-radius:18px;}"
-                                "QPushButton:checked{border:none;background-color:#3D6BE5;color:rgb(232,232,232)border-radius:18px;}");
 
     hBoxLayout->setSpacing(0);
     hBoxLayout->addWidget(btnOk);
@@ -93,14 +85,50 @@ NoMail::NoMail(QWidget *parent) :
     hBoxLayout->addWidget(btnCancel);
     hBoxLayout->setContentsMargins(0,0,32,0);
 
-    QPalette pal(palette());
-    pal.setColor(QPalette::Background, QColor(47, 44, 43));
-    setAutoFillBackground(true);
-    setPalette(pal);
+
+    //btnClose->setIcon (QIcon::fromTheme (ICON_THEME_CLOSE));
+    if (stylelist.contains(style_settings->get(STYLE_NAME).toString())) {
+        QPalette pal(palette());
+        pal.setColor(QPalette::Background, QColor(47, 44, 43));
+        setAutoFillBackground(true);
+        setPalette(pal);
+
+        btnClose->setStyleSheet("QPushButton{border:none;background-image: url(:/icon/icon/close.svg);background-color:rgb(47,44,43);border-radius:4px;}"
+                                "QPushButton:hover{border:none;background-image: url(:/icon/icon/close.svg);background-color:rgb(240,65,52);border-radius:4px;}"
+                                "QPushButton:checked{border:none;background-image: url(:/icon/icon/close.svg);background-color:rgb(215,52,53);border-radius:4px;}");
+        labTitle->setStyleSheet("color:#D9FFFFFF"); // 85% => D9, 255,255,255 => FFFFFF
+        textEdit->setStyleSheet("QTextEdit{background-color:rgb(47,44,43);color:#D9FFFFFF;border:0px}");
+        line->setStyleSheet("QFrame{color:rgb(32,30,29)}");
+        btnOk->setStyleSheet("QPushButton{background-color:rgb(32,30,29);border:1px solid #939393;color:rgb(232,232,232);border-radius:4px;}"
+                             "QPushButton:hover{border:none;background-color:#3D6BE5;border:rgb(147,147,147);color:rgb(232,232,232);border-radius:4px;}"
+                             "QPushButton:checked{border:none;background-color:#3D6BE5;border:rgb(147,147,147);color:rgb(232,232,232);border-radius:4px;}");
+        btnCancel->setStyleSheet("QPushButton{background-color:rgb(32,30,29);border:1px solid #939393;color:rgb(232,232,232);border-radius:4px;}"
+                                 "QPushButton:hover{border:none;background-color:#3D6BE5;color:rgb(232,232,232);border-radius:4px;}"
+                                 "QPushButton:checked{border:none;background-color:#3D6BE5;color:rgb(232,232,232)border-radius:4px;}");
+    } else {
+        QPalette pal(palette());
+        pal.setColor(QPalette::Background, QColor(255,255,255));
+        setAutoFillBackground(true);
+        setPalette(pal);
+
+        btnClose->setStyleSheet("QPushButton{border:none;background-image: url(:/icon/icon/close.svg);border:none;background-color:#FFFFFF;border-radius:4px;}"
+                                "QPushButton:hover{border:none;background-image: url(:/icon/icon/close.svg);border:none;background-color:rgb(240,65,52);border-radius:4px;}"
+                                "QPushButton:checked{border:none;background-image: url(:/icon/icon/close.svg);border:none;background-color:rgb(215,52,53);border-radius:4px;}");
+        labTitle->setStyleSheet("color:#D9000000"); // 85% => D9, 255,255,255 => FFFFFF
+        textEdit->setStyleSheet("QTextEdit{background-color:#FFFFFF;color:#D9000000;border:0px}");
+        line->setStyleSheet("QFrame{color:rgb(32,30,29}");
+        btnOk->setStyleSheet("QPushButton{background-color:#FFFFFF;border:1px solid #CCCCCC;color:#D9000000;border-radius:4px;}"
+                             "QPushButton:hover{border:none;background-color:#3D6BE5;color:#F0F0F0;border-radius:4px;}"
+                             "QPushButton:checked{border:none;background-color:#D93D6BE5;color:#F0F0F0;border-radius:4px;}");
+        btnCancel->setStyleSheet("QPushButton{background-color:#FFFFFF;border:1px solid #CCCCCC;color:#D9000000;border-radius:4px;}"
+                             "QPushButton:hover{border:none;background-color:#3D6BE5;color:#F0F0F0;border-radius:4px;}"
+                             "QPushButton:checked{border:none;background-color:#D93D6BE5;color:#F0F0F0;border-radius:4px;}");
+    }
+
 
     vBoxLayout->setSpacing(0);
     vBoxLayout->addLayout(hBoxLayoutClose);
-    vBoxLayout->addSpacing(48 - 30);
+    vBoxLayout->addSpacing(18);
     vBoxLayout->addWidget(labTitle);
     vBoxLayout->addSpacing(24);
     vBoxLayout->addWidget(textEdit);
@@ -126,6 +154,8 @@ NoMail::NoMail(QWidget *parent) :
 
     // For close button
     connect(btnClose, SIGNAL(clicked()), this, SLOT(reject()));
+
+    connect(style_settings,SIGNAL(changed(QString)),this,SLOT(nomail_style_changed(QString)));
 }
 
 NoMail::~NoMail()
@@ -133,40 +163,83 @@ NoMail::~NoMail()
 
 }
 
+void NoMail::nomail_style_changed(QString)
+{
+    //btnClose->setIcon (QIcon::fromTheme (ICON_THEME_CLOSE));
+    if (stylelist.contains(style_settings->get(STYLE_NAME).toString())) {
+        QPalette pal(palette());
+        pal.setColor(QPalette::Background, QColor(47, 44, 43));
+        setAutoFillBackground(true);
+        setPalette(pal);
+
+        btnClose->setStyleSheet("QPushButton{border:none;background-image: url(:/icon/icon/close.svg);background-color:rgb(47,44,43);border-radius:4px;}"
+                                "QPushButton:hover{border:none;background-image: url(:/icon/icon/close.svg);background-color:rgb(240,65,52);border-radius:4px;}"
+                                "QPushButton:checked{border:none;background-image: url(:/icon/icon/close.svg);background-color:rgb(215,52,53);border-radius:4px;}");
+        labTitle->setStyleSheet("color:#D9FFFFFF"); // 85% => D9, 255,255,255 => FFFFFF
+        textEdit->setStyleSheet("QTextEdit{background-color:rgb(47,44,43);color:#D9FFFFFF;border:0px}");
+        line->setStyleSheet("QFrame{color:rgb(32,30,29)}");
+        btnOk->setStyleSheet("QPushButton{background-color:rgb(32,30,29);border:1px solid #939393;color:rgb(232,232,232);border-radius:4px;}"
+                             "QPushButton:hover{border:none;background-color:#3D6BE5;border:rgb(147,147,147);color:rgb(232,232,232);border-radius:4px;}"
+                             "QPushButton:checked{border:none;background-color:#3D6BE5;border:rgb(147,147,147);color:rgb(232,232,232);border-radius:4px;}");
+        btnCancel->setStyleSheet("QPushButton{background-color:rgb(32,30,29);border:1px solid #939393;color:rgb(232,232,232);border-radius:4px;}"
+                                 "QPushButton:hover{border:none;background-color:#3D6BE5;color:rgb(232,232,232);border-radius:4px;}"
+                                 "QPushButton:checked{border:none;background-color:#3D6BE5;color:rgb(232,232,232)border-radius:4px;}");
+    } else {
+        QPalette pal(palette());
+        pal.setColor(QPalette::Background, QColor(255,255,255));
+        setAutoFillBackground(true);
+        setPalette(pal);
+
+        btnClose->setStyleSheet("QPushButton{border:none;background-image: url(:/icon/icon/close.svg);background-color:#FFFFFF;border-radius:4px;}"
+                                "QPushButton:hover{border:none;background-image: url(:/icon/icon/close.svg);background-color:rgb(240,65,52);border-radius:4px;}"
+                                "QPushButton:checked{border:none;background-image: url(:/icon/icon/close.svg);background-color:rgb(215,52,53);border-radius:4px;}");
+        labTitle->setStyleSheet("color:#D9000000"); // 85% => D9, 255,255,255 => FFFFFF
+        textEdit->setStyleSheet("QTextEdit{background-color:#FFFFFF;color:#D9000000;border:0px}");
+        line->setStyleSheet("QFrame{color:rgb(32,30,29}");
+        btnOk->setStyleSheet("QPushButton{background-color:#FFFFFF;border:1px solid #CCCCCC;color:#D9000000;border-radius:4px;}"
+                             "QPushButton:hover{border:none;background-color:#3D6BE5;color:#F0F0F0;border-radius:4px;}"
+                             "QPushButton:checked{border:none;background-color:#D93D6BE5;color:#F0F0F0;border-radius:4px;}");
+        btnCancel->setStyleSheet("QPushButton{background-color:#FFFFFF;border:1px solid #CCCCCC;color:#D9000000;border-radius:4px;}"
+                             "QPushButton:hover{border:none;background-color:#3D6BE5;color:#F0F0F0;border-radius:4px;}"
+                             "QPushButton:checked{border:none;background-color:#D93D6BE5;color:#F0F0F0;border-radius:4px;}");
+    }
+}
+
 
 SendMail::SendMail(QWidget *parent) :
     QDialog(parent)
+    , style_settings (new QGSettings(ORG_UKUI_STYLE))
+    , icon_theme_settings (new QGSettings(ORG_UKUI_STYLE))
+    , labTitle (new QLabel())
+    , btnClose (new QPushButton())
+    , hBoxLayout (new QHBoxLayout())
+    , hBoxLayout1 (new QHBoxLayout())
+    , vBoxLayout (new QVBoxLayout())
+    , vBoxLayout1 (new QVBoxLayout())
+    , scrollArea (new QScrollArea())
+    , widget (new QWidget())
 {
     setWindowFlags(Qt::FramelessWindowHint | Qt::Dialog);
+    setWindowTitle (tr("Select email client"));
     setFixedSize(320,350);
 
-    //btnClose = new QPushButton();
-    labTitle = new QLabel();
-    btnCancel = new QPushButton();
-    hBoxLayout = new QHBoxLayout();
-    hBoxLayout1 = new QHBoxLayout();
-    //hBoxLayoutClose = new QHBoxLayout();
-    vBoxLayout = new QVBoxLayout();
-    vBoxLayout1 = new QVBoxLayout();
-    scrollArea = new QScrollArea();
-    widget = new QWidget();
+    stylelist << STYLE_NAME_KEY_DARK << STYLE_NAME_KEY_BLACK << STYLE_NAME_KEY_DEFAULT;
+    iconthemelist << ICON_THEME_KEY_BASIC << ICON_THEME_KEY_CLASSICAL << ICON_THEME_KEY_DEFAULT;
+
 
     widget->setFixedSize(320,260);
     widget->setWindowFlags(Qt::FramelessWindowHint | Qt::Tool | Qt::WindowStaysOnTopHint); // 去掉标题栏,去掉任务栏显示，窗口置顶
 
-    btnCancel->setFixedSize(30,30);
-    btnCancel->setStyleSheet("QPushButton{border-image: url(:/icon/icon/close_white.svg);border:none;background-color:rgb(47,44,43);border-radius:4px;}"
-                              "QPushButton:hover{border-image: url(:/icon/icon/close_white.svg);border:none;background-color:rgb(240,65,52);border-radius:4px;}"
-                                "QPushButton:checked{border-image: url(:/icon/icon/close_white.svg);border:none;background-color:rgb(215,52,53);border-radius:4px;}");
+    btnClose->setFixedSize(30,30);
+
     hBoxLayout->setSpacing(0);
     hBoxLayout->addStretch();
-    hBoxLayout->addWidget(btnCancel);
+    hBoxLayout->addWidget(btnClose); // 取消也是关闭按钮
     hBoxLayout->setAlignment(Qt::AlignCenter);
     hBoxLayout->setContentsMargins(0,0,5,0);
 
     labTitle->setText(tr("Select email client"));
     labTitle->setAlignment(Qt::AlignLeft|Qt::AlignVCenter);
-    labTitle->setStyleSheet("color:#D9FFFFFF"); // 85% => D9, 255,255,255 => FFFFFF
     labTitle->setFixedSize(260, 32);
     QFont ft;
     ft.setPixelSize(24);
@@ -177,41 +250,48 @@ SendMail::SendMail(QWidget *parent) :
     hBoxLayout1->addStretch();
     hBoxLayout1->setContentsMargins(0, 0, 0, 0);
 
-    QPalette pal(palette());
-    pal.setColor(QPalette::Background, QColor(47, 44, 43));
-    setAutoFillBackground(true);
-    setPalette(pal);
+    btnClose->setIcon (QIcon::fromTheme (ICON_THEME_CLOSE));
+    if (stylelist.contains(style_settings->get(STYLE_NAME).toString())) {
+        QPalette pal(palette());
+        pal.setColor(QPalette::Background, QColor(47, 44, 43));
+        setAutoFillBackground(true);
+        setPalette(pal);
+
+        btnClose->setStyleSheet("QPushButton{border:none;background-image: url(:/icon/icon/close.svg);background-color:rgb(47,44,43);border-radius:4px;}"
+                                "QPushButton:hover{border:none;background-image: url(:/icon/icon/close.svg);background-color:rgb(240,65,52);border-radius:4px;}"
+                                "QPushButton:checked{border:none;background-image: url(:/icon/icon/close.svg);background-color:rgb(215,52,53);border-radius:4px;}");
+        labTitle->setStyleSheet("color:#D9FFFFFF"); // 85% => D9, 255,255,255 => FFFFFF
+    } else {
+        QPalette pal(palette());
+        pal.setColor(QPalette::Background, QColor(255,255,255));
+        setAutoFillBackground(true);
+        setPalette(pal);
+
+        btnClose->setStyleSheet("QPushButton{border:none;background-image: url(:/icon/icon/close.svg);background-color:#FFFFFF;border-radius:4px;}"
+                                "QPushButton:hover{border:none;background-image: url(:/icon/icon/close.svg);background-color:rgb(240,65,52);border-radius:4px;}"
+                                "QPushButton:checked{border:none;background-image: url(:/icon/icon/close.svg);background-color:rgb(215,52,53);border-radius:4px;}");
+        labTitle->setStyleSheet("color:#D9000000"); // 85% => D9, 255,255,255 => FFFFFF
+    }
 
     vBoxLayout->setSpacing(0);
-    //vBoxLayout->addLayout(hBoxLayoutClose);
     vBoxLayout->addLayout(hBoxLayout);
-    //vBoxLayout->addSpacing(24);
-    //vBoxLayout->addWidget(labTitle);
     vBoxLayout->addLayout(hBoxLayout1);
     vBoxLayout->setContentsMargins(0,0,0,0);
     setLayout(vBoxLayout);
 
     QBitmap bitMap(width(),height()); // A bit map has the same size with current widget
-
     bitMap.fill();
-
     QPainter painter(&bitMap);
-
     painter.setBrush(Qt::black);
-
     painter.setPen(Qt::NoPen); // Any color that is not QRgb(0,0,0) is right
-
     painter.setRenderHint(QPainter::Antialiasing);
-
     painter.drawRoundedRect(bitMap.rect(),6,6); //设置圆角弧度
-
     setMask(bitMap);
 
     // For cancel button
-    connect(btnCancel,SIGNAL(clicked()),this,SLOT(reject()));
+    connect(btnClose,SIGNAL(clicked()),this,SLOT(reject()));
 
-    // For close button
-    //connect(btnClose, SIGNAL(clicked()), this, SLOT(reject()));
+    connect(style_settings,SIGNAL(changed(QString)),this,SLOT(sendmail_style_changed(QString)));
 }
 
 Appinfo * _getAppList(const char *contentType)
@@ -254,7 +334,8 @@ AppList * getAppIdList(const char *contentType)
         int index = 0;
         AppList *list = (AppList *)malloc(sizeof(AppList)*(i+1));
 
-        for (gint j = 0;appinfo[j].item != NULL;j++)
+        int j = 0;
+        for (j = 0;appinfo[j].item != NULL;j++)
         {
             const char *id = g_app_info_get_id(appinfo[j].item);
             if(id != NULL)
@@ -284,7 +365,7 @@ void SendMail::setBtnList()
     AppList * maillist = getAppIdList(MAILTYPE);
     if (maillist)
     {
-        MYLOG << maillist;
+        qDebug() << maillist;
         vBoxLayout1->setSpacing(0);
         vBoxLayout1->setContentsMargins(0,0,0,0);
         for (int i = 0; maillist[i].appid != NULL; i++)
@@ -304,9 +385,15 @@ void SendMail::setBtnList()
             btn->setFont(ft);
             btn->setText(appname);
             btn->setFixedSize(256, 56);
-            btn->setStyleSheet("QPushButton{background-color:rgb(68,66,72);background-position:left;text-align:left;border:none;color:rgb(232,232,232);border-radius:4px;}"
-                                "QPushButton:hover{border:none;background-color:#3D6BE5;color:#F0FFFFFF;border-radius:4px;}"
-                                 "QPushButton:checked{border:none;background-color:#3D6BE5;color:#F7FFFFFF;border-radius:4px;}");
+            if (stylelist.contains(style_settings->get(STYLE_NAME).toString())) {
+                btn->setStyleSheet("QPushButton{background-color:rgb(68,66,72);background-position:left;text-align:left;border:none;color:rgb(232,232,232);border-radius:4px;}"
+                                   "QPushButton:hover{border:none;background-color:#3D6BE5;color:#F0FFFFFF;border-radius:4px;}"
+                                   "QPushButton:checked{border:none;background-color:#3D6BE5;color:#F7FFFFFF;border-radius:4px;}");
+            } else {
+                btn->setStyleSheet("QPushButton{background-color:#FFFFFFF;background-position:left;text-align:left;border:none;color:#000000;border-radius:4px;}"
+                                   "QPushButton:hover{border:none;background-color:#3D6BE5;color:#F0000000;border-radius:4px;}"
+                                   "QPushButton:checked{border:none;background-color:#3D6BE5;color:#F7000000;border-radius:4px;}");
+            }
             btn->setIcon(appicon);
             btn->setIconSize(QSize(40,40)); // 应用图标尺寸
             btn->setCheckable(true);
@@ -343,9 +430,9 @@ void SendMail::openMail(QString name)
 {
     QFile aFile(DESKTOPPATH+name);
         if(!aFile.exists())
-            MYLOG << DESKTOPPATH << name << " no exists!";
+            qDebug() << DESKTOPPATH << name << " no exists!";
         if(!aFile.open(QIODevice::ReadOnly | QIODevice::Text))
-            MYLOG << DESKTOPPATH << name << " open false!";
+            qDebug() << DESKTOPPATH << name << " open false!";
         QTextStream aStream(&aFile);
         QString str;
         aStream.setAutoDetectUnicode(true);
@@ -357,7 +444,7 @@ void SendMail::openMail(QString name)
         }
         str = str.section("Exec=",1,1);
         str = str.section(" ",0,0);
-        MYLOG << "exec str = " << str;
+        qDebug() << "exec str = " << str;
         QProcess *process = new QProcess();
         process->start(str);
 }
@@ -392,5 +479,30 @@ void SendMail::onBtnClicked()
             reject();
             break;
         }
+    }
+}
+
+void SendMail::sendmail_style_changed(QString)
+{
+    if (stylelist.contains(style_settings->get(STYLE_NAME).toString())) {
+        QPalette pal(palette());
+        pal.setColor(QPalette::Background, QColor(47, 44, 43));
+        setAutoFillBackground(true);
+        setPalette(pal);
+
+        btnClose->setStyleSheet("QPushButton{border:none;background-image: url(:/icon/icon/close.svg);background-color:rgb(47,44,43);border-radius:4px;}"
+                                "QPushButton:hover{border:none;background-image: url(:/icon/icon/close.svg);background-color:rgb(240,65,52);border-radius:4px;}"
+                                "QPushButton:checked{border:none;background-image: url(:/icon/icon/close.svg);background-color:rgb(215,52,53);border-radius:4px;}");
+        labTitle->setStyleSheet("color:#D9FFFFFF"); // 85% => D9, 255,255,255 => FFFFFF
+    } else {
+        QPalette pal(palette());
+        pal.setColor(QPalette::Background, QColor(255,255,255));
+        setAutoFillBackground(true);
+        setPalette(pal);
+
+        btnClose->setStyleSheet("QPushButton{border:none;background-image: url(:/icon/icon/close.svg);background-color:#FFFFFF;border-radius:4px;}"
+                                "QPushButton:hover{border:none;background-image: url(:/icon/icon/close.svg);background-color:rgb(240,65,52);border-radius:4px;}"
+                                "QPushButton:checked{border:none;background-image: url(:/icon/icon/close.svg);background-color:rgb(215,52,53);border-radius:4px;}");
+        labTitle->setStyleSheet("color:#D9000000"); // 85% => D9, 255,255,255 => FFFFFF
     }
 }

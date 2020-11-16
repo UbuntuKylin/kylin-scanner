@@ -16,8 +16,6 @@
 *
 */
 
-
-#include "kylinLog.h"
 #include "singleApplication.h"
 #include <QtNetwork/QLocalSocket>
 #include <QFileInfo>
@@ -33,7 +31,7 @@ SingleApplication::SingleApplication(int &argc, char **argv)
 {
 
     // 取应用程序名作为LocalServer的名字
-    MYLOG << "DISPLAY: " << QLatin1String(getenv ("DISPLAY"));
+    qDebug() << "DISPLAY: " << QLatin1String(getenv ("DISPLAY"));
     _serverName = QFileInfo(QCoreApplication::applicationFilePath()).fileName() + QLatin1String(getenv("DISPLAY"));
 
     _initLocalConnection();
@@ -82,11 +80,11 @@ void SingleApplication::_initLocalConnection()
         fprintf(stderr, "%s already running.\n",
                 _serverName.toLocal8Bit().constData());
         _isRunning = true;
-        MYLOG << "isRunnig = " << _isRunning;
+        qDebug() << "isRunnig = " << _isRunning;
         // 其他处理，如：将启动参数发送到服务端
         return;
     } else {
-        MYLOG << "isRunnig = " << _isRunning;
+        qDebug() << "isRunnig = " << _isRunning;
     }
 
     //连接不上服务器，就创建一个
@@ -118,7 +116,7 @@ void SingleApplication::_newLocalServer()
 void SingleApplication::_activateWindow()
 {
     if (w) {
-        MYLOG << "activateWindow";
+        qDebug() << "activateWindow";
         w->show();
         w->raise();
         w->activateWindow(); // 激活窗口

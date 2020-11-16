@@ -16,9 +16,9 @@
 *
 */
 
-#include "embelish.h"
+#include "beauty.h"
 
-Embelish::Embelish(QWidget *parent) : QWidget(parent)
+Beauty::Beauty(QWidget *parent) : QWidget(parent)
 {
 
 }
@@ -54,12 +54,12 @@ int readImagesAndTimes(vector<Mat> &images, vector<float> &times)
     //判断图像是否加载成功
     if (im.data == NULL)
     {
-        MYLOG << "图像加载失败!";
+        qDebug() << "图像加载失败!";
         return false;
     }
     else
     {
-        MYLOG << "图像加载成功!";
+        qDebug() << "图像加载成功!";
     }
 
     images.push_back(im);
@@ -79,77 +79,6 @@ void psloadExposureSeq(String path, vector<Mat>& images, vector<float>& times)
         times.push_back(1/val);
     }
     list_file.close();
-}
-
-void psHdrCV(Mat src)
-{
-  // Read images and exposure times
-  MYLOG << "Reading images ... " ;
-  vector<Mat> images;
-  vector<float> times;
-
-  //readImagesAndTimes(images, times);
-  readImagesAndTimesOne(src, images, times);
-
-
-  // Align input images
-  MYLOG << "Aligning images ... " ;
-  vector<Mat> images_(images);
-  Ptr<AlignMTB> alignMTB = cv::createAlignMTB();
-  alignMTB->process(images_, images);
-
-  // Obtain Camera Response Function (CRF)
-  MYLOG << "Calculating Camera Response Function (CRF) ... " ;
-  Mat responseDebevec;
-  Ptr<CalibrateDebevec> calibrateDebevec = createCalibrateDebevec();
-  calibrateDebevec->process(images, responseDebevec, times);
-
-
-  // Merge images into an HDR linear image
-  MYLOG << "Merging images into one HDR image ... " ;
-  Mat hdrDebevec;
-  Ptr<MergeDebevec> mergeDebevec = createMergeDebevec();
-  mergeDebevec->process(images, hdrDebevec, times, responseDebevec);
-  // Save HDR image.
-  imwrite("hdrDebevec.hdr", hdrDebevec);
-  MYLOG << "saved hdrDebevec.hdr ";
-
-  // Tonemap using Drago's method to obtain 24-bit color image
-  MYLOG << "Tonemaping using Drago's method ... ";
-  Mat ldrDrago;
-  Ptr<TonemapDrago> tonemapDrago = createTonemapDrago(1.0, 0.7);
-  tonemapDrago->process(hdrDebevec, ldrDrago);
-  ldrDrago = 3 * ldrDrago;
-  imwrite("/tmp/ldr-Drago.jpg", ldrDrago * 255);
-  MYLOG << "saved ldr-Drago.jpg";
-
-  // Tonemap using Durand's method obtain 24-bit color image
-  MYLOG << "Tonemaping using Durand's method ... ";
-  /*
-  Mat ldrDurand;
-  Ptr<TonemapDurand> tonemapDurand = createTonemapDurand(1.5,4,1.0,1,1);
-  tonemapDurand->process(hdrDebevec, ldrDurand);
-  ldrDurand = 3 * ldrDurand;
-  imwrite("/tmp/ldr-Durand.jpg", ldrDurand * 255);
-  MYLOG << "saved ldr-Durand.jpg";
-  */
-
-  // Tonemap using Reinhard's method to obtain 24-bit color image
-  MYLOG << "Tonemaping using Reinhard's method ... ";
-  Mat ldrReinhard;
-  Ptr<TonemapReinhard> tonemapReinhard = createTonemapReinhard(1.5, 0,0,0);
-  tonemapReinhard->process(hdrDebevec, ldrReinhard);
-  imwrite("/tmp/ldr-Reinhard.jpg", ldrReinhard * 255);
-  MYLOG << "saved ldr-Reinhard.jpg";
-
-  // Tonemap using Mantiuk's method to obtain 24-bit color image
-  MYLOG << "Tonemaping using Mantiuk's method ... ";
-  Mat ldrMantiuk;
-  Ptr<TonemapMantiuk> tonemapMantiuk = createTonemapMantiuk(2.2,0.85, 1.2);
-  tonemapMantiuk->process(hdrDebevec, ldrMantiuk);
-  ldrMantiuk = 3 * ldrMantiuk;
-  imwrite("/tmp/ldr-Mantiuk.jpg", ldrMantiuk * 255);
-  MYLOG << "saved ldr-Mantiuk.jpg";
 }
 
 void psAverageFilterCV(Mat src, Mat &dst)
@@ -222,7 +151,7 @@ QImage * psSharpen(QImage * origin)
  */
 void psSharpenCV(Mat src, Mat &dst)
 {
-    MYLOG << "sharp()";
+    qDebug() << "sharp()";
 
     Point2i anchor(-1,-1);
     double delta = 0;
@@ -233,7 +162,7 @@ void psSharpenCV(Mat src, Mat &dst)
                   0, -1, 0);
 
     filter2D(src, dst, dst.depth(), kernel, anchor, delta);
-    MYLOG << "sharp() end";
+    qDebug() << "sharp() end";
 }
 
 static void checkHsl(int &hue, int &saturation, int &lumination)
@@ -334,7 +263,7 @@ void psHslCV(Mat src, Mat &dst)
  */
 void psLuminanceContrastCV(Mat src, Mat &dst)
 {
-    MYLOG << "psLuminanceContrastCV()";
+    qDebug() << "psLuminanceContrastCV()";
     Mat new_image = Mat::zeros(src.size(), src.type());
     double alpha = 1.0; // contrast
     int beta = 5;       // brightness
@@ -354,7 +283,7 @@ void psLuminanceContrastCV(Mat src, Mat &dst)
     }
 
     dst = new_image.clone();
-    MYLOG << "psLuminanceContrastCV() end";
+    qDebug() << "psLuminanceContrastCV() end";
 }
 
 
@@ -367,7 +296,7 @@ void psLuminanceContrastCV(Mat src, Mat &dst)
  */
 void psSaturationCV(Mat src, Mat &dst)
 {
-    MYLOG << "saturation()";
+    qDebug() << "saturation()";
     Mat new_img;
 
     const int max_increment = 200;
@@ -413,7 +342,7 @@ void psSaturationCV(Mat src, Mat &dst)
                 sat = delta / (2 - value);
             }
 
-            MYLOG << "1";
+            qDebug() << "1";
             if (increment >= 0)
             {
                 if ((increment + sat) >= 1)
@@ -436,18 +365,18 @@ void psSaturationCV(Mat src, Mat &dst)
                 new_g = light * 255 + (g - light * 255) * (1 + alpha);
                 new_b = light * 255 + (b - light * 255) * (1 + alpha);
             }
-            MYLOG << "2";
+            qDebug() << "2";
             new_img.at<Vec3f> (row, col)[0] = new_b;
-            MYLOG << "3";
+            qDebug() << "3";
             new_img.at<Vec3f> (row, col)[1] = new_g;
-            MYLOG << "4";
+            qDebug() << "4";
             new_img.at<Vec3f> (row, col)[2] = new_r;
-            MYLOG << "5";
+            qDebug() << "5";
         }
     }
 
     dst = new_img.clone();
-    MYLOG << "saturation() end";
+    qDebug() << "saturation() end";
 }
 
 
@@ -709,7 +638,7 @@ QImage * psDrawFrame(QImage * origin, const char *filename)
     return newImage;
 }
 
-void oneClickEmbelish(const char *filename)
+void oneClickBeauty(const char *filename)
 {
     Mat src, dst;
 
@@ -718,12 +647,12 @@ void oneClickEmbelish(const char *filename)
     //判断图像是否加载成功
     if (src.data == NULL)
     {
-        MYLOG << "图像加载失败!";
+        qDebug() << "图像加载失败!";
         return;
     }
     else
     {
-        MYLOG << "图像加载成功!";
+        qDebug() << "图像加载成功!";
     }
 
     // 双边滤波

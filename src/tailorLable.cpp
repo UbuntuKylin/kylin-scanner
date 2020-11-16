@@ -15,9 +15,9 @@
 * along with this program; if not, see <http://www.gnu.org/licenses/&gt;.
 *
 */
-#include "kylinLbl.h"
+#include "tailorLable.h"
 
-KylinLbl::KylinLbl(QLabel *parent)
+TailorLable::TailorLable(QLabel *parent)
     : QLabel(parent)
 {
     x1 = 0;
@@ -26,7 +26,7 @@ KylinLbl::KylinLbl(QLabel *parent)
     y2 = 0;
 }
 
-void KylinLbl::paintEvent(QPaintEvent *event)
+void TailorLable::paintEvent(QPaintEvent *event)
 {
     //comment before
     QLabel::paintEvent(event); //绘制背景的图片
@@ -36,11 +36,11 @@ void KylinLbl::paintEvent(QPaintEvent *event)
 }
 
 /**
- * @brief KylinLbl::mousePressEvent
+ * @brief TailorLabel::mousePressEvent
  * 裁切时的起始坐标
  * @param event
  */
-void KylinLbl::mousePressEvent(QMouseEvent *event)
+void TailorLable::mousePressEvent(QMouseEvent *event)
 {
     x1 = event->pos().x();
     y1 = event->pos().y();
@@ -50,11 +50,11 @@ void KylinLbl::mousePressEvent(QMouseEvent *event)
 }
 
 /**
- * @brief KylinLbl::mouseReleaseEvent
+ * @brief TailorLabel::mouseReleaseEvent
  * 裁切时的终止坐标
  * @param event
  */
-void KylinLbl::mouseReleaseEvent(QMouseEvent *event)
+void TailorLable::mouseReleaseEvent(QMouseEvent *event)
 {
     x2 = event->pos().x(); //鼠标相对于所在控件的位置
     y2 = event->pos().y();
@@ -62,7 +62,7 @@ void KylinLbl::mouseReleaseEvent(QMouseEvent *event)
     QApplication::restoreOverrideCursor();
 }
 
-void KylinLbl::mouseMoveEvent(QMouseEvent *event)
+void TailorLable::mouseMoveEvent(QMouseEvent *event)
 {
     if (event->buttons() & Qt::LeftButton) {
         x2 = event->pos().x(); //鼠标相对于所在控件的位置

@@ -40,10 +40,10 @@ LIBS +=-ltesseract
 LIBS +=-lX11
 
 SOURCES += \
+    beauty.cpp \
     funcBar.cpp \
     interruptDlg.cpp \
     kylinCmb.cpp \
-    kylinLbl.cpp \
     kylinSane.cpp \
         main.cpp \
     realTimelbl.cpp \
@@ -52,17 +52,17 @@ SOURCES += \
     scanSet.cpp \
     sendMail.cpp \
     singleApplication.cpp \
+    tailorLable.cpp \
+    theme.cpp \
     titleBar.cpp \
     waterMarkDlg.cpp \
-        widget.cpp \
-    embelish.cpp
+        widget.cpp
 
 HEADERS += \
+    beauty.h \
     funcBar.h \
     interruptDlg.h \
     kylinCmb.h \
-    kylinLbl.h \
-    kylinLog.h \
     kylinSane.h \
     realTimelbl.h \
     rectify.h \
@@ -70,11 +70,11 @@ HEADERS += \
     scanSet.h \
     sendMail.h \
     singleApplication.h \
+    tailorLable.h \
     theme.h \
     titleBar.h \
     waterMarkDlg.h \
-        widget.h \
-    embelish.h
+        widget.h
 
 # Default rules for deployment.
 #qnx: target.path = /tmp/$${TARGET}/bin

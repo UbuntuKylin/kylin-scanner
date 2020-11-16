@@ -27,9 +27,7 @@
 #include <QMouseEvent>
 #include <QDebug>
 #include <QPainter>
-#include "kylinLog.h"
 #include "theme.h"
-//class QPushButton;
 
 class TitleBar : public QWidget
 {
@@ -55,25 +53,25 @@ private:
     // 最大化/还原
     void updateMaximize();
 
-    QGSettings *style_settings;
-    QGSettings *icon_theme_settings;
+    bool mMoving;
+    QPoint mLastMousePosition;
     QStringList stylelist;
     QStringList iconthemelist;
 
-    bool mMoving;
-    QPoint mLastMousePosition;
+    QGSettings *style_settings;
+    QGSettings *icon_theme_settings;
     QLabel *m_logo;
     QLabel *m_logoMsg;
-    QLabel *m_pIconLabel;
-    QLabel *m_pTitleLabel;
     QPushButton *m_pMinimizeButton;
     QPushButton *m_pMaximizeButton;
     QPushButton *m_pCloseButton;
+    QHBoxLayout *pLayout;
 
 private slots:
     // 进行最小化、最大化/还原、关闭操作
     void onClicked();
     void titlebar_icon_theme_changed(QString); // 系统图标主题风格变化
+    void titlebar_style_changed(QString); // 系统黑白主题样式变换
 
 Q_SIGNALS:
     void isNormal();

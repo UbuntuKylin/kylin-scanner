@@ -26,7 +26,6 @@
 #include "scanDisplay.h"
 #include "scanSet.h"
 #include "titleBar.h"
-#include "kylinLog.h"
 #include "theme.h"
 
 class CommonScanThread : public QThread
@@ -65,6 +64,7 @@ private:
     ScanDisplay *pScandisplay;
     QHBoxLayout *pHboxLayout;
     QVBoxLayout *pLayout;
+
     CommonScanThread thread;
 
 Q_SIGNALS:

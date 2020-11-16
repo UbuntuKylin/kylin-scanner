@@ -31,7 +31,7 @@
 #include "kylinCmb.h"
 #include "sendMail.h"
 #include "kylinSane.h"
-#include "kylinLog.h"
+#include "theme.h"
 
 class ScanSet  : public QWidget
 {
@@ -66,6 +66,11 @@ Q_SIGNALS:
     void openDeviceStatusSignal(bool);
 
 private:
+    int scanFlag = 0;
+    QStringList stylelist;
+    QStringList iconthemelist;
+    QGSettings *style_settings;
+    QGSettings *icon_theme_settings;
     QLabel *labDevice;              /**< 设备标签 */
     QLabel *labType;                /**< 类型标签 */
     QLabel *labColor;               /**< 色彩标签 */
@@ -101,9 +106,10 @@ private:
     QHBoxLayout *hBoxLine3;
     QHBoxLayout *hBoxLine4;
     QHBoxLayout *hBoxMailText;
+    QHBoxLayout *hBoxScanSet;
     QVBoxLayout *vBoxScanSet;
     QVBoxLayout *vBoxScanSet1;
-    QHBoxLayout *hBoxScanSet;
+
     int flag = 0; // 当前按钮为另存为还是文字识别后的存储文本
 
 public slots:
@@ -117,6 +123,7 @@ private slots:
     void onTextColorCurrentTextChanged(QString color);
     void onTextResolutionCurrentTextChanged(QString resolution);
     void onTextSizeCurrentTextChanged(QString size);
+    void scanset_style_changed(QString); // 系统主题风格变化
 };
 
 #endif // SCAN_SET_H

@@ -15,13 +15,11 @@
 * along with this program; if not, see <http://www.gnu.org/licenses/&gt;.
 *
 */
-#ifndef KYLINLOG_H
-#define KYLINLOG_H
 
-#include <QDebug>
-#include <QDateTime>
-#define MYLOG qDebug()
-//<< QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss:zzz") \
- //   << ":" << __FILE__ << ":" << __LINE__ << ":" << __func__ << "# "
+#include "theme.h"
 
-#endif // KYLINLOG_H
+
+Theme::Theme(QWidget *parent) : QWidget(parent)
+{
+
+}

@@ -19,7 +19,10 @@
 #ifndef THEME_H
 #define THEME_H
 
+#include <QWidget>
 #include <QGSettings/qgsettings.h>
+#include <QWidget>
+#include <QStringList>
 
 #define ORG_UKUI_STYLE            "org.ukui.style"
 
@@ -34,5 +37,20 @@
 #define ICON_THEME_KEY_BASIC      "ukui-icon-theme-basic"
 #define ICON_THEME_KEY_CLASSICAL  "ukui-icon-theme-classical"
 #define ICON_THEME_KEY_DEFAULT    "ukui-icon-theme-default"
+
+#define ICON_THEME_CLOSE "window-close-symbolic"
+#define ICON_THEME_MINIMIZE "window-minimize-symbolic"
+#define ICON_THEME_MAXIMAZE "window-maximize-symbolic"
+#define ICON_THEME_RESTORE "window-restore-symbolic"
+
+class Theme : public QWidget
+{
+    Q_OBJECT
+public:
+    explicit Theme(QWidget *parent = nullptr);
+
+signals:
+
+};
 
 #endif // THEME_H

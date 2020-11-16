@@ -21,20 +21,27 @@
 
 TitleBar::TitleBar(QWidget *parent)
     : QWidget(parent)
+    , style_settings (new QGSettings(ORG_UKUI_STYLE))
+    , icon_theme_settings (new QGSettings(ORG_UKUI_STYLE))
+    , m_logo (new QLabel())
+    , m_logoMsg (new QLabel())
+    , m_pMinimizeButton (new QPushButton())
+    , m_pMaximizeButton (new QPushButton())
+    , m_pCloseButton (new QPushButton())
+    , pLayout (new QHBoxLayout())
 {
     setFixedHeight(32);
     setMinimumWidth(860);
 
-    m_logo = new QLabel();
-    m_logoMsg = new QLabel();
-    m_pMinimizeButton = new QPushButton();
-    m_pMaximizeButton = new QPushButton();
-    m_pCloseButton = new QPushButton();
+    stylelist << STYLE_NAME_KEY_DARK << STYLE_NAME_KEY_BLACK << STYLE_NAME_KEY_DEFAULT;
+    iconthemelist << ICON_THEME_KEY_BASIC << ICON_THEME_KEY_CLASSICAL << ICON_THEME_KEY_DEFAULT;
 
     m_logo->setFixedSize (24, 24);
-    icon_theme_settings = new QGSettings(ORG_UKUI_STYLE);
-    iconthemelist << ICON_THEME_KEY_BASIC << ICON_THEME_KEY_CLASSICAL << ICON_THEME_KEY_DEFAULT;
-    MYLOG << "icon-theme: " << icon_theme_settings->get(ICON_THEME_NAME).toString();
+    m_logoMsg->setText (tr("kylin-scanner"));
+    m_logoMsg->setAlignment(Qt::AlignRight|Qt::AlignVCenter);
+    //m_logoMsg->setStyleSheet("color:rgb(232,232,232)");
+    m_logoMsg->setFixedSize(56, 14);
+
     if ("ukui-icon-theme-basic" == icon_theme_settings->get(ICON_THEME_NAME).toString()) {
         m_logo->setStyleSheet("QLabel{border-image:url(/usr/share/icons/ukui-icon-theme-basic/24x24/devices/scanner.png);border-radius:4px;}");
     } else if ("ukui-icon-theme-classical" == icon_theme_settings->get(ICON_THEME_NAME).toString()) {
@@ -43,37 +50,31 @@ TitleBar::TitleBar(QWidget *parent)
         m_logo->setStyleSheet("QLabel{border-image:url(/usr/share/icons/ukui-icon-theme-default/24x24/devices/scanner.png);border-radius:4px;}");
     }
 
-    m_logoMsg->setText (tr("kylin-scanner"));
-    m_logoMsg->setAlignment(Qt::AlignRight|Qt::AlignVCenter);
-    m_logoMsg->setStyleSheet("color:rgb(232,232,232)");
-    m_logoMsg->setFixedSize(56, 14);
-
-    m_pMinimizeButton->setFixedSize(30, 30);
-    m_pMaximizeButton->setFixedSize(30, 30);
-    m_pCloseButton->setFixedSize(30, 30);
-
+    m_pMinimizeButton->setIcon (QIcon::fromTheme (ICON_THEME_MINIMIZE));
     m_pMinimizeButton->setToolTip(tr("Minimize"));
+    m_pMinimizeButton->setFixedSize(30, 30);
+    m_pMinimizeButton->setIconSize (QSize(16, 16));
+
+    m_pMaximizeButton->setIcon (QIcon::fromTheme (ICON_THEME_MAXIMAZE));
     m_pMaximizeButton->setToolTip(tr("Maximize"));
+    m_pMaximizeButton->setFixedSize(30, 30);
+    m_pMaximizeButton->setIconSize (QSize(16, 16));
+
+    m_pCloseButton->setIcon (QIcon::fromTheme (ICON_THEME_CLOSE));
     m_pCloseButton->setToolTip(tr("Close"));
-
-    /*
-    m_pMinimizeButton->setIcon (QIcon::fromTheme (":/icon/icon/min_white.svg"));
-    m_pMaximizeButton->setIcon (QIcon::fromTheme (":/icon/icon/max_white.svg"));
-    m_pCloseButton->setIcon (QIcon::fromTheme (":/icon/icon/close_white.svg"));
-    */
-    m_pMinimizeButton->setStyleSheet("QPushButton{border-image: url(:/icon/icon/min_white.svg);border:none;background-color:rgb(47,44,43);border-radius:4px;}"
-                              "QPushButton:hover{border-image: url(:/icon/icon/min_white.svg);border:none;background-color:rgb(61,107,229);border-radius:4px;}"
-                                "QPushButton:checked{border-image: url(:/icon/icon/min_white.svg);border:none;background-color:rgb(50,87,202);border-radius:4px;}");
-
-    m_pMaximizeButton->setStyleSheet("QPushButton{border-image: url(:/icon/icon/max_white.svg);border:none;background-color:rgb(47,44,43);border-radius:4px;}"
-                              "QPushButton:hover{border-image: url(:/icon/icon/max_white.svg);border:none;background-color:rgb(61,107,229);border-radius:4px;}"
-                                "QPushButton:checked{border-image: url(:/icon/icon/max_white.svg);border:none;background-color:rgb(50,87,202);border-radius:4px;}");
-
-    m_pCloseButton->setStyleSheet("QPushButton{border-image: url(:/icon/icon/close_white.svg);border:none;background-color:rgb(47,44,43);border-radius:4px;}"
-                              "QPushButton:hover{border-image: url(:/icon/icon/close_white.svg);border:none;background-color:rgb(240,65,52);border-radius:4px;}"
-                                "QPushButton:checked{border-image: url(:/icon/icon/close_white.svg);border:none;background-color:rgb(215,52,53);border-radius:4px;}");
-
-    QHBoxLayout *pLayout = new QHBoxLayout(this);
+    m_pCloseButton->setFixedSize(30, 30);
+    m_pCloseButton->setIconSize (QSize(16, 16));
+    //m_pCloseButton->setFlat (true);
+    if (stylelist.contains(style_settings->get(STYLE_NAME).toString())) {
+        m_pCloseButton->setStyleSheet("QPushButton{border:none;background-color:#3D3D41;border-radius:4px;}"
+                                  "QPushButton:hover{border:none;background-color:#F86457;border-radius:4px;}"
+                                    "QPushButton:checked{border:none;background-color:#E44C50;border-radius:4px;}");
+    } else {
+        // 白色主题或默认主题
+        m_pCloseButton->setStyleSheet("QPushButton{border:none;background-color:#DCDCDC;border-radius:4px;}"
+                                  "QPushButton:hover{border:none;background-color:#F86457;border-radius:4px;}"
+                                    "QPushButton:checked{border:none;background-color:#E44C50;border-radius:4px;}");
+    }
 
     pLayout->addSpacing(0);
     pLayout->addWidget (m_logo);
@@ -85,12 +86,13 @@ TitleBar::TitleBar(QWidget *parent)
     pLayout->setSpacing(7);
     pLayout->setAlignment(Qt::AlignCenter);
     pLayout->setContentsMargins(7, 0, 7, 0);
-
     setLayout(pLayout);
 
     connect(m_pMinimizeButton, SIGNAL(clicked(bool)), this, SLOT(onClicked()));
     connect(m_pMaximizeButton, SIGNAL(clicked(bool)), this, SLOT(onClicked()));
     connect(m_pCloseButton, SIGNAL(clicked(bool)), this, SLOT(onClicked()));
+    connect(style_settings,SIGNAL(changed(QString)),this,SLOT(titlebar_style_changed(QString)));
+    connect(icon_theme_settings,SIGNAL(changed(QString)), this, SLOT(titlebar_icon_theme_changed(QString)));
 }
 
 TitleBar::~TitleBar()
@@ -162,7 +164,6 @@ void TitleBar::onClicked()
         }
         else if (pButton == m_pCloseButton)
         {
-
             pWindow->close();
         }
     }
@@ -170,7 +171,7 @@ void TitleBar::onClicked()
 
 void TitleBar::titlebar_icon_theme_changed(QString)
 {
-    MYLOG << "icon-theme: " << icon_theme_settings->get(ICON_THEME_NAME).toString();
+    qDebug() << "titlebar icon-theme: " << icon_theme_settings->get(ICON_THEME_NAME).toString();
 
     if ("ukui-icon-theme-basic" == icon_theme_settings->get(ICON_THEME_NAME).toString()) {
         m_logo->setStyleSheet("QLabel{border-image:url(/usr/share/icons/ukui-icon-theme-basic/24x24/devices/scanner.png);border-radius:4px;}");
@@ -181,10 +182,25 @@ void TitleBar::titlebar_icon_theme_changed(QString)
     }
 }
 
+void TitleBar::titlebar_style_changed(QString)
+{
+    qDebug() << "titlebar_style_changed = " << style_settings->get (STYLE_NAME).toString ();
+    if (stylelist.contains(style_settings->get(STYLE_NAME).toString())) {
+        // 黑色主题或默认主题
+        m_pCloseButton->setStyleSheet("QPushButton{border:none;background-color:#3D3D41;border-radius:4px;}"
+                                  "QPushButton:hover{border:none;background-color:#F86457;border-radius:4px;}"
+                                    "QPushButton:checked{border:none;background-color:#E44C50;border-radius:4px;}");
+    } else {
+        // 白色主题
+        m_pCloseButton->setStyleSheet("QPushButton{border:none;background-color:#DCDCDC;border-radius:4px;}"
+                                  "QPushButton:hover{border:none;background-color:#F86457;border-radius:4px;}"
+                                    "QPushButton:checked{border:none;background-color:#E44C50;border-radius:4px;}");
+    }
+}
+
 void TitleBar::updateMaximize()
 {
     QWidget *pWindow = this->window();
-    //if (pWindow->isTopLevel())
     if (pWindow->isWindow ())
     {
         bool bMaximize = pWindow->isMaximized();
@@ -192,24 +208,15 @@ void TitleBar::updateMaximize()
         {
             m_pMaximizeButton->setToolTip(tr("Restore"));
             m_pMaximizeButton->setProperty("maximizeProperty", "restore");
-            // m_pMaximizeButton->setIcon (QIcon::fromTheme (":/icon/icon/revert_white.svg"));
-            m_pMaximizeButton->setStyleSheet("QPushButton{border-image: url(:/icon/icon/revert_white.svg);border:none;background-color:rgb(47,44,43);border-radius:4px;}"
-                                      "QPushButton:hover{border-image: url(:/icon/icon/revert_white.svg);border:none;background-color:rgb(61,107,229);border-radius:4px;}"
-                                        "QPushButton:checked{border-image: url(:/icon/icon/revert_white.svg);border:none;background-color:rgb(50,87,202);border-radius:4px;}");
+            m_pMaximizeButton->setIcon (QIcon::fromTheme (ICON_THEME_RESTORE));
             emit isMax();
         }
         else
         {
             m_pMaximizeButton->setProperty("maximizeProperty", "maximize");
             m_pMaximizeButton->setToolTip(tr("Maximize"));
-            //m_pMaximizeButton->setIcon (QIcon::fromTheme (":/icon/icon/max_white.svg"));
-            m_pMaximizeButton->setStyleSheet("QPushButton{border-image: url(:/icon/icon/max_white.svg);border:none;background-color:rgb(47,44,43);border-radius:4px;}"
-                                      "QPushButton:hover{border-image: url(:/icon/icon/max_white.svg);border:none;background-color:rgb(61,107,229);border-radius:4px;}"
-                                        "QPushButton:checked{border-image: url(:/icon/icon/max_white.svg);border:none;background-color:rgb(50,87,202);border-radius:4px;}");
+            m_pMaximizeButton->setIcon (QIcon::fromTheme (ICON_THEME_MAXIMAZE));
             emit isNormal();
         }
-
-        // 解决切换主题导致程序段错误
-        //m_pMaximizeButton->setStyle(QApplication::style());
     }
 }

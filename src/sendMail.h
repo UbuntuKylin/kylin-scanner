@@ -36,7 +36,7 @@
 #include <QFileInfo>
 #include <QFileIconProvider>
 #include <qmath.h>
-#include "kylinLog.h"
+#include "theme.h"
 
 #ifdef signals
 #undef signals
@@ -69,6 +69,10 @@ public:
     explicit NoMail(QWidget *parent = nullptr);
     ~NoMail();
 private:
+    QStringList stylelist;
+    QStringList iconthemelist;
+    QGSettings *style_settings;
+    QGSettings *icon_theme_settings;
     QPushButton *btnClose;
     QLabel *labTitle;
     QTextEdit *textEdit;
@@ -78,6 +82,10 @@ private:
     QHBoxLayout *hBoxLayout;
     QHBoxLayout *hBoxLayoutClose; // 关闭按钮水平布局
     QVBoxLayout *vBoxLayout;
+
+private slots:
+    void nomail_style_changed(QString); // 系统黑白主题样式变换
+
 };
 
 class SendMail : public QDialog
@@ -91,9 +99,12 @@ public:
     //void paintEvent(QPaintEvent *event); // 窗口阴影
 
 private:
-    QPushButton *btnClose;
+    QStringList stylelist;
+    QStringList iconthemelist;
+    QGSettings *style_settings;
+    QGSettings *icon_theme_settings;
     QLabel *labTitle;
-    QPushButton *btnCancel;
+    QPushButton *btnClose;
     QHBoxLayout *hBoxLayout;
     QHBoxLayout *hBoxLayout1;
     QHBoxLayout *hBoxLayoutClose; // 关闭按钮水平布局
@@ -106,7 +117,7 @@ private:
 
 public slots:
     void onBtnClicked();
-
+    void sendmail_style_changed(QString); // 系统黑白主题样式变换
 };
 
 

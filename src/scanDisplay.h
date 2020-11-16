@@ -28,15 +28,15 @@
 #include <QToolTip>
 #include <QSize>
 #include <QTextEdit>
-#include "kylinLbl.h"
+#include "tailorLable.h"
 #include "waterMarkDlg.h"
 #include "funcBar.h"
 #include "rectify.h"
-#include "embelish.h"
+#include "beauty.h"
 #include "kylinSane.h"
 #include "realTimelbl.h"
 #include "interruptDlg.h"
-#include "kylinLog.h"
+#include "theme.h"
 
 class myThread : public QThread
 {
@@ -57,6 +57,12 @@ public:
 
     void setEditBarWindowBorderRadius();
 //private:
+    QStringList stylelist;
+    QStringList iconthemelist;
+
+    QGSettings *style_settings;
+    QGSettings *icon_theme_settings;
+
     QPushButton *btnTailor;
     QPushButton *btnRotate;
     QPushButton *btnSymmetry;
@@ -74,9 +80,11 @@ public:
     int flagBeautify = 0; //一键美化标志
     int flagRectify = 0; //智能纠偏标志
     int flagOrc = 0; //文字识别标志
+    int flagOrcInit = 0; // 文字识别已出现样式标志
+    int flagTailor = 0; // 用于裁切的主题切换问题
+    int flagWaterMark = 0; // 用于扫描完成后添加水印时的覆盖问题
     float scaledNum = 1; //缩放倍数
     int index = 0; // 控制工具栏的打开和关闭
-    int flagWaterMark = 0; // 用于扫描完成后添加水印时的覆盖问题
 
     ScanDisplay(QWidget *parent = nullptr);
     void keyPressEvent(QKeyEvent *e);
@@ -92,7 +100,16 @@ public:
 //    void showEvent(QShowEvent *event);
     void timerEvent(QTimerEvent *e);
 
+    void initStyle();
+    void initStyleOrc();
+    void initStyleTailor();
+
 private:
+    QStringList stylelist;
+    QStringList iconthemelist;
+
+    QGSettings *style_settings;
+    QGSettings *icon_theme_settings;
     QTimer *timerScan; // 实时显示扫描结果定时器
     QLabel *labInit; // 初始化界面，即空白界面
     QLabel *labConnectError; // 连接或者打开扫描仪出错界面
@@ -100,7 +117,7 @@ private:
     QLabel *labNormalLeft;       //正常显示界面左部分
     QLabel *labNormalRight;      //正常显示界面右部分
     QLabel *labEditLayout;       //编辑栏展开界面的显示部分
-    KylinLbl *labTailor;         //编辑栏
+    TailorLable *labTailor;         //编辑栏
     QLabel *labOrcLeft;          //文字识别图片显示部分
     QLabel *labOrcRight;         //文字识别文字显示部分
     QPushButton *btnNormal;      //正常显示界面按钮
@@ -115,7 +132,9 @@ private:
     QImage *imgBackup;           //添加水印时图片
     QImage *imgBeautify;         //一键美化图片
     QImage *imgRectify;          //智能纠偏图片
+
     QStack<QImage> stack;        //用于保存图片
+
     QVBoxLayout *vBoxConnectError;
     QVBoxLayout *vBoxScanSet;
     QVBoxLayout *vBoxOrc;
@@ -131,10 +150,11 @@ private:
     QStackedLayout *vStackedLayout;
     EditBar *editLayout;
     EditBar *editLayoutTailor;
-    myThread thread;
     QScrollArea *scrollArea;
+
     int widgetindex;
     QList<QString> list;
+    myThread thread;
 
 public slots:
     void onOrc();
@@ -150,6 +170,7 @@ private slots:
     void symmetry();
     void addWatermark();
     void orcText();
+    void scandisplay_theme_changed(QString);
 
 signals:
     void scanTimerFinished();

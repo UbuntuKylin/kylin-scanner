@@ -29,14 +29,13 @@
 #include <QApplication>
 #include <QPixmap>
 #include <QImage>
-#include "kylinLog.h"
 
-class KylinLbl  :   public QLabel
+class TailorLable  :   public QLabel
 {
     Q_OBJECT
 
 public:
-    KylinLbl(QLabel *parent = nullptr);
+    TailorLable(QLabel *parent = nullptr);
 
     int x1, y1, x2, y2;
 

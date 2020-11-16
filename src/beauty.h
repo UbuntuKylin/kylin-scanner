@@ -16,8 +16,8 @@
 *
 */
 
-#ifndef EMBELISH_H
-#define EMBELISH_H
+#ifndef BEAUTY_H
+#define BEAUTY_H
 
 #include <vector>
 #include <iostream>
@@ -31,7 +31,6 @@
 #include <opencv2/imgproc.hpp>
 #include <opencv2/highgui.hpp>
 #include <opencv2/imgproc/imgproc_c.h>
-#include "kylinLog.h"
 using namespace cv;
 using namespace std;
 
@@ -48,8 +47,6 @@ int readImagesAndTimes(vector<Mat> &images, vector<float> &times);
 //txt文件中指定多张不同曝光和时间序列图片
 void loadExposureSeq(String path, vector<Mat>& images, vector<float>& times);
 
-//高动态范围成像
-void psHdrCV(Mat src);
 ////////////////////////end
 
 
@@ -127,17 +124,17 @@ QImage * psDrawFrame(QImage * origin, const char *filename);
 
 
 //一键美化
-void oneClickEmbelish(const char *filename);
+void oneClickBeauty(const char *filename);
 
 
 
-class Embelish : public QWidget
+class Beauty : public QWidget
 {
     Q_OBJECT
 
 public:
-    explicit Embelish(QWidget *parent = nullptr);
+    explicit Beauty(QWidget *parent = nullptr);
 
 };
 
-#endif // EMBELISH_H
+#endif // BEAUTY_H
