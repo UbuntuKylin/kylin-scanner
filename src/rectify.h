@@ -26,7 +26,6 @@
 #include <QImage>
 #include <QPixmap>
 #include <QDebug>
-#include "kylinLog.h"
 using namespace cv;
 using namespace std;
 

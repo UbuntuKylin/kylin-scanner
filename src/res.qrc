@@ -7,10 +7,7 @@
         <file>icon/min.png</file>
         <file>icon/scanner.gif</file>
         <file>icon/max-click.png</file>
-        <file>icon/beautify.png</file>
         <file>icon/norscan.png</file>
-        <file>icon/rectify.png</file>
-        <file>icon/orc.png</file>
         <file>icon/down.png</file>
         <file>icon/connect_device.png</file>
         <file>icon/normal.png</file>
@@ -72,6 +69,14 @@
         <file>icon/waiting/warn.png</file>
         <file>icon/waiting/warn.svg</file>
         <file>icon/logo.png</file>
+        <file>icon/ocr.svg</file>
+        <file>icon/ocr_black.svg</file>
+        <file>icon/rectify_black.svg</file>
+        <file>icon/rectify.svg</file>
+        <file>icon/beautify_black.svg</file>
+        <file>icon/beautify.svg</file>
+        <file>icon/index-icon.svg</file>
+        <file>icon/down_black.svg</file>
     </qresource>
     <qresource prefix="/"/>
 </RCC>

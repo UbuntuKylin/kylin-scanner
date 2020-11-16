@@ -70,9 +70,13 @@ void customOutputMessage(QtMsgType type, const QMessageLogContext &context, cons
 
     case QtFatalMsg:
        text = QString("Fatal:");
+       break;
 
     case QtInfoMsg:
         text = QString("Info:");
+       break;
+    default:
+        text = QString("None:");
     }
 
     QString context_info = QString("(%1:%2)").arg(QString(context.file)).arg(context.line);
@@ -178,13 +182,13 @@ int main(int argc, char *argv[])
     // For translations with different language environments
     QTranslator translator;
     QString locale = "/usr/share/kylin-scanner/translations/kylin-scanner." + QLocale::system().name();
-    MYLOG << locale ;
+    qDebug() << locale ;
 
     translator.load(locale);
     app.installTranslator(&translator);
 
     if (!app.isRunning()){
-        MYLOG << "isRunning = false.";
+        qDebug() << "isRunning = false.";
         Widget w;
         app.w = &w;
         w.show();

@@ -22,7 +22,7 @@
 #include <QComboBox>
 #include <QMouseEvent>
 #include <QToolTip>
-#include "kylinLog.h"
+#include "theme.h"
 
 class KylinCmb : public QComboBox
 {
@@ -40,6 +40,11 @@ protected:
     virtual void hidePopup(); // 重载隐藏下拉框
     virtual void showPopup(); // 重载显示下拉框
 
+private:
+    QStringList stylelist;
+    QStringList iconthemelist;
+    QGSettings *style_settings;
+    QGSettings *icon_theme_settings;
 
 signals:
     void clicked();  // 自定义点击信号，在mousePressEvent事件发生时触发

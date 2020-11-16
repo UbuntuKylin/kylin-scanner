@@ -34,8 +34,8 @@
 #include <QMovie>
 #include <QTextDocument>
 #include "kylinSane.h"
-#include "embelish.h"
-#include "kylinLog.h"
+#include "beauty.h"
+#include "theme.h"
 
 class ThreadScanFuncBar : public QThread
 {
@@ -68,6 +68,11 @@ public:
     void setStackClear();
 
 private:
+    QStringList stylelist;
+    QStringList iconthemelist;
+    QGSettings *style_settings;
+    QGSettings *icon_theme_settings;
+
     QPushButton *btnNorScan ;
     QPushButton *btnBeautify;
     QPushButton *btnRectify;
@@ -79,7 +84,7 @@ private:
     QLabel *labBeautify;
     QLabel *labRectify;
     QLabel *labOrc;
-    QFrame *line1;
+    QFrame *line1; // 左边第一个竖线，已屏蔽
     QFrame *line2;
     QVBoxLayout *vBoxLay1;
     QVBoxLayout *vBoxLay2;
@@ -98,6 +103,7 @@ private slots:
     void onBtnRectifyClicked();
     void onBtnBeautyClicked();
     void scanResult(int ret);
+    void funcbar_style_changed(QString); // 系统主题样式变更
 
 Q_SIGNALS:
     void sendOrcBegin();

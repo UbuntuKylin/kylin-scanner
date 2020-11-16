@@ -25,7 +25,6 @@
 #include <QLabel>
 #include <QPainter>
 #include <QPicture>
-#include "kylinLog.h"
 
 class RealTimeLbl : public QLabel
 {

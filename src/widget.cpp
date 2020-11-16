@@ -21,20 +21,26 @@
 #include <QLabel>
 #include <QTranslator>
 
-bool device = true;
+bool device = false;
 
 Widget::Widget(QWidget *parent)
     : QWidget(parent)
+    , style_settings (new QGSettings(ORG_UKUI_STYLE))
+    , icon_theme_settings (new QGSettings(ORG_UKUI_STYLE))
+    , pTitleBar (new TitleBar())
+    , line (new QFrame())
+    , pFuncBar (new  FuncBar())
+    , pScanSet (new ScanSet())
+    , pScandisplay (new ScanDisplay())
+    , pHboxLayout (new QHBoxLayout())
+    , pLayout (new QVBoxLayout())
 {
     // 自定义设置窗口
     setWindowFlags (Qt::FramelessWindowHint | windowFlags());
     setWindowTitle (tr("kylin-scanner")); // For system tray text
     setWindowIcon (QIcon::fromTheme("scanner"));
 
-    style_settings = new QGSettings(ORG_UKUI_STYLE);
     stylelist << STYLE_NAME_KEY_DARK << STYLE_NAME_KEY_BLACK << STYLE_NAME_KEY_DEFAULT;
-
-    icon_theme_settings = new QGSettings(ORG_UKUI_STYLE);
     iconthemelist << ICON_THEME_KEY_BASIC << ICON_THEME_KEY_CLASSICAL << ICON_THEME_KEY_DEFAULT;
 
 #ifdef DEBUG_EDIT
@@ -46,35 +52,43 @@ Widget::Widget(QWidget *parent)
 
     resize(860, 680);
 
-//    setStyleSheet("QWidget{border-bottom-left-radius:5px;border-bottom-right-radius:5px;}");
-    // 设置窗口背景
-    QPalette pal(palette());
-    pal.setColor(QPalette::Background, QColor(47, 44, 43));
-    setAutoFillBackground(true);
-    setPalette(pal);
-
-    line =  new QFrame();
     line->setObjectName(QString::fromUtf8("line"));
     line->setGeometry(QRect(0, 32, 860, 1));
     line->setFrameShape(QFrame::HLine);
-    line->setStyleSheet("QFrame{color:rgb(32,30,29)}");
+    line->hide ();
 
-    pTitleBar = new TitleBar();
+#ifdef DEBUG_EDIT
+#else
+        // 未扫描时，左下角的发送邮件和另存为等所有设置都不能点击
+        pScanSet->setKylinScanSetNotEnable();
+#endif
+
+    if (stylelist.contains(style_settings->get(STYLE_NAME).toString())) {
+    // 设置窗口背景
+        QPalette pal(palette());
+        pal.setColor(QPalette::Background, QColor(47, 44, 43));
+        setAutoFillBackground(true);
+        setPalette(pal);
+
+        line->setStyleSheet("QFrame{color:#201E1D}");
+    } else {
+        QPalette pal(palette());
+        pal.setColor(QPalette::Background, QColor(255, 255, 255));
+        setAutoFillBackground(true);
+        setPalette(pal);
+
+        line->setStyleSheet("QFrame{color:#DCDCDC}");
+    }
+
     installEventFilter(pTitleBar);
-
-    pFuncBar = new  FuncBar();
     installEventFilter(pFuncBar);
-    pScanSet = new ScanSet() ;
     installEventFilter(pScanSet);
-    pScandisplay = new ScanDisplay();
 
-    pHboxLayout = new QHBoxLayout();
     pHboxLayout->setSpacing(0); // 需要先清空spacing，不然addSpacing会出问题
     pHboxLayout->addWidget(pScanSet);
     pHboxLayout->addWidget(pScandisplay);
     pHboxLayout->setContentsMargins(0,0,0,0); // 设置窗口左上右下边距
 
-    pLayout = new QVBoxLayout();
     pLayout->setSpacing(0);
     pLayout->addWidget(pTitleBar);
     pLayout->addWidget(line);
@@ -84,17 +98,9 @@ Widget::Widget(QWidget *parent)
 
     // 设置窗口圆角
     setWindowBorderRadius();
-
     setLayout(pLayout);
 
     // For save
-
-#ifdef DEBUG_EDIT
-#else
-    // 未扫描时，左下角的发送邮件和另存为等所有设置都不能点击
-    pScanSet->setKylinScanSetNotEnable();
-#endif
-
     connect(pScanSet,&ScanSet::saveImageSignal,this,&Widget::saveImage);
 
     // For ORC
@@ -128,7 +134,6 @@ Widget::Widget(QWidget *parent)
 
     // For icon theme change style
     connect(icon_theme_settings,SIGNAL(changed(QString)),this,SLOT(icon_theme_changed(QString)));
-    connect(icon_theme_settings,SIGNAL(changed(QString)), pTitleBar, SLOT(titlebar_icon_theme_changed(QString)));
 }
 
 Widget::~Widget()
@@ -228,11 +233,10 @@ void Widget::saveToPdf(QImage img, QString pathName)
  */
 void Widget::resultDetail(bool ret)
 {
-    MYLOG <<"result_detail";
+    qDebug() <<"result_detail";
 
     if(ret)
     {
-
         device = true;
         pScanSet->setKylinComboBox(false);
         pScanSet->setKylinLable();
@@ -250,7 +254,7 @@ void Widget::resultDetail(bool ret)
 
 void Widget::saveImage(QString fileName)
 {
-    MYLOG << "Save filename: " << fileName;
+    qDebug() << "Save filename: " << fileName;
     QImage *img = NULL;
     img = pScandisplay->imageSave(fileName);
     if(img)
@@ -281,12 +285,12 @@ void Widget::saveScanFile()
     img.load("/tmp/scanner/scan.pnm");
 #endif
     QString pathName = pScanSet->getTextLocation() + "/" + pScanSet->getTextName();
-    MYLOG <<"pathName:"<<pathName;
+    qDebug() <<"pathName:"<<pathName;
     QString format = pScanSet->getTextFormat();
     if ((format == "jpg") || (format == "png") || (format == "bmp"))
     {
         QString newformat = "." + format;
-        MYLOG <<"newformat:"<<newformat;
+        qDebug() <<"newformat:"<<newformat;
         if (pathName.endsWith(newformat,Qt::CaseSensitive))
         {
             img.save(pathName);
@@ -294,18 +298,18 @@ void Widget::saveScanFile()
         else
         {
             pathName += newformat;
-            MYLOG <<"pathName:"<<pathName;
+            qDebug() <<"pathName:"<<pathName;
             img.save(pathName);
         }
     }
     else if (format == "pdf")
     {
         QString newformat = "." + format;
-        MYLOG <<"newformat:"<<newformat;
+        qDebug() <<"newformat:"<<newformat;
         if (!pathName.endsWith(newformat,Qt::CaseSensitive))
         {
             pathName += newformat;
-            MYLOG <<"pathName:"<<pathName;
+            qDebug() <<"pathName:"<<pathName;
         }
         saveToPdf(img,pathName);
     }
@@ -320,7 +324,8 @@ void Widget::saveScanFile()
  */
 void Widget::scanResult(bool ret)
 {
-    MYLOG <<"scan_result";
+    qDebug() <<"ret = " << ret;
+    cout << "scan_result";
     KylinSane &instance = KylinSane::getInstance();
 
 #ifdef DEBUG_EDIT
@@ -343,13 +348,6 @@ void Widget::scanResult(bool ret)
 
         bool retStatus = instance.getKylinSaneStatus();
         resultDetail(retStatus);
-
-        /*
-        pScanSet->setKylinComboBox();
-        pScanSet->setKylinLable();
-        pFuncBar->setBtnScanEnable();
-        pScanSet->setKylinScanSetEnable();
-        */
     }
     else
     {
@@ -369,7 +367,7 @@ void Widget::scanResult(bool ret)
  */
 void Widget::scanResultDetail(bool ret)
 {
-    MYLOG <<"scan_result_detail";
+    qDebug() << "ret = " << ret;
 
 #ifdef DEBUG_EDIT
     {
@@ -426,24 +424,48 @@ void Widget::setWindowBorderRadius()
 
 void Widget::style_changed(QString)
 {
-    MYLOG << "style_changed";
+    qDebug() << "style_changed";
     if (stylelist.contains(style_settings->get(STYLE_NAME).toString())) {
         // 黑色主题或默认主题
-        MYLOG << "ukui-black";
+        qDebug() << "ukui-black";
+
+        QPalette pal(palette());
+        pal.setColor(QPalette::Background, QColor(47, 44, 43));
+        setAutoFillBackground(true);
+        setPalette(pal);
+
+        line->setStyleSheet("QFrame{color:#201E1D}");
+
     } else {
         // 白色主题
-        MYLOG << "ukui-white";
+        qDebug() << "ukui-white";
+        QPalette pal(palette());
+        pal.setColor(QPalette::Background, QColor(255, 255, 255));
+        setAutoFillBackground(true);
+        setPalette(pal);
+
+        line->setStyleSheet("QFrame{color:#DCDCDC}");
+    }
+    if (device)
+    {
+        //pScanSet->setKylinComboBox(false);
+        pScanSet->setKylinLable();
+        pFuncBar->setBtnScanEnable();
+        pScanSet->setKylinScanSetEnable();
+    } else {
+        pScanSet->setKylinScanSetNotEnable();
+        pFuncBar->setKylinScanSetNotEnable();
     }
 }
 
 void Widget::icon_theme_changed(QString)
 {
-    MYLOG << "icon_theme_changed";
+    qDebug() << "icon_theme_changed";
     if (iconthemelist.contains (icon_theme_settings->get(ICON_THEME_NAME).toString())) {
-        MYLOG << "icon-theme: " << icon_theme_settings->get(ICON_THEME_NAME).toString();
+        qDebug() << "icon-theme: " << icon_theme_settings->get(ICON_THEME_NAME).toString();
         setWindowIcon (QIcon::fromTheme("scanner"));
     } else {
-        MYLOG << "default eeed";
+        qDebug() << "default eeed";
     }
 }
 
@@ -452,22 +474,22 @@ void CommonScanThread::run()
     KylinSane &instance = KylinSane::getInstance();
 //again:
     do {
-        MYLOG << "begin findScanDevice()";
+        qDebug() << "begin findScanDevice()";
         instance.findScanDevice();
 
         //instance.open_device(0);
 
-        //MYLOG << instance.getKylinSaneResolutions();
+        //qDebug() << instance.getKylinSaneResolutions();
         if(instance.getKylinSaneStatus() == false)
         {
             emit scanFinished(false);
-            MYLOG << "scan finished!";
+            qDebug() << "scan finished!";
         }
         else
         {
             emit scanFinished(true);
         }
-    } while (!instance.getKylinSaneStatus());
+    } while (!instance.getKylinSaneStatus ());
 
     quit();
 }

@@ -25,17 +25,16 @@ Files: Doxyfile
        clear.sh
        kylin-scanner.pro
        src/src.pro
-       src/embelish.cpp
-       src/embelish.h
+       src/beauty.cpp
+       src/beauty.h
        src/realTimelbl.cpp
        src/realTimelbl.h
        src/funcBar.cpp
        src/funcBar.h
        src/kylinCmb.cpp
        src/kylinCmb.h
-       src/kylinLbl.cpp
-       src/kylinLbl.h
-       src/kylinLog.h
+       src/tailorLabel.cpp
+       src/tailorLabel.h
        src/kylinSane.cpp
        src/kylinSane.h
        src/main.cpp
@@ -48,6 +47,7 @@ Files: Doxyfile
        src/sendMail.cpp
        src/sendMail.h
        src/theme.h
+       src/theme.cpp
        src/titleBar.cpp
        src/titleBar.h
        src/waterMarkDlg.cpp

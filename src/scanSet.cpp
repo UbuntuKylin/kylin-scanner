@@ -22,63 +22,59 @@ QString curPath;
 
 ScanSet::ScanSet(QWidget *parent)
     : QWidget(parent)
+    , style_settings (new QGSettings(ORG_UKUI_STYLE))
+    , icon_theme_settings (new QGSettings(ORG_UKUI_STYLE))
+    , labDevice (new QLabel())
+    , labType (new QLabel())
+    , labColor (new QLabel())
+    , labResolution (new QLabel())
+    , labSize (new QLabel())
+    , labFormat (new QLabel())
+    , labName (new QLabel() )
+    , labLocation (new QLabel())
+    , line3 (new QFrame())
+    , line4 (new QFrame())
+    , btnMail (new QPushButton())
+    , btnSave (new QPushButton())
+    , btnLocation (new QPushButton())
+    , textDevice (new KylinCmb())
+    , textType (new QLabel())
+    , textColor (new KylinCmb())
+    , textResolution (new KylinCmb())
+    , textSize (new KylinCmb())
+    , textFormat (new KylinCmb())
+    , textName (new QLineEdit())
+    , hBoxDevice (new QHBoxLayout())
+    , hBoxType (new QHBoxLayout())
+    , hBoxColor (new QHBoxLayout())
+    , hBoxResolution (new QHBoxLayout())
+    , hBoxSize (new QHBoxLayout())
+    , hBoxFormat (new QHBoxLayout())
+    , hBoxName (new QHBoxLayout())
+    , hBoxLocation (new QHBoxLayout())
+    , hBoxLine3 (new QHBoxLayout())
+    , hBoxLine4 (new QHBoxLayout())
+    , hBoxMailText (new QHBoxLayout())
+    , hBoxScanSet (new QHBoxLayout())
+    , vBoxScanSet (new QVBoxLayout())
+    , vBoxScanSet1 (new QVBoxLayout())
 {
     setFixedWidth(260);
-  //  setFixedHeight(567);
-    labDevice = new QLabel();
-    labType = new QLabel();
-    labColor = new QLabel();
-    labResolution = new QLabel();
-    labSize = new QLabel();
-    labFormat = new QLabel();
-    labName = new QLabel() ;
-    labLocation = new QLabel();
 
-    line3 = new QFrame();
-    line4 = new QFrame();
+    stylelist << STYLE_NAME_KEY_DARK << STYLE_NAME_KEY_BLACK << STYLE_NAME_KEY_DEFAULT;
+    iconthemelist << ICON_THEME_KEY_BASIC << ICON_THEME_KEY_CLASSICAL << ICON_THEME_KEY_DEFAULT;
 
-    btnMail = new QPushButton();
-    btnSave = new QPushButton();
-    btnLocation = new QPushButton();
-
-    textDevice = new KylinCmb();
-    textType = new QLabel();
-    textColor = new KylinCmb();
-    textResolution = new KylinCmb();
-    textSize = new KylinCmb();
-    textFormat = new KylinCmb();
-    textName = new QLineEdit();
-
-    hBoxDevice = new QHBoxLayout();
-    hBoxType = new QHBoxLayout();
-    hBoxColor = new QHBoxLayout();
-    hBoxResolution = new QHBoxLayout();
-    hBoxSize = new QHBoxLayout();
-    hBoxFormat = new QHBoxLayout();
-    hBoxName = new QHBoxLayout();
-    hBoxLocation = new QHBoxLayout();
-    hBoxLine3 = new QHBoxLayout();
-    hBoxLine4 = new QHBoxLayout();
-    hBoxMailText = new QHBoxLayout();
-
-    vBoxScanSet = new QVBoxLayout(this);
-
-
-    line3 = new QFrame();
     line3->setObjectName(QString::fromUtf8("line3"));
     line3->setMaximumHeight(1);
     line3->setMaximumWidth(230);
     line3->setMinimumWidth(230);
     line3->setFrameShape(QFrame::HLine);
-    line3->setStyleSheet("QFrame{color:rgb(32,30,29)}"); // 分割线的颜色
 
-    line4 = new QFrame();
     line4->setObjectName(QString::fromUtf8("line4"));
     line4->setMaximumHeight(1);
     line4->setMaximumWidth(230);
     line4->setMinimumWidth(230);
     line4->setFrameStyle(QFrame::HLine);
-    line4->setStyleSheet("QFrame{color:rgb(32,30,29)}");
 
     btnMail->setText(tr("Send email to"));
     btnMail->setFixedSize(120,32);
@@ -91,18 +87,44 @@ ScanSet::ScanSet(QWidget *parent)
     btnLocation->setText(elideFont.elidedText(curPath,Qt::ElideRight,150));
     btnLocation->setFixedSize(180,32);
 
-    btnMail->setStyleSheet("QPushButton{background-color:rgb(32,30,29);border:1px solid #939393;color:rgb(232,232,232);border-radius:4px;}"
-                              "QPushButton:hover{border:none;background-color:#3D6BE5;border:rgb(147,147,147);color:rgb(232,232,232);border-radius:4px;}"
-                                "QPushButton:checked{border:none;background-color:#3D6BE5;border:rgb(147,147,147);color:rgb(232,232,232);border-radius:4px;}");
-    btnSave->setStyleSheet("QPushButton{background-color:rgb(32,30,29);border:1px solid #939393;color:rgb(232,232,232);border-radius:4px;}"
-                              "QPushButton:hover{border:none;background-color:#3D6BE5;color:rgb(232,232,232);border-radius:4px;}"
-                                "QPushButton:checked{border:none;background-color:#3D6BE5;color:rgb(232,232,232)border-radius:4px;}");
-    btnLocation->setStyleSheet("QPushButton{border:4px solid #0D0400;background-repeat:no-repeat;background-position:right;background-color:#0D0400;color:rgb(232,232,232);border-radius:4px;text-align:left;}");
     btnLocation->setIcon(QIcon::fromTheme("folder-open"));
     btnLocation->setLayoutDirection(Qt::LayoutDirection::RightToLeft);
 
     setKylinLable();
     setKylinComboBox(false);
+    if (stylelist.contains(style_settings->get(STYLE_NAME).toString())) {
+        // 背景颜色
+        QPalette pal(palette());
+        pal.setColor(QPalette::Background, QColor(32, 30, 29));
+        setAutoFillBackground(true);
+        setPalette(pal);
+
+        btnMail->setStyleSheet("QPushButton{background-color:rgb(32,30,29);border:1px solid #939393;color:rgb(232,232,232);border-radius:4px;}"
+                               "QPushButton:hover{border:none;background-color:#3D6BE5;border:rgb(147,147,147);color:rgb(232,232,232);border-radius:4px;}"
+                               "QPushButton:checked{border:none;background-color:#3D6BE5;border:rgb(147,147,147);color:rgb(232,232,232);border-radius:4px;}");
+        btnSave->setStyleSheet("QPushButton{background-color:rgb(32,30,29);border:1px solid #939393;color:rgb(232,232,232);border-radius:4px;}"
+                               "QPushButton:hover{border:none;background-color:#3D6BE5;color:rgb(232,232,232);border-radius:4px;}"
+                               "QPushButton:checked{border:none;background-color:#3D6BE5;color:rgb(232,232,232)border-radius:4px;}");
+        btnLocation->setStyleSheet("QPushButton{background-color:#0D0400;border:4px solid #0D0400;background-repeat:no-repeat;background-position:right;color:rgb(232,232,232);border-radius:4px;text-align:left;}");
+        line3->setStyleSheet("QFrame{color:#201E1D}");
+        line4->setStyleSheet("QFrame{color:#201E1D}");
+    } else {
+        QPalette pal(palette());
+        pal.setColor(QPalette::Background, QColor(249, 249, 249));
+        setAutoFillBackground(true);
+        setPalette(pal);
+
+        btnMail->setStyleSheet("QPushButton{background-color:#F9F9F9;border:1px solid #939393;color:#000000;border-radius:4px;}"
+                               "QPushButton:hover{border:none;background-color:#3D6BE5;border:rgb(147,147,147);color:#000000;border-radius:4px;}"
+                               "QPushButton:checked{border:none;background-color:#3D6BE5;border:rgb(147,147,147);color:#000000;border-radius:4px;}");
+        btnSave->setStyleSheet("QPushButton{background-color:#F9F9F9;border:1px solid #939393;color:#000000;border-radius:4px;}"
+                               "QPushButton:hover{border:none;background-color:#3D6BE5;color:#000000;border-radius:4px;}"
+                               "QPushButton:checked{border:none;background-color:#3D6BE5;color:#000000;border-radius:4px;}");
+        btnLocation->setStyleSheet("QPushButton{background-color:#F9F9F9;background-repeat:no-repeat;background-position:right;color:#000000;border-radius:4px;text-align:left;}");
+        line3->setStyleSheet("QFrame{color:#DCDCDC}");
+        line4->setStyleSheet("QFrame{color:#DCDCDC}");
+
+    }
     setKylinHBoxLayout();
 
     vBoxScanSet->setSpacing(0);
@@ -119,11 +141,6 @@ ScanSet::ScanSet(QWidget *parent)
     vBoxScanSet->addLayout(hBoxLine4);
     vBoxScanSet->addLayout(hBoxMailText);
     vBoxScanSet->setContentsMargins(0,0,0,0);
-
-    QPalette pal(palette());
-    pal.setColor(QPalette::Background, QColor(32, 30, 29));
-    setAutoFillBackground(true);
-    setPalette(pal);
 
     setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     setLayout(vBoxScanSet);
@@ -155,7 +172,7 @@ ScanSet::ScanSet(QWidget *parent)
     {
         instance.userInfo.color = "Gray";
     }
-    MYLOG << "userInfo.color = " << instance.userInfo.color;
+    qDebug() << "userInfo.color = " << instance.userInfo.color;
     instance.userInfo.color = curColor;
 
     curResolution = textResolution->currentText();
@@ -185,6 +202,9 @@ ScanSet::ScanSet(QWidget *parent)
     // For size changed
     connect(textSize, SIGNAL(currentTextChanged(QString)), this,
             SLOT(onTextSizeCurrentTextChanged(QString)));
+
+    connect(style_settings,SIGNAL(changed(QString)),this,
+            SLOT(scanset_style_changed(QString)));
 }
 
 ScanSet::~ScanSet()
@@ -257,7 +277,7 @@ void ScanSet::setKylinComboBox(bool curIndexChanged)
     if (!curIndexChanged) // 当选择设备时，索引发生改变，此时不应该按照读取的字符串进行默认设置
     {
         strListDevice = instance.getKylinSaneNames();
-        MYLOG << "sane names: " << strListDevice;
+        qDebug() << "sane names: " << strListDevice;
         setKylinComboBoxAttributes(textDevice, strListDevice);
     }
 
@@ -334,7 +354,7 @@ void ScanSet::setKylinComboBoxScanDeviceName()
 
     // For  default device
     strListDevice = instance.getKylinSaneNames();
-    MYLOG << "sane names: " << strListDevice;
+    qDebug() << "sane names: " << strListDevice;
     setKylinComboBoxAttributes(textDevice, strListDevice);
 }
 
@@ -360,27 +380,35 @@ void ScanSet::setKylinScanSetNotEnable()
         textFormat->colorGray();
 
         textName->setEnabled(false);
-        textName->setStyleSheet("QLineEdit{border:1px solid #0D0400;background-color:rgb(15,08,01);color:gray;border-radius:4px;}");
+
+        if (stylelist.contains(style_settings->get(STYLE_NAME).toString())) {
+            textName->setStyleSheet("QLineEdit{border:1px solid #0D0400;background-color:rgb(15,08,01);color:gray;border-radius:4px;}");
+            textType->setStyleSheet("QLabel{border:1px solid #0D0400;background-color:rgb(15,08,01);color:gray;border-radius:4px;}");
+            btnLocation->setStyleSheet("QPushButton{border:4px solid #0D0400;background-repeat:no-repeat;background-position:right;background-color:#0D0400;color:gray;border-radius:4px;text-align:left;}");
+            btnMail->setStyleSheet("QPushButton{background-color:rgb(32,30,29);border:1px solid #939393;color:gray;border-radius:4px;}"
+                                   "QPushButton:hover{border:none;background-color:#3D6BE5;border:rgb(147,147,147);color:rgb(232,232,232);border-radius:4px;}"
+                                   "QPushButton:checked{border:none;background-color:#3D6BE5;border:rgb(147,147,147);color:rgb(232,232,232);border-radius:4px;}");
+            btnSave->setStyleSheet("QPushButton{background-color:rgb(32,30,29);border:1px solid #939393;color:gray;border-radius:4px;}"
+                                   "QPushButton:hover{border:none;background-color:#3D6BE5;border:rgb(147,147,147);color:rgb(232,232,232);border-radius:4px;}"
+                                   "QPushButton:checked{border:none;background-color:#3D6BE5;border:rgb(147,147,147);color:rgb(232,232,232);border-radius:4px;}");
+            //textDevice->colorGray (); // 主题颜色变换
+        } else {
+            textType->setStyleSheet("QLabel{background-color:#E7E7E7;color:gray;border-radius:4px;}");
+            textName->setStyleSheet("QLineEdit{background-color:#E7E7E7;color:gray;border-radius:4px;}");
+            btnLocation->setStyleSheet("QPushButton{background-color:#E7E7E7;background-repeat:no-repeat;background-position:right;color:gray;border-radius:4px;text-align:left;}");
+            btnMail->setStyleSheet("QPushButton{background-color:#F9F9F9;border:1px solid #8E8E8E;color:gray;opacity:0.85;border-radius:4px;}"
+                                   "QPushButton:hover{border:none;background-color:#3D6BE5;border:rgb(147,147,147);color:rgb(232,232,232);border-radius:4px;}"
+                                   "QPushButton:checked{border:none;background-color:#3D6BE5;border:rgb(147,147,147);color:rgb(232,232,232);border-radius:4px;}");
+            btnSave->setStyleSheet("QPushButton{background-color:#F9F9F9;border:1px solid #8E8E8E;color:gray;opacity:0.85;border-radius:4px;}"
+                                   "QPushButton:hover{border:none;background-color:#3D6BE5;border:rgb(147,147,147);color:rgb(232,232,232);border-radius:4px;}"
+                                   "QPushButton:checked{border:none;background-color:#3D6BE5;border:rgb(147,147,147);color:rgb(232,232,232);border-radius:4px;}");
+            //textDevice->colorGray (); // 主题颜色变换
+        }
 
         btnLocation->setEnabled(false);
-        btnLocation->setStyleSheet("QPushButton{border:4px solid #0D0400;background-repeat:no-repeat;background-position:right;background-color:#0D0400;color:gray;border-radius:4px;text-align:left;}");
-
         btnMail->setEnabled(false);
-        btnMail->setStyleSheet("QPushButton{background-color:rgb(32,30,29);border:1px solid #939393;color:gray;border-radius:4px;}"
-                              "QPushButton:hover{border:none;background-color:#3D6BE5;border:rgb(147,147,147);color:rgb(232,232,232);border-radius:4px;}"
-                                "QPushButton:checked{border:none;background-color:#3D6BE5;border:rgb(147,147,147);color:rgb(232,232,232);border-radius:4px;}");
-
         btnSave->setEnabled(false);
-        btnSave->setStyleSheet("QPushButton{background-color:rgb(32,30,29);border:1px solid #939393;color:gray;border-radius:4px;}"
-                              "QPushButton:hover{border:none;background-color:#3D6BE5;border:rgb(147,147,147);color:rgb(232,232,232);border-radius:4px;}"
-                                "QPushButton:checked{border:none;background-color:#3D6BE5;border:rgb(147,147,147);color:rgb(232,232,232);border-radius:4px;}");
-
-//        textDevice->setStyleSheet("QLabel{border:1px solid #0D0400;background-color:rgb(15,08,01);color:gray;border-radius:4px;}");
-//        textDevice->setEnabled(false);
-//        textDevice->colorGray();
-
         textType->setEnabled(false);
-        textType->setStyleSheet("QLabel{border:1px solid #0D0400;background-color:rgb(15,08,01);color:gray;border-radius:4px;}");
     }
 }
 
@@ -391,27 +419,45 @@ void ScanSet::setKylinScanSetNotEnable()
 void ScanSet::setKylinScanSetBtnNotEnable()
 {
     btnMail->setEnabled(false);
-    btnMail->setStyleSheet("QPushButton{background-color:rgb(32,30,29);border:1px solid #939393;color:gray;border-radius:4px;}"
-                          "QPushButton:hover{border:none;background-color:#3D6BE5;border:rgb(147,147,147);color:rgb(232,232,232);border-radius:4px;}"
-                            "QPushButton:checked{border:none;background-color:#3D6BE5;border:rgb(147,147,147);color:rgb(232,232,232);border-radius:4px;}");
-
     btnSave->setEnabled(false);
-    btnSave->setStyleSheet("QPushButton{background-color:rgb(32,30,29);border:1px solid #939393;color:gray;border-radius:4px;}"
-                          "QPushButton:hover{border:none;background-color:#3D6BE5;border:rgb(147,147,147);color:rgb(232,232,232);border-radius:4px;}"
-                            "QPushButton:checked{border:none;background-color:#3D6BE5;border:rgb(147,147,147);color:rgb(232,232,232);border-radius:4px;}");
+    if (stylelist.contains(style_settings->get(STYLE_NAME).toString())) {
+        btnMail->setStyleSheet("QPushButton{background-color:rgb(32,30,29);border:1px solid #939393;color:gray;border-radius:4px;}"
+                               "QPushButton:hover{border:none;background-color:#3D6BE5;border:rgb(147,147,147);color:gray;border-radius:4px;}"
+                               "QPushButton:checked{border:none;background-color:#3D6BE5;border:rgb(147,147,147);color:gray;border-radius:4px;}");
+
+        btnSave->setStyleSheet("QPushButton{background-color:rgb(32,30,29);border:1px solid #939393;color:gray;border-radius:4px;}"
+                               "QPushButton:hover{border:none;background-color:#3D6BE5;border:rgb(147,147,147);color:gray;border-radius:4px;}"
+                               "QPushButton:checked{border:none;background-color:#3D6BE5;border:rgb(147,147,147);color:gray;border-radius:4px;}");
+    } else {
+        btnMail->setStyleSheet("QPushButton{background-color:#CCCCCC;border:1px solid #8E8E8E;color:#000000;opacity:0.85;border-radius:4px;}"
+                               "QPushButton:hover{border:none;background-color:#3D6BE5;border:rgb(147,147,147);color:gray;border-radius:4px;}"
+                               "QPushButton:checked{border:none;background-color:#3D6BE5;border:rgb(147,147,147);color:gray;border-radius:4px;}");
+        btnSave->setStyleSheet("QPushButton{background-color:#CCCCCC;border:1px solid #8E8E8E;color:#000000;opacity:0.85;border-radius:4px;}"
+                               "QPushButton:hover{border:none;background-color:#3D6BE5;border:rgb(147,147,147);color:gray;border-radius:4px;}"
+                               "QPushButton:checked{border:none;background-color:#3D6BE5;border:rgb(147,147,147);color:gray;border-radius:4px;}");
+    }
 }
 
 void ScanSet::setKylinScanSetBtnEnable()
 {
     btnMail->setEnabled(true);
-    btnMail->setStyleSheet("QPushButton{background-color:rgb(32,30,29);border:1px solid #939393;color:rgb(232,232,232);border-radius:4px;}"
-                              "QPushButton:hover{border:none;background-color:#3D6BE5;border:rgb(147,147,147);color:rgb(232,232,232);border-radius:4px;}"
-                                "QPushButton:checked{border:none;background-color:#3D6BE5;border:rgb(147,147,147);color:rgb(232,232,232);border-radius:4px;}");
-
     btnSave->setEnabled(true);
-    btnSave->setStyleSheet("QPushButton{background-color:rgb(32,30,29);border:1px solid #939393;color:rgb(232,232,232);border-radius:4px;}"
-                              "QPushButton:hover{border:none;background-color:#3D6BE5;color:rgb(232,232,232);border-radius:4px;}"
-                                "QPushButton:checked{border:none;background-color:#3D6BE5;color:rgb(232,232,232)border-radius:4px;}");
+    if (stylelist.contains(style_settings->get(STYLE_NAME).toString())) {
+        btnMail->setStyleSheet("QPushButton{background-color:rgb(32,30,29);border:1px solid #939393;color:rgb(232,232,232);border-radius:4px;}"
+                               "QPushButton:hover{border:none;background-color:#3D6BE5;border:rgb(147,147,147);color:rgb(232,232,232);border-radius:4px;}"
+                               "QPushButton:checked{border:none;background-color:#3D6BE5;border:rgb(147,147,147);color:rgb(232,232,232);border-radius:4px;}");
+
+        btnSave->setStyleSheet("QPushButton{background-color:rgb(32,30,29);border:1px solid #939393;color:rgb(232,232,232);border-radius:4px;}"
+                               "QPushButton:hover{border:none;background-color:#3D6BE5;color:rgb(232,232,232);border-radius:4px;}"
+                               "QPushButton:checked{border:none;background-color:#3D6BE5;color:rgb(232,232,232)border-radius:4px;}");
+    } else {
+        btnMail->setStyleSheet("QPushButton{background-color:#F9F9F9;border:1px solid #8E8E8E;color:#000000;opacity:0.85;border-radius:4px;}"
+                               "QPushButton:hover{border:none;background-color:#3D6BE5;border:rgb(147,147,147);color:rgb(232,232,232);border-radius:4px;}"
+                               "QPushButton:checked{border:none;background-color:#3D6BE5;border:rgb(147,147,147);color:rgb(232,232,232);border-radius:4px;}");
+        btnSave->setStyleSheet("QPushButton{background-color:#F9F9F9;border:1px solid #8E8E8E;color:#000000;opacity:0.85;border-radius:4px;}"
+                               "QPushButton:hover{border:none;background-color:#3D6BE5;border:rgb(147,147,147);color:rgb(232,232,232);border-radius:4px;}"
+                               "QPushButton:checked{border:none;background-color:#3D6BE5;border:rgb(147,147,147);color:rgb(232,232,232);border-radius:4px;}");
+    }
 }
 
 void ScanSet::setKylinScanSetEnable()
@@ -439,12 +485,13 @@ void ScanSet::setKylinScanSetEnable()
         textFormat->colorNormal();
 
         textName->setEnabled(true);
-
         btnLocation->setEnabled(true);
-        btnLocation->setStyleSheet("QPushButton{border:4px solid #0D0400;background-repeat:no-repeat;background-position:right;background-color:#0D0400;color:rgb(232,232,232);border-radius:4px;text-align:left;}");
 
-        //btnMail->setEnabled(true);
-        //btnSave->setEnabled(true);
+        if (stylelist.contains(style_settings->get(STYLE_NAME).toString())) {
+            btnLocation->setStyleSheet("QPushButton{border:4px solid #0D0400;background-position:right;background-color:#0D0400;color:rgb(232,232,232);border-radius:4px;text-align:left;}");
+        } else {
+            btnLocation->setStyleSheet("QPushButton{background-color:#E7E7E7;background-position:right;color:#000000;border-radius:4px;text-align:left;}");
+        }
     }
 }
 
@@ -490,21 +537,36 @@ void ScanSet::setKylinLable()
     setFontSize(labLocation,10);
     setKylinLabelAttributes(labLocation);
 
+    textType->setFixedSize(180,32);
+    textName->setText("scanner01");
+    textName->setFixedSize(180,32);
+
     if(!device_status)
     {
         // No find scan device
         textType->setText(tr("Device type"));
-        textType->setStyleSheet("QLabel{border:1px solid #0D0400;background-color:rgb(15,08,01);color:rgb(232,232,232);border-radius:4px;}");
-    }
-    else {
-        textType->setText(instance.getKylinSaneType());
-        textType->setStyleSheet("QLabel{border:1px solid #0D0400;background-color:rgb(15,08,01);color:rgb(232,232,232);border-radius:4px;}");
-    }
-    textType->setFixedSize(180,32);
 
-    textName->setText("scanner01");
-    textName->setStyleSheet("QLineEdit{border:1px solid #0D0400;background-color:rgb(15,08,01);color:rgb(232,232,232);border-radius:4px;}");
-    textName->setFixedSize(180,32);
+        if (stylelist.contains(style_settings->get(STYLE_NAME).toString())) {
+            textName->setStyleSheet("QLineEdit{border:1px solid #0D0400;background-color:rgb(15,08,01);color:gray;border-radius:4px;}");
+            textType->setStyleSheet("QLabel{border:1px solid #0D0400;background-color:rgb(15,08,01);color:gray;border-radius:4px;}");
+            btnLocation->setStyleSheet("QPushButton{border:4px solid #0D0400;background-repeat:no-repeat;background-position:right;background-color:#0D0400;color:gray;border-radius:4px;text-align:left;}");
+        } else {
+            textType->setStyleSheet("QLabel{background-color:#E7E7E7;color:#000000;border-radius:4px;}");
+            textName->setStyleSheet("QLineEdit{background-color:#E7E7E7;color:#000000;border-radius:4px;}");
+            btnLocation->setStyleSheet("QPushButton{background-color:#E7E7E7;background-repeat:no-repeat;background-position:right;color:gray;border-radius:4px;text-align:left;}");
+        }
+
+    } else {
+        textType->setText(instance.getKylinSaneType());
+
+        if (stylelist.contains(style_settings->get(STYLE_NAME).toString())) {
+            textType->setStyleSheet("QLabel{border:1px solid #0D0400;background-color:rgb(15,08,01);color:rgb(232,232,232);border-radius:4px;}");
+            textName->setStyleSheet("QLineEdit{border:1px solid #0D0400;background-color:rgb(15,08,01);color:rgb(232,232,232);border-radius:4px;}");
+        } else {
+            textType->setStyleSheet("QLabel{background-color:#E7E7E7;color:#000000;border-radius:4px;}");
+            textName->setStyleSheet("QLineEdit{background-color:#E7E7E7;color:#000000;border-radius:4px;}");
+        }
+    }
 }
 
 /**
@@ -514,7 +576,11 @@ void ScanSet::setKylinLable()
 void ScanSet::setKylinLabelAttributes(QLabel *label)
 {
     label->setAlignment(Qt::AlignRight|Qt::AlignVCenter);
-    label->setStyleSheet("color:rgb(232,232,232)");
+    if (stylelist.contains(style_settings->get(STYLE_NAME).toString())) {
+        label->setStyleSheet("color:rgb(232,232,232)");
+    } else {
+        label->setStyleSheet("color:#000000");
+    }
     label->setFixedSize(40,32);
 }
 
@@ -551,8 +617,6 @@ void ScanSet::setKylinHBoxLayout()
 //    setKylinHBoxLayoutAttributes(hBoxName, labName, textName);
     hBoxName->setContentsMargins(0,4,0,4);
 
-//    setKylinHBoxLayoutAttributes(hBoxLocation, labLocation, btnLocation);
-//    hBoxLocation->setContentsMargins(0,4,0,4);
     hBoxLocation->setSpacing(0);
     hBoxLocation->addSpacing(16);
     hBoxLocation->addWidget(labLocation);
@@ -660,14 +724,14 @@ void ScanSet::onBtnLocationClicked()
 void ScanSet::onBtnMailClicked()
 {
     AppList * maillist = getAppIdList(MAILTYPE);
-    MYLOG << "Get Applist success.";
+    qDebug() << "Get Applist success.";
 
     if(!maillist)
     {
-        MYLOG << "maillist is null";
+        qDebug() << "maillist is null";
         NoMail *dialog = new NoMail(this);
         int ret= dialog->exec();// 以模态方式显示对话框，用户关闭对话框时返回 DialogCode值
-        MYLOG << "ret = " << ret;
+        qDebug() << "ret = " << ret;
         if(ret==QDialog::Accepted)
         {
             QProcess *process = new QProcess();
@@ -677,11 +741,11 @@ void ScanSet::onBtnMailClicked()
     }
     else
     {
-        MYLOG << "maillist is not null";
+        qDebug() << "maillist is not null";
         SendMail *dialog = new SendMail(this);
-        MYLOG << "begin";
+        qDebug() << "begin";
         dialog->setBtnList();
-        MYLOG << "after";
+        qDebug() << "after";
         dialog->exec();
     }
 }
@@ -704,10 +768,10 @@ void ScanSet::onBtnSaveClicked()
     //保存文件
     QString dlgTitle=tr("Save as ..."); //对话框标题
     //QString filter="文本文件(*.txt);;h文件(*.h);;C++文件(.cpp);;所有文件(*.*)"; //文件过滤器
-    MYLOG << "current format index = " << textFormat->currentIndex ()
+    qDebug() << "current format index = " << textFormat->currentIndex ()
           << "current format: " << textFormat->currentText ();
 
-    MYLOG << "flagSave = " << flag;
+    qDebug() << "flagSave = " << flag;
     if (flag == 1) // 进行OCR ，存储文本
     {
         pathName = curPath + "/" + textName->text() + ".txt";
@@ -721,7 +785,7 @@ void ScanSet::onBtnSaveClicked()
                                                        hashFormatFilter[textFormat->currentIndex ()]);
     }
 
-    MYLOG << "Save as: " << aFileName;
+    qDebug() << "Save as: " << aFileName;
     if (!aFileName.isEmpty())
         emit saveImageSignal(aFileName);
 }
@@ -734,8 +798,8 @@ void ScanSet::onTextDeviceCurrentTextChanged(QString device)
     instance.userInfo.name = device;
     int curTextLen = textDevice->currentText().length();
 
-    MYLOG << "device name: "<< instance.userInfo.name;
-    MYLOG << "textDevice->currentText = " << textDevice->currentText()
+    qDebug() << "device name: "<< instance.userInfo.name;
+    qDebug() << "textDevice->currentText = " << textDevice->currentText()
              << "length = " << curTextLen;
 
     if ( curTextLen >= 20)
@@ -751,7 +815,7 @@ void ScanSet::onTextDeviceCurrentTextChanged(QString device)
     {
         index = 0;
     }
-    MYLOG << "device index: " << index;
+    qDebug() << "device index: " << index;
     //char *deviceName =
 
     //int index = 1;
@@ -760,12 +824,14 @@ void ScanSet::onTextDeviceCurrentTextChanged(QString device)
     status = instance.getKylinSaneStatus();
     if (status)
     {
-        MYLOG << "open_device true";
+        qDebug() << "open_device true";
+        scanFlag = 1;
         emit openDeviceStatusSignal(true);
     }
     else
     {
-        MYLOG << "open_device false";
+        qDebug() << "open_device false";
+        scanFlag = 0;
         emit openDeviceStatusSignal(false);
     }
 }
@@ -802,19 +868,56 @@ void ScanSet::onTextColorCurrentTextChanged(QString color)
     {
         instance.userInfo.color = "Gray";
     }
-    MYLOG << "color: "<< instance.userInfo.color;
+    qDebug() << "color: "<< instance.userInfo.color;
 }
 
 void ScanSet::onTextResolutionCurrentTextChanged(QString resolution)
 {
     KylinSane & instance = KylinSane::getInstance();
     instance.userInfo.resolution = resolution;
-    MYLOG << "resolution: "<< instance.userInfo.resolution;
+    qDebug() << "resolution: "<< instance.userInfo.resolution;
 }
 
 void ScanSet::onTextSizeCurrentTextChanged(QString size)
 {
     KylinSane & instance = KylinSane::getInstance();
     instance.userInfo.size = size;
-    MYLOG << "size: "<< instance.userInfo.size;
+    qDebug() << "size: "<< instance.userInfo.size;
+}
+
+void ScanSet::scanset_style_changed(QString)
+{
+    setKylinLable();
+    if (stylelist.contains(style_settings->get(STYLE_NAME).toString())) {
+        // 背景颜色
+        QPalette pal(palette());
+        pal.setColor(QPalette::Background, QColor(32, 30, 29));
+        setAutoFillBackground(true);
+        setPalette(pal);
+
+        btnMail->setStyleSheet("QPushButton{background-color:rgb(32,30,29);border:1px solid #939393;color:rgb(232,232,232);border-radius:4px;}"
+                               "QPushButton:hover{border:none;background-color:#3D6BE5;border:rgb(147,147,147);color:rgb(232,232,232);border-radius:4px;}"
+                               "QPushButton:checked{border:none;background-color:#3D6BE5;border:rgb(147,147,147);color:rgb(232,232,232);border-radius:4px;}");
+        btnSave->setStyleSheet("QPushButton{background-color:rgb(32,30,29);border:1px solid #939393;color:rgb(232,232,232);border-radius:4px;}"
+                               "QPushButton:hover{border:none;background-color:#3D6BE5;color:rgb(232,232,232);border-radius:4px;}"
+                               "QPushButton:checked{border:none;background-color:#3D6BE5;color:rgb(232,232,232)border-radius:4px;}");
+        btnLocation->setStyleSheet("QPushButton{border:4px solid #0D0400;background-repeat:no-repeat;background-position:right;background-color:#0D0400;color:rgb(232,232,232);border-radius:4px;text-align:left;}");
+        line3->setStyleSheet("QFrame{color:#201E1D}");
+        line4->setStyleSheet("QFrame{color:#201E1D}");
+    } else {
+        QPalette pal(palette());
+        pal.setColor(QPalette::Background, QColor(249, 249, 249));
+        setAutoFillBackground(true);
+        setPalette(pal);
+
+        btnMail->setStyleSheet("QPushButton{background-color:#F9F9F9;border:1px solid #939393;color:#000000;border-radius:4px;}"
+                               "QPushButton:hover{border:none;background-color:#3D6BE5;border:rgb(147,147,147);color:#000000;border-radius:4px;}"
+                               "QPushButton:checked{border:none;background-color:#3D6BE5;border:rgb(147,147,147);color:#000000;border-radius:4px;}");
+        btnSave->setStyleSheet("QPushButton{background-color:#F9F9F9;border:1px solid #939393;color:#000000;border-radius:4px;}"
+                               "QPushButton:hover{border:none;background-color:#3D6BE5;color:#000000;border-radius:4px;}"
+                               "QPushButton:checked{border:none;background-color:#3D6BE5;color:#000000;border-radius:4px;}");
+        btnLocation->setStyleSheet("QPushButton{background-repeat:no-repeat;background-position:right;background-color:#E7E7E7;color:#000000;border-radius:4px;text-align:left;}");
+        line3->setStyleSheet("QFrame{color:#DCDCDC}");
+        line4->setStyleSheet("QFrame{color:#DCDCDC}");
+    }
 }

@@ -29,7 +29,7 @@
 #include <QVBoxLayout>
 #include <QPainter>
 #include <QBitmap>
-#include "kylinLog.h"
+#include "theme.h"
 
 class WaterMarkDialog : public QDialog
 {
@@ -40,7 +40,14 @@ public:
     ~WaterMarkDialog();
     QString getLineEdit();
 
+    void setWindowMask();
+
 private:
+    QStringList stylelist;
+    QStringList iconthemelist;
+
+    QGSettings *style_settings;
+    QGSettings *icon_theme_settings;
     QLabel *label;
     QLineEdit *lineedit;
     QFrame *line;
@@ -48,6 +55,10 @@ private:
     QPushButton *btnCancel;
     QHBoxLayout *hBoxLayout;
     QVBoxLayout *vBoxLayout;
+
+private slots:
+    void watermarkdlg_style_changed(QString); // 系统黑白主题样式变换
+
 };
 
 #endif // MARK_DIALOG_H

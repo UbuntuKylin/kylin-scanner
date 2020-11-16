@@ -22,37 +22,48 @@ QString outText;
 
 ScanDisplay::ScanDisplay(QWidget *parent)
     : QWidget(parent)
+    , style_settings (new QGSettings(ORG_UKUI_STYLE))
+    , icon_theme_settings (new QGSettings(ORG_UKUI_STYLE))
+    , timerScan (new QTimer())
+    , labInit (new QLabel())
+    , labConnectError (new QLabel())
+    , labConnectErrorText (new QLabel())
+    , labNormalLeft (new QLabel())
+    , labNormalRight (new QLabel())
+    , labEditLayout (new QLabel())
+    , labOrcLeft (new QLabel())
+    , labOrcRight (new QLabel())
+    , btnNormal (new QPushButton())
+    , btnEditLayout (new QPushButton())
+    , btnTailorLayout (new QPushButton())
+    , imgConnectError (new QImage())
+    , imgEditLayout (new QImage())
+    , imgTailor (new QImage())
+    , imgStack (new QImage())
+    , imgNormal (new QImage())
+    , imgBackup (new QImage())
+    , imgBeautify (new QImage())
+    , imgRectify (new QImage())
+    , vBoxConnectError (new QVBoxLayout())
+    , vBoxScanSet (new QVBoxLayout())
+    , vBoxOrc (new QVBoxLayout())
+    , hBoxNormal (new QHBoxLayout())
+    , hBoxEditLayout (new QHBoxLayout())
+    , widgetConnectError (new QWidget())
+    , widgetNormal (new QWidget())
+    , widgetEditLayout (new QWidget())
+    //, widgetTailor (new QWidget())
+    , widgetOrc (new QWidget())
+    , vStackedLayout (new QStackedLayout())
+    , editLayout (new EditBar())
+    , editLayoutTailor (new EditBar())
+    , scrollArea (new QScrollArea())
 {
     setFocusPolicy(Qt::StrongFocus);
     setMinimumSize(600,567);
-    labInit = new QLabel();
-    labConnectError = new QLabel();
-    labConnectErrorText = new QLabel();
-    labNormalLeft = new QLabel();
-    labNormalRight = new QLabel();
-    labEditLayout = new QLabel();
 
-    timerScan = new QTimer(this);
-
-    btnNormal = new QPushButton();
-    btnEditLayout = new QPushButton();
-
-    widgetConnectError = new QWidget();
-    widgetNormal = new QWidget();
-    widgetEditLayout = new QWidget();
-
-    imgConnectError = new QImage();
-    imgEditLayout = new QImage();
-    imgStack = new QImage();
-    imgNormal = new QImage();
-    imgBeautify = new QImage();
-    imgRectify = new QImage();
-    vBoxConnectError = new QVBoxLayout();
-    vBoxScanSet = new QVBoxLayout(this);
-    hBoxNormal = new QHBoxLayout();
-    hBoxEditLayout = new QHBoxLayout();
-
-    vStackedLayout = new QStackedLayout();
+    stylelist << STYLE_NAME_KEY_DARK << STYLE_NAME_KEY_BLACK << STYLE_NAME_KEY_DEFAULT;
+    iconthemelist << ICON_THEME_KEY_BASIC << ICON_THEME_KEY_CLASSICAL << ICON_THEME_KEY_DEFAULT;
 
     labConnectError->setParent(widgetConnectError);
     labConnectErrorText->setParent(widgetConnectError);
@@ -63,20 +74,13 @@ ScanDisplay::ScanDisplay(QWidget *parent)
     labNormalRight->setFixedWidth(40);
     labEditLayout->setMinimumSize(360,490);
 
-    labInit->setText(" ");
+    labInit->setText("");
+    //labInit->setCursor (Qt::BusyCursor);
 
-    imgConnectError->load(":/icon/icon/connect_device.png");
+    imgConnectError->load(":/icon/icon/index-icon.svg");
     labConnectError->setPixmap(QPixmap::fromImage(*imgConnectError));
     labConnectError->setAlignment(Qt::AlignHCenter|Qt::AlignBottom);
 
-    QFont ft;
-    ft.setPointSize(24);
-    labConnectErrorText->setFont(ft);
-    QPalette pa;
-    pa.setColor(QPalette::WindowText,QColor(232,232,232));
-    labConnectErrorText->setPalette(pa);
-    labConnectErrorText->setText(tr("Please connect to a scan device firstly !"));
-    labConnectErrorText->setAlignment(Qt::AlignHCenter|Qt::AlignTop);
 
     vBoxConnectError->setSpacing(0);
     vBoxConnectError->addStretch();
@@ -88,18 +92,11 @@ ScanDisplay::ScanDisplay(QWidget *parent)
     widgetConnectError->setLayout(vBoxConnectError);
 
     labNormalLeft->setParent(widgetNormal);
+    labNormalLeft->setAlignment(Qt::AlignCenter);
+
     labNormalRight->setParent(widgetNormal);
     btnNormal->setParent(widgetNormal);
     btnNormal->setFixedSize(12,30);
-    btnNormal->setStyleSheet("QPushButton{ "
-                                 "border-image: url(:/icon/icon/editBar/shrink-normal.svg);"
-                                 "border:none;"
-                                 "background-color:#0f0801;"
-                                 "border-radius:0px;"
-                                 "}");
-
-    labNormalLeft->setAlignment(Qt::AlignCenter);
-    labNormalRight->setStyleSheet("QLabel{background-color:#0f0801;}");
 
     hBoxNormal->setSpacing(0);
     hBoxNormal->addSpacing(93);
@@ -114,18 +111,13 @@ ScanDisplay::ScanDisplay(QWidget *parent)
     widgetNormal->setLayout(hBoxNormal);
 
 
-    editLayout = new EditBar();
     labEditLayout->setParent(widgetEditLayout);
-    btnEditLayout->setParent(widgetEditLayout);
-    editLayout->setParent(widgetEditLayout);
-
-
     labEditLayout->setAlignment(Qt::AlignCenter);
 
-
+    btnEditLayout->setParent(widgetEditLayout);
     btnEditLayout->setFixedSize(12,30);
-    btnEditLayout->setStyleSheet("QPushButton{border-image: url(:/icon/icon/editBar/shrink-editLayout.svg);border:none;background-color:#0f0801;border-radius:0px;}"
-                                 );
+    editLayout->setParent(widgetEditLayout);
+
 
     hBoxEditLayout->setSpacing(0);
     hBoxEditLayout->addSpacing(93);
@@ -144,11 +136,6 @@ ScanDisplay::ScanDisplay(QWidget *parent)
     vStackedLayout->addWidget(widgetConnectError);
     vStackedLayout->addWidget(labInit);
 
-    QPalette pal(palette());
-    pal.setColor(QPalette::Background, QColor(15, 8, 1));
-    setAutoFillBackground(true);
-    setPalette(pal);
-    setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
     vBoxScanSet->setSpacing(0);
     vBoxScanSet->addLayout(vStackedLayout);
@@ -156,6 +143,10 @@ ScanDisplay::ScanDisplay(QWidget *parent)
     setLayout(vBoxScanSet);
     vStackedLayout->setCurrentWidget(labInit);
     vStackedLayout->setContentsMargins(0,0,0,0);
+
+
+    initStyle ();
+
 
     // For switch page
     connect(btnNormal,SIGNAL(clicked()),this,SLOT(switchPage()));
@@ -178,6 +169,8 @@ ScanDisplay::ScanDisplay(QWidget *parent)
 
     // For timerScan
     connect(timerScan, SIGNAL(timeout()), this, SLOT(timerScanUpdate()));
+
+    connect(icon_theme_settings,SIGNAL(changed(QString)), this, SLOT(scandisplay_theme_changed(QString)));
 }
 
 /**
@@ -186,11 +179,11 @@ ScanDisplay::ScanDisplay(QWidget *parent)
  */
 void ScanDisplay::keyPressEvent(QKeyEvent *e)
 {
-    MYLOG << "key() = " << e->key();
+    qDebug() << "key() = " << e->key();
     if ((e->key() == Qt::Key_Return || e->key() == Qt::Key_Enter  || e->key() == Qt::Key_Space)
             && (vStackedLayout->currentWidget() == widgetTailor))
     {
-        MYLOG << "key() = " << e->key();
+        qDebug() << "key() = " << e->key();
         QImage newimage;
         int x1,y1,x2,y2;
         if(labTailor->getX1() <= labTailor->getX2())
@@ -227,6 +220,7 @@ void ScanDisplay::keyPressEvent(QKeyEvent *e)
         editLayout->btnTailor->setStyleSheet("QPushButton{border-image: url(:/icon/icon/editBar/tailor.svg);border:none;background-color:rgb(232,232,232);border-radius:0px;}"
                                   "QPushButton:hover{border-image: url(:/icon/icon/editBar/tailor-click.svg);border:none;background-color:rgb(232,232,232);border-radius:0px;}"
                                     "QPushButton:checked{border-image: url(:/icon/icon/editBar/tailor-click.svg);border:none;background-color:rgb(232,232,232);border-radius:0px;}");
+        flagTailor = 0;
     }
     if(e->key() == Qt::Key_Z && e->modifiers() ==  Qt::ControlModifier)
     {
@@ -328,11 +322,169 @@ void ScanDisplay::timerEvent(QTimerEvent *e)
 
     if (id == m_timeScanId)
     {
-        MYLOG << "timeScanId";
+        qDebug() << "timeScanId";
 //            labNormalLeft->height = 490;
 
 //            labNormalLeft->data = NULL; //图像信息
 //            labNormalLeft->update();
+    }
+}
+
+void ScanDisplay::initStyle()
+{
+    if (stylelist.contains(style_settings->get(STYLE_NAME).toString())) {
+        QPalette init_pacolor_black;
+        init_pacolor_black.setColor (QPalette::Background, QColor(15,8,1));
+        labInit->clear ();
+        labInit->setAutoFillBackground (true);
+        labInit->setPalette (init_pacolor_black);
+
+        QFont ft;
+        ft.setPointSize(24);
+
+        labConnectErrorText->setFont(ft);
+        labConnectErrorText->setText (tr("Please connect to a scan device firstly !"));
+        labConnectErrorText->setAlignment(Qt::AlignHCenter|Qt::AlignTop);
+        labConnectErrorText->setStyleSheet ("QLabel{background-color:rgb(15,8,1);"
+                                            "color:rgb(232,232,232);}");
+        QPalette connect_error_pacolor_black;
+        connect_error_pacolor_black.setColor (QPalette::Background, QColor(15,8,1));
+        labConnectError->setAutoFillBackground (true);
+        labConnectError->setPalette (connect_error_pacolor_black);
+
+        QPalette pal(palette());
+        pal.setColor(QPalette::Background, QColor(15, 8, 1));
+        setAutoFillBackground(true);
+        setPalette(pal);
+        setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+
+        btnEditLayout->setStyleSheet("QPushButton{border-image: url(:/icon/icon/editBar/shrink-editLayout.svg);border:none;background-color:#0f0801;border-radius:0px;}" );
+        btnNormal->setStyleSheet("QPushButton{ "
+                                 "border-image: url(:/icon/icon/editBar/shrink-normal.svg);"
+                                 "border:none;"
+                                 "background-color:#0f0801;"
+                                 "border-radius:0px;"
+                                 "}");
+        labNormalRight->setStyleSheet("QLabel{background-color:#0f0801;}");
+
+    } else {
+        QPalette connect_error_pacolor;
+        QPalette init_pacolor;
+        QFont ft;
+
+        ft.setPointSize(24);
+        labConnectErrorText->setFont(ft);
+        labConnectErrorText->setText (tr("Please connect to a scan device firstly !"));
+        labConnectErrorText->setAlignment(Qt::AlignHCenter|Qt::AlignTop);
+        labConnectErrorText->setStyleSheet ("QLabel{background-color:rgb(232,232,232);"
+                                            "color:rgb(15,8,1);}");
+
+        connect_error_pacolor.setColor (QPalette::Background, QColor(232,232,232));
+        labConnectError->setAutoFillBackground (true);
+        labConnectError->setPalette (connect_error_pacolor);
+
+        init_pacolor.setColor (QPalette::Background, QColor(232,232,232));
+        labInit->clear ();
+        labInit->setAutoFillBackground (true);
+        labInit->setPalette (init_pacolor);
+
+        QPalette pal(palette());
+        pal.setColor(QPalette::Background, QColor(232,232,232));
+        setAutoFillBackground(true);
+        this->setPalette(pal);
+        setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+
+        btnEditLayout->setStyleSheet("QPushButton{border-image: url(:/icon/icon/editBar/shrink-editLayout.svg);"
+                                     "border:none;background-color:#E7E7E7;border-radius:0px;}" );
+        btnNormal->setStyleSheet("QPushButton{ "
+                                 "border-image: url(:/icon/icon/editBar/shrink-normal.svg);"
+                                 "border:none;"
+                                 "background-color:#E7E7E7;"
+                                 "border-radius:0px;"
+                                 "}");
+        labNormalRight->setStyleSheet("QLabel{background-color:#E7E7E7;}");
+    }
+}
+
+void ScanDisplay::initStyleOrc()
+{
+    if (flagOrc == 1)
+    {
+        QHBoxLayout *hBoxOrc = new QHBoxLayout();
+        hBoxOrc->setSpacing(0);
+        hBoxOrc->addStretch();
+        hBoxOrc->addWidget(labOrcLeft);
+        hBoxOrc->addSpacing(24);
+        hBoxOrc->addWidget(scrollArea);
+        hBoxOrc->addStretch();
+        hBoxOrc->setContentsMargins(32,32,32,32);
+
+        widgetOrc->setLayout(hBoxOrc);
+        vStackedLayout->addWidget(widgetOrc);
+        vStackedLayout->setCurrentWidget(widgetOrc);
+    }
+
+    if (stylelist.contains(style_settings->get(STYLE_NAME).toString())) {
+        QPalette palette;
+        palette.setColor(QPalette::Background, QColor(192,253,123,100)); // palette可以模糊
+        labOrcLeft->setPalette(palette);
+
+        labOrcRight->setStyleSheet("background-color:rgb(15,8,1);color:rgb(255,255,255);border:1px solid #717171;");
+
+        scrollArea->setStyleSheet("QScrollBar:vertical {width:6px;background:#2f2c2b;margin:0px,0px,0px,0px;padding-top:0px;padding-bottom:0px;padding-right:3px;}"
+                                  "QScrollBar::handle:vertical {width:6px;background:rgba(255,255,255,50%);border-radius:3px;min-height:20;}"
+                                  "QScrollBar::handle:vertical:hover {width:6px;background:rgba(255,255,255,80%);border-radius:3px;min-height:20;}"
+                                  "QScrollBar::add-line:vertical {height:0px;width:0px;}"
+                                  "QScrollBar::sub-line:vertical {height:0px;width:0px;subcontrol-position:top;}"
+                                  );
+    } else {
+        QPalette palette;
+        palette.setColor(QPalette::Background, QColor(192,253,123,100)); // palette可以模糊
+        labOrcLeft->setPalette(palette);
+
+        labOrcRight->setStyleSheet("background-color:rgb(255,255,255);color:rgb(15,8,1);border:1px solid #FFFFFF;");
+
+        scrollArea->setStyleSheet("QScrollBar:vertical {width:6px;background:#E7E7E7;margin:0px,0px,0px,0px;padding-top:0px;padding-bottom:0px;padding-right:3px;}"
+                                  "QScrollBar::handle:vertical {width:6px;background:rgba(15,8,1,50%);border-radius:3px;min-height:20;}"
+                                  "QScrollBar::handle:vertical:hover {width:6px;background:rgba(15,8,1,80%);border-radius:3px;min-height:20;}"
+                                  "QScrollBar::add-line:vertical {height:0px;width:0px;}"
+                                  "QScrollBar::sub-line:vertical {height:0px;width:0px;subcontrol-position:top;}"
+                                  );
+    }
+}
+
+void ScanDisplay::initStyleTailor()
+{
+    if (flagTailor == 1)
+    {
+        widgetTailor = new QWidget(); // 需重新初始化，否则底部有原先的裁切图片
+
+        labTailor = new TailorLable();
+        labTailor->setMinimumSize(360,490);
+        labTailor->setParent(widgetTailor);
+        labTailor->setAlignment(Qt::AlignCenter);
+
+        hBoxTailor = new QHBoxLayout();
+        hBoxTailor->setSpacing(0);
+        hBoxTailor->addSpacing(93);
+        hBoxTailor->addStretch();
+        hBoxTailor->addWidget(labTailor);
+        hBoxTailor->addStretch();
+        hBoxTailor->addSpacing(93);
+        hBoxTailor->addWidget(editLayoutTailor);
+        hBoxTailor->addSpacing(2);
+        hBoxTailor->addWidget(btnTailorLayout);
+        hBoxTailor->setContentsMargins(0,45,0,32);
+        widgetTailor->setLayout(hBoxTailor);
+
+        vStackedLayout->addWidget(widgetTailor);
+        vStackedLayout->setCurrentWidget(widgetTailor);
+        *imgTailor = imgEditLayout->copy();
+
+        *imgStack = imgEditLayout->copy();
+        stack.push(*imgStack);
+        scaledNum = setPixmapScaled(*imgTailor,labTailor);
+        btnTailorLayout->setStyleSheet("QPushButton{border-image: url(:/icon/icon/editBar/shrink-editLayout.svg);border:none;background-color:#0f0801;border-radius:0px;}");
     }
 }
 
@@ -362,35 +514,33 @@ void ScanDisplay::symmetry()
 
 void ScanDisplay::addWatermark()
 {
-    MYLOG << "flagWaterMark   = " << flagWaterMark;
+    qDebug() << "flagWaterMark   = " << flagWaterMark;
     if (flagWaterMark  == 0)
     {
         flagWaterMark = 1;
-        imgBackup = new QImage();
         *imgBackup = imgEditLayout->copy();
     }
-    QString text;
-    WaterMarkDialog *dialog = new WaterMarkDialog(this);
-    int ret=dialog->exec();// 以模态方式显示对话框，用户关闭对话框时返回 DialogCode值
-    MYLOG << "ret = " << ret;
+    WaterMarkDialog *dialog = new WaterMarkDialog();
+    int ret = dialog->exec();// 以模态方式显示对话框，用户关闭对话框时返回 DialogCode值
+    qDebug() << "ret = " << ret;
 
     if (ret == QDialog::Accepted) //OK键被按下,对话框关闭，若设置了setAttribute(Qt::WA_DeleteOnClose)，对话框被释放，无法获得返回值
     { //OK键被按下，获取对话框上的输入，设置行数和列数
-        text = dialog->getLineEdit();
-        MYLOG << text;
+        QString text = dialog->getLineEdit();
+        qDebug() << text;
 
         *imgStack = imgEditLayout->copy();
         stack.push(*imgStack);
         *imgEditLayout = imgBackup->copy();
+
         QPainter painter(imgEditLayout);
-        int fontSize = 60, spacing = 20;
+        int fontSize = 60;
+        int spacing = 20;
         QFont font("华文黑体", fontSize, QFont::Thin);
-        QColor colorFont(47, 44, 43);
-        //colorFont.setAlphaF(0.4); // 设置水印字体颜色透明度,这个会导致字体不显示等一系列错误
+
         font.setLetterSpacing(QFont::AbsoluteSpacing, spacing);
         painter.setFont(font);
-        painter.setPen(colorFont);
-        //painter.translate(img2->width() / 2, -img2->width() / 2);//调整位置
+        painter.setPen(QColor(47,44,43)); // 字体颜色
         painter.rotate(15);
 
         int squareEdgeSize = imgEditLayout->width() * sin(45) + imgEditLayout->height() * sin(45);//对角线长度
@@ -411,28 +561,27 @@ void ScanDisplay::addWatermark()
         setPixmapScaled(*imgNormal,labNormalLeft);
     }
     delete dialog; //删除对话框
-
 }
 
 void ScanDisplay::orcText()
 {
     labOrcRight->setText(outText);
-    MYLOG <<outText;
+    qDebug() <<outText;
+}
+
+void ScanDisplay::scandisplay_theme_changed(QString)
+{
+    initStyle ();
+    initStyleOrc ();
+    initStyleTailor ();
 }
 
 void ScanDisplay::onOrc()
 {
-    if(flagOrc == 0)
+    if (flagOrc == 0)
     {
         flagOrc = 1;
         widgetindex = vStackedLayout->currentIndex();
-        labOrcLeft = new QLabel();
-        labOrcRight = new QLabel();
-        imgBackup = new QImage();
-        vBoxOrc = new QVBoxLayout();
-        hBoxOrc = new QHBoxLayout();
-        widgetOrc = new QWidget();
-        scrollArea = new QScrollArea();
 
         labOrcLeft->setFixedWidth(120);
         *imgEditLayout = imgNormal->copy();
@@ -440,9 +589,7 @@ void ScanDisplay::onOrc()
         *imgBackup = imgEditLayout->copy();
         thread.start();
         *imgBackup = imgBackup->scaled(120,166);
-        QPalette palette;
-        palette.setColor(QPalette::Background, QColor(192,253,123,100));
-        labOrcLeft->setPalette(palette);
+
         labOrcLeft->setPixmap(QPixmap::fromImage(*imgBackup));
         labOrcLeft->setAlignment(Qt::AlignTop);
 
@@ -450,11 +597,8 @@ void ScanDisplay::onOrc()
         QFont ft1;
         ft1.setPointSize(14);
         labOrcRight->setFont(ft1);
-        QPalette pa1;
-        pa1.setColor(QPalette::WindowText,QColor(255,255,255));
-        labOrcRight->setPalette(pa1);
         labOrcRight->setText(outText);
-        labOrcRight->setStyleSheet("background-color:#2f2c2b;border:1px solid #717171;");
+
         labOrcRight->setMargin(20);
         labOrcRight->setAlignment(Qt::AlignTop);
         labOrcRight->setWordWrap(true);
@@ -470,57 +614,17 @@ void ScanDisplay::onOrc()
         widget->setWindowFlags(Qt::FramelessWindowHint | Qt::Tool | Qt::WindowStaysOnTopHint); // 去掉标题栏,去掉任务栏显示，窗口置顶
         widget->setLayout(vBoxOrc);
         widget->setContentsMargins(0,0,0,0);
+
         scrollArea->setFixedWidth(392);
         scrollArea->setMinimumHeight(503);
         scrollArea->setWidget(widget);
         scrollArea->setWidgetResizable(true);
         scrollArea->setFrameShape(QFrame::NoFrame);
-        scrollArea->setStyleSheet("QScrollBar:vertical"
-                                  "{"
-                                  "width:6px;"
-                                  "background:#2f2c2b;"
-                                  "margin:0px,0px,0px,0px;"
-                                  "padding-top:0px;"
-                                  "padding-bottom:0px;"
-                                  "padding-right:3px"
-                                  "}"
-                                  "QScrollBar::handle:vertical"
-                                  "{"
-                                  "width:6px;"
-                                  "background:rgba(255,255,255,50%);"
-                                  " border-radius:3px;"
-                                  "min-height:20;"
-                                  "}"
-                                  "QScrollBar::handle:vertical:hover"
-                                  "{"
-                                  "width:6px;"
-                                  "background:rgba(255,255,255,80%);"
-                                  " border-radius:3px;"
-                                  "min-height:20;"
-                                  "}"
-                                  "QScrollBar::add-line:vertical"
-                                  "{"
-                                  "height:0px;width:0px;"
-                                  "}"
-                                  "QScrollBar::sub-line:vertical"
-                                  "{"
-                                  "height:0px;width:0px;"
-                                  "subcontrol-position:top;"
-                                  "}"
-                                  );
-        hBoxOrc->setSpacing(0);
-        hBoxOrc->addStretch();
-        hBoxOrc->addWidget(labOrcLeft);
-        hBoxOrc->addSpacing(24);
-        hBoxOrc->addWidget(scrollArea);
-        hBoxOrc->addStretch();
-        hBoxOrc->setContentsMargins(32,32,32,32);
-        widgetOrc->setLayout(hBoxOrc);
-        vStackedLayout->addWidget(widgetOrc);
-        vStackedLayout->setCurrentWidget(widgetOrc);
-    }
-    else
-    {
+
+        initStyleOrc ();
+
+        flagOrcInit++; //每次都加，但在第一次扫描时应该置0
+    } else {
         flagOrc = 0;
         vStackedLayout->setCurrentIndex(widgetindex);
     }
@@ -531,7 +635,7 @@ void ScanDisplay::onOrc()
  */
 void ScanDisplay::onScan()
 {
-    MYLOG << "begin";
+    qDebug() << "begin";
     vStackedLayout->setCurrentIndex(0);
     vStackedLayout->setCurrentIndex(1);
     vStackedLayout->setCurrentIndex(2);
@@ -541,8 +645,10 @@ void ScanDisplay::onScan()
     stack.clear();
     list.clear();
     flagOrc = 0;
+    flagOrcInit = 0;
     flagRectify = 0;
     flagBeautify = 0;
+    flagTailor = 0;
     flagWaterMark = 0; // 需要置0，避免多次扫描造成水印的图片切换到上一次扫描的图片
 
     timerScan->start(100);
@@ -563,14 +669,14 @@ void ScanDisplay::onScan()
  */
 void ScanDisplay::onRectify()
 {
-    MYLOG <<"flagRectify = " << flagRectify;
+    qDebug() <<"flagRectify = " << flagRectify;
     if(flagRectify == 0)
     {
         // 此时代表用户点击了智能纠偏按钮
         flagRectify = 1;
         if(vStackedLayout->currentWidget() == widgetNormal)
         {
-            MYLOG << "currentWidget == widgetNormal";
+            qDebug() << "currentWidget == widgetNormal";
             imgNormal->save("/tmp/scanner/scan1.png");
             // 为了撤销
             *imgRectify = imgNormal->copy();
@@ -599,13 +705,13 @@ void ScanDisplay::onRectify()
         flagRectify = 0;
         if(vStackedLayout->currentWidget() == widgetNormal)
         {
-            MYLOG << "currentWidget == widgetNormal";
+            qDebug() << "currentWidget == widgetNormal";
             *imgNormal = imgRectify->copy();
             /**
              * 2代表点击了先智能纠偏和后一键美化：
              * 有2种情况： 1）先撤销一键美化 2）先撤销智能纠偏
              */
-            MYLOG << "list.count = " << list.count();
+            qDebug() << "list.count = " << list.count();
             if(list.count() == 2)
             {
                 // 撤销的是智能纠偏：先全部清空，后把一键美化的加上
@@ -615,7 +721,7 @@ void ScanDisplay::onRectify()
                     imgNormal->save("/tmp/scanner/scan1.png");
                     *imgBeautify = imgNormal->copy();
                     list.append("Beautify");
-                    oneClickEmbelish("/tmp/scanner/scan1.png");
+                    oneClickBeauty("/tmp/scanner/scan1.png");
                     imgNormal->load("/tmp/scanner/scan1.png");
                 }
                 else
@@ -633,17 +739,17 @@ void ScanDisplay::onRectify()
         else
         {
             *imgEditLayout = imgRectify->copy();
-            MYLOG << "list.count = " << list.count();
+            qDebug() << "list.count = " << list.count();
             if(list.count() == 2)
             {
                 if(list[0] == "Rectify")
                 {
-                    MYLOG << "list[0] = " << list[0];
+                    qDebug() << "list[0] = " << list[0];
                     list.clear();
                     imgEditLayout->save("/tmp/scanner/scan1.png");
                     *imgBeautify = imgEditLayout->copy();
                     list.append("Beautify");
-                    oneClickEmbelish("/tmp/scanner/scan1.png");
+                    oneClickBeauty("/tmp/scanner/scan1.png");
                     imgEditLayout->load("/tmp/scanner/scan1.png");
                 }
                 else
@@ -663,7 +769,7 @@ void ScanDisplay::onRectify()
  */
 void ScanDisplay::onBeautify()
 {
-    MYLOG << "beauty()";
+    qDebug() << "beauty()";
     if(flagBeautify == 0)
     {
         flagBeautify = 1;
@@ -672,7 +778,7 @@ void ScanDisplay::onBeautify()
             imgNormal->save("/tmp/scanner/scan1.png");
             *imgBeautify = imgNormal->copy();
             list.append("Beautify");
-            oneClickEmbelish("/tmp/scanner/scan1.png");
+            oneClickBeauty("/tmp/scanner/scan1.png");
             imgNormal->load("/tmp/scanner/scan1.png");
             setPixmapScaled(*imgNormal,labNormalLeft);
             *imgEditLayout = imgNormal->copy();
@@ -683,7 +789,7 @@ void ScanDisplay::onBeautify()
             imgEditLayout->save("/tmp/scanner/scan1.png");
             *imgBeautify = imgEditLayout->copy();
             list.append("Beautify");
-            oneClickEmbelish("/tmp/scanner/scan1.png");
+            oneClickBeauty("/tmp/scanner/scan1.png");
             imgEditLayout->load("/tmp/scanner/scan1.png");
             setPixmapScaled(*imgEditLayout,labEditLayout);
             *imgNormal = imgEditLayout->copy();
@@ -750,14 +856,14 @@ void ScanDisplay::switchPage()
     index++;
     if(index > 1)
     {
-        MYLOG << "1 switchPage index = " << index;
+        qDebug() << "1 switchPage index = " << index;
         index = 0;
         *imgNormal = imgEditLayout->copy();
         setPixmapScaled(*imgNormal,labNormalLeft);
     }
     else
     {
-        MYLOG << "2 switchPage index = " << index;
+        qDebug() << "2 switchPage index = " << index;
         *imgEditLayout = imgNormal->copy();
         setPixmapScaled(*imgEditLayout,labEditLayout);
     }
@@ -770,11 +876,11 @@ void ScanDisplay::switchPage()
 void ScanDisplay::timerScanUpdate()
 {
     m_timerNum++;
-    //MYLOG << m_timerNum << "timer";
+    //qDebug() << m_timerNum << "timer";
     if (m_timerNum == 50)
     {
         timerScan->stop();
-        //MYLOG << "timer stop";
+        //qDebug() << "timer stop";
         emit scanTimerFinished();
     }
 }
@@ -784,43 +890,19 @@ void ScanDisplay::timerScanUpdate()
  */
 void ScanDisplay::tailor()
 {
-    MYLOG << "begin";
-    btnTailorLayout = new QPushButton();
-    labTailor = new KylinLbl();
-    editLayoutTailor = new EditBar();
-    widgetTailor = new QWidget();
-    hBoxTailor = new QHBoxLayout();
-    imgTailor = new QImage();
-    labTailor->setMinimumSize(360,490);
-    labTailor->setParent(widgetTailor);
-    btnTailorLayout->setParent(widgetTailor);
-    editLayoutTailor->setParent(widgetTailor); // 编辑工具栏布局
-    labTailor->setAlignment(Qt::AlignCenter);
+    qDebug() << "begin";
 
+    btnTailorLayout->setParent(widgetTailor);
     btnTailorLayout->setFixedSize(12,30);
-    btnTailorLayout->setStyleSheet("QPushButton{border-image: url(:/icon/icon/editBar/shrink-editLayout.svg);border:none;background-color:#0f0801;border-radius:0px;}");
 
     // 当点击裁切时，需要更换图片为点击时的状态，通过css不行，hover和clicked会冲突
+    editLayoutTailor->setParent(widgetTailor); // 编辑工具栏布局
     editLayoutTailor->btnTailor->setIcon(QIcon(":/icon/icon/editBar/tailor-click.svg"));
     editLayoutTailor->btnTailor->setIconSize (QSize(30, 30));
+    flagTailor = 1;
 
-    hBoxTailor->setSpacing(0);
-    hBoxTailor->addSpacing(93);
-    hBoxTailor->addStretch();
-    hBoxTailor->addWidget(labTailor);
-    hBoxTailor->addStretch();
-    hBoxTailor->addSpacing(93);
-    hBoxTailor->addWidget(editLayoutTailor);
-    hBoxTailor->addSpacing(2);
-    hBoxTailor->addWidget(btnTailorLayout);
-    hBoxTailor->setContentsMargins(0,45,0,32);
-    widgetTailor->setLayout(hBoxTailor);
-    vStackedLayout->addWidget(widgetTailor);
-    vStackedLayout->setCurrentWidget(widgetTailor);
-    *imgTailor = imgEditLayout->copy();
-    *imgStack = imgEditLayout->copy();
-    stack.push(*imgStack);
-    scaledNum = setPixmapScaled(*imgTailor,labTailor);
+    initStyleTailor ();
+
 }
 
 /**
@@ -829,13 +911,15 @@ void ScanDisplay::tailor()
  */
 EditBar::EditBar(QWidget *parent)
     : QWidget(parent)
+    , style_settings (new QGSettings(ORG_UKUI_STYLE))
+    , icon_theme_settings (new QGSettings(ORG_UKUI_STYLE))
+    , btnTailor (new QPushButton())
+    , btnRotate (new QPushButton())
+    , btnSymmetry (new QPushButton())
+    , btnWatermark (new QPushButton())
+    , vBoxEditBar (new QVBoxLayout())
 {
     setFixedSize(40,220);
-    vBoxEditBar = new QVBoxLayout(this);
-    btnRotate = new QPushButton();
-    btnTailor = new QPushButton();
-    btnSymmetry = new QPushButton();
-    btnWatermark = new QPushButton();
 
     QPalette pal(palette());
     pal.setColor(QPalette::Background, QColor(232, 232, 232));
@@ -899,7 +983,7 @@ void EditBar::setEditBarWindowBorderRadius()
 
 void EditBar::onBtnTailorClicked()
 {
-    MYLOG << "clicked";
+    qDebug() << "clicked";
 }
 
 /**
@@ -908,10 +992,10 @@ void EditBar::onBtnTailorClicked()
 void myThread::run()
 {
     tesseract::TessBaseAPI *api = new tesseract::TessBaseAPI();
-    MYLOG <<"orc run!\n";
+    qDebug() <<"orc run!\n";
     //使用中文初始化tesseract-ocr，而不指定tessdata路径。正在识别中
     if (api->Init(NULL, "chi_sim")) {
-        MYLOG <<"Could not initialize tesseract.\n";
+        qDebug() <<"Could not initialize tesseract.\n";
         outText = "Unable to read text";
         exit(1);
     }
@@ -919,7 +1003,7 @@ void myThread::run()
     Pix* image = pixRead("/tmp/scanner/scan1.png");
     if(!image)
     {
-        MYLOG <<"pixRead error!";
+        qDebug() <<"pixRead error!";
         outText = "Unable to read text";
         emit orcFinished();
         // 销毁使用过的对象并释放内存。
