@@ -52,7 +52,7 @@ SOURCES += \
     scanSet.cpp \
     sendMail.cpp \
     singleApplication.cpp \
-    tailorLable.cpp \
+    tailorLabel.cpp \
     theme.cpp \
     titleBar.cpp \
     waterMarkDlg.cpp \
@@ -70,7 +70,7 @@ HEADERS += \
     scanSet.h \
     sendMail.h \
     singleApplication.h \
-    tailorLable.h \
+    tailorLabel.h \
     theme.h \
     titleBar.h \
     waterMarkDlg.h \

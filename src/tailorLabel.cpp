@@ -15,9 +15,10 @@
 * along with this program; if not, see <http://www.gnu.org/licenses/&gt;.
 *
 */
-#include "tailorLable.h"
 
-TailorLable::TailorLable(QLabel *parent)
+#include "tailorLabel.h"
+
+TailorLabel::TailorLabel(QLabel *parent)
     : QLabel(parent)
 {
     x1 = 0;
@@ -26,7 +27,7 @@ TailorLable::TailorLable(QLabel *parent)
     y2 = 0;
 }
 
-void TailorLable::paintEvent(QPaintEvent *event)
+void TailorLabel::paintEvent(QPaintEvent *event)
 {
     //comment before
     QLabel::paintEvent(event); //绘制背景的图片
@@ -40,7 +41,7 @@ void TailorLable::paintEvent(QPaintEvent *event)
  * 裁切时的起始坐标
  * @param event
  */
-void TailorLable::mousePressEvent(QMouseEvent *event)
+void TailorLabel::mousePressEvent(QMouseEvent *event)
 {
     x1 = event->pos().x();
     y1 = event->pos().y();
@@ -54,7 +55,7 @@ void TailorLable::mousePressEvent(QMouseEvent *event)
  * 裁切时的终止坐标
  * @param event
  */
-void TailorLable::mouseReleaseEvent(QMouseEvent *event)
+void TailorLabel::mouseReleaseEvent(QMouseEvent *event)
 {
     x2 = event->pos().x(); //鼠标相对于所在控件的位置
     y2 = event->pos().y();
@@ -62,7 +63,7 @@ void TailorLable::mouseReleaseEvent(QMouseEvent *event)
     QApplication::restoreOverrideCursor();
 }
 
-void TailorLable::mouseMoveEvent(QMouseEvent *event)
+void TailorLabel::mouseMoveEvent(QMouseEvent *event)
 {
     if (event->buttons() & Qt::LeftButton) {
         x2 = event->pos().x(); //鼠标相对于所在控件的位置

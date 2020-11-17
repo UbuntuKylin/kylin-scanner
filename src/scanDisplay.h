@@ -28,7 +28,7 @@
 #include <QToolTip>
 #include <QSize>
 #include <QTextEdit>
-#include "tailorLable.h"
+#include "tailorLabel.h"
 #include "waterMarkDlg.h"
 #include "funcBar.h"
 #include "rectify.h"
@@ -117,7 +117,7 @@ private:
     QLabel *labNormalLeft;       //正常显示界面左部分
     QLabel *labNormalRight;      //正常显示界面右部分
     QLabel *labEditLayout;       //编辑栏展开界面的显示部分
-    TailorLable *labTailor;         //编辑栏
+    TailorLabel *labTailor;         //编辑栏
     QLabel *labOrcLeft;          //文字识别图片显示部分
     QLabel *labOrcRight;         //文字识别文字显示部分
     QPushButton *btnNormal;      //正常显示界面按钮
