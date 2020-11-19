@@ -54,6 +54,7 @@ public:
     void setKylinHBoxLayoutAttributes(QHBoxLayout *layout, QLabel *labelFirst, QLabel *labelSecond);
     void setKylinHBoxLayoutAttributes(QHBoxLayout *layout, QLabel *labelFirst, KylinCmb *combo);
     void setFontSize(QLabel *label, int n);
+    void setTextNameToolTip();
 
     QString getTextResolution();
     QString getTextSize();
@@ -123,6 +124,7 @@ private slots:
     void onTextColorCurrentTextChanged(QString color);
     void onTextResolutionCurrentTextChanged(QString resolution);
     void onTextSizeCurrentTextChanged(QString size);
+    void onTextNameTextChanged(QString);
     void scanset_style_changed(QString); // 系统主题风格变化
 };
 
