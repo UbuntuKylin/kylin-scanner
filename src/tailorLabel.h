@@ -30,12 +30,12 @@
 #include <QPixmap>
 #include <QImage>
 
-class TailorLable  :   public QLabel
+class TailorLabel  :   public QLabel
 {
     Q_OBJECT
 
 public:
-    TailorLable(QLabel *parent = nullptr);
+    TailorLabel(QLabel *parent = nullptr);
 
     int x1, y1, x2, y2;
 

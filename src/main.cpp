@@ -179,6 +179,13 @@ int main(int argc, char *argv[])
     //通过parser来解析一系列命令行参数
     //QString strValue = parser.value("l");
 
+
+    // For qt: QFileDialog
+    QTranslator qtTranslator;
+    qtTranslator.load("qt_" + QLocale::system().name(),
+            QLibraryInfo::location(QLibraryInfo::TranslationsPath));
+    app.installTranslator(&qtTranslator);
+
     // For translations with different language environments
     QTranslator translator;
     QString locale = "/usr/share/kylin-scanner/translations/kylin-scanner." + QLocale::system().name();

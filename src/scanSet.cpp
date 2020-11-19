@@ -191,6 +191,10 @@ ScanSet::ScanSet(QWidget *parent)
     connect(textDevice, SIGNAL(currentTextChanged(QString)), this,
             SLOT(onTextDeviceCurrentTextChanged(QString)));
 
+    // For textName changed
+    connect (textName, SIGNAL (textChanged(QString)), this,
+             SLOT(onTextNameTextChanged(QString)));
+
     // For color mode changed
     connect(textColor, SIGNAL(currentTextChanged(QString)), this,
             SLOT(onTextColorCurrentTextChanged(QString)));
@@ -539,6 +543,9 @@ void ScanSet::setKylinLable()
 
     textType->setFixedSize(180,32);
     textName->setText("scanner01");
+
+    //textName->setMaxLength (256-4);
+    textName->setMaxLength (10);
     textName->setFixedSize(180,32);
 
     if(!device_status)
@@ -706,6 +713,18 @@ void ScanSet::setFontSize(QLabel *label, int n)
     label->setFont(ft);
 }
 
+void ScanSet::setTextNameToolTip()
+{
+    int lenTextName = textName->text ().length ();
+    qDebug() << "lenTextName = " << lenTextName;
+
+    // 设置名字最大长度为256,但由于后缀名(.jpg)有4位长度，否则在文件夹中显示为隐藏文件
+    if (lenTextName >= 252)
+        textName->setToolTip (tr("Scanning images's length cannot be large than 252"));
+    else
+        textName->setToolTip ("");
+}
+
 void ScanSet::onBtnLocationClicked()
 {
     if(curPath.isEmpty())
@@ -772,6 +791,7 @@ void ScanSet::onBtnSaveClicked()
           << "current format: " << textFormat->currentText ();
 
     qDebug() << "flagSave = " << flag;
+
     if (flag == 1) // 进行OCR ，存储文本
     {
         pathName = curPath + "/" + textName->text() + ".txt";
@@ -883,6 +903,11 @@ void ScanSet::onTextSizeCurrentTextChanged(QString size)
     KylinSane & instance = KylinSane::getInstance();
     instance.userInfo.size = size;
     qDebug() << "size: "<< instance.userInfo.size;
+}
+
+void ScanSet::onTextNameTextChanged(QString)
+{
+    setTextNameToolTip ();
 }
 
 void ScanSet::scanset_style_changed(QString)

@@ -459,7 +459,7 @@ void ScanDisplay::initStyleTailor()
     {
         widgetTailor = new QWidget(); // 需重新初始化，否则底部有原先的裁切图片
 
-        labTailor = new TailorLable();
+        labTailor = new TailorLabel();
         labTailor->setMinimumSize(360,490);
         labTailor->setParent(widgetTailor);
         labTailor->setAlignment(Qt::AlignCenter);
