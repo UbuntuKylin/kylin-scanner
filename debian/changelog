@@ -1,3 +1,12 @@
+kylin-scanner (1.0.0-1kylin1k6) v101; urgency=medium
+
+  * Delete complicated icons
+  * Modify tailorLabel for copyright
+  * Fix #20503, Limit length of textName to 252 characters
+  * Fix #25740，Modify translations 
+
+ -- yushuoqi <yushuoqi@kylinos.cn>  Thu, 19 Nov 2020 16:34:01 +0800
+
 kylin-scanner (1.0.0-1kylin1k5) v101; urgency=medium
 
   * Fix #23892, Add light theme style
