@@ -19,6 +19,7 @@
 #ifndef TITLE_BAR_H
 #define TITLE_BAR_H
 
+#include <QDialog>
 #include <QWidget>
 #include <QLabel>
 #include <QPushButton>
@@ -29,7 +30,7 @@
 #include <QPainter>
 #include "theme.h"
 
-class TitleBar : public QWidget
+class TitleBar : public QDialog
 {
     Q_OBJECT
 
@@ -54,7 +55,9 @@ private:
     void updateMaximize();
 
     bool mMoving;
+    bool flagMaxWindow;
     QPoint mLastMousePosition;
+    QPoint offset;
     QStringList stylelist;
     QStringList iconthemelist;
 
