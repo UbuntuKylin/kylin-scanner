@@ -1,3 +1,9 @@
+kylin-scanner (1.0.0-1kylin1k7) v101; urgency=medium
+
+  * Fix #25735, Moving window is abnormal while window is maximized 
+
+ -- yushuoqi <yushuoqi@kylinos.cn>  Fri, 20 Nov 2020 16:13:00 +0800
+
 kylin-scanner (1.0.0-1kylin1k6) v101; urgency=medium
 
   * Delete complicated icons

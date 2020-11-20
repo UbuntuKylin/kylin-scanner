@@ -18,9 +18,11 @@
 
 #include "titleBar.h"
 #include <QApplication>
+#include <iostream>
+using namespace std;
 
 TitleBar::TitleBar(QWidget *parent)
-    : QWidget(parent)
+    : QDialog (parent)
     , style_settings (new QGSettings(ORG_UKUI_STYLE))
     , icon_theme_settings (new QGSettings(ORG_UKUI_STYLE))
     , m_logo (new QLabel())
@@ -35,6 +37,8 @@ TitleBar::TitleBar(QWidget *parent)
 
     stylelist << STYLE_NAME_KEY_DARK << STYLE_NAME_KEY_BLACK << STYLE_NAME_KEY_DEFAULT;
     iconthemelist << ICON_THEME_KEY_BASIC << ICON_THEME_KEY_CLASSICAL << ICON_THEME_KEY_DEFAULT;
+
+    flagMaxWindow = false;
 
     m_logo->setFixedSize (24, 24);
     m_logoMsg->setText (tr("kylin-scanner"));
@@ -109,18 +113,45 @@ void TitleBar::mouseDoubleClickEvent(QMouseEvent *event)
 
 void TitleBar::mouseMoveEvent(QMouseEvent *event)
 {
-    if(event->buttons().testFlag(Qt::LeftButton) && mMoving)
+    if((event->buttons() & Qt::LeftButton) && mMoving)
     {
         QWidget *pWindow = this->window();
-        pWindow->move(pWindow->pos() + (event->globalPos() - mLastMousePosition));
-        mLastMousePosition = event->globalPos();
+        if (pWindow->isWindow ())
+        {
+            bool bMaximize = pWindow->isMaximized();
+            cout << "bMaximize = " << bMaximize << endl;
+
+            //qDebug() << "pWindow->pos() = " << pWindow->pos ();
+            //qDebug() << "event->globalPos() = " << event->globalPos ();
+            //qDebug() << "mLastMousePosition = " << mLastMousePosition;
+
+            if (bMaximize)
+            {
+                m_pMaximizeButton->setProperty("maximizeProperty", "maximize");
+                m_pMaximizeButton->setToolTip(tr("Maximize"));
+                m_pMaximizeButton->setIcon (QIcon::fromTheme (ICON_THEME_MAXIMAZE));
+                flagMaxWindow = false;
+
+                pWindow->showNormal (); // 最大化时拖拽，窗口显示正常大小
+            }
+            else
+            {
+                // 当前窗口不是最大化窗口
+                pWindow->move(pWindow->pos() + (event->globalPos() - mLastMousePosition));
+                mLastMousePosition = event->globalPos();
+            }
+        }
     }
 }
 
 void TitleBar::mousePressEvent(QMouseEvent *event)
 {
-    if(event->button() == Qt::LeftButton)
+    if(event->buttons() & Qt::LeftButton)
     {
+        QCursor cursor;
+        cursor.setShape (Qt::ClosedHandCursor);
+        QApplication::setOverrideCursor (cursor); // 使鼠标指针暂时改变形状
+
         mMoving = true;
         mLastMousePosition = event->globalPos();
     }
@@ -128,6 +159,7 @@ void TitleBar::mousePressEvent(QMouseEvent *event)
 
 void TitleBar::mouseReleaseEvent(QMouseEvent *event)
 {
+    QApplication::restoreOverrideCursor (); // 恢复鼠标指针形状
     if(event->button() == Qt::LeftButton)
     {
         mMoving = false;
@@ -209,6 +241,7 @@ void TitleBar::updateMaximize()
             m_pMaximizeButton->setToolTip(tr("Restore"));
             m_pMaximizeButton->setProperty("maximizeProperty", "restore");
             m_pMaximizeButton->setIcon (QIcon::fromTheme (ICON_THEME_RESTORE));
+            flagMaxWindow = true;
             emit isMax();
         }
         else
@@ -216,6 +249,7 @@ void TitleBar::updateMaximize()
             m_pMaximizeButton->setProperty("maximizeProperty", "maximize");
             m_pMaximizeButton->setToolTip(tr("Maximize"));
             m_pMaximizeButton->setIcon (QIcon::fromTheme (ICON_THEME_MAXIMAZE));
+            flagMaxWindow = false;
             emit isNormal();
         }
     }
