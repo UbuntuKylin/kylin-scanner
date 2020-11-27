@@ -47,7 +47,7 @@ FuncBar::FuncBar(QWidget *parent)
     setFixedHeight(80);
     setMinimumWidth(860);
 
-    stylelist << STYLE_NAME_KEY_DARK << STYLE_NAME_KEY_BLACK << STYLE_NAME_KEY_DEFAULT;
+    stylelist << STYLE_NAME_KEY_DARK << STYLE_NAME_KEY_BLACK;
     iconthemelist << ICON_THEME_KEY_BASIC << ICON_THEME_KEY_CLASSICAL << ICON_THEME_KEY_DEFAULT;
 
     btnScan->setCursor (Qt::PointingHandCursor); // 可点击鼠标样式

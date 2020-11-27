@@ -40,7 +40,8 @@ Widget::Widget(QWidget *parent)
     setWindowTitle (tr("kylin-scanner")); // For system tray text
     setWindowIcon (QIcon::fromTheme("scanner"));
 
-    stylelist << STYLE_NAME_KEY_DARK << STYLE_NAME_KEY_BLACK << STYLE_NAME_KEY_DEFAULT;
+    //stylelist << STYLE_NAME_KEY_DARK << STYLE_NAME_KEY_BLACK << STYLE_NAME_KEY_DEFAULT;
+    stylelist << STYLE_NAME_KEY_DARK << STYLE_NAME_KEY_BLACK;
     iconthemelist << ICON_THEME_KEY_BASIC << ICON_THEME_KEY_CLASSICAL << ICON_THEME_KEY_DEFAULT;
 
 #ifdef DEBUG_EDIT
@@ -63,6 +64,7 @@ Widget::Widget(QWidget *parent)
         pScanSet->setKylinScanSetNotEnable();
 #endif
 
+    qDebug() << "1 styleName = " << style_settings->get(STYLE_NAME).toString();
     if (stylelist.contains(style_settings->get(STYLE_NAME).toString())) {
     // 设置窗口背景
         QPalette pal(palette());
@@ -325,7 +327,6 @@ void Widget::saveScanFile()
 void Widget::scanResult(bool ret)
 {
     qDebug() <<"ret = " << ret;
-    cout << "scan_result";
     KylinSane &instance = KylinSane::getInstance();
 
 #ifdef DEBUG_EDIT

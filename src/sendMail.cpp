@@ -37,7 +37,7 @@ NoMail::NoMail(QWidget *parent) :
     setWindowTitle (tr("No email client")); // For system tray text
     setFixedSize(320,260); // 窗口固定大小
 
-    stylelist << STYLE_NAME_KEY_DARK << STYLE_NAME_KEY_BLACK << STYLE_NAME_KEY_DEFAULT;
+    stylelist << STYLE_NAME_KEY_DARK << STYLE_NAME_KEY_BLACK;
     iconthemelist << ICON_THEME_KEY_BASIC << ICON_THEME_KEY_CLASSICAL << ICON_THEME_KEY_DEFAULT;
 
     btnClose->setFixedSize(30, 30);
@@ -223,7 +223,7 @@ SendMail::SendMail(QWidget *parent) :
     setWindowTitle (tr("Select email client"));
     setFixedSize(320,350);
 
-    stylelist << STYLE_NAME_KEY_DARK << STYLE_NAME_KEY_BLACK << STYLE_NAME_KEY_DEFAULT;
+    stylelist << STYLE_NAME_KEY_DARK << STYLE_NAME_KEY_BLACK;
     iconthemelist << ICON_THEME_KEY_BASIC << ICON_THEME_KEY_CLASSICAL << ICON_THEME_KEY_DEFAULT;
 
 

@@ -61,7 +61,7 @@ ScanSet::ScanSet(QWidget *parent)
 {
     setFixedWidth(260);
 
-    stylelist << STYLE_NAME_KEY_DARK << STYLE_NAME_KEY_BLACK << STYLE_NAME_KEY_DEFAULT;
+    stylelist << STYLE_NAME_KEY_DARK << STYLE_NAME_KEY_BLACK;
     iconthemelist << ICON_THEME_KEY_BASIC << ICON_THEME_KEY_CLASSICAL << ICON_THEME_KEY_DEFAULT;
 
     line3->setObjectName(QString::fromUtf8("line3"));
