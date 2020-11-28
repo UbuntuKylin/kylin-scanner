@@ -59,13 +59,15 @@ InterruptDlg::~InterruptDlg()
 void InterruptDlg::setDialogAttrbutes()
 {
     setFixedSize(322, 200);
-    setWindowFlags(Qt::FramelessWindowHint | Qt::Dialog);
+    //setWindowFlags(Qt::FramelessWindowHint | Qt::Dialog);
+    setWindowFlags(Qt::Dialog);
 
     QPalette pal(palette());
     pal.setColor(QPalette::Background, QColor(47, 44, 43));
     setAutoFillBackground(true);
     setPalette(pal);
 
+    /*
     QBitmap bitMap(width(),height()); // A bit map has the same size with current widget
     bitMap.fill();
     QPainter painter(&bitMap);
@@ -74,6 +76,7 @@ void InterruptDlg::setDialogAttrbutes()
     painter.setRenderHint(QPainter::Antialiasing);
     painter.drawRoundedRect(bitMap.rect(),6,6); //设置圆角弧度
     setMask(bitMap);
+    */
 }
 
 /**

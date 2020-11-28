@@ -15,7 +15,9 @@ Build-Depends: debhelper-compat (=12),
                qt5-qmake,
                qtbase5-dev,
                qtbase5-dev-tools,
-               qttools5-dev-tools
+               qttools5-dev-tools,
+               libkf5windowsystem-dev,
+               pkgconf
 Standards-Version: 4.5.0
 Rules-Requires-Root: no
 Homepage: https://github.com/ubuntukylin/kylin-scanner

@@ -50,6 +50,8 @@ protected:
     // 设置界面标题与图标
     virtual bool eventFilter(QObject *obj, QEvent *event);
 
+    virtual void keyPressEvent(QKeyEvent *e);
+
 private:
     // 最大化/还原
     void updateMaximize();

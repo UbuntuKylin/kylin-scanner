@@ -44,44 +44,45 @@ TitleBar::TitleBar(QWidget *parent)
     m_logoMsg->setText (tr("kylin-scanner"));
     m_logoMsg->setAlignment(Qt::AlignRight|Qt::AlignVCenter);
     //m_logoMsg->setStyleSheet("color:rgb(232,232,232)");
-    m_logoMsg->setFixedSize(56, 14);
+    m_logoMsg->setFixedSize(60, 24);
 
     if ("ukui-icon-theme-basic" == icon_theme_settings->get(ICON_THEME_NAME).toString()) {
-        m_logo->setStyleSheet("QLabel{border-image:url(/usr/share/icons/ukui-icon-theme-basic/24x24/devices/scanner.png);border-radius:4px;}");
+        m_logo->setStyleSheet("QLabel{border-image:url(/usr/share/icons/ukui-icon-theme-basic/24x24/apps/kylin-scanner.png);border-radius:4px;}");
     } else if ("ukui-icon-theme-classical" == icon_theme_settings->get(ICON_THEME_NAME).toString()) {
-        m_logo->setStyleSheet("QLabel{border-image:url(/usr/share/icons/ukui-icon-theme-classical/24x24/devices/scanner.png);border-radius:4px;}");
+        m_logo->setStyleSheet("QLabel{border-image:url(/usr/share/icons/ukui-icon-theme-classical/24x24/apps/kylin-scanner.png);border-radius:4px;}");
     } else if ("ukui-icon-theme-default" == icon_theme_settings->get(ICON_THEME_NAME).toString()) {
-        m_logo->setStyleSheet("QLabel{border-image:url(/usr/share/icons/ukui-icon-theme-default/24x24/devices/scanner.png);border-radius:4px;}");
+        m_logo->setStyleSheet("QLabel{border-image:url(/usr/share/icons/ukui-icon-theme-default/24x24/apps/kylin-scanner.png);border-radius:4px;}");
     }
 
     m_pMinimizeButton->setIcon (QIcon::fromTheme (ICON_THEME_MINIMIZE));
     m_pMinimizeButton->setToolTip(tr("Minimize"));
     m_pMinimizeButton->setFixedSize(30, 30);
     m_pMinimizeButton->setIconSize (QSize(16, 16));
+    // 自定义标题栏窗口三联按钮
+    m_pMinimizeButton->setProperty("isWindowButton", 0x1);
+    m_pMinimizeButton->setProperty("useIconHighlightEffect", 0x2);
+    m_pMinimizeButton->setFlat(true);
 
     m_pMaximizeButton->setIcon (QIcon::fromTheme (ICON_THEME_MAXIMAZE));
     m_pMaximizeButton->setToolTip(tr("Maximize"));
     m_pMaximizeButton->setFixedSize(30, 30);
     m_pMaximizeButton->setIconSize (QSize(16, 16));
+    m_pMaximizeButton->setProperty("isWindowButton", 0x1);
+    m_pMaximizeButton->setProperty("useIconHighlightEffect", 0x2);
+    m_pMaximizeButton->setFlat(true);
 
     m_pCloseButton->setIcon (QIcon::fromTheme (ICON_THEME_CLOSE));
     m_pCloseButton->setToolTip(tr("Close"));
     m_pCloseButton->setFixedSize(30, 30);
     m_pCloseButton->setIconSize (QSize(16, 16));
-    //m_pCloseButton->setFlat (true);
-    if (stylelist.contains(style_settings->get(STYLE_NAME).toString())) {
-        m_pCloseButton->setStyleSheet("QPushButton{border:none;background-color:#3D3D41;border-radius:4px;}"
-                                  "QPushButton:hover{border:none;background-color:#F86457;border-radius:4px;}"
-                                    "QPushButton:checked{border:none;background-color:#E44C50;border-radius:4px;}");
-    } else {
-        // 白色主题或默认主题
-        m_pCloseButton->setStyleSheet("QPushButton{border:none;background-color:#DCDCDC;border-radius:4px;}"
-                                  "QPushButton:hover{border:none;background-color:#F86457;border-radius:4px;}"
-                                    "QPushButton:checked{border:none;background-color:#E44C50;border-radius:4px;}");
-    }
+    m_pCloseButton->setProperty("isWindowButton", 0x2);
+    m_pCloseButton->setProperty("useIconHighlightEffect", 0x8);
+    m_pCloseButton->setFlat(true);
+
 
     pLayout->addSpacing(0);
     pLayout->addWidget (m_logo);
+    pLayout->addSpacing(4);
     pLayout->addWidget (m_logoMsg);
     pLayout->addStretch();
     pLayout->addWidget(m_pMinimizeButton);
@@ -179,6 +180,17 @@ bool TitleBar::eventFilter(QObject *obj, QEvent *event)
     return QWidget::eventFilter(obj, event);
 }
 
+void TitleBar::keyPressEvent(QKeyEvent *e)
+{
+    switch (e->key()) {
+    case Qt::Key_Escape:
+        qDebug() << "3333333333333333" ;
+        break;
+    default:
+        break;
+    }
+}
+
 void TitleBar::onClicked()
 {
     QPushButton *pButton = qobject_cast<QPushButton *>(sender());
@@ -205,28 +217,17 @@ void TitleBar::titlebar_icon_theme_changed(QString)
     qDebug() << "titlebar icon-theme: " << icon_theme_settings->get(ICON_THEME_NAME).toString();
 
     if ("ukui-icon-theme-basic" == icon_theme_settings->get(ICON_THEME_NAME).toString()) {
-        m_logo->setStyleSheet("QLabel{border-image:url(/usr/share/icons/ukui-icon-theme-basic/24x24/devices/scanner.png);border-radius:4px;}");
+        m_logo->setStyleSheet("QLabel{border-image:url(/usr/share/icons/ukui-icon-theme-basic/24x24/apps/kylin-scanner.png);border-radius:4px;}");
     } else if ("ukui-icon-theme-classical" == icon_theme_settings->get(ICON_THEME_NAME).toString()) {
-        m_logo->setStyleSheet("QLabel{border-image:url(/usr/share/icons/ukui-icon-theme-classical/24x24/devices/scanner.png);border-radius:4px;}");
+        m_logo->setStyleSheet("QLabel{border-image:url(/usr/share/icons/ukui-icon-theme-classical/24x24/apps/kylin-scanner.png);border-radius:4px;}");
     } else if ("ukui-icon-theme-default" == icon_theme_settings->get(ICON_THEME_NAME).toString()) {
-        m_logo->setStyleSheet("QLabel{border-image:url(/usr/share/icons/ukui-icon-theme-default/24x24/devices/scanner.png);border-radius:4px;}");
+        m_logo->setStyleSheet("QLabel{border-image:url(/usr/share/icons/ukui-icon-theme-default/24x24/apps/kylin-scanner.png);border-radius:4px;}");
     }
 }
 
 void TitleBar::titlebar_style_changed(QString)
 {
     qDebug() << "titlebar_style_changed = " << style_settings->get (STYLE_NAME).toString ();
-    if (stylelist.contains(style_settings->get(STYLE_NAME).toString())) {
-        // 黑色主题或默认主题
-        m_pCloseButton->setStyleSheet("QPushButton{border:none;background-color:#3D3D41;border-radius:4px;}"
-                                  "QPushButton:hover{border:none;background-color:#F86457;border-radius:4px;}"
-                                    "QPushButton:checked{border:none;background-color:#E44C50;border-radius:4px;}");
-    } else {
-        // 白色主题
-        m_pCloseButton->setStyleSheet("QPushButton{border:none;background-color:#DCDCDC;border-radius:4px;}"
-                                  "QPushButton:hover{border:none;background-color:#F86457;border-radius:4px;}"
-                                    "QPushButton:checked{border:none;background-color:#E44C50;border-radius:4px;}");
-    }
 }
 
 void TitleBar::updateMaximize()

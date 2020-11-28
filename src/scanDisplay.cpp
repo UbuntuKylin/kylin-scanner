@@ -611,7 +611,8 @@ void ScanDisplay::onOrc()
         QWidget *widget = new QWidget();
 
         widget->setMinimumHeight(labOrcRight->height());
-        widget->setWindowFlags(Qt::FramelessWindowHint | Qt::Tool | Qt::WindowStaysOnTopHint); // 去掉标题栏,去掉任务栏显示，窗口置顶
+        //widget->setWindowFlags(Qt::FramelessWindowHint | Qt::Tool | Qt::WindowStaysOnTopHint); // 去掉标题栏,去掉任务栏显示，窗口置顶
+        widget->setWindowFlags(Qt::Tool | Qt::WindowStaysOnTopHint); // 去掉标题栏,去掉任务栏显示，窗口置顶
         widget->setLayout(vBoxOrc);
         widget->setContentsMargins(0,0,0,0);
 
@@ -926,7 +927,7 @@ EditBar::EditBar(QWidget *parent)
     setAutoFillBackground(true);
     setPalette(pal);
 
-    setEditBarWindowBorderRadius();
+    //setEditBarWindowBorderRadius();
 
     btnRotate->setFixedSize(30,30);
     btnTailor->setFixedSize(30,30);

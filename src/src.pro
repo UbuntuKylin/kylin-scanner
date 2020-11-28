@@ -4,13 +4,12 @@
 #
 #-------------------------------------------------
 
-QT       += core gui network printsupport concurrent
+QT       += core gui network printsupport concurrent KWindowSystem dbus x11extras
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = kylin-scanner
 TEMPLATE = app
-PKGCONFIG += gsettings-qt
 
 # The following define makes your compiler emit warnings if you use
 # any feature of Qt which has been marked as deprecated (the exact warnings
@@ -31,13 +30,17 @@ PKGCONFIG += gsettings-qt
 
 #CONFIG += c++11
 ##加载gio库和gio-unix库，用于处理desktop文件
-CONFIG        += link_pkgconfig c++11
+CONFIG        += link_pkgconfig \
+                 c++11
 PKGCONFIG     += gio-2.0 \
                  gio-unix-2.0 \
-                 opencv4
-LIBS +=-llept
-LIBS +=-ltesseract
-LIBS +=-lX11
+                 opencv4 \
+                 gsettings-qt
+
+LIBS += -llept \
+        -ltesseract \
+        -lpthread \
+        -lX11
 
 SOURCES += \
     beauty.cpp \
@@ -56,7 +59,8 @@ SOURCES += \
     theme.cpp \
     titleBar.cpp \
     waterMarkDlg.cpp \
-        widget.cpp
+        widget.cpp \
+    xatomhelper.cpp
 
 HEADERS += \
     beauty.h \
@@ -74,7 +78,8 @@ HEADERS += \
     theme.h \
     titleBar.h \
     waterMarkDlg.h \
-        widget.h
+        widget.h \
+    xatomhelper.h
 
 # Default rules for deployment.
 #qnx: target.path = /tmp/$${TARGET}/bin

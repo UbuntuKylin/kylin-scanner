@@ -33,6 +33,9 @@ WaterMarkDialog::WaterMarkDialog(QWidget *parent) :
     setWindowFlags(Qt::FramelessWindowHint | Qt::Dialog);
     setFixedSize(320,250);
 
+    stylelist << STYLE_NAME_KEY_DARK << STYLE_NAME_KEY_BLACK;
+    iconthemelist << ICON_THEME_KEY_BASIC << ICON_THEME_KEY_CLASSICAL << ICON_THEME_KEY_DEFAULT;
+
     setWindowMask ();
 
     label->setText(tr("Input watermark content"));

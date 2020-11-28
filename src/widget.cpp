@@ -38,7 +38,8 @@ Widget::Widget(QWidget *parent)
     // 自定义设置窗口
     setWindowFlags (Qt::FramelessWindowHint | windowFlags());
     setWindowTitle (tr("kylin-scanner")); // For system tray text
-    setWindowIcon (QIcon::fromTheme("scanner"));
+
+    setWindowIcon (QIcon::fromTheme("kylin-scanner"));
 
     //stylelist << STYLE_NAME_KEY_DARK << STYLE_NAME_KEY_BLACK << STYLE_NAME_KEY_DEFAULT;
     stylelist << STYLE_NAME_KEY_DARK << STYLE_NAME_KEY_BLACK;
@@ -464,7 +465,7 @@ void Widget::icon_theme_changed(QString)
     qDebug() << "icon_theme_changed";
     if (iconthemelist.contains (icon_theme_settings->get(ICON_THEME_NAME).toString())) {
         qDebug() << "icon-theme: " << icon_theme_settings->get(ICON_THEME_NAME).toString();
-        setWindowIcon (QIcon::fromTheme("scanner"));
+        //setWindowIcon (QIcon::fromTheme("kylin-scanner"));
     } else {
         qDebug() << "default eeed";
     }
@@ -473,14 +474,12 @@ void Widget::icon_theme_changed(QString)
 void CommonScanThread::run()
 {
     KylinSane &instance = KylinSane::getInstance();
-//again:
     do {
         qDebug() << "begin findScanDevice()";
         instance.findScanDevice();
 
         //instance.open_device(0);
 
-        //qDebug() << instance.getKylinSaneResolutions();
         if(instance.getKylinSaneStatus() == false)
         {
             emit scanFinished(false);
