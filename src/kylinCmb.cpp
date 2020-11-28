@@ -22,7 +22,7 @@ KylinCmb::KylinCmb(QWidget *parent) : QComboBox(parent)
     , style_settings (new QGSettings(ORG_UKUI_STYLE))
     , icon_theme_settings (new QGSettings(ORG_UKUI_STYLE))
 {
-    stylelist << STYLE_NAME_KEY_DARK << STYLE_NAME_KEY_BLACK << STYLE_NAME_KEY_DEFAULT;
+    stylelist << STYLE_NAME_KEY_DARK << STYLE_NAME_KEY_BLACK;
     iconthemelist << ICON_THEME_KEY_BASIC << ICON_THEME_KEY_CLASSICAL << ICON_THEME_KEY_DEFAULT;
 
     if (stylelist.contains(style_settings->get(STYLE_NAME).toString())) {

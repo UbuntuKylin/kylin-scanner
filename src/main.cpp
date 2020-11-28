@@ -17,6 +17,7 @@
 */
 #include "widget.h"
 #include "singleApplication.h"
+#include "xatomhelper.h"
 #include <QApplication>
 #include <QLabel>
 #include <QTranslator>
@@ -198,6 +199,14 @@ int main(int argc, char *argv[])
         qDebug() << "isRunning = false.";
         Widget w;
         app.w = &w;
+
+        // 添加窗管协议
+        MotifWmHints hints;
+        hints.flags = MWM_HINTS_FUNCTIONS | MWM_HINTS_DECORATIONS;
+        hints.functions = MWM_FUNC_ALL;
+        hints.decorations = MWM_DECOR_BORDER;
+        XAtomHelper::getInstance()->setWindowMotifHint(w.winId(), hints);
+
         w.show();
         return app.exec();
     }

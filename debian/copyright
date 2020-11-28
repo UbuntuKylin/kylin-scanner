@@ -58,6 +58,8 @@ Files: Doxyfile
        src/singleApplication.h
        src/widget.cpp
        src/widget.h
+       src/xatomhelper.cpp
+       src/xatomhelper.h
 Copyright: 2020, KylinSoft Co., Ltd.
 License: GPL-3+
  This program is free software; you can redistribute it and/or modify

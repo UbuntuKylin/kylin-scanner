@@ -62,7 +62,7 @@ ScanDisplay::ScanDisplay(QWidget *parent)
     setFocusPolicy(Qt::StrongFocus);
     setMinimumSize(600,567);
 
-    stylelist << STYLE_NAME_KEY_DARK << STYLE_NAME_KEY_BLACK << STYLE_NAME_KEY_DEFAULT;
+    stylelist << STYLE_NAME_KEY_DARK << STYLE_NAME_KEY_BLACK;
     iconthemelist << ICON_THEME_KEY_BASIC << ICON_THEME_KEY_CLASSICAL << ICON_THEME_KEY_DEFAULT;
 
     labConnectError->setParent(widgetConnectError);
@@ -611,7 +611,8 @@ void ScanDisplay::onOrc()
         QWidget *widget = new QWidget();
 
         widget->setMinimumHeight(labOrcRight->height());
-        widget->setWindowFlags(Qt::FramelessWindowHint | Qt::Tool | Qt::WindowStaysOnTopHint); // 去掉标题栏,去掉任务栏显示，窗口置顶
+        //widget->setWindowFlags(Qt::FramelessWindowHint | Qt::Tool | Qt::WindowStaysOnTopHint); // 去掉标题栏,去掉任务栏显示，窗口置顶
+        widget->setWindowFlags(Qt::Tool | Qt::WindowStaysOnTopHint); // 去掉标题栏,去掉任务栏显示，窗口置顶
         widget->setLayout(vBoxOrc);
         widget->setContentsMargins(0,0,0,0);
 
@@ -926,7 +927,7 @@ EditBar::EditBar(QWidget *parent)
     setAutoFillBackground(true);
     setPalette(pal);
 
-    setEditBarWindowBorderRadius();
+    //setEditBarWindowBorderRadius();
 
     btnRotate->setFixedSize(30,30);
     btnTailor->setFixedSize(30,30);
