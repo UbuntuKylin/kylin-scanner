@@ -56,8 +56,12 @@ private:
     QHBoxLayout *hBoxLayout;
     QVBoxLayout *vBoxLayout;
 
+signals:
+    void closeDialog();
+
 private slots:
     void watermarkdlg_style_changed(QString); // 系统黑白主题样式变换
+    void doAccept();
 
 };
 

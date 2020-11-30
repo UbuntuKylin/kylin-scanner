@@ -1,3 +1,11 @@
+kylin-scanner (1.0.0-1kylin1k8) v101; urgency=medium
+
+  * Fix #23892, Modify default light theme for v10.1;
+  * Fix #26774, Modify titlebar button style; Fix #23892 and #26774
+  * Modify application icons
+
+ -- yushuoqi <yushuoqi@kylinos.cn>  Sat, 28 Nov 2020 17:30:10 +0800
+
 kylin-scanner (1.0.0-1kylin1k7) v101; urgency=medium
 
   * Fix #25735, Moving window is abnormal while window is maximized 

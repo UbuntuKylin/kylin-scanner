@@ -109,17 +109,15 @@ WaterMarkDialog::WaterMarkDialog(QWidget *parent) :
     vBoxLayout->addLayout(hBoxLayout);
     vBoxLayout->setContentsMargins(16,30,16,30);
 
-
     setLayout(vBoxLayout);
 
-    connect(btnOk,SIGNAL(clicked()),this,SLOT(accept()));
+    connect(btnOk,SIGNAL(clicked()),this,SLOT(doAccept()));
     connect(btnCancel,SIGNAL(clicked()),this,SLOT(reject()));
     connect(style_settings,SIGNAL(changed(QString)),this,SLOT(watermarkdlg_style_changed(QString)));
 }
 
 WaterMarkDialog::~WaterMarkDialog()
 {
-
 }
 
 QString WaterMarkDialog::getLineEdit()
@@ -175,4 +173,13 @@ void WaterMarkDialog::watermarkdlg_style_changed(QString)
                                "QPushButton:checked{border:none;background-color:#3D6BE5;border:rgb(147,147,147);color:#000000;border-radius:4px;}");
 
     }
+}
+
+void WaterMarkDialog::doAccept()
+{
+    if (lineedit->text() == "")
+        reject();
+    else
+        accept();
+
 }
