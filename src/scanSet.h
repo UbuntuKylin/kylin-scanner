@@ -55,6 +55,7 @@ public:
     void setKylinHBoxLayoutAttributes(QHBoxLayout *layout, QLabel *labelFirst, KylinCmb *combo);
     void setFontSize(QLabel *label, int n);
     void setTextNameToolTip();
+    void setBtnSaveText();
 
     QString getTextResolution();
     QString getTextSize();

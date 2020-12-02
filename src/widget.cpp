@@ -129,6 +129,7 @@ Widget::Widget(QWidget *parent)
     // For beauty
     connect(pFuncBar, &FuncBar::sendBeautifyBegin, pScandisplay, &ScanDisplay::onBeautify);
     connect(pFuncBar, &FuncBar::sendBeautifyEnd, pScandisplay, &ScanDisplay::onBeautify);
+
     connect(pTitleBar,&TitleBar::isNormal,this,&Widget::setWindowBorderRadius);
     connect(pTitleBar,&TitleBar::isMax,this,&Widget::setMaskClear);
 
@@ -271,6 +272,7 @@ void Widget::saveImage(QString fileName)
 void Widget::setScanSetBtnEnable()
 {
     pScanSet->setKylinScanSetBtnEnable();
+    pScanSet->setBtnSaveText();
 }
 
 /**
