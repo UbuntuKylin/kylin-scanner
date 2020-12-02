@@ -272,6 +272,7 @@ void Widget::saveImage(QString fileName)
 void Widget::setScanSetBtnEnable()
 {
     pScanSet->setKylinScanSetBtnEnable();
+    pScanSet->setBtnSaveText();
 }
 
 /**

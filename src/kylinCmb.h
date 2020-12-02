@@ -24,6 +24,18 @@
 #include <QToolTip>
 #include "theme.h"
 
+typedef struct styleUnit
+{
+    QString styleCommonWhite;
+    QString styleCommonBlack;
+    QString styleInitWhite;
+    QString styleInitBlack;
+    QString styleGrayWhite;
+    QString styleGrayBlack;
+    QString styleNormalWhite;
+    QString styleNormalBlack;
+}styleUnit;
+
 class KylinCmb : public QComboBox
 {
     Q_OBJECT
@@ -32,6 +44,8 @@ public:
     explicit KylinCmb(QWidget *parent = nullptr);
     ~KylinCmb();
 
+    void initStyleUnit();
+    void colorInit();
     void colorGray();
     void colorNormal();
 
@@ -45,9 +59,10 @@ private:
     QStringList iconthemelist;
     QGSettings *style_settings;
     QGSettings *icon_theme_settings;
+    styleUnit styleunit;
 
 signals:
-    void clicked();  // 自定义点击信号，在mousePressEvent事件发生时触发
+    void clicked();
 
 };
 

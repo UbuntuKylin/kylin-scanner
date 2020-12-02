@@ -29,9 +29,16 @@
 #include <QIODevice>
 #include <QStandardPaths>
 
-
-const int mounth_days[12]= {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
-int mounth_days_add[12];
+void verifyScannerDir()
+{
+    QString logPath = "/tmp/scanner/";
+    QDir configPath;
+    if (! configPath.exists (logPath))
+    {
+        qDebug() << "Create " << logPath;
+        configPath.mkdir (logPath);
+    }
+}
 
 int getScreenWidth() 
 {
@@ -48,7 +55,6 @@ int getScreenWidth()
     return width;
 }
 
-
 void customOutputMessage(QtMsgType type, const QMessageLogContext &context, const QString &msg)
 {
     static QMutex mutex;
@@ -58,19 +64,19 @@ void customOutputMessage(QtMsgType type, const QMessageLogContext &context, cons
     switch(type)
     {
     case QtDebugMsg:
-       text = QString("Debug:");
+       text = QString("Debug:"); // 调试信息
        break;
 
     case QtWarningMsg:
-       text = QString("Warning:");
+       text = QString("Warning:"); // 警告信息
        break;
 
     case QtCriticalMsg:
-       text = QString("Critical:");
+       text = QString("Critical:"); // 严重错误
        break;
 
     case QtFatalMsg:
-       text = QString("Fatal:");
+       text = QString("Fatal:"); // 致命错误
        break;
 
     case QtInfoMsg:
@@ -85,58 +91,16 @@ void customOutputMessage(QtMsgType type, const QMessageLogContext &context, cons
     QString current_date = QString("[%1]").arg(current_date_time);
     QString message = QString("%1 %2 %3 %4").arg(current_date).arg(text).arg(context_info).arg(msg);
 
-    QFile file(qgetenv("HOME") +"/.cache/kylin-scanner/kylin-scanner.log");
-    file.open(QIODevice::WriteOnly | QIODevice::Append);
+    verifyScannerDir();
+
+    QFile file("/tmp/scanner/kylin-scanner.log");
+    file.open(QIODevice::ReadWrite | QIODevice::Append);
     QTextStream text_stream(&file);
     text_stream << message << "\r\n";
     file.flush();
     file.close();
 
     mutex.unlock();
-}
-
-void deleteOutputMessage()
-{
-    QDir dir(qgetenv("HOME") +"/.cache/kylin-scanner/");
-    QStringList filters;//设置过滤器
-    filters<<"*.log";//过滤留下txt文件
-    dir.setNameFilters(filters);
-    qDebug() << "filter: " << filters;
-
-    QList<QString> dataList; //用来存放从log文件名获取到的日期
-
-    QDateTime data = QDateTime::currentDateTime();//获取当前时间
-    QString dataStr = data.toString("yyyy-MM-dd");//时间格式转换
-
-    /*初始化月份累加天数*/
-    for (int i=0 ; i<12; i++) {
-        if (i == 0) {
-            mounth_days_add[i] = 0;
-        }
-        else {
-            mounth_days_add[i] = mounth_days[i-1] + mounth_days_add[i-1];
-        }
-    }
-
-    //循环遍历，在Qlist中存取文件名
-    foreach (QFileInfo mItem, dir.entryInfoList()) {
-        dataList << mItem.fileName();
-    }
-    //将当天日期换算为天数
-    int currentDate_value =
-        mounth_days_add[dataStr.mid(5,2).toInt()-1]+dataStr.mid(8,2).toInt();
-
-    for (int i=0; i<dataList.count(); i++) {
-        //从获取到文件名中，读取日期，将日期换算成天数，大于7天的删除
-        if ((currentDate_value - (mounth_days_add[dataList.at(i).mid(5,2).toInt()-1] + dataList.at(i).mid(8,2).toInt())) > 7) {
-            qDebug()<<"overdue debug file :"<<dataList.at(i);
-            if (QFile::exists(dataList.at(i))) {
-                qDebug()<<dataList.at(i)<<"deubg file txt exist , removing...";
-                QFile::remove(dataList.at(i));
-                qDebug()<<dataList.at(i)<<"file txt removed";
-            }
-        }
-    }
 }
 
 int main(int argc, char *argv[])
@@ -147,39 +111,18 @@ int main(int argc, char *argv[])
                 QApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
         #endif
     }
+    //注册MessageHandler
+    verifyScannerDir();
     qInstallMessageHandler(customOutputMessage);
-    deleteOutputMessage ();
 
     SingleApplication app(argc, argv);
-    //QApplication::setWindowIcon(QIcon::fromTheme("kylin-scanner", QIcon(":/icon/icon/scanner.png")));
-    //QApplication::setWindowIcon(QIcon::fromTheme("scanner"));
-
-    //注册MessageHandler
-    QStringList homePath = QStandardPaths::standardLocations(QStandardPaths::HomeLocation);
-    QString logPath = homePath.at(0) + "/.cache/kylin-scanner";
-    QDir configPath;
-    if (! configPath.exists (logPath))
-    {
-        qDebug() << "Create " << logPath;
-        configPath.mkdir (logPath);
-    }
-
-
-    app.setApplicationVersion("1.0.0");
     app.setApplicationName("kylin-scanner");
+    app.setApplicationVersion("1.0.8");
 
     QCommandLineParser parser;
     parser.addHelpOption();
     parser.addVersionOption();
-
-    //QCommandLineOption l(QStringList() << "l" << "language", "set code language c++ or lua", "c++");
-    //parser.addOption(l);
-
     parser.process(app);
-
-    //通过parser来解析一系列命令行参数
-    //QString strValue = parser.value("l");
-
 
     // For qt: QFileDialog
     QTranslator qtTranslator;
@@ -189,8 +132,8 @@ int main(int argc, char *argv[])
 
     // For translations with different language environments
     QTranslator translator;
-    QString locale = "/usr/share/kylin-scanner/translations/kylin-scanner." + QLocale::system().name();
-    qDebug() << locale ;
+    QString localePath = "/usr/share/kylin-scanner/translations/kylin-scanner.";
+    QString locale = localePath + QLocale::system().name();
 
     translator.load(locale);
     app.installTranslator(&translator);

@@ -223,14 +223,14 @@ ScanSet::~ScanSet()
  */
 void ScanSet::setKylinComboBoxAttributes(KylinCmb *combo, QStringList strList)
 {
-    QListView *listView = new QListView;
+    QListView *listView = new QListView(this);
 
     combo->clear();
     combo->addItems(strList);
     combo->setFixedSize(180,32);
     combo->setInsertPolicy(QComboBox::NoInsert);  //编辑框的内容不插入到列表项
     combo->setFocusPolicy(Qt::NoFocus); //获取焦点策略：无焦点，也就是不可编辑
-    combo->setModel(listView->model());
+    combo->setModel(listView->model()); // avoid warning
     combo->setView(listView);   //使下拉选项样式生效
 }
  
@@ -474,19 +474,19 @@ void ScanSet::setKylinScanSetEnable()
     if(device_status)
     {
         textDevice->setEnabled(true);
-        textDevice->colorNormal();
+        textDevice->colorInit();
 
         textColor->setEnabled(true);
-        textColor->colorNormal();
+        textColor->colorInit();
 
         textSize->setEnabled(true);
-        textSize->colorNormal();
+        textSize->colorInit();
 
         textResolution->setEnabled(true);
-        textResolution->colorNormal();
+        textResolution->colorInit();
 
         textFormat->setEnabled(true);
-        textFormat->colorNormal();
+        textFormat->colorInit();
 
         textName->setEnabled(true);
         btnLocation->setEnabled(true);
@@ -553,6 +553,7 @@ void ScanSet::setKylinLable()
         // No find scan device
         textType->setText(tr("Device type"));
 
+        textDevice->colorInit();
         if (stylelist.contains(style_settings->get(STYLE_NAME).toString())) {
             textName->setStyleSheet("QLineEdit{border:1px solid #0D0400;background-color:rgb(15,08,01);color:gray;border-radius:4px;}");
             textType->setStyleSheet("QLabel{border:1px solid #0D0400;background-color:rgb(15,08,01);color:gray;border-radius:4px;}");
@@ -725,6 +726,11 @@ void ScanSet::setTextNameToolTip()
         textName->setToolTip ("");
 }
 
+void ScanSet::setBtnSaveText()
+{
+    btnSave->setText(tr("Save as"));
+}
+
 void ScanSet::onBtnLocationClicked()
 {
     if(curPath.isEmpty())
@@ -786,6 +792,7 @@ void ScanSet::onBtnSaveClicked()
 
     //保存文件
     QString dlgTitle=tr("Save as ..."); //对话框标题
+    QString dlgTitleStore = tr("Store text");
     //QString filter="文本文件(*.txt);;h文件(*.h);;C++文件(.cpp);;所有文件(*.*)"; //文件过滤器
     qDebug() << "current format index = " << textFormat->currentIndex ()
           << "current format: " << textFormat->currentText ();
@@ -795,7 +802,7 @@ void ScanSet::onBtnSaveClicked()
     if (flag == 1) // 进行OCR ，存储文本
     {
         pathName = curPath + "/" + textName->text() + ".txt";
-        aFileName =QFileDialog::getSaveFileName(this, dlgTitle, pathName,
+        aFileName =QFileDialog::getSaveFileName(this, dlgTitleStore, pathName,
                                                        hashFormatFilter[5]);
     }
     else // 另存为

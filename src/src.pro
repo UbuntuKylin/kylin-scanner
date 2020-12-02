@@ -1,95 +1,48 @@
 #-------------------------------------------------
+# Copyright (C) 2020, KylinSoft Co., Ltd.
 #
-# Project created by QtCreator 2020-03-11T17:25:15
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 3, or (at your option)
+# any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, see <http://www.gnu.org/licenses/&gt;.
 #
 #-------------------------------------------------
 
-QT       += core gui network printsupport concurrent KWindowSystem dbus x11extras
+QT += core gui network printsupport concurrent KWindowSystem dbus x11extras
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
+VERSION = 1.0.8
 TARGET = kylin-scanner
 TEMPLATE = app
 
-# The following define makes your compiler emit warnings if you use
-# any feature of Qt which has been marked as deprecated (the exact warnings
-# depend on your compiler). Please consult the documentation of the
-# deprecated API in order to know how to port your code away from it.
-#DEFINES += QT_DEPRECATED_WARNINGS
+CONFIG        += link_pkgconfig c++11
+PKGCONFIG     += gio-2.0 gio-unix-2.0 opencv4 gsettings-qt
+LIBS += -llept -ltesseract -lpthread -lX11
 
-# For debug image without scanner, so OCR, and other functions could use.
-# what you need is put your image in and rename /tmp/scanner/scan.pnm,
-# and click scan btn.
-# Note: you should close this while release kylin-scanner.
+include(src.pri)
+
 #DEFINES += DEBUG_EDIT
-
-# You can also make your code fail to compile if you use deprecated APIs.
-# In order to do so, uncomment the following line.
-# You can also select to disable deprecated APIs only up to a certain version of Qt.
+#DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
-#CONFIG += c++11
-##加载gio库和gio-unix库，用于处理desktop文件
-CONFIG        += link_pkgconfig \
-                 c++11
-PKGCONFIG     += gio-2.0 \
-                 gio-unix-2.0 \
-                 opencv4 \
-                 gsettings-qt
+#DISTRIBUTION = $$system(cat /etc/kylin-build | grep Kylin | cut -d\' \' -f2)
+#count($$DISTRIBUTION,"V10"){
+#        DEFINES += __V10__
+#        QT      -= x11extras
+#        LIBS    -= -lpthread
+#        LIBS    -= -lX11
+#}
 
-LIBS += -llept \
-        -ltesseract \
-        -lpthread \
-        -lX11
-
-SOURCES += \
-    beauty.cpp \
-    funcBar.cpp \
-    interruptDlg.cpp \
-    kylinCmb.cpp \
-    kylinSane.cpp \
-        main.cpp \
-    realTimelbl.cpp \
-    rectify.cpp \
-    scanDisplay.cpp \
-    scanSet.cpp \
-    sendMail.cpp \
-    singleApplication.cpp \
-    tailorLabel.cpp \
-    theme.cpp \
-    titleBar.cpp \
-    waterMarkDlg.cpp \
-        widget.cpp \
-    xatomhelper.cpp
-
-HEADERS += \
-    beauty.h \
-    funcBar.h \
-    interruptDlg.h \
-    kylinCmb.h \
-    kylinSane.h \
-    realTimelbl.h \
-    rectify.h \
-    scanDisplay.h \
-    scanSet.h \
-    sendMail.h \
-    singleApplication.h \
-    tailorLabel.h \
-    theme.h \
-    titleBar.h \
-    waterMarkDlg.h \
-        widget.h \
-    xatomhelper.h
-
-# Default rules for deployment.
-#qnx: target.path = /tmp/$${TARGET}/bin
-#else: unix:!android: target.path = /opt/$${TARGET}/bin
-#!isEmpty(target.path): INSTALLS += target
-
-RESOURCES += \
-    res.qrc
-
-FORMS +=
+RESOURCES += res.qrc
 
 unix:!macx: LIBS += -L$$PWD/../../../usr/lib/x86_64-linux-gnu/ -lsane
 
@@ -97,7 +50,6 @@ INCLUDEPATH += $$PWD/../../../usr/lib/x86_64-linux-gnu
 DEPENDPATH += $$PWD/../../../usr/lib/x86_64-linux-gnu
 
 TRANSLATIONS = translations/kylin-scanner.zh_CN.ts
-# !system($$PWD/translations/generate_translations_pm.sh): error("Failed to generate pm")
 qm_files.files = translations/*.qm
 qm_files.path = /usr/share/kylin-scanner/translations/
 
@@ -119,4 +71,3 @@ DISTFILES += \
     icon/scanner.png \
     translations/generate_translations_pm.sh \
     translations/local.zh_CN.qm
-

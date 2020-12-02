@@ -25,6 +25,7 @@ Files: Doxyfile
        clear.sh
        kylin-scanner.pro
        src/src.pro
+       src/src.pri
        src/beauty.cpp
        src/beauty.h
        src/realTimelbl.cpp

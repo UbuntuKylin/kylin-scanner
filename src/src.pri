@@ -16,5 +16,42 @@
 #
 #-------------------------------------------------
 
-TEMPLATE = subdirs
-SUBDIRS = src/src.pro
+SOURCES += \
+    beauty.cpp \
+    funcBar.cpp \
+    interruptDlg.cpp \
+    kylinCmb.cpp \
+    kylinSane.cpp \
+        main.cpp \
+    realTimelbl.cpp \
+    rectify.cpp \
+    scanDisplay.cpp \
+    scanSet.cpp \
+    sendMail.cpp \
+    singleApplication.cpp \
+    tailorLabel.cpp \
+    theme.cpp \
+    titleBar.cpp \
+    waterMarkDlg.cpp \
+        widget.cpp \
+    xatomhelper.cpp
+
+HEADERS += \
+    beauty.h \
+    funcBar.h \
+    interruptDlg.h \
+    kylinCmb.h \
+    kylinSane.h \
+    realTimelbl.h \
+    rectify.h \
+    scanDisplay.h \
+    scanSet.h \
+    sendMail.h \
+    singleApplication.h \
+    tailorLabel.h \
+    theme.h \
+    titleBar.h \
+    waterMarkDlg.h \
+        widget.h \
+    xatomhelper.h
+

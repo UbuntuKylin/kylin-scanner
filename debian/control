@@ -17,6 +17,7 @@ Build-Depends: debhelper-compat (=12),
                qtbase5-dev-tools,
                qttools5-dev-tools,
                libkf5windowsystem-dev,
+               libqt5x11extras5-dev,
                pkgconf
 Standards-Version: 4.5.0
 Rules-Requires-Root: no
