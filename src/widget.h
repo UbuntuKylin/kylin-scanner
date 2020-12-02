@@ -51,6 +51,7 @@ public:
     void setPdfSize(QPdfWriter *pdfWriter,QString size);
     void saveToPdf(QImage img, QString pathName);
     void resultDetail(bool ret);
+    int messageScanFinishedSave(QString pathName);
 
 private:
     QGSettings *style_settings;
