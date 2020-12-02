@@ -1,3 +1,11 @@
+kylin-scanner (1.0.0-1kylin1k9) v101; urgency=medium
+
+  * Modify watermarkDlg btnOk judge while input null
+  * Add some depends
+  * Fix #27158, Modify Save As button text
+
+ -- yushuoqi <yushuoqi@kylinos.cn>  Wed, 02 Dec 2020 14:46:55 +0800
+
 kylin-scanner (1.0.0-1kylin1k8) v101; urgency=medium
 
   * Fix #23892, Modify default light theme for v10.1;

@@ -20,6 +20,7 @@
 #include <QApplication>
 #include <QLabel>
 #include <QTranslator>
+#include <QMessageBox>
 
 bool device = false;
 
@@ -256,6 +257,22 @@ void Widget::resultDetail(bool ret)
     }
 }
 
+int Widget::messageScanFinishedSave(QString pathName)
+{
+    QFileInfo fileInfo(pathName);
+    if (! fileInfo.exists()) // Not exists, so save it
+        return 1;
+
+    QMessageBox::StandardButton msgBox;
+    QString msg = pathName + tr(" already exist, do you want to overwrite it?");
+    msgBox = QMessageBox::question(0, "Question", msg);
+
+    if (msgBox == QMessageBox::Yes)
+        return 1;
+    else
+        return 0;
+}
+
 void Widget::saveImage(QString fileName)
 {
     qDebug() << "Save filename: " << fileName;
@@ -292,19 +309,29 @@ void Widget::saveScanFile()
     QString pathName = pScanSet->getTextLocation() + "/" + pScanSet->getTextName();
     qDebug() <<"pathName:"<<pathName;
     QString format = pScanSet->getTextFormat();
+
     if ((format == "jpg") || (format == "png") || (format == "bmp"))
     {
         QString newformat = "." + format;
         qDebug() <<"newformat:"<<newformat;
         if (pathName.endsWith(newformat,Qt::CaseSensitive))
         {
-            img.save(pathName);
+            qDebug() <<"pathName:"<<pathName;
+            if(messageScanFinishedSave(pathName))
+            {
+                QFile::remove(pathName);
+                img.save(pathName);
+            } else return;
         }
         else
         {
             pathName += newformat;
             qDebug() <<"pathName:"<<pathName;
-            img.save(pathName);
+            if(messageScanFinishedSave(pathName))
+            {
+                QFile::remove(pathName);
+                img.save(pathName);
+            } else return;
         }
     }
     else if (format == "pdf")
@@ -316,7 +343,12 @@ void Widget::saveScanFile()
             pathName += newformat;
             qDebug() <<"pathName:"<<pathName;
         }
-        saveToPdf(img,pathName);
+
+        if(messageScanFinishedSave(pathName))
+        {
+            QFile::remove(pathName);
+            saveToPdf(img,pathName);
+        } else return;
     }
 }
 
