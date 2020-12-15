@@ -36,10 +36,7 @@ Widget::Widget(QWidget *parent)
     , pHboxLayout (new QHBoxLayout())
     , pLayout (new QVBoxLayout())
 {
-    // 自定义设置窗口
-    setWindowFlags (Qt::FramelessWindowHint | windowFlags());
     setWindowTitle (tr("kylin-scanner")); // For system tray text
-
     setWindowIcon (QIcon::fromTheme("kylin-scanner"));
 
     //stylelist << STYLE_NAME_KEY_DARK << STYLE_NAME_KEY_BLACK << STYLE_NAME_KEY_DEFAULT;
@@ -101,7 +98,7 @@ Widget::Widget(QWidget *parent)
     pLayout->setContentsMargins(0, 0, 0, 0);
 
     // 设置窗口圆角
-    setWindowBorderRadius();
+    //setWindowBorderRadius();
     setLayout(pLayout);
 
     // For save
@@ -238,7 +235,9 @@ void Widget::saveToPdf(QImage img, QString pathName)
  */
 void Widget::resultDetail(bool ret)
 {
-    qDebug() <<"result_detail";
+#ifdef DEBUG_EDIT
+    ret = true;
+#endif
 
     if(ret)
     {
@@ -259,6 +258,10 @@ void Widget::resultDetail(bool ret)
 
 int Widget::messageScanFinishedSave(QString pathName)
 {
+#ifdef DEBUG_EDIT
+    return 0;
+#endif
+
     QFileInfo fileInfo(pathName);
     if (! fileInfo.exists()) // Not exists, so save it
         return 1;
@@ -447,15 +450,6 @@ void Widget::setWindowBorderRadius()
 {
         clearMask();
         pScandisplay->updateWindowSize();
-        QBitmap bitMap(860,680); // A bit map has the same size with current widget
-
-        bitMap.fill();
-        QPainter painter(&bitMap);
-        painter.setBrush(Qt::black);
-        painter.setPen(Qt::NoPen); // Any color that is not QRgb(0,0,0) is right
-        painter.setRenderHint(QPainter::Antialiasing, true);
-        painter.drawRoundedRect(bitMap.rect(),6,6); //设置圆角弧度
-        setMask(bitMap);
 }
 
 void Widget::style_changed(QString)

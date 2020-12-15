@@ -32,7 +32,7 @@ TitleBar::TitleBar(QWidget *parent)
     , m_pCloseButton (new QPushButton())
     , pLayout (new QHBoxLayout())
 {
-    setFixedHeight(32);
+    setFixedHeight(36);
     setMinimumWidth(860);
 
     stylelist << STYLE_NAME_KEY_DARK << STYLE_NAME_KEY_BLACK;
@@ -88,9 +88,9 @@ TitleBar::TitleBar(QWidget *parent)
     pLayout->addWidget(m_pMinimizeButton);
     pLayout->addWidget(m_pMaximizeButton);
     pLayout->addWidget(m_pCloseButton);
-    pLayout->setSpacing(7);
+    //pLayout->setSpacing(7);
     pLayout->setAlignment(Qt::AlignCenter);
-    pLayout->setContentsMargins(7, 0, 7, 0);
+    pLayout->setContentsMargins(4, 4, 4, 4);
     setLayout(pLayout);
 
     connect(m_pMinimizeButton, SIGNAL(clicked(bool)), this, SLOT(onClicked()));

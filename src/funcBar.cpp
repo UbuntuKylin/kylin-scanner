@@ -138,6 +138,7 @@ FuncBar::FuncBar(QWidget *parent)
 
 
 #ifdef DEBUG_EDIT
+    setKylinScanSetEnable();
 #else
     setKylinScanSetNotEnable();
 #endif
