@@ -4,7 +4,7 @@
 <context>
     <name>EditBar</name>
     <message>
-        <location filename="../scanDisplay.cpp" line="+936"/>
+        <location filename="../scanDisplay.cpp" line="+934"/>
         <source>rotate</source>
         <translation>旋转</translation>
     </message>
@@ -50,6 +50,11 @@
         <location line="+4"/>
         <source>Text OCR</source>
         <translation>文字识别</translation>
+    </message>
+    <message>
+        <location line="+410"/>
+        <source>scan</source>
+        <translation>扫描</translation>
     </message>
 </context>
 <context>
@@ -263,29 +268,29 @@
 <context>
     <name>TitleBar</name>
     <message>
-        <location filename="../titleBar.cpp" line="+44"/>
+        <location filename="../titleBar.cpp" line="+51"/>
         <source>kylin-scanner</source>
         <translation>麒麟扫描</translation>
     </message>
     <message>
-        <location line="+14"/>
+        <location line="+15"/>
         <source>Minimize</source>
         <translation>最小化</translation>
     </message>
     <message>
         <location line="+9"/>
-        <location line="+64"/>
+        <location line="+74"/>
         <location line="+119"/>
         <source>Maximize</source>
         <translation>最大化</translation>
     </message>
     <message>
-        <location line="-175"/>
+        <location line="-185"/>
         <source>Close</source>
         <translation>关闭</translation>
     </message>
     <message>
-        <location line="+166"/>
+        <location line="+176"/>
         <source>Restore</source>
         <translation>还原</translation>
     </message>
@@ -311,12 +316,12 @@
 <context>
     <name>Widget</name>
     <message>
-        <location filename="../widget.cpp" line="+41"/>
+        <location filename="../widget.cpp" line="+39"/>
         <source>kylin-scanner</source>
         <translation>麒麟扫描</translation>
     </message>
     <message>
-        <location line="+226"/>
+        <location line="+231"/>
         <source> already exist, do you want to overwrite it?</source>
         <translation>已经存在，你想覆盖它吗？</translation>
     </message>

@@ -493,7 +493,7 @@ void FuncBar::scanResult(int ret)
 {
     qDebug() << ret;
     btnScan->show();
-    btnScan->setText("扫描");
+    btnScan->setText(tr("scan"));
     btnScan->setStyleSheet("QPushButton{background-color: rgb(232,160,73);border-radius:28px;color:rgb(232,232,232);}");
 
     movieScan->stop();
