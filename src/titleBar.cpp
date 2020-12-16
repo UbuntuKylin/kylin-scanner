@@ -30,6 +30,8 @@ TitleBar::TitleBar(QWidget *parent)
     , m_pMinimizeButton (new QPushButton())
     , m_pMaximizeButton (new QPushButton())
     , m_pCloseButton (new QPushButton())
+    , pTitleLayout (new QHBoxLayout())
+    , pButtonLayout (new QHBoxLayout())
     , pLayout (new QHBoxLayout())
 {
     setFixedHeight(36);
@@ -41,11 +43,16 @@ TitleBar::TitleBar(QWidget *parent)
     flagMaxWindow = false;
 
     m_logo->setFixedSize (24, 24);
+    m_logo->setPixmap(QIcon::fromTheme("kylin-scanner").pixmap(m_logo->size()));
+
+    QFont fontLogoMsg;
+    fontLogoMsg.setPixelSize(14);
+    m_logoMsg->setFont(fontLogoMsg);
     m_logoMsg->setText (tr("kylin-scanner"));
     m_logoMsg->setAlignment(Qt::AlignRight|Qt::AlignVCenter);
-    //m_logoMsg->setStyleSheet("color:rgb(232,232,232)");
-    m_logoMsg->setFixedSize(60, 24);
+    //m_logoMsg->setFixedSize(60, 24);
 
+#if 0
     if ("ukui-icon-theme-basic" == icon_theme_settings->get(ICON_THEME_NAME).toString()) {
         m_logo->setStyleSheet("QLabel{border-image:url(/usr/share/icons/ukui-icon-theme-basic/24x24/apps/kylin-scanner.png);border-radius:4px;}");
     } else if ("ukui-icon-theme-classical" == icon_theme_settings->get(ICON_THEME_NAME).toString()) {
@@ -53,6 +60,7 @@ TitleBar::TitleBar(QWidget *parent)
     } else if ("ukui-icon-theme-default" == icon_theme_settings->get(ICON_THEME_NAME).toString()) {
         m_logo->setStyleSheet("QLabel{border-image:url(/usr/share/icons/ukui-icon-theme-default/24x24/apps/kylin-scanner.png);border-radius:4px;}");
     }
+#endif
 
     m_pMinimizeButton->setIcon (QIcon::fromTheme (ICON_THEME_MINIMIZE));
     m_pMinimizeButton->setToolTip(tr("Minimize"));
@@ -79,18 +87,28 @@ TitleBar::TitleBar(QWidget *parent)
     m_pCloseButton->setProperty("useIconHighlightEffect", 0x8);
     m_pCloseButton->setFlat(true);
 
+    pTitleLayout->addSpacing(0);
+    pTitleLayout->addSpacing(8);
+    pTitleLayout->addWidget (m_logo);
+    pTitleLayout->addSpacing(0);
+    //pTitleLayout->addSpacing(8);
+    pTitleLayout->addWidget (m_logoMsg);
+    pTitleLayout->setContentsMargins(0,8,0,0);
 
-    pLayout->addSpacing(0);
-    pLayout->addWidget (m_logo);
-    pLayout->addSpacing(4);
-    pLayout->addWidget (m_logoMsg);
-    pLayout->addStretch();
-    pLayout->addWidget(m_pMinimizeButton);
-    pLayout->addWidget(m_pMaximizeButton);
-    pLayout->addWidget(m_pCloseButton);
-    //pLayout->setSpacing(7);
-    pLayout->setAlignment(Qt::AlignCenter);
-    pLayout->setContentsMargins(4, 4, 4, 4);
+    pButtonLayout->addStretch();
+    pButtonLayout->setSpacing(0);
+    pButtonLayout->addWidget(m_pMinimizeButton);
+    pButtonLayout->addSpacing(4);
+    pButtonLayout->addWidget(m_pMaximizeButton);
+    pButtonLayout->addSpacing(4);
+    pButtonLayout->addWidget(m_pCloseButton);
+    pButtonLayout->setAlignment(Qt::AlignCenter);
+    pButtonLayout->setContentsMargins(0, 4, 4, 4);
+
+    pLayout->addLayout(pTitleLayout);
+    pLayout->addLayout(pButtonLayout);
+    pLayout->setContentsMargins(0, 0, 0, 0);
+
     setLayout(pLayout);
 
     connect(m_pMinimizeButton, SIGNAL(clicked(bool)), this, SLOT(onClicked()));
