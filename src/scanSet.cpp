@@ -59,7 +59,7 @@ ScanSet::ScanSet(QWidget *parent)
     , vBoxScanSet (new QVBoxLayout())
     , vBoxScanSet1 (new QVBoxLayout())
 {
-    setFixedWidth(260);
+    setFixedWidth(268);
 
     stylelist << STYLE_NAME_KEY_DARK << STYLE_NAME_KEY_BLACK;
     iconthemelist << ICON_THEME_KEY_BASIC << ICON_THEME_KEY_CLASSICAL << ICON_THEME_KEY_DEFAULT;
@@ -517,7 +517,7 @@ void ScanSet::setKylinLable()
     setFontSize(labType,10);
     setKylinLabelAttributes(labType);
 
-    labColor->setText(tr("Colouration"));
+    labColor->setText(tr("Colour"));
     setFontSize(labColor,10);
     setKylinLabelAttributes(labColor);
 
@@ -589,7 +589,9 @@ void ScanSet::setKylinLabelAttributes(QLabel *label)
     } else {
         label->setStyleSheet("color:#000000");
     }
-    label->setFixedSize(40,32);
+    //label->setFixedSize(68,32);
+    label->setFixedHeight(32);
+    label->adjustSize();
 }
 
 
@@ -617,7 +619,7 @@ void ScanSet::setKylinHBoxLayout()
     hBoxFormat->setContentsMargins(0,16,0,4);
 
     hBoxName->setSpacing(0);
-    hBoxName->addSpacing(16);
+    hBoxName->addStretch();
     hBoxName->addWidget(labName);
     hBoxName->addSpacing(8);
     hBoxName->addWidget(textName);
@@ -626,7 +628,7 @@ void ScanSet::setKylinHBoxLayout()
     hBoxName->setContentsMargins(0,4,0,4);
 
     hBoxLocation->setSpacing(0);
-    hBoxLocation->addSpacing(16);
+    hBoxLocation->addStretch();
     hBoxLocation->addWidget(labLocation);
     hBoxLocation->addSpacing(8);
     hBoxLocation->addWidget(btnLocation);
@@ -658,7 +660,7 @@ void ScanSet::setKylinHBoxLayout()
 void ScanSet::setKylinHBoxLayoutAttributes(QHBoxLayout *layout, QLabel *labelFirst, QLabel *labelSecond)
 {
     layout->setSpacing(0);
-    layout->addSpacing(16);
+    layout->addStretch();
     layout->addWidget(labelFirst);
     layout->addSpacing(8);
     layout->addWidget(labelSecond);
@@ -675,7 +677,7 @@ void ScanSet::setKylinHBoxLayoutAttributes(QHBoxLayout *layout, QLabel *labelFir
 void ScanSet::setKylinHBoxLayoutAttributes(QHBoxLayout *layout, QLabel *labelFirst, KylinCmb *combo)
 {
     layout->setSpacing(0);
-    layout->addSpacing(16);
+    layout->addStretch();
     layout->addWidget(labelFirst);
     layout->addSpacing(8);
     layout->addWidget(combo);

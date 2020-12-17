@@ -153,13 +153,13 @@
     </message>
     <message>
         <location line="+2"/>
-        <location line="+650"/>
+        <location line="+651"/>
         <location line="+145"/>
         <source>Save as</source>
         <translation>另存为</translation>
     </message>
     <message>
-        <location line="-623"/>
+        <location line="-624"/>
         <location line="+100"/>
         <source>No available device</source>
         <translation>无可用设备</translation>
@@ -195,8 +195,12 @@
         <translation>类型</translation>
     </message>
     <message>
-        <location line="+4"/>
         <source>Colouration</source>
+        <translation type="vanished">色彩</translation>
+    </message>
+    <message>
+        <location line="+4"/>
+        <source>Colour</source>
         <translation>色彩</translation>
     </message>
     <message>
@@ -230,7 +234,7 @@
         <translation>设备类型</translation>
     </message>
     <message>
-        <location line="+170"/>
+        <location line="+171"/>
         <source>Scanning images&apos;s length cannot be large than 252</source>
         <translation>扫描图片文件名长度不能超过252个字符</translation>
     </message>
