@@ -21,53 +21,87 @@
 TailorLabel::TailorLabel(QLabel *parent)
     : QLabel(parent)
 {
-    x1 = 0;
-    y1 = 0;
-    x2 = 0;
-    y2 = 0;
+    startX = 0;
+    startY = 0;
+    endX = 0;
+    endY = 0;
+}
+
+TailorLabel::~TailorLabel()
+{
+
 }
 
 void TailorLabel::paintEvent(QPaintEvent *event)
 {
-    //comment before
-    QLabel::paintEvent(event); //绘制背景的图片
+    QLabel::paintEvent(event); // draw label background
+
     QPainter painter(this);
-    painter.setPen(QPen(Qt::green, 2));
-    painter.drawRect(QRect(x1, y1, x2 - x1, y2 - y1));
+    QPen pen(Qt::green, 1);
+    painter.setPen(pen);
+
+    QPainterPath borderPath, tailorPath, outPath;
+
+    borderPath.setFillRule(Qt::WindingFill);
+    borderPath.addRect(0, 0, this->width(), this->height()); // need judge
+
+    QRect rect(startX, startY, endX-startX, endY-startY);
+    tailorPath.addRect(rect);
+
+    painter.drawPath(tailorPath);
+
+    outPath = borderPath.subtracted(tailorPath);
+
+    painter.setRenderHint(QPainter::Antialiasing, true);
+    painter.fillPath(outPath, QColor(0, 0, 0, 100));
 }
 
-/**
- * @brief TailorLabel::mousePressEvent
- * 裁切时的起始坐标
- * @param event
- */
 void TailorLabel::mousePressEvent(QMouseEvent *event)
 {
-    x1 = event->pos().x();
-    y1 = event->pos().y();
-    QCursor cursor;
-    cursor.setShape(Qt::ClosedHandCursor);
-    QApplication::setOverrideCursor(cursor);
+    QApplication::setOverrideCursor(QCursor(Qt::ClosedHandCursor));
+
+    if (event->button() == Qt::LeftButton)
+    {
+        startX = event->pos().x();
+        startY = event->pos().y();
+        endX = event->pos().x();
+        endY = event->pos().y();
+
+        isPressed = true;
+    }
 }
 
-/**
- * @brief TailorLabel::mouseReleaseEvent
- * 裁切时的终止坐标
- * @param event
- */
 void TailorLabel::mouseReleaseEvent(QMouseEvent *event)
 {
-    x2 = event->pos().x(); //鼠标相对于所在控件的位置
-    y2 = event->pos().y();
+    isPressed = false;
+
+    if (event->buttons() & Qt::LeftButton) // For avoid rightButton
+    {
+        endX = event->pos().x();
+        endY = event->pos().y();
+    }
+
+    endX = judgePosition(endX, 0, this->width());
+    endY = judgePosition(endY, 0, this->height());
     update();
+
     QApplication::restoreOverrideCursor();
 }
 
 void TailorLabel::mouseMoveEvent(QMouseEvent *event)
 {
-    if (event->buttons() & Qt::LeftButton) {
-        x2 = event->pos().x(); //鼠标相对于所在控件的位置
-        y2 = event->pos().y();
+    if (isPressed && (event->buttons() & Qt::LeftButton))
+    {
+        endX = event->pos().x();
+        endY = event->pos().y();
+
         update();
     }
+}
+
+int TailorLabel::judgePosition(int origin, int min, int max)
+{
+    if (origin < min)  return min;
+    if (origin > max)  return max;
+    return origin;
 }

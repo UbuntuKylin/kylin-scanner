@@ -15,14 +15,15 @@
 * along with this program; if not, see <http://www.gnu.org/licenses/&gt;.
 *
 */
-#ifndef MY_LABEL_H
-#define MY_LABEL_H
+#ifndef TAILOR_LABEL_H
+#define TAILOR_LABEL_H
 
 #include <QLabel>
 #include <QMouseEvent>
 #include <QString>
 #include <QShowEvent>
 #include <QPainter>
+#include <QPainterPath>
 #include <QPen>
 #include <QRect>
 #include <QCursor>
@@ -30,26 +31,33 @@
 #include <QPixmap>
 #include <QImage>
 
+#define EPLISION 1e-6
+
 class TailorLabel  :   public QLabel
 {
     Q_OBJECT
 
 public:
     TailorLabel(QLabel *parent = nullptr);
-
-    int x1, y1, x2, y2;
+    ~TailorLabel();
 
     void paintEvent(QPaintEvent* event);
     void mousePressEvent(QMouseEvent* event);
     void mouseReleaseEvent(QMouseEvent* event);
     void mouseMoveEvent(QMouseEvent* event);
-    void savePicture(QString path, int filename);
 
-public:
-    int getX1() {return x1;}
-    int getY1() {return y1;}
-    int getX2() {return x2;}
-    int getY2() {return y2;}
+    int judgePosition(int origin, int min, int max);
+    int getStartX() {return startX;}
+    int getStartY() {return startY;}
+    int getEndX() {return endX;}
+    int getEndY() {return endY;}
+
+private:
+    bool isPressed;
+    int startX;
+    int startY;
+    int endX;
+    int endY;
 };
 
-#endif // MY_LABEL_H
+#endif // TAILOR_LABEL_H

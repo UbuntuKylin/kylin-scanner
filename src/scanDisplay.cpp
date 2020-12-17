@@ -186,26 +186,26 @@ void ScanDisplay::keyPressEvent(QKeyEvent *e)
         qDebug() << "key() = " << e->key();
         QImage newimage;
         int x1,y1,x2,y2;
-        if(labTailor->getX1() <= labTailor->getX2())
+        if(labTailor->getStartX() <= labTailor->getEndX())
         {
-             x1 = labTailor->getX1() - ((labTailor->width() - imgEditLayout->width()*scaledNum) / 2);
-             x2 = labTailor->getX2() - ((labTailor->width() - imgEditLayout->width()*scaledNum) / 2);
+             x1 = labTailor->getStartX() - ((labTailor->width() - imgEditLayout->width()*scaledNum) / 2);
+             x2 = labTailor->getEndX() - ((labTailor->width() - imgEditLayout->width()*scaledNum) / 2);
         }
         else
         {
-            x1 = labTailor->getX2() - ((labTailor->width() - imgEditLayout->width()*scaledNum) / 2);
-            x2 = labTailor->getX1() - ((labTailor->width() - imgEditLayout->width()*scaledNum) / 2);
+            x1 = labTailor->getEndX() - ((labTailor->width() - imgEditLayout->width()*scaledNum) / 2);
+            x2 = labTailor->getStartX() - ((labTailor->width() - imgEditLayout->width()*scaledNum) / 2);
         }
 
-        if(labTailor->getY1() <= labTailor->getY2())
+        if(labTailor->getStartY() <= labTailor->getEndY())
         {
-            y1 = labTailor->getY1() - ((labTailor->height() - imgEditLayout->height()*scaledNum) / 2);
-            y2 = labTailor->getY2() - ((labTailor->height() - imgEditLayout->height()*scaledNum) / 2);
+            y1 = labTailor->getStartY() - ((labTailor->height() - imgEditLayout->height()*scaledNum) / 2);
+            y2 = labTailor->getEndY() - ((labTailor->height() - imgEditLayout->height()*scaledNum) / 2);
         }
         else
         {
-            y1 = labTailor->getY2() - ((labTailor->height() - imgEditLayout->height()*scaledNum) / 2);
-            y2 = labTailor->getY1() - ((labTailor->height() - imgEditLayout->height()*scaledNum) / 2);
+            y1 = labTailor->getEndY() - ((labTailor->height() - imgEditLayout->height()*scaledNum) / 2);
+            y2 = labTailor->getStartY() - ((labTailor->height() - imgEditLayout->height()*scaledNum) / 2);
         }
 
         newimage = imgEditLayout->copy(x1/scaledNum,y1/scaledNum,(x2-x1)/scaledNum,(y2-y1)/scaledNum);
@@ -288,8 +288,6 @@ void ScanDisplay::setPixmap(QImage img, QLabel *lab)
 
 float ScanDisplay::setPixmapScaled(QImage img, QLabel *lab)
 {
-//    float labWidth = lab->width();
-//    float labHeight = lab->height();
     float labWidth = this->width() - 240;
     float labHeight = this->height() - 77;
     float imgWidth = img.width();

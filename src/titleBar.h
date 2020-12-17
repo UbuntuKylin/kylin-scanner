@@ -70,6 +70,9 @@ private:
     QPushButton *m_pMinimizeButton;
     QPushButton *m_pMaximizeButton;
     QPushButton *m_pCloseButton;
+
+    QHBoxLayout *pButtonLayout;
+    QHBoxLayout *pTitleLayout;
     QHBoxLayout *pLayout;
 
 private slots:
