@@ -49,8 +49,8 @@ TitleBar::TitleBar(QWidget *parent)
     fontLogoMsg.setPixelSize(14);
     m_logoMsg->setFont(fontLogoMsg);
     m_logoMsg->setText (tr("kylin-scanner"));
+    m_logoMsg->setScaledContents(true);
     m_logoMsg->setAlignment(Qt::AlignRight|Qt::AlignVCenter);
-    //m_logoMsg->setFixedSize(60, 24);
 
 #if 0
     if ("ukui-icon-theme-basic" == icon_theme_settings->get(ICON_THEME_NAME).toString()) {
