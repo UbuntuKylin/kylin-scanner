@@ -60,36 +60,44 @@ void customOutputMessage(QtMsgType type, const QMessageLogContext &context, cons
     static QMutex mutex;
     mutex.lock();
 
+    // For color
+    QString greenDebugColor = "\033[32m";
+    QString blueWarningColor = "\033[34m";
+    QString redCriticalColor = "\033[31m";
+    QString redFatalColor = "\033[31m";
+    QString yellowInfoColor = "\033[33m";
+    QString noColor = "\033[0m";
+
+    QFileInfo filePath(context.file);
+    QString context_info = QString("(%1:%2)").arg(filePath.fileName()).arg(context.line);
+    QString current_date_time = QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss ddd");
+    QString current_date = QString("[%1]").arg(current_date_time);
     QString text;
     switch(type)
     {
     case QtDebugMsg:
-       text = QString("Debug:"); // 调试信息
+       text = greenDebugColor + QString("Debug:");
        break;
 
     case QtWarningMsg:
-       text = QString("Warning:"); // 警告信息
+       text = blueWarningColor + QString("Warning:");
        break;
 
     case QtCriticalMsg:
-       text = QString("Critical:"); // 严重错误
+       text = redFatalColor + QString("Critical:");
        break;
 
     case QtFatalMsg:
-       text = QString("Fatal:"); // 致命错误
+       text = redFatalColor + QString("Fatal:");
        break;
 
     case QtInfoMsg:
-        text = QString("Info:");
+        text = yellowInfoColor + QString("Info:");
        break;
     default:
         text = QString("None:");
     }
-
-    QString context_info = QString("(%1:%2)").arg(QString(context.file)).arg(context.line);
-    QString current_date_time = QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss ddd");
-    QString current_date = QString("[%1]").arg(current_date_time);
-    QString message = QString("%1 %2 %3 %4").arg(current_date).arg(text).arg(context_info).arg(msg);
+    QString message = QString("%1 %2 %3 %4 %5").arg(text).arg(current_date).arg(context_info).arg(msg).arg(noColor);
 
     verifyScannerDir();
 
@@ -111,7 +119,7 @@ int main(int argc, char *argv[])
                 QApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
         #endif
     }
-    //注册MessageHandler
+
     verifyScannerDir();
     qInstallMessageHandler(customOutputMessage);
 
@@ -120,6 +128,7 @@ int main(int argc, char *argv[])
     app.setApplicationVersion("1.0.9");
 
     QCommandLineParser parser;
+    parser.setApplicationDescription("An interface-friendly scanner with OCR, Smart rectify and OneClickBeauty.");
     parser.addHelpOption();
     parser.addVersionOption();
     parser.process(app);
@@ -138,12 +147,11 @@ int main(int argc, char *argv[])
     translator.load(locale);
     app.installTranslator(&translator);
 
-    if (!app.isRunning()){
+    if (!app.isRunning()) {
         qDebug() << "isRunning = false.";
         Widget w;
         app.w = &w;
 
-        // 添加窗管协议
         MotifWmHints hints;
         hints.flags = MWM_HINTS_FUNCTIONS | MWM_HINTS_DECORATIONS;
         hints.functions = MWM_FUNC_ALL;

@@ -186,7 +186,7 @@ void ScanDisplay::keyPressEvent(QKeyEvent *e)
         qDebug() << "key() = " << e->key();
         QImage newimage;
         int x1,y1,x2,y2;
-        if(labTailor->getStartX() <= labTailor->getEndX())
+        if (labTailor->getStartX() <= labTailor->getEndX())
         {
              x1 = labTailor->getStartX() - ((labTailor->width() - imgEditLayout->width()*scaledNum) / 2);
              x2 = labTailor->getEndX() - ((labTailor->width() - imgEditLayout->width()*scaledNum) / 2);
@@ -197,7 +197,7 @@ void ScanDisplay::keyPressEvent(QKeyEvent *e)
             x2 = labTailor->getStartX() - ((labTailor->width() - imgEditLayout->width()*scaledNum) / 2);
         }
 
-        if(labTailor->getStartY() <= labTailor->getEndY())
+        if (labTailor->getStartY() <= labTailor->getEndY())
         {
             y1 = labTailor->getStartY() - ((labTailor->height() - imgEditLayout->height()*scaledNum) / 2);
             y2 = labTailor->getEndY() - ((labTailor->height() - imgEditLayout->height()*scaledNum) / 2);
@@ -222,9 +222,9 @@ void ScanDisplay::keyPressEvent(QKeyEvent *e)
                                     "QPushButton:checked{border-image: url(:/icon/icon/editBar/tailor-click.svg);border:none;background-color:rgb(232,232,232);border-radius:0px;}");
         flagTailor = 0;
     }
-    if(e->key() == Qt::Key_Z && e->modifiers() ==  Qt::ControlModifier)
+    if (e->key() == Qt::Key_Z && e->modifiers() ==  Qt::ControlModifier)
     {
-        if(!stack.isEmpty())
+        if (!stack.isEmpty())
         {
             *imgEditLayout = stack.pop();
             setPixmapScaled(*imgEditLayout,labEditLayout);
@@ -237,16 +237,16 @@ void ScanDisplay::keyPressEvent(QKeyEvent *e)
 
 QImage *ScanDisplay::imageSave(QString fileName)
 {
-    if(flagOrc == 0)
+    if (flagOrc == 0)
     {
         *imgEditLayout = imgNormal->copy();
-        if(fileName.endsWith(".pdf"))
+        if (fileName.endsWith(".pdf"))
             return imgEditLayout;
-        if(fileName.endsWith(".png") || fileName.endsWith(".jpg") || fileName.endsWith(".bmp"))
+        if (fileName.endsWith(".png") || fileName.endsWith(".jpg") || fileName.endsWith(".bmp"))
             imgEditLayout->save(fileName);
     }
     else {
-        if(!fileName.endsWith(".txt"))
+        if (!fileName.endsWith(".txt"))
             fileName += ".txt";
         QFile file(fileName);
         file.open(QIODevice::ReadWrite | QIODevice::Text);
@@ -293,7 +293,7 @@ float ScanDisplay::setPixmapScaled(QImage img, QLabel *lab)
     float imgWidth = img.width();
     float imgHeight = img.height();
     float num = 1;
-    if((labWidth/imgWidth) <= (labHeight/imgHeight))
+    if ((labWidth/imgWidth) <= (labHeight/imgHeight))
         num = labWidth/imgWidth;
     else
         num = labHeight/imgHeight;
@@ -669,11 +669,11 @@ void ScanDisplay::onScan()
 void ScanDisplay::onRectify()
 {
     qDebug() <<"flagRectify = " << flagRectify;
-    if(flagRectify == 0)
+    if (flagRectify == 0)
     {
         // 此时代表用户点击了智能纠偏按钮
         flagRectify = 1;
-        if(vStackedLayout->currentWidget() == widgetNormal)
+        if (vStackedLayout->currentWidget() == widgetNormal)
         {
             qDebug() << "currentWidget == widgetNormal";
             imgNormal->save("/tmp/scanner/scan1.png");
@@ -702,7 +702,7 @@ void ScanDisplay::onRectify()
     {
         // 此时代表用户重复点击智能纠偏按钮，应该进行撤销操作
         flagRectify = 0;
-        if(vStackedLayout->currentWidget() == widgetNormal)
+        if (vStackedLayout->currentWidget() == widgetNormal)
         {
             qDebug() << "currentWidget == widgetNormal";
             *imgNormal = imgRectify->copy();
@@ -711,10 +711,10 @@ void ScanDisplay::onRectify()
              * 有2种情况： 1）先撤销一键美化 2）先撤销智能纠偏
              */
             qDebug() << "list.count = " << list.count();
-            if(list.count() == 2)
+            if (list.count() == 2)
             {
                 // 撤销的是智能纠偏：先全部清空，后把一键美化的加上
-                if(list[0] == "Rectify")
+                if (list[0] == "Rectify")
                 {
                     list.clear();
                     imgNormal->save("/tmp/scanner/scan1.png");
@@ -739,9 +739,9 @@ void ScanDisplay::onRectify()
         {
             *imgEditLayout = imgRectify->copy();
             qDebug() << "list.count = " << list.count();
-            if(list.count() == 2)
+            if (list.count() == 2)
             {
-                if(list[0] == "Rectify")
+                if (list[0] == "Rectify")
                 {
                     qDebug() << "list[0] = " << list[0];
                     list.clear();
@@ -769,10 +769,10 @@ void ScanDisplay::onRectify()
 void ScanDisplay::onBeautify()
 {
     qDebug() << "beauty()";
-    if(flagBeautify == 0)
+    if (flagBeautify == 0)
     {
         flagBeautify = 1;
-        if(vStackedLayout->currentWidget() == widgetNormal)
+        if (vStackedLayout->currentWidget() == widgetNormal)
         {
             imgNormal->save("/tmp/scanner/scan1.png");
             *imgBeautify = imgNormal->copy();
@@ -798,12 +798,12 @@ void ScanDisplay::onBeautify()
     else
     {
         flagBeautify = 0;
-        if(vStackedLayout->currentWidget() == widgetNormal)
+        if (vStackedLayout->currentWidget() == widgetNormal)
         {
             *imgNormal = imgBeautify->copy();
-            if(list.count() == 2)
+            if (list.count() == 2)
             {
-                if(list[0] == "Beautify")
+                if (list[0] == "Beautify")
                 {
                     list.clear();
                     imgNormal->save("/tmp/scanner/scan1.png");
@@ -824,9 +824,9 @@ void ScanDisplay::onBeautify()
         else
         {
             *imgEditLayout = imgBeautify->copy();
-            if(list.count() == 2)
+            if (list.count() == 2)
             {
-                if(list[0] == "Beautify")
+                if (list[0] == "Beautify")
                 {
                     list.clear();
                     imgEditLayout->save("/tmp/scanner/scan1.png");
@@ -853,7 +853,7 @@ void ScanDisplay::onBeautify()
 void ScanDisplay::switchPage()
 {
     index++;
-    if(index > 1)
+    if (index > 1)
     {
         qDebug() << "1 switchPage index = " << index;
         index = 0;
@@ -1000,7 +1000,7 @@ void myThread::run()
     }
     // 使用leptonica库打开输入图像。
     Pix* image = pixRead("/tmp/scanner/scan1.png");
-    if(!image)
+    if (!image)
     {
         qDebug() <<"pixRead error!";
         outText = "Unable to read text";

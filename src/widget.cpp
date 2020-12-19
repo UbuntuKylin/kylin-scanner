@@ -239,7 +239,7 @@ void Widget::resultDetail(bool ret)
     ret = true;
 #endif
 
-    if(ret)
+    if (ret)
     {
         device = true;
         pScanSet->setKylinComboBox(false);
@@ -281,7 +281,7 @@ void Widget::saveImage(QString fileName)
     qDebug() << "Save filename: " << fileName;
     QImage *img = NULL;
     img = pScandisplay->imageSave(fileName);
-    if(img)
+    if (img)
         saveToPdf(*img,fileName);
 }
 
@@ -320,7 +320,7 @@ void Widget::saveScanFile()
         if (pathName.endsWith(newformat,Qt::CaseSensitive))
         {
             qDebug() <<"pathName:"<<pathName;
-            if(messageScanFinishedSave(pathName))
+            if (messageScanFinishedSave(pathName))
             {
                 QFile::remove(pathName);
                 img.save(pathName);
@@ -330,7 +330,7 @@ void Widget::saveScanFile()
         {
             pathName += newformat;
             qDebug() <<"pathName:"<<pathName;
-            if(messageScanFinishedSave(pathName))
+            if (messageScanFinishedSave(pathName))
             {
                 QFile::remove(pathName);
                 img.save(pathName);
@@ -347,7 +347,7 @@ void Widget::saveScanFile()
             qDebug() <<"pathName:"<<pathName;
         }
 
-        if(messageScanFinishedSave(pathName))
+        if (messageScanFinishedSave(pathName))
         {
             QFile::remove(pathName);
             saveToPdf(img,pathName);
@@ -378,7 +378,7 @@ void Widget::scanResult(bool ret)
         resultDetail(retStatus);
     }
 #else
-    if(ret)
+    if (ret)
     {
         device = true;
 
@@ -418,7 +418,7 @@ void Widget::scanResultDetail(bool ret)
         pScanSet->setKylinScanSetEnable();
     }
 #else
-    if(ret)
+    if (ret)
     {
         device = true;
         pScandisplay->setInitDevice();
@@ -508,7 +508,7 @@ void CommonScanThread::run()
 
         //instance.open_device(0);
 
-        if(instance.getKylinSaneStatus() == false)
+        if (instance.getKylinSaneStatus() == false)
         {
             emit scanFinished(false);
             qDebug() << "scan finished!";

@@ -82,7 +82,7 @@ ScanSet::ScanSet(QWidget *parent)
     btnSave->setFixedSize(100,32);
 
     QFontMetrics elideFont(btnLocation->font());
-    if(curPath.isEmpty())
+    if (curPath.isEmpty())
         curPath=QDir::homePath() ; //获取家目录的路径
     btnLocation->setText(elideFont.elidedText(curPath,Qt::ElideRight,150));
     btnLocation->setFixedSize(180,32);
@@ -157,17 +157,17 @@ ScanSet::ScanSet(QWidget *parent)
 
     curColor = textColor->currentText();
     // Do not direct to return color, because color has been tr()
-    if(! QString::compare("黑白", curColor)
+    if (! QString::compare("黑白", curColor)
             || ! QString::compare("Lineart", curColor))
     {
         instance.userInfo.color = "Lineart";
     }
-    else if(! QString::compare("彩色", curColor)
+    else if (! QString::compare("彩色", curColor)
             || ! QString::compare("Color", curColor))
     {
        instance.userInfo.color = "Color";
     }
-    else if(! QString::compare("灰度", curColor)
+    else if (! QString::compare("灰度", curColor)
             || ! QString::compare("Gray", curColor))
     {
         instance.userInfo.color = "Gray";
@@ -291,7 +291,7 @@ void ScanSet::setKylinComboBox(bool curIndexChanged)
 
     for(int i=0; i<strListColor.size(); i++)
     {
-       if(! QString::compare("黑白", strListColor[i], Qt::CaseSensitive)
+       if (! QString::compare("黑白", strListColor[i], Qt::CaseSensitive)
                || ! QString::compare("Lineart", strListColor[i], Qt::CaseSensitive))
        {
            defaultColor = i;
@@ -307,7 +307,7 @@ void ScanSet::setKylinComboBox(bool curIndexChanged)
 
     for(int i=0; i<strListResolution.size(); i++)
     {
-       if(! QString::compare("300", strListResolution[i], Qt::CaseSensitive))
+       if (! QString::compare("300", strListResolution[i], Qt::CaseSensitive))
        {
            defaultResolution = i;
            break;
@@ -322,7 +322,7 @@ void ScanSet::setKylinComboBox(bool curIndexChanged)
 
     for(int i=0; i<strListSize.size(); i++)
     {
-       if(! QString::compare("A4", strListSize[i], Qt::CaseSensitive))
+       if (! QString::compare("A4", strListSize[i], Qt::CaseSensitive))
        {
            defaultSize = i;
            break;
@@ -369,7 +369,7 @@ void ScanSet::setKylinScanSetNotEnable()
 
     device_status = instance.getKylinSaneStatus();
 
-    if(!device_status)
+    if (!device_status)
     {
         textColor->setEnabled(false);
         textColor->colorGray();
@@ -471,7 +471,7 @@ void ScanSet::setKylinScanSetEnable()
 
     device_status = instance.getKylinSaneStatus();
 
-    if(device_status)
+    if (device_status)
     {
         textDevice->setEnabled(true);
         textDevice->colorInit();
@@ -548,7 +548,7 @@ void ScanSet::setKylinLable()
     textName->setMaxLength (10);
     textName->setFixedSize(180,32);
 
-    if(!device_status)
+    if (!device_status)
     {
         // No find scan device
         textType->setText(tr("Device type"));
@@ -735,7 +735,7 @@ void ScanSet::setBtnSaveText()
 
 void ScanSet::onBtnLocationClicked()
 {
-    if(curPath.isEmpty())
+    if (curPath.isEmpty())
         curPath=QDir::homePath() ; //获取家目录的路径
 
     QString dlgTitle=tr("Select a directory"); //对话框标题
@@ -753,13 +753,13 @@ void ScanSet::onBtnMailClicked()
     AppList * maillist = getAppIdList(MAILTYPE);
     qDebug() << "Get Applist success.";
 
-    if(!maillist)
+    if (!maillist)
     {
         qDebug() << "maillist is null";
         NoMail *dialog = new NoMail(this);
         int ret= dialog->exec();// 以模态方式显示对话框，用户关闭对话框时返回 DialogCode值
         qDebug() << "ret = " << ret;
-        if(ret==QDialog::Accepted)
+        if (ret==QDialog::Accepted)
         {
             QProcess *process = new QProcess();
             process->start("/usr/bin/ubuntu-kylin-software-center");
@@ -867,7 +867,7 @@ void ScanSet::onTextDeviceCurrentTextChanged(QString device)
 
 void ScanSet::modifyBtnSave()
 {
-    if(flag == 0) // 进行OCR，存储文本
+    if (flag == 0) // 进行OCR，存储文本
     {
         flag = 1;
         btnSave->setText(tr("Store text"));

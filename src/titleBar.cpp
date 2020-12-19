@@ -132,7 +132,7 @@ void TitleBar::mouseDoubleClickEvent(QMouseEvent *event)
 
 void TitleBar::mouseMoveEvent(QMouseEvent *event)
 {
-    if((event->buttons() & Qt::LeftButton) && mMoving)
+    if ((event->buttons() & Qt::LeftButton) && mMoving)
     {
         QWidget *pWindow = this->window();
         if (pWindow->isWindow ())
@@ -164,7 +164,7 @@ void TitleBar::mouseMoveEvent(QMouseEvent *event)
 
 void TitleBar::mousePressEvent(QMouseEvent *event)
 {
-    if(event->buttons() & Qt::LeftButton)
+    if (event->buttons() & Qt::LeftButton)
     {
         QCursor cursor;
         cursor.setShape (Qt::ClosedHandCursor);
@@ -178,7 +178,7 @@ void TitleBar::mousePressEvent(QMouseEvent *event)
 void TitleBar::mouseReleaseEvent(QMouseEvent *event)
 {
     QApplication::restoreOverrideCursor (); // 恢复鼠标指针形状
-    if(event->button() == Qt::LeftButton)
+    if (event->button() == Qt::LeftButton)
     {
         mMoving = false;
     }

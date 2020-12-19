@@ -102,17 +102,17 @@ double CalcDegree(const Mat &srcImage, Mat &dst)
         qDebug() << i << ", " << "DegreeTrans() = " << DegreeTrans (theta);
         //只选角度最小的作为旋转角度
         // 时常会遇到角度为10度返回内的图片，此时处理机制为默认已经高度校正，过滤该线条角度
-        if((DegreeTrans(theta) >= 80) && (DegreeTrans(theta) <= 95))
+        if ((DegreeTrans(theta) >= 80) && (DegreeTrans(theta) <= 95))
         {
             n +=1;
             continue;
         }
-        if((DegreeTrans(theta) >= 178.5))
+        if ((DegreeTrans(theta) >= 178.5))
         {
             n +=1;
             continue;
         }
-        if((DegreeTrans(theta) <= 8))
+        if ((DegreeTrans(theta) <= 8))
         {
             n +=1;
             continue;
@@ -134,11 +134,11 @@ double CalcDegree(const Mat &srcImage, Mat &dst)
 
     angle = angle - 90; // 经过多次反复测试，此处应该减90，整个线条接近水平，之后可以旋转进行校正。
     /*
-    if(angle >= 135)
+    if (angle >= 135)
         angle = angle - 180;
-    else if(angle >= 90)
+    else if (angle >= 90)
         angle =angle - 90;
-    else if(angle >= 45)
+    else if (angle >= 45)
         angle =  angle - 90;
         */
     qDebug() << "angle = " << angle;
@@ -163,7 +163,7 @@ int ImageRectify(const char * pInFileName)
         qDebug() << "矫正失败！" ;
         return -1;
     }
-    if(fabs(degree) < 1e-15 + 0.4)
+    if (fabs(degree) < 1e-15 + 0.4)
     {
         qDebug() <<"already right, so return straight!";
         return -1;

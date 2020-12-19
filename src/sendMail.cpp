@@ -313,7 +313,7 @@ Appinfo * _getAppList(const char *contentType)
 AppList * getAppIdList(const char *contentType)
 {
     Appinfo *appinfo = _getAppList(contentType);
-    if(appinfo != NULL)
+    if (appinfo != NULL)
     {
         int i = 0;
 
@@ -328,7 +328,7 @@ AppList * getAppIdList(const char *contentType)
         for (j = 0;appinfo[j].item != NULL;j++)
         {
             const char *id = g_app_info_get_id(appinfo[j].item);
-            if(id != NULL)
+            if (id != NULL)
             {
                 int len = strlen(id);
                 list[index].appid = (char *)malloc(sizeof(char)*(len+1));
@@ -419,9 +419,9 @@ void SendMail::setBtnList()
 void SendMail::openMail(QString name)
 {
     QFile aFile(DESKTOPPATH+name);
-        if(!aFile.exists())
+        if (!aFile.exists())
             qDebug() << DESKTOPPATH << name << " no exists!";
-        if(!aFile.open(QIODevice::ReadOnly | QIODevice::Text))
+        if (!aFile.open(QIODevice::ReadOnly | QIODevice::Text))
             qDebug() << DESKTOPPATH << name << " open false!";
         QTextStream aStream(&aFile);
         QString str;
@@ -429,7 +429,7 @@ void SendMail::openMail(QString name)
         while (!aStream.atEnd())
         {
             str = aStream.readLine();
-            if(str.startsWith("Exec=",Qt::CaseSensitive))
+            if (str.startsWith("Exec=",Qt::CaseSensitive))
                 break;
         }
         str = str.section("Exec=",1,1);
@@ -463,7 +463,7 @@ void SendMail::onBtnClicked()
 {
     for (int i = 0;i < btnList.size();i++)
     {
-        if(btnList[i]->isChecked())
+        if (btnList[i]->isChecked())
         {
             openMail(desktopName[i]);
             reject();
