@@ -680,7 +680,9 @@ void ScanDisplay::onRectify()
             // 为了撤销
             *imgRectify = imgNormal->copy();
             list.append("Rectify");
+            qDebug() << "before ImageRectify()";
             ImageRectify("/tmp/scanner/scan1.png");
+            qDebug() << "end ImageRectify()";
             imgNormal->load("/tmp/scanner/scan1.png");
             setPixmapScaled(*imgNormal,labNormalLeft);
             *imgEditLayout = imgNormal->copy();

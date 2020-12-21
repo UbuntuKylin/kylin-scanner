@@ -32,7 +32,7 @@ include(src.pri)
 
 DEFINES += QT_MESSAGELOGCONTEXT # for message line, file and date
 #release:DEFINES += QT_NO_WARNING_OUTPUT QT_NO_DEBUG_OUTPUT
-DEFINES += DEBUG_EDIT
+#DEFINES += DEBUG_EDIT
 #DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 

@@ -396,6 +396,8 @@ SANE_Status kylin_sane_get_parameters(SANE_Handle device)
 
 SANE_Status doScan(const char *fileName)
 {
+    KylinSane& instance = KylinSane::getInstance();
+
     SANE_Status status = SANE_STATUS_GOOD;
     FILE *ofp = nullptr;
     char path[PATH_MAX];
@@ -429,6 +431,8 @@ SANE_Status doScan(const char *fileName)
         qInfo() << "status error: " << sane_strstatus(status);
         if (status != SANE_STATUS_GOOD)
         {
+            qInfo() << "Cannot start scan devices, sane_status = " << status;
+            instance.setKylinSaneStatus(false);
             break;
         }
 
