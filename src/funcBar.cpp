@@ -227,12 +227,12 @@ FuncBar::~FuncBar()
 
 void FuncBar::keyPressEvent(QKeyEvent *e)
 {
-    if(e->key() == Qt::Key_Z && e->modifiers() ==  Qt::ControlModifier)
+    if (e->key() == Qt::Key_Z && e->modifiers() ==  Qt::ControlModifier)
     {
-        if(!stack.isEmpty())
+        if (!stack.isEmpty())
         {
             QString flagName = stack.pop();
-            if(flagName == "flagOrc")
+            if (flagName == "flagOrc")
             {
                 flagOrc = 0;
                 if (stylelist.contains(style_settings->get(STYLE_NAME).toString())) {
@@ -246,7 +246,7 @@ void FuncBar::keyPressEvent(QKeyEvent *e)
                 }
                 emit sendOrcEnd();
             }
-            if(flagName == "flagBeautify")
+            if (flagName == "flagBeautify")
             {
                 flagBeautify = 0;
                 if (stylelist.contains(style_settings->get(STYLE_NAME).toString())) {
@@ -261,7 +261,7 @@ void FuncBar::keyPressEvent(QKeyEvent *e)
                 }
                 emit sendBeautifyEnd();
             }
-            if(flagName == "flagRectify")
+            if (flagName == "flagRectify")
             {
                 flagRectify = 0;
                 if (stylelist.contains(style_settings->get(STYLE_NAME).toString())) {
@@ -286,7 +286,7 @@ void FuncBar::setKylinScanSetNotEnable()
 
     device_status = instance.getKylinSaneStatus();
 
-    if(!device_status)
+    if (!device_status)
     {
         btnNorScan->setEnabled(false);
         btnBeautify->setEnabled(false);
@@ -311,7 +311,7 @@ void FuncBar::setKylinScanSetEnable()
 
     device_status = instance.getKylinSaneStatus();
 
-    if(device_status)
+    if (device_status)
     {
         btnNorScan->setEnabled(true);
         btnBeautify->setEnabled(true);
@@ -328,7 +328,7 @@ void FuncBar::setBtnScanEnable()
 
     device_status = instance.getKylinSaneStatus();
 
-    if(device_status)
+    if (device_status)
     {
         btnScan->setEnabled(true);
     }
@@ -377,7 +377,7 @@ void FuncBar::setStackClear()
 //QString orc_text;
 void FuncBar::onBtnOrcClicked()
 {
-    if(flagOrc == 0)
+    if (flagOrc == 0)
     {
         flagOrc = 1;
         stack.push("flagOrc");
@@ -413,7 +413,7 @@ void FuncBar::onBtnScanClicked()
 {
     qDebug() << "clicked!";
     KylinSane& instance = KylinSane::getInstance();
-    if(instance.getKylinSaneStatus() == true)
+    if (instance.getKylinSaneStatus() == true)
     {
         thread.start();
         qDebug() << "btnScan: " << btnScan->size() << btnScan->pos() << btnScan->geometry();
@@ -432,7 +432,7 @@ void FuncBar::onBtnScanClicked()
 void FuncBar::onBtnRectifyClicked()
 {
     qDebug() <<"send_Rectify_Begin";
-    if(flagRectify == 0)
+    if (flagRectify == 0)
     {
         flagRectify = 1;
         stack.push("flagRectify");
@@ -463,7 +463,7 @@ void FuncBar::onBtnRectifyClicked()
 void FuncBar::onBtnBeautyClicked()
 {
     qDebug() << "flagBeauty = " << flagBeautify;
-    if(flagBeautify == 0)
+    if (flagBeautify == 0)
     {
         flagBeautify = 1;
         stack.push("flagBeautify");
@@ -611,7 +611,7 @@ void ThreadScanFuncBar::run()
     emit scanFinishedFuncBar(ret);
     quit();
 #else
-    if(instance.getKylinSaneStatus() == true)
+    if (instance.getKylinSaneStatus() == true)
     {
         ret = instance.startScanning(instance.userInfo);
         qDebug() <<"start_scanning end!!!";
