@@ -1336,7 +1336,12 @@ static SANE_Status startSaneScan(SANE_Handle sane_handle, SANE_String_Const file
 {
     gs_device = sane_handle; //全局静态变量初始化
 
-    return doScan(fileName);
+    SANE_Status status = SANE_STATUS_GOOD;
+    status = doScan(fileName);
+
+    qInfo() << "doScan() status = " << status;
+
+    return status;
 }
 
 /**

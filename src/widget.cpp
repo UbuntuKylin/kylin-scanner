@@ -116,9 +116,11 @@ Widget::Widget(QWidget *parent)
     // For scan
     connect(&thread,SIGNAL(scanFinished(bool)),this,SLOT(scanResult(bool)));
     connect(pScanSet,SIGNAL(openDeviceStatusSignal(bool)),this,SLOT(scanResultDetail(bool)));
-    connect(pFuncBar,&FuncBar::sendScanEnd,pScandisplay,&ScanDisplay::onScan);
-    connect(pFuncBar,&FuncBar::sendScanEnd,this,&Widget::setScanSetBtnEnable);
-    connect(pFuncBar,&FuncBar::sendScanEnd,this,&Widget::saveScanFile);
+
+    connect(pFuncBar,SIGNAL(sendScanEnd(bool)),pScandisplay,SLOT(onScan(bool)));
+    connect(pFuncBar,SIGNAL(sendScanEnd(bool)),this,SLOT(setScanSetBtnEnable(bool)));
+    connect(pFuncBar,SIGNAL(sendScanEnd(bool)),this,SLOT(saveScanFile(bool)));
+    connect(pFuncBar,SIGNAL(sendScanEnd(bool)),this,SLOT(scanningResultDetail(bool)));
 
     // For rectify
     connect(pFuncBar,&FuncBar::sendRectifyBegin,pScandisplay,&ScanDisplay::onRectify);
@@ -258,6 +260,11 @@ void Widget::resultDetail(bool ret)
 
 int Widget::messageScanFinishedSave(QString pathName)
 {
+    KylinSane &instance = KylinSane::getInstance();
+    bool retStatus = instance.getKylinSaneStatus();
+    if (!retStatus)
+        return 0;
+
 #ifdef DEBUG_EDIT
     return 0;
 #endif
@@ -289,8 +296,11 @@ void Widget::saveImage(QString fileName)
  * @brief Widget::setScanSetBtnEnable
  * 设置发邮件和另存为控件可用
  */
-void Widget::setScanSetBtnEnable()
+void Widget::setScanSetBtnEnable(bool ret)
 {
+    if (!ret)
+        return;
+
     pScanSet->setKylinScanSetBtnEnable();
     pScanSet->setBtnSaveText();
 }
@@ -298,8 +308,11 @@ void Widget::setScanSetBtnEnable()
 /**
  * @brief Widget::save_scan_file存储为不同的格式
  */
-void Widget::saveScanFile()
+void Widget::saveScanFile(bool ret)
 {
+    if (!ret)
+        return;
+
     QImage img;
 
     pFuncBar->setKylinScanSetEnable();
@@ -433,6 +446,32 @@ void Widget::scanResultDetail(bool ret)
         pScandisplay->setNoDevice();
         pFuncBar->setKylinScanSetNotEnable();
         pScanSet->setKylinScanSetNotEnable();
+    }
+#endif
+}
+
+void Widget::scanningResultDetail(bool ret)
+{
+    qDebug() << "ret = " << ret;
+
+#ifdef DEBUG_EDIT
+    {
+        device = true;
+        pScandisplay->setInitDevice();
+        pScanSet->setKylinComboBox(true);
+        pScanSet->setKylinLable();
+        pFuncBar->setBtnScanEnable();
+        pScanSet->setKylinScanSetEnable();
+    }
+#else
+    if (!ret)
+    {
+        device = true;
+        pScandisplay->setInitDevice();
+        pScanSet->setKylinComboBox(true);
+        pScanSet->setKylinLable();
+        pFuncBar->setBtnScanEnable();
+        pScanSet->setKylinScanSetEnable();
     }
 #endif
 }

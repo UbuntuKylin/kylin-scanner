@@ -73,10 +73,11 @@ Q_SIGNALS:
 
 private slots:
     void saveImage(QString fileName);
-    void setScanSetBtnEnable();
-    void saveScanFile();
+    void setScanSetBtnEnable(bool ret);
+    void saveScanFile(bool ret);
     void scanResult(bool ret);
     void scanResultDetail(bool ret);
+    void scanningResultDetail(bool ret);
     void setMaskClear();
     void setWindowBorderRadius();
     void style_changed(QString); // 系统主题风格变化
