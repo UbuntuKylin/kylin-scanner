@@ -1,3 +1,21 @@
+kylin-scanner (1.0.0-1kylin1k10) v101; urgency=medium
+
+  * [English]
+  * Fix #27702, scan break after click rectify button
+  * Fix #28815, label words cannot display correctly
+  * Fix #28817, funcBar scan button translation
+  * Fix #28924, window shadow, titlebar style
+  * Add log module color display
+  *
+  * [中文]
+  * 修复#27702，扫描过程中，点击"智能纠偏"，应用闪退
+  * 修复#28815，英文环境下，麒麟扫描界面文字显示不全
+  * 修复#28817，英文环境下，麒麟扫描“扫描中”和扫描完成后，“扫描”按钮变成中文
+  * 修复#28924，主界面无边框阴影
+  * 增加日志模块颜色显示
+
+ -- yushuoqi <yushuoqi@kylinos.cn>  Thu, 24 Dec 2020 20:29:40 +0800
+
 kylin-scanner (1.0.0-1kylin1k9) v101; urgency=medium
 
   * Modify watermarkDlg btnOk judge while input null
