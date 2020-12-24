@@ -491,7 +491,7 @@ void FuncBar::onBtnBeautyClicked()
 
 void FuncBar::scanResult(int ret)
 {
-    qDebug() << ret;
+    qDebug() << "scanResult(0:success) = " << ret;
     btnScan->show();
     btnScan->setText(tr("scan"));
     btnScan->setStyleSheet("QPushButton{background-color: rgb(232,160,73);border-radius:28px;color:rgb(232,232,232);}");
@@ -500,7 +500,10 @@ void FuncBar::scanResult(int ret)
     labMovieScan->resize(0, 0);
     labMovieScan->hide();
 
-    emit sendScanEnd();
+    if (ret == 0)
+        emit sendScanEnd(true);
+    else
+        emit sendScanEnd(false);
 }
 
 void FuncBar::funcbar_style_changed(QString)
@@ -614,7 +617,7 @@ void ThreadScanFuncBar::run()
     if (instance.getKylinSaneStatus() == true)
     {
         ret = instance.startScanning(instance.userInfo);
-        qDebug() <<"start_scanning end!!!";
+        qDebug() << "start_scanning end, status = " << ret;
         emit scanFinishedFuncBar(ret);
     }
     quit();

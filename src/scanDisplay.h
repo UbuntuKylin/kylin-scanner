@@ -158,7 +158,7 @@ private:
 
 public slots:
     void onOrc();
-    void onScan();
+    void onScan(bool ret);
     void onRectify();
     void onBeautify();
     void switchPage();

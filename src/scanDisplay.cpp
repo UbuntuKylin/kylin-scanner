@@ -632,9 +632,12 @@ void ScanDisplay::onOrc()
 /**
  * @brief scan_display::scan 扫描功能结束后显示图片
  */
-void ScanDisplay::onScan()
+void ScanDisplay::onScan(bool ret)
 {
-    qDebug() << "begin";
+    qDebug() << "onScan begin, ret = " << ret;
+    if (!ret)
+        return;
+
     vStackedLayout->setCurrentIndex(0);
     vStackedLayout->setCurrentIndex(1);
     vStackedLayout->setCurrentIndex(2);
