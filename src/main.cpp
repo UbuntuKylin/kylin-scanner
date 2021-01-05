@@ -102,7 +102,9 @@ void customOutputMessage(QtMsgType type, const QMessageLogContext &context, cons
     verifyScannerDir();
 
     QFile file("/tmp/scanner/kylin-scanner.log");
-    file.open(QIODevice::ReadWrite | QIODevice::Append);
+    if (!file.open(QIODevice::ReadWrite | QIODevice::Append))
+        return;
+
     QTextStream text_stream(&file);
     text_stream << message << "\r\n";
     file.flush();

@@ -75,8 +75,8 @@
         <file>icon/rectify.svg</file>
         <file>icon/beautify_black.svg</file>
         <file>icon/beautify.svg</file>
-        <file>icon/index-icon.svg</file>
         <file>icon/down_black.svg</file>
+        <file>icon/no-conection-dark.svg</file>
+        <file>icon/no-conection-light.svg</file>
     </qresource>
-    <qresource prefix="/"/>
 </RCC>
