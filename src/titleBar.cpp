@@ -19,6 +19,9 @@
 #include "titleBar.h"
 #include <QApplication>
 #include <iostream>
+#include <QDBusMessage>
+#include <QDBusConnection>
+
 using namespace std;
 
 TitleBar::TitleBar(QWidget *parent)
@@ -30,6 +33,9 @@ TitleBar::TitleBar(QWidget *parent)
     , m_pMinimizeButton (new QPushButton())
     , m_pMaximizeButton (new QPushButton())
     , m_pCloseButton (new QPushButton())
+    , m_pMenuButton(new QToolButton(this))
+    , m_pMenu(new QMenu(this))
+    , m_pAbout(new KYCAboutDialog(this))
     , pTitleLayout (new QHBoxLayout())
     , pButtonLayout (new QHBoxLayout())
     , pLayout (new QHBoxLayout())
@@ -61,6 +67,32 @@ TitleBar::TitleBar(QWidget *parent)
         m_logo->setStyleSheet("QLabel{border-image:url(/usr/share/icons/ukui-icon-theme-default/24x24/apps/kylin-scanner.png);border-radius:4px;}");
     }
 #endif
+
+    // Menu : Help F1 | About | Exit
+    m_pMenu->setMinimumWidth(160);
+    m_pMenu->addAction(tr("Help"), this, [=](){
+        QDBusMessage msg = QDBusMessage::createMethodCall( "com.kylinUserGuide.hotel_1000",
+                                                        "/",
+                                                        "com.guide.hotel",
+                                                        "showGuide");
+        msg << "kylin-scanner";
+        QDBusMessage response = QDBusConnection::sessionBus().call(msg);
+    }, QKeySequence(Qt::Key_F1));
+    m_pMenu->addAction(tr("About"), this, [=](){
+        m_pAbout->show();
+    });
+    m_pMenu->addAction(tr("Exit"), [=](){exit(0);} );
+
+    m_pMenuButton->setIcon (QIcon::fromTheme (ICON_THEME_MENU));
+    m_pMenuButton->setToolTip(tr("Minimize"));
+    m_pMenuButton->setFixedSize(30, 30);
+    m_pMenuButton->setIconSize (QSize(16, 16));
+    m_pMenuButton->setPopupMode(QToolButton::InstantPopup);
+    // 自定义标题栏窗口三联按钮
+    m_pMenuButton->setProperty("isWindowButton", 0x1);
+    m_pMenuButton->setProperty("useIconHighlightEffect", 0x2);
+    m_pMenuButton->setAutoRaise(true);
+    m_pMenuButton->setMenu(m_pMenu);
 
     m_pMinimizeButton->setIcon (QIcon::fromTheme (ICON_THEME_MINIMIZE));
     m_pMinimizeButton->setToolTip(tr("Minimize"));
@@ -97,6 +129,8 @@ TitleBar::TitleBar(QWidget *parent)
 
     pButtonLayout->addStretch();
     pButtonLayout->setSpacing(0);
+    pButtonLayout->addWidget(m_pMenuButton);
+    pButtonLayout->addSpacing(4);
     pButtonLayout->addWidget(m_pMinimizeButton);
     pButtonLayout->addSpacing(4);
     pButtonLayout->addWidget(m_pMaximizeButton);

@@ -41,6 +41,7 @@
 #define ICON_THEME_CLOSE "window-close-symbolic"
 #define ICON_THEME_MINIMIZE "window-minimize-symbolic"
 #define ICON_THEME_MAXIMAZE "window-maximize-symbolic"
+#define ICON_THEME_MENU "open-menu-symbolic"
 #define ICON_THEME_RESTORE "window-restore-symbolic"
 
 class Theme : public QWidget

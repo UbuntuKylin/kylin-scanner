@@ -4,7 +4,7 @@
 <context>
     <name>EditBar</name>
     <message>
-        <location filename="../scanDisplay.cpp" line="+934"/>
+        <location filename="../scanDisplay.cpp" line="+951"/>
         <source>rotate</source>
         <translation>旋转</translation>
     </message>
@@ -58,6 +58,54 @@
     </message>
 </context>
 <context>
+    <name>KYCAboutDialog</name>
+    <message>
+        <location filename="../kycaboutdialog.ui" line="+14"/>
+        <source>Dialog</source>
+        <translatorcomment>关于对话框</translatorcomment>
+        <translation>关于对话框</translation>
+    </message>
+    <message>
+        <location filename="../kycaboutdialog.cpp" line="+23"/>
+        <location line="+4"/>
+        <location line="+13"/>
+        <source>kylin-scanner</source>
+        <translatorcomment>麒麟扫描</translatorcomment>
+        <translation>麒麟扫描</translation>
+    </message>
+    <message>
+        <location line="-9"/>
+        <source>Version: 3.1.0</source>
+        <translatorcomment>版本：1.11</translatorcomment>
+        <translation>版本：1.11</translation>
+    </message>
+    <message>
+        <location line="+5"/>
+        <source>About</source>
+        <translatorcomment>关于</translatorcomment>
+        <translation>关于</translation>
+    </message>
+    <message>
+        <location line="+33"/>
+        <location line="+13"/>
+        <source>Service &amp; Support : </source>
+        <translatorcomment>技术与支持 :</translatorcomment>
+        <translation>技术与支持 :</translation>
+    </message>
+    <message>
+        <source>&lt;p style=&quot;color: %1&quot;&gt;</source>
+        <translatorcomment>&lt;p style=\&quot;color: %1\&quot;&gt;</translatorcomment>
+        <translation type="vanished">&lt;p style=\&quot;color: %1\&quot;&gt;</translation>
+    </message>
+    <message>
+        <location line="-7"/>
+        <location line="+13"/>
+        <source>Kylin Scanner is.</source>
+        <translatorcomment>麒麟扫描是</translatorcomment>
+        <translation>麒麟扫描是</translation>
+    </message>
+</context>
+<context>
     <name>NoMail</name>
     <message>
         <location filename="../sendMail.cpp" line="+37"/>
@@ -89,7 +137,7 @@
 <context>
     <name>QObject</name>
     <message>
-        <location filename="../kylinSane.cpp" line="+582"/>
+        <location filename="../kylinSane.cpp" line="+586"/>
         <source>Color</source>
         <translation>彩色</translation>
     </message>
@@ -105,20 +153,20 @@
     </message>
     <message>
         <location line="+67"/>
-        <location line="+761"/>
+        <location line="+766"/>
         <location line="+73"/>
         <source>Flatbed</source>
         <translation>平板式</translation>
     </message>
     <message>
-        <location line="-828"/>
-        <location line="+759"/>
+        <location line="-833"/>
+        <location line="+764"/>
         <location line="+73"/>
         <source>Transparency Adapter</source>
         <translation>馈纸式</translation>
     </message>
     <message>
-        <location line="-742"/>
+        <location line="-747"/>
         <source>auto</source>
         <translation>自动</translation>
     </message>
@@ -133,13 +181,13 @@
 <context>
     <name>ScanDisplay</name>
     <message>
-        <location filename="../scanDisplay.cpp" line="-593"/>
-        <location line="+31"/>
+        <location filename="../scanDisplay.cpp" line="-607"/>
+        <location line="+36"/>
         <source>Please connect to a scan device firstly !</source>
         <translation>请先连接扫描仪</translation>
     </message>
     <message>
-        <location line="+219"/>
+        <location line="+223"/>
         <source>Try to ocr ...</source>
         <translation>正在识别中...</translation>
     </message>
@@ -153,13 +201,13 @@
     </message>
     <message>
         <location line="+2"/>
-        <location line="+651"/>
+        <location line="+652"/>
         <location line="+145"/>
         <source>Save as</source>
         <translation>另存为</translation>
     </message>
     <message>
-        <location line="-624"/>
+        <location line="-625"/>
         <location line="+100"/>
         <source>No available device</source>
         <translation>无可用设备</translation>
@@ -234,7 +282,7 @@
         <translation>设备类型</translation>
     </message>
     <message>
-        <location line="+171"/>
+        <location line="+172"/>
         <source>Scanning images&apos;s length cannot be large than 252</source>
         <translation>扫描图片文件名长度不能超过252个字符</translation>
     </message>
@@ -272,29 +320,48 @@
 <context>
     <name>TitleBar</name>
     <message>
-        <location filename="../titleBar.cpp" line="+51"/>
+        <location filename="../titleBar.cpp" line="+57"/>
         <source>kylin-scanner</source>
         <translation>麒麟扫描</translation>
     </message>
     <message>
-        <location line="+15"/>
+        <location line="+16"/>
+        <source>Help</source>
+        <translatorcomment>帮助</translatorcomment>
+        <translation>帮助</translation>
+    </message>
+    <message>
+        <location line="+8"/>
+        <source>About</source>
+        <translatorcomment>关于</translatorcomment>
+        <translation>关于</translation>
+    </message>
+    <message>
+        <location line="+3"/>
+        <source>Exit</source>
+        <translatorcomment>退出</translatorcomment>
+        <translation>退出</translation>
+    </message>
+    <message>
+        <location line="+3"/>
+        <location line="+11"/>
         <source>Minimize</source>
         <translation>最小化</translation>
     </message>
     <message>
         <location line="+9"/>
-        <location line="+74"/>
+        <location line="+76"/>
         <location line="+119"/>
         <source>Maximize</source>
         <translation>最大化</translation>
     </message>
     <message>
-        <location line="-185"/>
+        <location line="-187"/>
         <source>Close</source>
         <translation>关闭</translation>
     </message>
     <message>
-        <location line="+176"/>
+        <location line="+178"/>
         <source>Restore</source>
         <translation>还原</translation>
     </message>
@@ -325,7 +392,7 @@
         <translation>麒麟扫描</translation>
     </message>
     <message>
-        <location line="+231"/>
+        <location line="+238"/>
         <source> already exist, do you want to overwrite it?</source>
         <translation>已经存在，你想覆盖它吗？</translation>
     </message>
