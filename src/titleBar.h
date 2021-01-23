@@ -19,6 +19,9 @@
 #ifndef TITLE_BAR_H
 #define TITLE_BAR_H
 
+#include "theme.h"
+#include "kycaboutdialog.h"
+
 #include <QDialog>
 #include <QWidget>
 #include <QLabel>
@@ -28,7 +31,8 @@
 #include <QMouseEvent>
 #include <QDebug>
 #include <QPainter>
-#include "theme.h"
+#include <QToolButton>
+#include <QMenu>
 
 class TitleBar : public QDialog
 {
@@ -70,6 +74,9 @@ private:
     QPushButton *m_pMinimizeButton;
     QPushButton *m_pMaximizeButton;
     QPushButton *m_pCloseButton;
+    QToolButton *m_pMenuButton;
+    QMenu       *m_pMenu;
+    KYCAboutDialog *m_pAbout;
 
     QHBoxLayout *pTitleLayout;
     QHBoxLayout *pButtonLayout;
