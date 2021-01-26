@@ -23,10 +23,14 @@
 #include <QIcon>
 #include <QSplitter>
 #include <QLine>
+#include <QString>
 #include "scanDisplay.h"
 #include "scanSet.h"
 #include "titleBar.h"
 #include "theme.h"
+
+#define MAINWINDOW_WIDTH 860
+#define MAINWINDOW_HEIGHT 680
 
 class CommonScanThread : public QThread
 {

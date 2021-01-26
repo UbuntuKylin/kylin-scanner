@@ -34,6 +34,9 @@
 #include <QToolButton>
 #include <QMenu>
 
+#define MAINWINDOW_WIDTH 860
+#define MAINWINDOW_HEIGHT 680
+
 class TitleBar : public QDialog
 {
     Q_OBJECT
@@ -41,6 +44,8 @@ class TitleBar : public QDialog
 public:
     explicit TitleBar(QWidget *parent = nullptr);
     ~TitleBar();
+
+    void setMainWindowAttribute(int w, int h);
 
 protected:
     // 双击标题栏进行界面的最大化/还原
@@ -53,8 +58,8 @@ protected:
 
     // 设置界面标题与图标
     virtual bool eventFilter(QObject *obj, QEvent *event);
-
     virtual void keyPressEvent(QKeyEvent *e);
+
 
 private:
     // 最大化/还原
@@ -81,6 +86,9 @@ private:
     QHBoxLayout *pTitleLayout;
     QHBoxLayout *pButtonLayout;
     QHBoxLayout *pLayout;
+
+    int mainWindowWidth;
+    int mainWindowHeight;
 
 private slots:
     // 进行最小化、最大化/还原、关闭操作

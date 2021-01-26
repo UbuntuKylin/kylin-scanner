@@ -73,12 +73,3 @@ DISTFILES += \
     icon/scanner.png \
     translations/generate_translations_pm.sh \
     translations/local.zh_CN.qm
-
-FORMS += \
-    kycaboutdialog.ui
-
-HEADERS += \
-    kycaboutdialog.h
-
-SOURCES += \
-    kycaboutdialog.cpp

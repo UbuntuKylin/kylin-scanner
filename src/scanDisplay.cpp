@@ -245,7 +245,7 @@ QImage *ScanDisplay::imageSave(QString fileName)
         *imgEditLayout = imgNormal->copy();
         if (fileName.endsWith(".pdf"))
             return imgEditLayout;
-        if (fileName.endsWith(".png") || fileName.endsWith(".jpg") || fileName.endsWith(".bmp"))
+        //if (fileName.endsWith(".png") || fileName.endsWith(".jpg") || fileName.endsWith(".bmp"))
             imgEditLayout->save(fileName);
     }
     else {

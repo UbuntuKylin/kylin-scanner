@@ -28,7 +28,7 @@ KYCAboutDialog::KYCAboutDialog(QWidget *parent) :
     f.setWeight(24);
     f.setPixelSize(14);
     ui->labelVersion->setFont(f);
-    ui->labelVersion->setText(tr("Version: 3.1.0"));
+    ui->labelVersion->setText(tr("Version: " ) + "1.0.11");
     //ui->labelVersion->setAlignment(Qt::AlignCenter);
     f.setPixelSize(12);
     f.setPixelSize(14);
@@ -61,33 +61,32 @@ void KYCAboutDialog::paintEvent(QPaintEvent *event)
     QPalette pal = QApplication::style()->standardPalette();
     QPalette pp = QApplication::style()->standardPalette();
     QColor c;
+    QString text = tr("Kylin Scanner is an interface-friendly scanner, which could be also used as one-click beautification, intelligent correction and text recognition tools.");
 
     c.setRed(231); c.setBlue(231); c.setGreen(231);
     if (c == pal.background().color())
     {
         pal.setColor(QPalette::Background, QColor("#FFFFFF"));
-        ui->labelSupport->setText(tr("Service & Support : ") +
-                                  "<a href=\"mailto://support@kylinos.cn\">"
-                                  "support@kylinos.cn</a>");
+        ui->labelSupport->setText(tr("Service & Support : ")
+                                  + "<a href=\"mailto://support@kylinos.cn\">"
+                                  + "support@kylinos.cn</a>");
 
-        ui->textEdit->setText("<body style=\"background:#FFFFFF;\">" +
-                              QString("<p style=\"color: %1\">").arg(pal.windowText().color().name(QColor::HexRgb)) +
-                              tr("Kylin Scanner is.")
+        ui->textEdit->setText("<body style=\"background:#FFFFFF;\">"
+                              + QString("<p style=\"color: %1\">").arg(pal.windowText().color().name(QColor::HexRgb))
+                              + text
                               + "</p></body>");
         setPalette(pal);
     }
     else
     {
         setPalette(pal);
-        ui->labelSupport->setText(tr("Service & Support : ") +
-                                  "<a href=\"mailto://support@kylinos.cn\">"
-                                  "support@kylinos.cn</a>");
-        ui->textEdit->setText(QString("<body style=\"background:%1;\">")
-                              .arg(pal.background().color().name(QColor::HexRgb)) +
-                              QString("<p style=\"color: %1\">").arg(pal.windowText().color().name(QColor::HexRgb)) +
-                              tr("Kylin Scanner is.")
+        ui->labelSupport->setText(tr("Service & Support : ")
+                                  + "<a href=\"mailto://support@kylinos.cn\">"
+                                  + "support@kylinos.cn</a>");
+        ui->textEdit->setText(QString("<body style=\"background:%1;\">") .arg(pal.background().color().name(QColor::HexRgb))
+                              + QString("<p style=\"color: %1\">").arg(pal.windowText().color().name(QColor::HexRgb))
+                              + text
                               + "</p></body>");
-
     }
 
 
