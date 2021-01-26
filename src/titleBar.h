@@ -19,6 +19,9 @@
 #ifndef TITLE_BAR_H
 #define TITLE_BAR_H
 
+#include "theme.h"
+#include "kycaboutdialog.h"
+
 #include <QDialog>
 #include <QWidget>
 #include <QLabel>
@@ -28,7 +31,11 @@
 #include <QMouseEvent>
 #include <QDebug>
 #include <QPainter>
-#include "theme.h"
+#include <QToolButton>
+#include <QMenu>
+
+#define MAINWINDOW_WIDTH 860
+#define MAINWINDOW_HEIGHT 680
 
 class TitleBar : public QDialog
 {
@@ -37,6 +44,8 @@ class TitleBar : public QDialog
 public:
     explicit TitleBar(QWidget *parent = nullptr);
     ~TitleBar();
+
+    void setMainWindowAttribute(int w, int h);
 
 protected:
     // 双击标题栏进行界面的最大化/还原
@@ -49,8 +58,8 @@ protected:
 
     // 设置界面标题与图标
     virtual bool eventFilter(QObject *obj, QEvent *event);
-
     virtual void keyPressEvent(QKeyEvent *e);
+
 
 private:
     // 最大化/还原
@@ -70,10 +79,16 @@ private:
     QPushButton *m_pMinimizeButton;
     QPushButton *m_pMaximizeButton;
     QPushButton *m_pCloseButton;
+    QToolButton *m_pMenuButton;
+    QMenu       *m_pMenu;
+    KYCAboutDialog *m_pAbout;
 
     QHBoxLayout *pTitleLayout;
     QHBoxLayout *pButtonLayout;
     QHBoxLayout *pLayout;
+
+    int mainWindowWidth;
+    int mainWindowHeight;
 
 private slots:
     // 进行最小化、最大化/还原、关闭操作

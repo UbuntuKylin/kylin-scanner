@@ -77,9 +77,12 @@ ScanDisplay::ScanDisplay(QWidget *parent)
     labInit->setText("");
     //labInit->setCursor (Qt::BusyCursor);
 
+    /*
+    if (stylelist.contains(style_settings->get(STYLE_NAME).toString())) {
     imgConnectError->load(":/icon/icon/index-icon.svg");
     labConnectError->setPixmap(QPixmap::fromImage(*imgConnectError));
     labConnectError->setAlignment(Qt::AlignHCenter|Qt::AlignBottom);
+    */
 
 
     vBoxConnectError->setSpacing(0);
@@ -242,7 +245,7 @@ QImage *ScanDisplay::imageSave(QString fileName)
         *imgEditLayout = imgNormal->copy();
         if (fileName.endsWith(".pdf"))
             return imgEditLayout;
-        if (fileName.endsWith(".png") || fileName.endsWith(".jpg") || fileName.endsWith(".bmp"))
+        //if (fileName.endsWith(".png") || fileName.endsWith(".jpg") || fileName.endsWith(".bmp"))
             imgEditLayout->save(fileName);
     }
     else {
@@ -345,8 +348,13 @@ void ScanDisplay::initStyle()
         labConnectErrorText->setAlignment(Qt::AlignHCenter|Qt::AlignTop);
         labConnectErrorText->setStyleSheet ("QLabel{background-color:rgb(15,8,1);"
                                             "color:rgb(232,232,232);}");
+
+        imgConnectError->load(":/icon/icon/no-conection-dark.svg");
+        labConnectError->setPixmap(QPixmap::fromImage(*imgConnectError));
+        labConnectError->setAlignment(Qt::AlignHCenter|Qt::AlignBottom);
+
         QPalette connect_error_pacolor_black;
-        connect_error_pacolor_black.setColor (QPalette::Background, QColor(15,8,1));
+        connect_error_pacolor_black.setColor (QPalette::Background, QColor(15,8,1)); 
         labConnectError->setAutoFillBackground (true);
         labConnectError->setPalette (connect_error_pacolor_black);
 
@@ -376,6 +384,10 @@ void ScanDisplay::initStyle()
         labConnectErrorText->setAlignment(Qt::AlignHCenter|Qt::AlignTop);
         labConnectErrorText->setStyleSheet ("QLabel{background-color:rgb(232,232,232);"
                                             "color:rgb(15,8,1);}");
+
+        imgConnectError->load(":/icon/icon/no-conection-light.svg");
+        labConnectError->setPixmap(QPixmap::fromImage(*imgConnectError));
+        labConnectError->setAlignment(Qt::AlignHCenter|Qt::AlignBottom);
 
         connect_error_pacolor.setColor (QPalette::Background, QColor(232,232,232));
         labConnectError->setAutoFillBackground (true);

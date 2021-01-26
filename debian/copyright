@@ -30,8 +30,12 @@ Files: Doxyfile
        src/beauty.h
        src/realTimelbl.cpp
        src/realTimelbl.h
+       src/daemondbus.cpp
+       src/daemondbus.h
        src/funcBar.cpp
        src/funcBar.h
+       src/kycaboutdialog.cpp
+       src/kycaboutdialog.h
        src/kylinCmb.cpp
        src/kylinCmb.h
        src/tailorLabel.cpp

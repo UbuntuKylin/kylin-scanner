@@ -811,7 +811,7 @@ void ScanSet::onBtnSaveClicked()
     {
         pathName = curPath + "/" + textName->text() + "." + textFormat->currentText();
         aFileName =QFileDialog::getSaveFileName(this, dlgTitle, pathName,
-                                                       hashFormatFilter[textFormat->currentIndex ()]);
+                                                      hashFormatFilter[textFormat->currentIndex ()]);
     }
 
     qDebug() << "Save as: " << aFileName;

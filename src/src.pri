@@ -17,6 +17,8 @@
 #-------------------------------------------------
 
 SOURCES += \
+    $$PWD/daemondbus.cpp \
+    $$PWD/kycaboutdialog.cpp \
     beauty.cpp \
     funcBar.cpp \
     interruptDlg.cpp \
@@ -37,6 +39,8 @@ SOURCES += \
     xatomhelper.cpp
 
 HEADERS += \
+    $$PWD/daemondbus.h \
+    $$PWD/kycaboutdialog.h \
     beauty.h \
     funcBar.h \
     interruptDlg.h \
@@ -54,4 +58,7 @@ HEADERS += \
     waterMarkDlg.h \
         widget.h \
     xatomhelper.h
+
+FORMS += \
+    $$PWD/kycaboutdialog.ui
 

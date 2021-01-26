@@ -50,7 +50,8 @@ Widget::Widget(QWidget *parent)
     thread.start();
 #endif
 
-    resize(860, 680);
+    resize(MAINWINDOW_WIDTH, MAINWINDOW_HEIGHT);
+    pTitleBar->setMainWindowAttribute(this->width(), this->height());
 
     line->setObjectName(QString::fromUtf8("line"));
     line->setGeometry(QRect(0, 32, 860, 1));
@@ -480,6 +481,8 @@ void Widget::setMaskClear()
 {
     clearMask();
     pScandisplay->updateWindowSize();
+
+    pTitleBar->setMainWindowAttribute(this->width(), this->height());
 }
 
 /**
@@ -487,8 +490,10 @@ void Widget::setMaskClear()
  */
 void Widget::setWindowBorderRadius()
 {
-        clearMask();
-        pScandisplay->updateWindowSize();
+    clearMask();
+    pScandisplay->updateWindowSize();
+
+    pTitleBar->setMainWindowAttribute(this->width(), this->height());
 }
 
 void Widget::style_changed(QString)

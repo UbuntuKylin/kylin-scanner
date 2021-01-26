@@ -17,8 +17,12 @@
 */
 
 #include "titleBar.h"
+#include "daemondbus.h"
 #include <QApplication>
 #include <iostream>
+#include <QDBusMessage>
+#include <QDBusConnection>
+
 using namespace std;
 
 TitleBar::TitleBar(QWidget *parent)
@@ -30,12 +34,17 @@ TitleBar::TitleBar(QWidget *parent)
     , m_pMinimizeButton (new QPushButton())
     , m_pMaximizeButton (new QPushButton())
     , m_pCloseButton (new QPushButton())
+    , m_pMenuButton(new QToolButton(this))
+    , m_pMenu(new QMenu(this))
+    , m_pAbout(new KYCAboutDialog(this))
     , pTitleLayout (new QHBoxLayout())
     , pButtonLayout (new QHBoxLayout())
     , pLayout (new QHBoxLayout())
 {
     setFixedHeight(36);
     setMinimumWidth(860);
+    mainWindowHeight = MAINWINDOW_HEIGHT;
+    mainWindowWidth = MAINWINDOW_WIDTH;
 
     stylelist << STYLE_NAME_KEY_DARK << STYLE_NAME_KEY_BLACK;
     iconthemelist << ICON_THEME_KEY_BASIC << ICON_THEME_KEY_CLASSICAL << ICON_THEME_KEY_DEFAULT;
@@ -52,15 +61,36 @@ TitleBar::TitleBar(QWidget *parent)
     m_logoMsg->setScaledContents(true);
     m_logoMsg->setAlignment(Qt::AlignRight|Qt::AlignVCenter);
 
-#if 0
-    if ("ukui-icon-theme-basic" == icon_theme_settings->get(ICON_THEME_NAME).toString()) {
-        m_logo->setStyleSheet("QLabel{border-image:url(/usr/share/icons/ukui-icon-theme-basic/24x24/apps/kylin-scanner.png);border-radius:4px;}");
-    } else if ("ukui-icon-theme-classical" == icon_theme_settings->get(ICON_THEME_NAME).toString()) {
-        m_logo->setStyleSheet("QLabel{border-image:url(/usr/share/icons/ukui-icon-theme-classical/24x24/apps/kylin-scanner.png);border-radius:4px;}");
-    } else if ("ukui-icon-theme-default" == icon_theme_settings->get(ICON_THEME_NAME).toString()) {
-        m_logo->setStyleSheet("QLabel{border-image:url(/usr/share/icons/ukui-icon-theme-default/24x24/apps/kylin-scanner.png);border-radius:4px;}");
-    }
-#endif
+    // Menu : Help F1 | About | Exit
+    m_pMenu->setMinimumWidth(160);
+    m_pMenu->addAction(tr("Help"), this, [=](){
+        QString appName = "tools/kylin-scanner";
+        DaemonDbus *ipcDbus = new DaemonDbus();
+
+        if(!ipcDbus->daemonIsNotRunning())
+            ipcDbus->showGuide(appName);
+
+    }, QKeySequence(Qt::Key_F1));
+
+    m_pMenu->addAction(tr("About"), this, [=](){
+        QPoint globalPos = this->mapToGlobal(QPoint(0, 0));
+        int m_x = (mainWindowWidth - m_pAbout->width()) / 2;
+        int m_y = (mainWindowHeight - m_pAbout->height()) / 2;
+        m_pAbout->move(globalPos.x() + m_x, globalPos.y() + m_y);
+        m_pAbout->show();
+    });
+    m_pMenu->addAction(tr("Exit"), [=](){exit(0);} );
+
+    m_pMenuButton->setIcon (QIcon::fromTheme (ICON_THEME_MENU));
+    m_pMenuButton->setToolTip(tr("mainmenu"));
+    m_pMenuButton->setFixedSize(30, 30);
+    m_pMenuButton->setIconSize (QSize(16, 16));
+    m_pMenuButton->setPopupMode(QToolButton::InstantPopup);
+    // 自定义标题栏窗口三联按钮
+    m_pMenuButton->setProperty("isWindowButton", 0x1);
+    m_pMenuButton->setProperty("useIconHighlightEffect", 0x2);
+    m_pMenuButton->setAutoRaise(true);
+    m_pMenuButton->setMenu(m_pMenu);
 
     m_pMinimizeButton->setIcon (QIcon::fromTheme (ICON_THEME_MINIMIZE));
     m_pMinimizeButton->setToolTip(tr("Minimize"));
@@ -97,6 +127,8 @@ TitleBar::TitleBar(QWidget *parent)
 
     pButtonLayout->addStretch();
     pButtonLayout->setSpacing(0);
+    pButtonLayout->addWidget(m_pMenuButton);
+    pButtonLayout->addSpacing(4);
     pButtonLayout->addWidget(m_pMinimizeButton);
     pButtonLayout->addSpacing(4);
     pButtonLayout->addWidget(m_pMaximizeButton);
@@ -202,11 +234,16 @@ void TitleBar::keyPressEvent(QKeyEvent *e)
 {
     switch (e->key()) {
     case Qt::Key_Escape:
-        qDebug() << "3333333333333333" ;
         break;
     default:
         break;
     }
+}
+
+void TitleBar::setMainWindowAttribute(int w, int h)
+{
+    mainWindowWidth = w;
+    mainWindowHeight = h;
 }
 
 void TitleBar::onClicked()
