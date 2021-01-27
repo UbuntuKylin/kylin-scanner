@@ -19,6 +19,7 @@
 SOURCES += \
     $$PWD/daemondbus.cpp \
     $$PWD/kycaboutdialog.cpp \
+    $$PWD/kycsavefiledialog.cpp \
     beauty.cpp \
     funcBar.cpp \
     interruptDlg.cpp \
@@ -41,6 +42,7 @@ SOURCES += \
 HEADERS += \
     $$PWD/daemondbus.h \
     $$PWD/kycaboutdialog.h \
+    $$PWD/kycsavefiledialog.h \
     beauty.h \
     funcBar.h \
     interruptDlg.h \

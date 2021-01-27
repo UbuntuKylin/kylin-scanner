@@ -36,6 +36,8 @@ Files: Doxyfile
        src/funcBar.h
        src/kycaboutdialog.cpp
        src/kycaboutdialog.h
+       src/kycsavefiledialog.cpp
+       src/kycsavefiledialog.h
        src/kylinCmb.cpp
        src/kylinCmb.h
        src/tailorLabel.cpp

@@ -63,6 +63,8 @@ public:
     QString getTextName();
     QString getTextLocation();
 
+    void warnMsg(QString msg);
+
 Q_SIGNALS:
     void saveImageSignal(QString);
     void openDeviceStatusSignal(bool);
@@ -88,6 +90,7 @@ private:
     QPushButton *btnMail;           /**< 发送至邮件 */
     QPushButton *btnSave;           /**< 另存为 */
     QPushButton *btnLocation;       /**< 扫描至 */
+    QString curPath;
 
     KylinCmb *textDevice;      /**< 设备 */
     QLabel *textType;               /**< 类型 */

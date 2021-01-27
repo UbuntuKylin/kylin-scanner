@@ -127,7 +127,7 @@ int main(int argc, char *argv[])
 
     SingleApplication app(argc, argv);
     app.setApplicationName("kylin-scanner");
-    app.setApplicationVersion("1.0.10");
+    app.setApplicationVersion(QString(APP_VERSION));
 
     QCommandLineParser parser;
     parser.setApplicationDescription("An interface-friendly scanner with OCR, Smart rectify and OneClickBeauty.");
