@@ -49,6 +49,8 @@ extern "C" {
 
 #define MAILTYPE "x-scheme-handler/mailto"
 #define DESKTOPPATH "/usr/share/applications/"
+#define MAIL_WINDOW_WIDTH 320
+#define MAIL_WINDOW_HEIGHT 260
 
 typedef struct _Applist
 {

@@ -20,7 +20,7 @@ QT += core gui network printsupport concurrent KWindowSystem dbus x11extras
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-VERSION = 1.0.10
+VERSION = 1.0.11
 TARGET = kylin-scanner
 TEMPLATE = app
 
@@ -31,6 +31,7 @@ LIBS += -llept -ltesseract -lpthread -lX11
 include(src.pri)
 
 DEFINES += QT_MESSAGELOGCONTEXT # for message line, file and date
+DEFINES += APP_VERSION=\\\"$$VERSION\\\"
 #release:DEFINES += QT_NO_WARNING_OUTPUT QT_NO_DEBUG_OUTPUT
 #DEFINES += DEBUG_EDIT
 #DEFINES += QT_DEPRECATED_WARNINGS

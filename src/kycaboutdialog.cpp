@@ -28,7 +28,9 @@ KYCAboutDialog::KYCAboutDialog(QWidget *parent) :
     f.setWeight(24);
     f.setPixelSize(14);
     ui->labelVersion->setFont(f);
-    ui->labelVersion->setText(tr("Version: " ) + "1.0.11");
+
+    QString appVersion = QCoreApplication::applicationVersion();
+    ui->labelVersion->setText(tr("Version: " ) + appVersion);
     //ui->labelVersion->setAlignment(Qt::AlignCenter);
     f.setPixelSize(12);
     f.setPixelSize(14);

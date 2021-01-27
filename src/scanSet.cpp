@@ -17,8 +17,9 @@
 */
 
 #include "scanSet.h"
-
-QString curPath;
+#include "kycsavefiledialog.h"
+#include <QMessageBox>
+#include <QTextCursor>
 
 ScanSet::ScanSet(QWidget *parent)
     : QWidget(parent)
@@ -544,8 +545,7 @@ void ScanSet::setKylinLable()
     textType->setFixedSize(180,32);
     textName->setText("scanner01");
 
-    //textName->setMaxLength (256-4);
-    textName->setMaxLength (10);
+    textName->setMaxLength (256-4);
     textName->setFixedSize(180,32);
 
     if (!device_status)
@@ -709,6 +709,13 @@ QString ScanSet::getTextLocation()
     return curPath;
 }
 
+void ScanSet::warnMsg(QString msg)
+{
+    QMessageBox msgBox(QMessageBox::Warning, QObject::tr("warning"), msg);
+    msgBox.setWindowIcon(QIcon::fromTheme("kylin-scanner"));
+    msgBox.exec();
+}
+
 void ScanSet::setFontSize(QLabel *label, int n)
 {
     QFont ft;
@@ -777,46 +784,76 @@ void ScanSet::onBtnMailClicked()
     }
 }
 
-QString filter="*.jpg;;*.png;;*.pdf;;*.bmp"; //文件过滤器
-
-
 void ScanSet::onBtnSaveClicked()
 {
-    QString pathName;
-    QString aFileName;
-    QHash <int, QString> hashFormatFilter;
+    QString filename;
+    QString filepath;
+    QString filetype;
+    QString msg;
+    QString titlename;
+    bool flagSave = false;
 
-    hashFormatFilter[0] = "*.jpg;;*.png;;*.pdf;;*.bmp";
-    hashFormatFilter[1] = "*.png;;*.jpg;;*.pdf;;*.bmp";
-    hashFormatFilter[2] = "*.pdf;;*.jpg;;*,png;;*.bmp";
-    hashFormatFilter[3] = "*.bmp;;*.jpg;;*.png;;*.pdf";
-    hashFormatFilter[5] = "*.txt"; // Far After OCR， save *.txt
+    while (!flagSave) {
+        if (flag == 1) { // 进行OCR ，存储文本
+            if (textName->text().endsWith(".txt"))
+                filename = textName->text();
+            else
+                filename = textName->text() + "." + ".txt";
+            titlename = tr("Store text dialog");
+        } else {
+            if (textName->text().endsWith(".jpg")
+                    || textName->text().endsWith(".png")
+                    || textName->text().endsWith(".bmp")
+                    || textName->text().endsWith(".pdf"))
+                filename = textName->text();
+            else
+                filename = textName->text() + "." + textFormat->currentText();
+            titlename = tr("Save as dialog");
+        }
+        filepath = curPath;
 
-    //保存文件
-    QString dlgTitle=tr("Save as ..."); //对话框标题
-    QString dlgTitleStore = tr("Store text");
-    //QString filter="文本文件(*.txt);;h文件(*.h);;C++文件(.cpp);;所有文件(*.*)"; //文件过滤器
-    qDebug() << "current format index = " << textFormat->currentIndex ()
-          << "current format: " << textFormat->currentText ();
+        KYCSaveFileDialog *saveDialog = new KYCSaveFileDialog(this, flag, filename, titlename);
+        saveDialog->kycSetDirectory(filepath);
 
-    qDebug() << "flagSave = " << flag;
+        if (saveDialog->exec() == QFileDialog::Accepted) {
+            filepath = saveDialog->selectedFiles().at(0);
+            filename = saveDialog->getFileName();
+            qDebug() << "filepath = " << filepath
+                     << "filename = " << filename;
 
-    if (flag == 1) // 进行OCR ，存储文本
-    {
-        pathName = curPath + "/" + textName->text() + ".txt";
-        aFileName =QFileDialog::getSaveFileName(this, dlgTitleStore, pathName,
-                                                       hashFormatFilter[5]);
+            if (filepath.isNull())
+                break;
+
+            if (filename.contains(QChar('/'), Qt::CaseInsensitive)) {
+                msg = tr("cannot contain '/' character.");
+                warnMsg(msg);
+                continue;
+            }
+            if (filename.startsWith(QChar('.'), Qt::CaseInsensitive)) {
+                msg = tr("cannot save as hidden file.");
+                warnMsg(msg);
+                continue;
+            }
+
+            if (!filename.endsWith(".jpg", Qt::CaseInsensitive)
+                && !filename.endsWith("*.png", Qt::CaseInsensitive)
+                && !filename.endsWith("*.pdf", Qt::CaseInsensitive)
+                && !filename.endsWith("*.bmp", Qt::CaseInsensitive)) {
+
+                filetype = saveDialog->getFileType();
+                filepath = filepath.append(filetype);
+            }
+            flagSave = true;
+        } else {
+            flagSave = false;
+            return;
+        }
     }
-    else // 另存为
-    {
-        pathName = curPath + "/" + textName->text() + "." + textFormat->currentText();
-        aFileName =QFileDialog::getSaveFileName(this, dlgTitle, pathName,
-                                                      hashFormatFilter[textFormat->currentIndex ()]);
-    }
 
-    qDebug() << "Save as: " << aFileName;
-    if (!aFileName.isEmpty())
-        emit saveImageSignal(aFileName);
+    qDebug() << "filepath = " << filepath;
+
+    if (flagSave)
+        emit saveImageSignal(filepath);
 }
 
 void ScanSet::onTextDeviceCurrentTextChanged(QString device)
@@ -867,16 +904,13 @@ void ScanSet::onTextDeviceCurrentTextChanged(QString device)
 
 void ScanSet::modifyBtnSave()
 {
-    if (flag == 0) // 进行OCR，存储文本
-    {
+    if (flag == 0) {
+        // 进行OCR，存储文本
         flag = 1;
         btnSave->setText(tr("Store text"));
-        filter ="*.txt";
-    }
-    else { // 另存为
+    } else { // 另存为
         flag = 0;
         btnSave->setText(tr("Save as"));
-        filter="*.jpg;;*.png;;*.pdf;;*.bmp;;"; //文件过滤器
     }
 }
 
@@ -916,6 +950,20 @@ void ScanSet::onTextSizeCurrentTextChanged(QString size)
 
 void ScanSet::onTextNameTextChanged(QString)
 {
+    QString msg;
+    if (textName->text().contains(QChar('/'), Qt::CaseInsensitive)) {
+        msg = tr("cannot contain '/' character.");
+        warnMsg(msg);
+        textName->cursorBackward(true,1); // 向左移动一个字符的长度
+        textName->del(); // 删除光标右侧字符或选中文本
+    }
+    if (textName->text().startsWith(QChar('.'), Qt::CaseInsensitive)) {
+        msg = tr("cannot save as hidden file.");
+        warnMsg(msg);
+        textName->cursorBackward(true,1);
+        textName->del();
+    }
+
     setTextNameToolTip ();
 }
 

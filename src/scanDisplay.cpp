@@ -171,7 +171,7 @@ ScanDisplay::ScanDisplay(QWidget *parent)
     connect(&thread,SIGNAL(orcFinished()),this,SLOT(orcText()));
 
     // For timerScan
-    connect(timerScan, SIGNAL(timeout()), this, SLOT(timerScanUpdate()));
+    //connect(timerScan, SIGNAL(timeout()), this, SLOT(timerScanUpdate()));
 
     connect(icon_theme_settings,SIGNAL(changed(QString)), this, SLOT(scandisplay_theme_changed(QString)));
 }
@@ -238,20 +238,19 @@ void ScanDisplay::keyPressEvent(QKeyEvent *e)
     }
 }
 
-QImage *ScanDisplay::imageSave(QString fileName)
+QImage *ScanDisplay::imageSave(QString filename)
 {
-    if (flagOrc == 0)
-    {
+    qDebug() << "save image: " << filename;
+    if (flagOrc == 0) {
         *imgEditLayout = imgNormal->copy();
-        if (fileName.endsWith(".pdf"))
+        if (filename.endsWith(".pdf"))
             return imgEditLayout;
-        //if (fileName.endsWith(".png") || fileName.endsWith(".jpg") || fileName.endsWith(".bmp"))
-            imgEditLayout->save(fileName);
-    }
-    else {
-        if (!fileName.endsWith(".txt"))
-            fileName += ".txt";
-        QFile file(fileName);
+        if (filename.endsWith(".png") || filename.endsWith(".jpg") || filename.endsWith(".bmp"))
+            imgEditLayout->save(filename);
+    } else {
+        if (!filename.endsWith(".txt"))
+            filename += ".txt";
+        QFile file(filename);
         file.open(QIODevice::ReadWrite | QIODevice::Text);
         QByteArray str = outText.toUtf8();
         file.write(str);
@@ -665,7 +664,7 @@ void ScanDisplay::onScan(bool ret)
     flagTailor = 0;
     flagWaterMark = 0; // 需要置0，避免多次扫描造成水印的图片切换到上一次扫描的图片
 
-    timerScan->start(100);
+    //timerScan->start(100);
 
 #ifdef DEBUG_EDIT
     imgNormal->load("/tmp/scanner/scan.pnm");

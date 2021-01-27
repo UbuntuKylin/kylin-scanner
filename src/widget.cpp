@@ -276,7 +276,7 @@ int Widget::messageScanFinishedSave(QString pathName)
 
     QMessageBox::StandardButton msgBox;
     QString msg = pathName + tr(" already exist, do you want to overwrite it?");
-    msgBox = QMessageBox::question(0, "Question", msg);
+    msgBox = QMessageBox::question(0, tr("Question"), msg);
 
     if (msgBox == QMessageBox::Yes)
         return 1;

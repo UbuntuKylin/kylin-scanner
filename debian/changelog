@@ -1,3 +1,21 @@
+kylin-scanner (1.0.0-1kylin1k11) v101; urgency=medium
+
+  * [English] 
+  * Fix #35630, save file dialog cannot save correctly
+  * Fix #35695, cannot display Help and About dialog
+  * Fix #25740, limit filename maxlength
+  * Fix #35549, translate question dialog
+  * Add filename lineedit judge while input '.' and '/' character
+  *
+  * [中文]
+  * Fix #25630, 修复另存为对话框不能正确保存图片
+  * Fix #35695，新增主菜单的帮助和关于对话框
+  * Fix #25740，修复文件名长度问题
+  * Fix #35549, 汉化询问对话框
+  * 增加文件名编辑框对于 '.' 和 '/' 字符的实时判断
+
+ -- yushuoqi <yushuoqi@kylinos.cn>  Wed, 27 Jan 2021 17:36:30 +0800
+
 kylin-scanner (1.0.0-1kylin1k10) v101; urgency=medium
 
   * [English]

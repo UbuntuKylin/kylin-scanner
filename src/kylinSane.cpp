@@ -754,7 +754,7 @@ static SANE_Status getOptionResolutions(SANE_Handle sane_handle, int optnum)
                 break;
         }
     }
-    resolutions << QObject::tr("auto");
+    resolutions << QObject::tr("Auto");
 
     instance.setKylinSaneResolutions(resolutions);
 
@@ -1697,7 +1697,7 @@ int KylinSane::startScanning(UserSelectedInfo info)
     // For resolutions
     s_resolution = const_cast<SANE_String>(strResolution.c_str());
     SANE_Int i_resolution;
-    if (!strcmp("auto", s_resolution) || !strcmp("自动", s_resolution))
+    if (!strcmp("Auto", s_resolution) || !strcmp("自动", s_resolution))
     {
         i_resolution = 300; //自动时设置为300
     }

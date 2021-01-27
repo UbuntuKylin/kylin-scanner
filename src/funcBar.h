@@ -33,6 +33,7 @@
 #include <QThread>
 #include <QMovie>
 #include <QTextDocument>
+#include <QMessageBox>
 #include "kylinSane.h"
 #include "beauty.h"
 #include "theme.h"
@@ -66,6 +67,7 @@ public:
     void setBtnScanEnable();
     void setFontSize(QLabel *label, int n);
     void setStackClear();
+    void warnMsg(QString msg);
 
 private:
     QStringList stylelist;

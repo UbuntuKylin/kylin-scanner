@@ -374,6 +374,13 @@ void FuncBar::setStackClear()
         }
 }
 
+void FuncBar::warnMsg(QString msg)
+{
+    QMessageBox msgBox(QMessageBox::Warning, QObject::tr("warning"), msg);
+    msgBox.setWindowIcon(QIcon::fromTheme("kylin-scanner"));
+    msgBox.exec();
+}
+
 //QString orc_text;
 void FuncBar::onBtnOrcClicked()
 {
