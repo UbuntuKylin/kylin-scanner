@@ -52,7 +52,7 @@ KYCAboutDialog::KYCAboutDialog(QWidget *parent) :
     this->move(screenRect.width() / 2, screenRect.height() / 2);
     this->hide();
     connect(ui->btnClose, SIGNAL(clicked()), this, SLOT(hide()));
-    connect(ui->labelSupport, &QLabel::linkActivated, [=](QString s) {
+    connect(ui->labelSupport, &QLabel::linkActivated, [ = ](QString s) {
         QUrl url(s);
         QDesktopServices::openUrl(url);
     });

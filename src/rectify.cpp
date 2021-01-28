@@ -104,8 +104,8 @@ double CalcDegree(const Mat &srcImage, Mat &dst)
 
         // 时常会遇到角度为10度返回内的图片，此时处理机制为默认已经高度校正，过滤该线条角度
         if (((DegreeTrans(theta) >= 80) && (DegreeTrans(theta) <= 95))
-            || (DegreeTrans(theta) >= 178.5)
-            || (DegreeTrans(theta) <=8 )) {
+                || (DegreeTrans(theta) >= 178.5)
+                || (DegreeTrans(theta) <= 8 )) {
             n += 1;
             continue;
         }

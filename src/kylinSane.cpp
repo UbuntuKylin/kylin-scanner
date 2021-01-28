@@ -182,8 +182,7 @@ static SANE_Status onScanning(FILE *ofp)
                  * the image.
                  */
                 image.width = parm.bytes_per_line;
-                if (parm.lines >= 0)
-                {
+                if (parm.lines >= 0) {
                     image.height = parm.lines - STRIP_HEIGHT + 1;
                 } else {
                     image.height = 0;

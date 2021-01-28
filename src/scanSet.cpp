@@ -783,9 +783,9 @@ void ScanSet::onBtnSaveClicked()
             titlename = tr("Store text dialog");
         } else {
             if (textName->text().endsWith(".jpg")
-                || textName->text().endsWith(".png")
-                || textName->text().endsWith(".bmp")
-                || textName->text().endsWith(".pdf")) {
+                    || textName->text().endsWith(".png")
+                    || textName->text().endsWith(".bmp")
+                    || textName->text().endsWith(".pdf")) {
                 filename = textName->text();
             } else {
                 filename = textName->text() + "." + textFormat->currentText();

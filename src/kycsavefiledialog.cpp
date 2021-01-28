@@ -32,7 +32,7 @@ KYCSaveFileDialog::KYCSaveFileDialog(QWidget *parent) : QFileDialog(parent)
     this->findChildren<QLineEdit *>("fileNameEdit").at(0)->setText(initFilename);
     filetype = ".jpg";
     connect(this->findChildren<QComboBox *>("fileTypeCombo").at(0),
-            QOverload<int>::of(&QComboBox::currentIndexChanged), [=](int index) {
+    QOverload<int>::of(&QComboBox::currentIndexChanged), [ = ](int index) {
         switch (index) {
         case 0:
             filetype = ".jpg";
@@ -63,7 +63,7 @@ KYCSaveFileDialog::KYCSaveFileDialog(QWidget *parent, int flag, QString filename
     this->findChildren<QLineEdit *>("fileNameEdit").at(0)->setText(filename);
     filetype = (flag == 1) ? "*.txt" : ".jpg";
     connect(this->findChildren<QComboBox *>("fileTypeCombo").at(0),
-            QOverload<int>::of(&QComboBox::currentIndexChanged), [=](int index) {
+    QOverload<int>::of(&QComboBox::currentIndexChanged), [ = ](int index) {
         switch (index) {
         case 0:
             filetype = (flag == 1) ? "*.txt" : ".jpg";
