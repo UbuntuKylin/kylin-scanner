@@ -59,27 +59,29 @@ TitleBar::TitleBar(QWidget *parent)
     m_logoMsg->setFont(fontLogoMsg);
     m_logoMsg->setText (tr("kylin-scanner"));
     m_logoMsg->setScaledContents(true);
-    m_logoMsg->setAlignment(Qt::AlignRight|Qt::AlignVCenter);
+    m_logoMsg->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
 
     // Menu : Help F1 | About | Exit
     m_pMenu->setMinimumWidth(160);
-    m_pMenu->addAction(tr("Help"), this, [=](){
+    m_pMenu->addAction(tr("Help"), this, [ = ]() {
         QString appName = "tools/kylin-scanner";
         DaemonDbus *ipcDbus = new DaemonDbus();
 
-        if(!ipcDbus->daemonIsNotRunning())
+        if (!ipcDbus->daemonIsNotRunning())
             ipcDbus->showGuide(appName);
 
     }, QKeySequence(Qt::Key_F1));
 
-    m_pMenu->addAction(tr("About"), this, [=](){
+    m_pMenu->addAction(tr("About"), this, [ = ]() {
         QPoint globalPos = this->mapToGlobal(QPoint(0, 0));
         int m_x = (mainWindowWidth - m_pAbout->width()) / 2;
         int m_y = (mainWindowHeight - m_pAbout->height()) / 2;
         m_pAbout->move(globalPos.x() + m_x, globalPos.y() + m_y);
         m_pAbout->show();
     });
-    m_pMenu->addAction(tr("Exit"), [=](){exit(0);} );
+    m_pMenu->addAction(tr("Exit"), [ = ]() {
+        exit(0);
+    } );
 
     m_pMenuButton->setIcon (QIcon::fromTheme (ICON_THEME_MENU));
     m_pMenuButton->setToolTip(tr("mainmenu"));
@@ -123,7 +125,7 @@ TitleBar::TitleBar(QWidget *parent)
     pTitleLayout->addSpacing(0);
     //pTitleLayout->addSpacing(8);
     pTitleLayout->addWidget (m_logoMsg);
-    pTitleLayout->setContentsMargins(0,8,0,0);
+    pTitleLayout->setContentsMargins(0, 8, 0, 0);
 
     pButtonLayout->addStretch();
     pButtonLayout->setSpacing(0);
@@ -146,8 +148,9 @@ TitleBar::TitleBar(QWidget *parent)
     connect(m_pMinimizeButton, SIGNAL(clicked(bool)), this, SLOT(onClicked()));
     connect(m_pMaximizeButton, SIGNAL(clicked(bool)), this, SLOT(onClicked()));
     connect(m_pCloseButton, SIGNAL(clicked(bool)), this, SLOT(onClicked()));
-    connect(style_settings,SIGNAL(changed(QString)),this,SLOT(titlebar_style_changed(QString)));
-    connect(icon_theme_settings,SIGNAL(changed(QString)), this, SLOT(titlebar_icon_theme_changed(QString)));
+    connect(style_settings, SIGNAL(changed(QString)), this, SLOT(titlebar_style_changed(QString)));
+    connect(icon_theme_settings, SIGNAL(changed(QString)), this,
+            SLOT(titlebar_icon_theme_changed(QString)));
 }
 
 TitleBar::~TitleBar()
@@ -164,28 +167,20 @@ void TitleBar::mouseDoubleClickEvent(QMouseEvent *event)
 
 void TitleBar::mouseMoveEvent(QMouseEvent *event)
 {
-    if ((event->buttons() & Qt::LeftButton) && mMoving)
-    {
+    if ((event->buttons() & Qt::LeftButton) && mMoving) {
         QWidget *pWindow = this->window();
-        if (pWindow->isWindow ())
-        {
+        if (pWindow->isWindow ()) {
             bool bMaximize = pWindow->isMaximized();
 
-            //qDebug() << "pWindow->pos() = " << pWindow->pos ();
-            //qDebug() << "event->globalPos() = " << event->globalPos ();
-            //qDebug() << "mLastMousePosition = " << mLastMousePosition;
-
-            if (bMaximize)
-            {
+            if (bMaximize) {
                 m_pMaximizeButton->setProperty("maximizeProperty", "maximize");
                 m_pMaximizeButton->setToolTip(tr("Maximize"));
                 m_pMaximizeButton->setIcon (QIcon::fromTheme (ICON_THEME_MAXIMAZE));
                 flagMaxWindow = false;
 
-                pWindow->showNormal (); // 最大化时拖拽，窗口显示正常大小
-            }
-            else
-            {
+                // 最大化时拖拽，窗口显示正常大小
+                pWindow->showNormal ();
+            } else {
                 // 当前窗口不是最大化窗口
                 pWindow->move(pWindow->pos() + (event->globalPos() - mLastMousePosition));
                 mLastMousePosition = event->globalPos();
@@ -196,8 +191,7 @@ void TitleBar::mouseMoveEvent(QMouseEvent *event)
 
 void TitleBar::mousePressEvent(QMouseEvent *event)
 {
-    if (event->buttons() & Qt::LeftButton)
-    {
+    if (event->buttons() & Qt::LeftButton) {
         QCursor cursor;
         cursor.setShape (Qt::ClosedHandCursor);
         QApplication::setOverrideCursor (cursor); // 使鼠标指针暂时改变形状
@@ -210,22 +204,20 @@ void TitleBar::mousePressEvent(QMouseEvent *event)
 void TitleBar::mouseReleaseEvent(QMouseEvent *event)
 {
     QApplication::restoreOverrideCursor (); // 恢复鼠标指针形状
-    if (event->button() == Qt::LeftButton)
-    {
+    if (event->button() == Qt::LeftButton) {
         mMoving = false;
     }
 }
 
 bool TitleBar::eventFilter(QObject *obj, QEvent *event)
 {
-    switch (event->type())
-    {
-        case QEvent::WindowStateChange:
-        case QEvent::Resize:
-            updateMaximize();
-            return true;
-        default:
-            break;
+    switch (event->type()) {
+    case QEvent::WindowStateChange:
+    case QEvent::Resize:
+        updateMaximize();
+        return true;
+    default:
+        break;
     }
     return QWidget::eventFilter(obj, event);
 }
@@ -250,18 +242,12 @@ void TitleBar::onClicked()
 {
     QPushButton *pButton = qobject_cast<QPushButton *>(sender());
     QWidget *pWindow = this->window();
-    if (pWindow->isTopLevel())
-    {
-        if (pButton == m_pMinimizeButton)
-        {
+    if (pWindow->isTopLevel()) {
+        if (pButton == m_pMinimizeButton) {
             pWindow->showMinimized();
-        }
-        else if (pButton == m_pMaximizeButton)
-        {
+        } else if (pButton == m_pMaximizeButton) {
             pWindow->isMaximized() ? pWindow->showNormal() : pWindow->showMaximized();
-        }
-        else if (pButton == m_pCloseButton)
-        {
+        } else if (pButton == m_pCloseButton) {
             pWindow->close();
         }
     }
@@ -288,19 +274,15 @@ void TitleBar::titlebar_style_changed(QString)
 void TitleBar::updateMaximize()
 {
     QWidget *pWindow = this->window();
-    if (pWindow->isWindow ())
-    {
+    if (pWindow->isWindow ()) {
         bool bMaximize = pWindow->isMaximized();
-        if (bMaximize)
-        {
+        if (bMaximize) {
             m_pMaximizeButton->setToolTip(tr("Restore"));
             m_pMaximizeButton->setProperty("maximizeProperty", "restore");
             m_pMaximizeButton->setIcon (QIcon::fromTheme (ICON_THEME_RESTORE));
             flagMaxWindow = true;
             emit isMax();
-        }
-        else
-        {
+        } else {
             m_pMaximizeButton->setProperty("maximizeProperty", "maximize");
             m_pMaximizeButton->setToolTip(tr("Maximize"));
             m_pMaximizeButton->setIcon (QIcon::fromTheme (ICON_THEME_MAXIMAZE));

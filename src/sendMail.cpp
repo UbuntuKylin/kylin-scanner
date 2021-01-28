@@ -61,8 +61,8 @@ NoMail::NoMail(QWidget *parent) :
     hBoxLayoutClose->setContentsMargins(0, 4, 4, 4);
 
     labTitle->setText(tr("No email client"));
-    labTitle->setAlignment(Qt::AlignLeft|Qt::AlignVCenter);
-    labTitle->setFixedSize(260,32);
+    labTitle->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
+    labTitle->setFixedSize(260, 32);
     QFont ft;
     ft.setPixelSize(24);
     labTitle->setFont(ft);
@@ -71,10 +71,11 @@ NoMail::NoMail(QWidget *parent) :
     ft1.setPixelSize(14);
     //ft1.setPointSize(14);
     textEdit->setFont(ft1);
-    textEdit->setText(tr("Not find email client in the system, please download and install email client firstly."));
+    textEdit->setText(
+        tr("Not find email client in the system, please download and install email client firstly."));
 
     int textEditSizeX = MAIL_WINDOW_WIDTH - 32 - 32;
-    textEdit->setFixedSize(textEditSizeX,50);
+    textEdit->setFixedSize(textEditSizeX, 50);
     textEdit->setReadOnly(true);
 
     line->setObjectName(QString::fromUtf8("line"));
@@ -84,16 +85,16 @@ NoMail::NoMail(QWidget *parent) :
     line->setFrameShape(QFrame::HLine);
 
     btnOk->setText(tr("Go to install"));
-    btnOk->setFixedSize(120,36);
+    btnOk->setFixedSize(120, 36);
     btnCancel->setText(tr("Cancel"));
-    btnCancel->setFixedSize(120,36);
+    btnCancel->setFixedSize(120, 36);
 
 
     hBoxLayout->setSpacing(0);
     hBoxLayout->addWidget(btnOk);
     hBoxLayout->addSpacing(16);
     hBoxLayout->addWidget(btnCancel);
-    hBoxLayout->setContentsMargins(0,0,32,0);
+    hBoxLayout->setContentsMargins(0, 0, 32, 0);
 
     if (stylelist.contains(style_settings->get(STYLE_NAME).toString())) {
         QPalette pal(palette());
@@ -112,7 +113,7 @@ NoMail::NoMail(QWidget *parent) :
                                  "QPushButton:checked{border:none;background-color:#3D6BE5;color:rgb(232,232,232)border-radius:4px;}");
     } else {
         QPalette pal(palette());
-        pal.setColor(QPalette::Background, QColor(255,255,255));
+        pal.setColor(QPalette::Background, QColor(255, 255, 255));
         setAutoFillBackground(true);
         setPalette(pal);
 
@@ -123,8 +124,8 @@ NoMail::NoMail(QWidget *parent) :
                              "QPushButton:hover{border:none;background-color:#3D6BE5;color:#F0F0F0;border-radius:4px;}"
                              "QPushButton:checked{border:none;background-color:#D93D6BE5;color:#F0F0F0;border-radius:4px;}");
         btnCancel->setStyleSheet("QPushButton{background-color:rgb(255,255,255);border:1px solid #CCCCCC;color:#D9000000;border-radius:4px;}"
-                             "QPushButton:hover{border:none;background-color:#3D6BE5;color:#F0F0F0;border-radius:4px;}"
-                             "QPushButton:checked{border:none;background-color:#D93D6BE5;color:#F0F0F0;border-radius:4px;}");
+                                 "QPushButton:hover{border:none;background-color:#3D6BE5;color:#F0F0F0;border-radius:4px;}"
+                                 "QPushButton:checked{border:none;background-color:#D93D6BE5;color:#F0F0F0;border-radius:4px;}");
     }
 
 
@@ -136,12 +137,12 @@ NoMail::NoMail(QWidget *parent) :
     vBoxLayout->addWidget(textEdit);
     vBoxLayout->addSpacing(40);
     vBoxLayout->addLayout(hBoxLayout);
-    vBoxLayout->setContentsMargins(32,0,0,48);
+    vBoxLayout->setContentsMargins(32, 0, 0, 48);
 
-    connect(btnOk,SIGNAL(clicked()),this,SLOT(accept()));
-    connect(btnCancel,SIGNAL(clicked()),this,SLOT(reject()));
+    connect(btnOk, SIGNAL(clicked()), this, SLOT(accept()));
+    connect(btnCancel, SIGNAL(clicked()), this, SLOT(reject()));
     connect(btnClose, SIGNAL(clicked()), this, SLOT(reject()));
-    connect(style_settings,SIGNAL(changed(QString)),this,SLOT(nomail_style_changed(QString)));
+    connect(style_settings, SIGNAL(changed(QString)), this, SLOT(nomail_style_changed(QString)));
 }
 
 NoMail::~NoMail()
@@ -168,7 +169,7 @@ void NoMail::nomail_style_changed(QString)
                                  "QPushButton:checked{border:none;background-color:#3D6BE5;color:rgb(232,232,232)border-radius:4px;}");
     } else {
         QPalette pal(palette());
-        pal.setColor(QPalette::Background, QColor(255,255,255));
+        pal.setColor(QPalette::Background, QColor(255, 255, 255));
         setAutoFillBackground(true);
         setPalette(pal);
 
@@ -179,8 +180,8 @@ void NoMail::nomail_style_changed(QString)
                              "QPushButton:hover{border:none;background-color:#3D6BE5;color:#F0F0F0;border-radius:4px;}"
                              "QPushButton:checked{border:none;background-color:#D93D6BE5;color:#F0F0F0;border-radius:4px;}");
         btnCancel->setStyleSheet("QPushButton{background-color:rgb(255,255,255);border:1px solid #CCCCCC;color:#D9000000;border-radius:4px;}"
-                             "QPushButton:hover{border:none;background-color:#3D6BE5;color:#F0F0F0;border-radius:4px;}"
-                             "QPushButton:checked{border:none;background-color:#D93D6BE5;color:#F0F0F0;border-radius:4px;}");
+                                 "QPushButton:hover{border:none;background-color:#3D6BE5;color:#F0F0F0;border-radius:4px;}"
+                                 "QPushButton:checked{border:none;background-color:#D93D6BE5;color:#F0F0F0;border-radius:4px;}");
     }
 }
 
@@ -211,7 +212,8 @@ SendMail::SendMail(QWidget *parent) :
     iconthemelist << ICON_THEME_KEY_BASIC << ICON_THEME_KEY_CLASSICAL << ICON_THEME_KEY_DEFAULT;
 
     widget->setFixedSize(MAIL_WINDOW_WIDTH, MAIL_WINDOW_HEIGHT);
-    widget->setWindowFlags(Qt::FramelessWindowHint | Qt::Tool | Qt::WindowStaysOnTopHint); // 去掉标题栏,去掉任务栏显示，窗口置顶
+    widget->setWindowFlags(Qt::FramelessWindowHint | Qt::Tool |
+                           Qt::WindowStaysOnTopHint); // 去掉标题栏,去掉任务栏显示，窗口置顶
 
     btnClose->setIcon (QIcon::fromTheme (ICON_THEME_CLOSE));
     btnClose->setToolTip(tr("Close"));
@@ -228,7 +230,7 @@ SendMail::SendMail(QWidget *parent) :
     hBoxLayout->setContentsMargins(0, 4, 4, 4);
 
     labTitle->setText(tr("Select email client"));
-    labTitle->setAlignment(Qt::AlignLeft|Qt::AlignVCenter);
+    labTitle->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
     labTitle->setFixedSize(260, 32);
     QFont ft;
     ft.setPixelSize(24);
@@ -248,7 +250,7 @@ SendMail::SendMail(QWidget *parent) :
         labTitle->setStyleSheet("color:#D9FFFFFF"); // 85% => D9, 255,255,255 => FFFFFF
     } else {
         QPalette pal(palette());
-        pal.setColor(QPalette::Background, QColor(255,255,255));
+        pal.setColor(QPalette::Background, QColor(255, 255, 255));
         setAutoFillBackground(true);
         setPalette(pal);
 
@@ -258,95 +260,83 @@ SendMail::SendMail(QWidget *parent) :
     vBoxLayout->setSpacing(0);
     vBoxLayout->addLayout(hBoxLayout);
     vBoxLayout->addLayout(hBoxLayout1);
-    vBoxLayout->setContentsMargins(0,0,0,0);
+    vBoxLayout->setContentsMargins(0, 0, 0, 0);
     setLayout(vBoxLayout);
 
-    connect(btnClose,SIGNAL(clicked()),this,SLOT(reject()));
-    connect(style_settings,SIGNAL(changed(QString)),this,SLOT(sendmail_style_changed(QString)));
+    connect(btnClose, SIGNAL(clicked()), this, SLOT(reject()));
+    connect(style_settings, SIGNAL(changed(QString)), this, SLOT(sendmail_style_changed(QString)));
 }
 
-Appinfo * _getAppList(const char *contentType)
+Appinfo *_getAppList(const char *contentType)
 {
     GList *applist;
     applist = g_app_info_get_all_for_type(contentType);
-    GAppInfo * item;
+    GAppInfo *item;
 
-    if (applist != NULL)
-    {
+    if (applist != NULL) {
         int len = g_list_length(applist);
-        Appinfo * appinfo=(Appinfo *)malloc(sizeof(Appinfo)*(len+1));
+        Appinfo *appinfo = (Appinfo *)malloc(sizeof(Appinfo) * (len + 1));
 
         //获取应用列表
-        for (int index=0; index < len; index++){
-            item = (GAppInfo*) g_list_nth_data(applist, index);
-            appinfo[index].item=item;
+        for (int index = 0; index < len; ++index) {
+            item = (GAppInfo *) g_list_nth_data(applist, index);
+            appinfo[index].item = item;
         }
-        appinfo[len].item=NULL;
+        appinfo[len].item = NULL;
         return appinfo;
 
-    }
-    else
-    {
+    } else {
         return NULL;
     }
 }
 
-AppList * getAppIdList(const char *contentType)
+AppList *getAppIdList(const char *contentType)
 {
     Appinfo *appinfo = _getAppList(contentType);
-    if (appinfo != NULL)
-    {
+    if (appinfo != NULL) {
         int i = 0;
 
         while (appinfo[i].item != NULL)
-            i++;
+            ++i;
 
         int count = i;
         int index = 0;
-        AppList *list = (AppList *)malloc(sizeof(AppList)*(i+1));
+        AppList *list = (AppList *)malloc(sizeof(AppList) * (i + 1));
 
         int j = 0;
-        for (j = 0;appinfo[j].item != NULL;j++)
-        {
+        for (j = 0; appinfo[j].item != NULL; ++j) {
             const char *id = g_app_info_get_id(appinfo[j].item);
-            if (id != NULL)
-            {
+            if (id != NULL) {
                 int len = strlen(id);
-                list[index].appid = (char *)malloc(sizeof(char)*(len+1));
-                strcpy(list[index].appid,id);
-                index++;
-            }
-            else
-            {
-                free(list+count);
-                count--;
+                list[index].appid = (char *)malloc(sizeof(char) * (len + 1));
+                strcpy(list[index].appid, id);
+                ++index;
+            } else {
+                free(list + count);
+                --count;
             }
         }
-        list[count].appid=NULL;
+        list[count].appid = NULL;
         free(appinfo);
         return list;
-    }
-    else
-    {
+    } else {
         return NULL;
     }
 }
 void SendMail::setBtnList()
 {
-    AppList * maillist = getAppIdList(MAILTYPE);
-    if (maillist)
-    {
+    AppList *maillist = getAppIdList(MAILTYPE);
+    if (maillist) {
         qDebug() << maillist;
         vBoxLayout1->setSpacing(0);
-        vBoxLayout1->setContentsMargins(0,0,0,0);
-        for (int i = 0; maillist[i].appid != NULL; i++)
-        {
+        vBoxLayout1->setContentsMargins(0, 0, 0, 0);
+        for (int i = 0; maillist[i].appid != NULL; ++i) {
             QString single(maillist[i].appid);
             desktopName.append(single);
             QByteArray ba = QString(DESKTOPPATH + single).toUtf8();
-            GDesktopAppInfo * mailinfo = g_desktop_app_info_new_from_filename(ba.constData());
+            GDesktopAppInfo *mailinfo = g_desktop_app_info_new_from_filename(ba.constData());
             QString appname = g_app_info_get_name(G_APP_INFO(mailinfo));
-            const char * iconname = g_icon_to_string(g_app_info_get_icon(G_APP_INFO(mailinfo)));
+            const char *iconname = g_icon_to_string(g_app_info_get_icon(G_APP_INFO(mailinfo)));
             QIcon appicon;
             if (QIcon::hasThemeIcon(QString(iconname)))
                 appicon = QIcon::fromTheme(QString(iconname));
@@ -366,24 +356,21 @@ void SendMail::setBtnList()
                                    "QPushButton:checked{border:none;background-color:#3D6BE5;color:#F7000000;border-radius:4px;}");
             }
             btn->setIcon(appicon);
-            btn->setIconSize(QSize(40,40)); // 应用图标尺寸
+            btn->setIconSize(QSize(40, 40)); // 应用图标尺寸
             btn->setCheckable(true);
             btnList.append(btn);
             QHBoxLayout *hBoxLayout1 = new QHBoxLayout();
             hBoxLayout1->addStretch();
             hBoxLayout1->addWidget(btnList[i]);
             hBoxLayout1->addStretch();
-            if (i == 0)
-            {
+            if (i == 0) {
                 hBoxLayout1->setContentsMargins(0, 16, 0, 0);
-            }
-            else
-            {
-                hBoxLayout1->setContentsMargins(0,0,0,0);
+            } else {
+                hBoxLayout1->setContentsMargins(0, 0, 0, 0);
             }
             vBoxLayout1->addSpacing(4);
             vBoxLayout1->addLayout(hBoxLayout1);
-            connect(btnList[i],SIGNAL(toggled(bool)),this,SLOT(onBtnClicked()));
+            connect(btnList[i], SIGNAL(toggled(bool)), this, SLOT(onBtnClicked()));
 
             free(maillist[i].appid);
         }
@@ -399,25 +386,25 @@ void SendMail::setBtnList()
 
 void SendMail::openMail(QString name)
 {
-    QFile aFile(DESKTOPPATH+name);
-        if (!aFile.exists())
-            qDebug() << DESKTOPPATH << name << " no exists!";
-        if (!aFile.open(QIODevice::ReadOnly | QIODevice::Text))
-            qDebug() << DESKTOPPATH << name << " open false!";
-        QTextStream aStream(&aFile);
-        QString str;
-        aStream.setAutoDetectUnicode(true);
-        while (!aStream.atEnd())
-        {
-            str = aStream.readLine();
-            if (str.startsWith("Exec=",Qt::CaseSensitive))
-                break;
-        }
-        str = str.section("Exec=",1,1);
-        str = str.section(" ",0,0);
-        qDebug() << "exec str = " << str;
-        QProcess *process = new QProcess();
-        process->start(str);
+    QFile aFile(DESKTOPPATH + name);
+    if (!aFile.exists())
+        qDebug() << DESKTOPPATH << name << " no exists!";
+    if (!aFile.open(QIODevice::ReadOnly | QIODevice::Text))
+        qDebug() << DESKTOPPATH << name << " open false!";
+
+    QTextStream aStream(&aFile);
+    QString str;
+    aStream.setAutoDetectUnicode(true);
+    while (!aStream.atEnd()) {
+        str = aStream.readLine();
+        if (str.startsWith("Exec=", Qt::CaseSensitive))
+            break;
+    }
+    str = str.section("Exec=", 1, 1);
+    str = str.section(" ", 0, 0);
+    qDebug() << "exec str = " << str;
+    QProcess *process = new QProcess();
+    process->start(str);
 }
 
 /*
@@ -428,7 +415,7 @@ void send_mail::paintEvent(QPaintEvent *event)
     QPainter painter(this);
 
     QColor color(0, 0, 0, 51);
-    for(int i=0; i<10; i++)
+    for(int i=0; i<10; ++i)
     {
         QPainterPath path;
         path.setFillRule(Qt::WindingFill);
@@ -442,10 +429,8 @@ void send_mail::paintEvent(QPaintEvent *event)
 
 void SendMail::onBtnClicked()
 {
-    for (int i = 0;i < btnList.size();i++)
-    {
-        if (btnList[i]->isChecked())
-        {
+    for (int i = 0; i < btnList.size(); ++i) {
+        if (btnList[i]->isChecked()) {
             openMail(desktopName[i]);
             reject();
             break;
@@ -464,7 +449,7 @@ void SendMail::sendmail_style_changed(QString)
         labTitle->setStyleSheet("color:#D9FFFFFF"); // 85% => D9, 255,255,255 => FFFFFF
     } else {
         QPalette pal(palette());
-        pal.setColor(QPalette::Background, QColor(255,255,255));
+        pal.setColor(QPalette::Background, QColor(255, 255, 255));
         setAutoFillBackground(true);
         setPalette(pal);
 

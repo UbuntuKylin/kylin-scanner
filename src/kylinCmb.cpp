@@ -44,47 +44,53 @@ void KylinCmb::initStyleUnit()
 {
     // white theme
     styleunit.styleCommonWhite = "QComboBox QLineEdit{background-color:#E7E7E7;border-radius:4px;}"
-                    "QComboBox::drop-down{border-radius:4px;}" //下拉按钮
-                    "QComboBox::down-arrow{border-radius:4px;border-image:url(:/icon/icon/down_black.svg);}"
-                    "QToolTip {height:32px;background:#E7E7E7;border:1px solid #E7E7E7;border-radius:4px;font-size:14px;font-weight:400;color:#000000;line-height:52px;} ";
+                                 "QComboBox::drop-down{border-radius:4px;}" //下拉按钮
+                                 "QComboBox::down-arrow{border-radius:4px;border-image:url(:/icon/icon/down_black.svg);}"
+                                 "QToolTip {height:32px;background:#E7E7E7;border:1px solid #E7E7E7;border-radius:4px;font-size:14px;font-weight:400;color:#000000;line-height:52px;} ";
 
-    styleunit.styleInitWhite = styleunit.styleCommonWhite + "QComboBox{border-radius:4px;background-color:#E7E7E7;color:#000000;}"
-                    "QComboBox:hover{border-radius:4px;background-color:#E7E7E7;color:#000000;}"
-                    "QComboBox QAbstractItemView{background-color:#FFFFFF;color:#000000;border-radius:4px;}" // 下拉的背景颜色由color指定
-                    "QComboBox QAbstractItemView::item{background-color:#FFFFFF;color:#000000;width:180px;height:32px;border-radius:4px;}"//下拉列表框样式
-                    "QComboBox QAbstractItemView::item:hover:selected{background-color:#E7E7E7;color:#000000;}";
-    styleunit.styleGrayWhite = styleunit.styleCommonWhite + "QComboBox{border-radius:4px;background-color:#E7E7E7;color:gray;}"
-                    "QComboBox:hover{border-radius:4px;background-color:#E7E7E7;color:gray;}"
-                    "QComboBox QAbstractItemView{background-color:#FFFFFF;color:gray;border-radius:4px;}"
-                    "QComboBox QAbstractItemView::item{background-color:#FFFFFF;color:gray;width:180px;height:32px;border-radius:4px;}"
-                    "QComboBox QAbstractItemView::item:hover:selected{background-color:#E7E7E7;color:gray;}";
-    styleunit.styleNormalWhite = styleunit.styleCommonWhite + "QComboBox{border:2px solid #3D6BE5;border-radius:4px;background-color:#E7E7E7;color:#000000;}"
-                    "QComboBox:hover{border-radius:4px;background-color:#E7E7E7;color:#000000;}"
-                    "QComboBox QAbstractItemView{background-color:#FFFFFF;color:#000000;border-radius:4px;}"
-                    "QComboBox QAbstractItemView::item{background-color:#FFFFFF;color:#000000;width:180px;height:32px;border-radius:4px;}"
-                    "QComboBox QAbstractItemView::item:hover:selected{background-color:#E7E7E7;color:#000000;}";
+    styleunit.styleInitWhite = styleunit.styleCommonWhite +
+                               "QComboBox{border-radius:4px;background-color:#E7E7E7;color:#000000;}"
+                               "QComboBox:hover{border-radius:4px;background-color:#E7E7E7;color:#000000;}"
+                               "QComboBox QAbstractItemView{background-color:#FFFFFF;color:#000000;border-radius:4px;}" // 下拉的背景颜色由color指定
+                               "QComboBox QAbstractItemView::item{background-color:#FFFFFF;color:#000000;width:180px;height:32px;border-radius:4px;}"//下拉列表框样式
+                               "QComboBox QAbstractItemView::item:hover:selected{background-color:#E7E7E7;color:#000000;}";
+    styleunit.styleGrayWhite = styleunit.styleCommonWhite +
+                               "QComboBox{border-radius:4px;background-color:#E7E7E7;color:gray;}"
+                               "QComboBox:hover{border-radius:4px;background-color:#E7E7E7;color:gray;}"
+                               "QComboBox QAbstractItemView{background-color:#FFFFFF;color:gray;border-radius:4px;}"
+                               "QComboBox QAbstractItemView::item{background-color:#FFFFFF;color:gray;width:180px;height:32px;border-radius:4px;}"
+                               "QComboBox QAbstractItemView::item:hover:selected{background-color:#E7E7E7;color:gray;}";
+    styleunit.styleNormalWhite = styleunit.styleCommonWhite +
+                                 "QComboBox{border:2px solid #3D6BE5;border-radius:4px;background-color:#E7E7E7;color:#000000;}"
+                                 "QComboBox:hover{border-radius:4px;background-color:#E7E7E7;color:#000000;}"
+                                 "QComboBox QAbstractItemView{background-color:#FFFFFF;color:#000000;border-radius:4px;}"
+                                 "QComboBox QAbstractItemView::item{background-color:#FFFFFF;color:#000000;width:180px;height:32px;border-radius:4px;}"
+                                 "QComboBox QAbstractItemView::item:hover:selected{background-color:#E7E7E7;color:#000000;}";
 
     // black theme
     styleunit.styleCommonBlack = "QComboBox QLineEdit{background-color:#0D0400;border-radius:4px;}"
-                    "QComboBox::drop-down{border-radius:4px;}"
-                    "QComboBox::down-arrow{border-radius:4px;border-image:url(:/icon/icon/down.svg);}"
-                    "QToolTip {height:32px;background:#000000;border:1px solid #383838;border-radius:4px;font-size:14px;font-weight:400;color:gray;line-height:52px;}";
+                                 "QComboBox::drop-down{border-radius:4px;}"
+                                 "QComboBox::down-arrow{border-radius:4px;border-image:url(:/icon/icon/down.svg);}"
+                                 "QToolTip {height:32px;background:#000000;border:1px solid #383838;border-radius:4px;font-size:14px;font-weight:400;color:gray;line-height:52px;}";
 
-    styleunit.styleInitBlack = styleunit.styleCommonBlack + "QComboBox{background-color:#0D0400;color:white;border-radius:4px;}"
-                    "QComboBox:hover{border-radius:4px;background-color:#0D0400;color:white;}"
-                    "QComboBox QAbstractItemView{margin-top:4px solid #0D0400;color:white;border-radius:4px;background-color:#888888;}"
-                    "QComboBox QAbstractItemView::item{width:180px;height:32px;border-radius:4px;}"
-                    "QComboBox QAbstractItemView::item:hover:selected{background-color:#3D6BE5;}";
-    styleunit.styleGrayBlack = styleunit.styleCommonBlack + "QComboBox{border-radius:4px;background-color:#0D0400;color:gray;}"
-                    "QComboBox:hover{border-radius:4px;background-color:#0D0400;color:gray;}"
-                    "QComboBox QAbstractItemView{margin-top:4px solid #0D0400;color:gray;border-radius:4px;background-color:#888888;}"
-                    "QComboBox QAbstractItemView::item{width:180px;height: 32px;border-radius:4px;}"
-                    "QComboBox QAbstractItemView::item:hover:selected{background-color:#3D6BE5;}";
-    styleunit.styleNormalBlack = styleunit.styleCommonBlack + "QComboBox{border:2px solid #3D6BE5;border-radius:4px;background-color:#0D0400;color:white;}"
-                    "QComboBox:hover{border-radius:4px;background-color:#0D0400;color:white;}"
-                    "QComboBox QAbstractItemView{margin-top:4px solid #0D0400;color:white;border-radius:4px;background-color:#888888;}"
-                    "QComboBox QAbstractItemView::item{width:180px;height: 32px;border-radius:4px;}"
-                                                              "QComboBox QAbstractItemView::item:hover:selected{background-color:#3D6BE5;}";
+    styleunit.styleInitBlack = styleunit.styleCommonBlack +
+                               "QComboBox{background-color:#0D0400;color:white;border-radius:4px;}"
+                               "QComboBox:hover{border-radius:4px;background-color:#0D0400;color:white;}"
+                               "QComboBox QAbstractItemView{margin-top:4px solid #0D0400;color:white;border-radius:4px;background-color:#888888;}"
+                               "QComboBox QAbstractItemView::item{width:180px;height:32px;border-radius:4px;}"
+                               "QComboBox QAbstractItemView::item:hover:selected{background-color:#3D6BE5;}";
+    styleunit.styleGrayBlack = styleunit.styleCommonBlack +
+                               "QComboBox{border-radius:4px;background-color:#0D0400;color:gray;}"
+                               "QComboBox:hover{border-radius:4px;background-color:#0D0400;color:gray;}"
+                               "QComboBox QAbstractItemView{margin-top:4px solid #0D0400;color:gray;border-radius:4px;background-color:#888888;}"
+                               "QComboBox QAbstractItemView::item{width:180px;height: 32px;border-radius:4px;}"
+                               "QComboBox QAbstractItemView::item:hover:selected{background-color:#3D6BE5;}";
+    styleunit.styleNormalBlack = styleunit.styleCommonBlack +
+                                 "QComboBox{border:2px solid #3D6BE5;border-radius:4px;background-color:#0D0400;color:white;}"
+                                 "QComboBox:hover{border-radius:4px;background-color:#0D0400;color:white;}"
+                                 "QComboBox QAbstractItemView{margin-top:4px solid #0D0400;color:white;border-radius:4px;background-color:#888888;}"
+                                 "QComboBox QAbstractItemView::item{width:180px;height: 32px;border-radius:4px;}"
+                                 "QComboBox QAbstractItemView::item:hover:selected{background-color:#3D6BE5;}";
 }
 
 void KylinCmb::colorInit()
@@ -98,8 +104,7 @@ void KylinCmb::colorInit()
 
 void KylinCmb::mousePressEvent(QMouseEvent *event)
 {
-    if (event->button() == Qt::LeftButton)
-    {
+    if (event->button() == Qt::LeftButton) {
         emit clicked();
     }
 

@@ -25,7 +25,8 @@
 
 #include "widget.h"
 
-class SingleApplication : public QApplication {
+class SingleApplication : public QApplication
+{
     Q_OBJECT
 public:
     SingleApplication(int &argc, char **argv);

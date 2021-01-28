@@ -33,25 +33,24 @@ void verifyScannerDir()
 {
     QString logPath = "/tmp/scanner/";
     QDir configPath;
-    if (! configPath.exists (logPath))
-    {
+    if (! configPath.exists (logPath)) {
         qDebug() << "Create " << logPath;
         configPath.mkdir (logPath);
     }
 }
 
-int getScreenWidth() 
+int getScreenWidth()
 {
     Display *disp = XOpenDisplay(NULL);
     Screen *scrn = DefaultScreenOfDisplay(disp);
-    if (NULL == scrn) {
+    if (NULL == scrn)
         return 0;
-    }
+
     int width = scrn->width;
 
-    if (NULL != disp) {
+    if (NULL != disp)
         XCloseDisplay(disp);
-    }
+
     return width;
 }
 
@@ -73,31 +72,31 @@ void customOutputMessage(QtMsgType type, const QMessageLogContext &context, cons
     QString current_date_time = QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss ddd");
     QString current_date = QString("[%1]").arg(current_date_time);
     QString text;
-    switch(type)
-    {
+    switch (type) {
     case QtDebugMsg:
-       text = greenDebugColor + QString("Debug:");
-       break;
+        text = greenDebugColor + QString("Debug:");
+        break;
 
     case QtWarningMsg:
-       text = blueWarningColor + QString("Warning:");
-       break;
+        text = blueWarningColor + QString("Warning:");
+        break;
 
     case QtCriticalMsg:
-       text = redFatalColor + QString("Critical:");
-       break;
+        text = redFatalColor + QString("Critical:");
+        break;
 
     case QtFatalMsg:
-       text = redFatalColor + QString("Fatal:");
-       break;
+        text = redFatalColor + QString("Fatal:");
+        break;
 
     case QtInfoMsg:
         text = yellowInfoColor + QString("Info:");
-       break;
+        break;
     default:
         text = QString("None:");
     }
-    QString message = QString("%1 %2 %3 %4 %5").arg(text).arg(current_date).arg(context_info).arg(msg).arg(noColor);
+    QString message = QString("%1 %2 %3 %4 %5").arg(text).arg(current_date).arg(context_info).arg(
+                          msg).arg(noColor);
 
     verifyScannerDir();
 
@@ -116,10 +115,10 @@ void customOutputMessage(QtMsgType type, const QMessageLogContext &context, cons
 int main(int argc, char *argv[])
 {
     if (getScreenWidth() > 2560) {
-        #if (QT_VERSION >= QT_VERSION_CHECK(5, 6, 0))
-                QApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
-                QApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
-        #endif
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 6, 0))
+        QApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+        QApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
+#endif
     }
 
     verifyScannerDir();
@@ -138,7 +137,7 @@ int main(int argc, char *argv[])
     // For qt: QFileDialog
     QTranslator qtTranslator;
     qtTranslator.load("qt_" + QLocale::system().name(),
-            QLibraryInfo::location(QLibraryInfo::TranslationsPath));
+                      QLibraryInfo::location(QLibraryInfo::TranslationsPath));
     app.installTranslator(&qtTranslator);
 
     // For translations with different language environments

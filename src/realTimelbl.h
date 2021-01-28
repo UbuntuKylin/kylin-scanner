@@ -36,7 +36,7 @@ public:
 
     int width;
     int height;
-    const uchar * data;   //图像信息
+    const uchar *data;    //图像信息
 
 protected:
     void paintEvent(QPaintEvent *event);

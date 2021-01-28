@@ -37,18 +37,9 @@ using namespace std;
 //#define CV_MINMAX       32
 
 /******************************* opencv 图像处理 **********************************/
-////////////////////////start 高动态范围成像HDR
+/// 高动态范围成像HDR
 /// 基于多张不同曝光的图片才行,单张图片直接hdr效果不好,
 /// 因此扫描图像的处理可参照ps，进行图片的对比度、亮度、饱和度、滤波、冷暖色调、锐化等操作。
-
-//代码中指定多张不同曝光和时间序列的图片
-int readImagesAndTimes(vector<Mat> &images, vector<float> &times);
-
-//txt文件中指定多张不同曝光和时间序列图片
-void loadExposureSeq(String path, vector<Mat>& images, vector<float>& times);
-
-////////////////////////end
-
 
 //线性变换，进行亮度和对比度调整
 void psLuminanceContrastCV(Mat src, Mat &dst);
@@ -57,7 +48,7 @@ void psLuminanceContrastCV(Mat src, Mat &dst);
 void psSaturationCV(Mat src, Mat &dst);
 
 //基于拉普拉斯算子的锐化美化
-void psSharpenCV(Mat src, Mat & dst);
+void psSharpenCV(Mat src, Mat &dst);
 
 //转换色彩空间进行饱和度设置
 void psHslCV(Mat src, Mat &dst);
@@ -86,7 +77,7 @@ void psBilateralFilterCV(Mat src, Mat &dst);
 void psHistogramEqualizationCV(Mat src, Mat &dst);
 
 //拉普拉斯算子
-void psContrastCV(Mat src, Mat & dst);
+void psContrastCV(Mat src, Mat &dst);
 
 //对数变换
 void psLogarithmCV(Mat src, Mat &dst);
@@ -100,25 +91,25 @@ void psGammaCV(Mat src, Mat &dst);
 
 /****************************** Qt QImage 图像处理 **********************************/
 //锐化美化
-QImage * psSharpen(QImage * origin);
+QImage *psSharpen(QImage *origin);
 
 //彩色图转换成灰度图
-QImage * psGreyScale(QImage * origin);
+QImage *psGreyScale(QImage *origin);
 
 //亮度调节
-QImage * psLumimance(int delta, QImage * origin);
+QImage *psLumimance(int delta, QImage *origin);
 
 //饱和度调节
-QImage * psSaturation(int delta, QImage * origin);
+QImage *psSaturation(int delta, QImage *origin);
 
 //暖色调调节
-QImage * psWarmToned(int delta, QImage * origin);
+QImage *psWarmToned(int delta, QImage *origin);
 
 //冷色调调节
-QImage * psCoolToned(int delta, QImage * origin);
+QImage *psCoolToned(int delta, QImage *origin);
 
 //添加边框
-QImage * psDrawFrame(QImage * origin, const char *filename);
+QImage *psDrawFrame(QImage *origin, const char *filename);
 
 /**********************************************************************************/
 

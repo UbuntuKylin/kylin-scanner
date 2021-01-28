@@ -32,7 +32,8 @@ SingleApplication::SingleApplication(int &argc, char **argv)
 
     // 取应用程序名作为LocalServer的名字
     qDebug() << "DISPLAY: " << QLatin1String(getenv ("DISPLAY"));
-    _serverName = QFileInfo(QCoreApplication::applicationFilePath()).fileName() + QLatin1String(getenv("DISPLAY"));
+    _serverName = QFileInfo(QCoreApplication::applicationFilePath()).fileName()
+                  + QLatin1String(getenv("DISPLAY"));
 
     _initLocalConnection();
 }
@@ -55,7 +56,7 @@ void SingleApplication::_newLocalConnection()
 {
     QLocalSocket *socket = _localServer->nextPendingConnection();
     if (socket) {
-        socket->waitForReadyRead(2*TIME_OUT);
+        socket->waitForReadyRead(2 * TIME_OUT);
         delete socket;
 
         // 其他处理，如：读取启动参数
@@ -87,7 +88,7 @@ void SingleApplication::_initLocalConnection()
         qDebug() << "isRunnig = " << _isRunning;
     }
 
-    //连接不上服务器，就创建一个
+    // 连接不上服务器，就创建一个
     _newLocalServer();
 }
 
@@ -103,7 +104,7 @@ void SingleApplication::_newLocalServer()
     if (!_localServer->listen(_serverName)) {
         // 此时监听失败，可能是程序崩溃时,残留进程服务导致的,移除之
         if (_localServer->serverError() == QAbstractSocket::AddressInUseError) {
-            QLocalServer::removeServer(_serverName); // <-- 重点
+            QLocalServer::removeServer(_serverName); // 重点
             _localServer->listen(_serverName); // 再次监听
         }
     }

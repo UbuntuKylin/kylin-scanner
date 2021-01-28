@@ -41,16 +41,28 @@ public:
     TailorLabel(QLabel *parent = nullptr);
     ~TailorLabel();
 
-    void paintEvent(QPaintEvent* event);
-    void mousePressEvent(QMouseEvent* event);
-    void mouseReleaseEvent(QMouseEvent* event);
-    void mouseMoveEvent(QMouseEvent* event);
+    void paintEvent(QPaintEvent *event);
+    void mousePressEvent(QMouseEvent *event);
+    void mouseReleaseEvent(QMouseEvent *event);
+    void mouseMoveEvent(QMouseEvent *event);
 
     int judgePosition(int origin, int min, int max);
-    int getStartX() {return startX;}
-    int getStartY() {return startY;}
-    int getEndX() {return endX;}
-    int getEndY() {return endY;}
+    int getStartX()
+    {
+        return startX;
+    }
+    int getStartY()
+    {
+        return startY;
+    }
+    int getEndX()
+    {
+        return endX;
+    }
+    int getEndY()
+    {
+        return endY;
+    }
 
 private:
     bool isPressed;

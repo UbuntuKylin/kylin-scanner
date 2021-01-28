@@ -32,6 +32,6 @@ using namespace std;
 #define ERROR 1234
 
 
-int ImageRectify(const char * pInFileName);
+int ImageRectify(const char *pInFileName);
 
 #endif // RECTIFY_H

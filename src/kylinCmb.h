@@ -24,8 +24,7 @@
 #include <QToolTip>
 #include "theme.h"
 
-typedef struct styleUnit
-{
+typedef struct styleUnit {
     QString styleCommonWhite;
     QString styleCommonBlack;
     QString styleInitWhite;
@@ -34,7 +33,7 @@ typedef struct styleUnit
     QString styleGrayBlack;
     QString styleNormalWhite;
     QString styleNormalBlack;
-}styleUnit;
+} styleUnit;
 
 class KylinCmb : public QComboBox
 {
