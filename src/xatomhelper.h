@@ -32,7 +32,7 @@ struct UnityCorners {
     ulong bottomRight = 0;
 };
 
-typedef struct _MotifWmHints{
+typedef struct _MotifWmHints {
     ulong flags = 0;
     ulong functions = 0;
     ulong decorations = 0;
@@ -66,7 +66,7 @@ typedef struct _MotifWmHints{
 #define MWM_INPUT_FULL_APPLICATION_MODAL 3
 #define MWM_INPUT_APPLICATION_MODAL MWM_INPUT_PRIMARY_APPLICATION_MODAL
 
-#define MWM_TEAROFF_WINDOW	(1L<<0)
+#define MWM_TEAROFF_WINDOW  (1L<<0)
 
 namespace UKUI {
 class Decoration;

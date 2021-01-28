@@ -31,7 +31,7 @@ WaterMarkDialog::WaterMarkDialog(QWidget *parent) :
     , vBoxLayout (new QVBoxLayout(this))
 {
     setWindowFlags(Qt::FramelessWindowHint | Qt::Dialog);
-    setFixedSize(320,250);
+    setFixedSize(320, 250);
 
     stylelist << STYLE_NAME_KEY_DARK << STYLE_NAME_KEY_BLACK;
     iconthemelist << ICON_THEME_KEY_BASIC << ICON_THEME_KEY_CLASSICAL << ICON_THEME_KEY_DEFAULT;
@@ -39,14 +39,14 @@ WaterMarkDialog::WaterMarkDialog(QWidget *parent) :
     setWindowMask ();
 
     label->setText(tr("Input watermark content"));
-    label->setAlignment(Qt::AlignLeft|Qt::AlignVCenter);
-    label->setFixedSize(192,32);
+    label->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
+    label->setFixedSize(192, 32);
     QFont ft;
     ft.setPointSize(16);
     label->setFont(ft);
 
     lineedit->setText("");
-    lineedit->setFixedSize(288,32);
+    lineedit->setFixedSize(288, 32);
 
     line->setObjectName(QString::fromUtf8("line"));
     line->setMaximumHeight(1);
@@ -55,16 +55,16 @@ WaterMarkDialog::WaterMarkDialog(QWidget *parent) :
     line->setFrameShape(QFrame::HLine);
 
     btnOk->setText(tr("Confirm"));
-    btnOk->setFixedSize(120,36);
+    btnOk->setFixedSize(120, 36);
     btnCancel->setText(tr("Cancel"));
-    btnCancel->setFixedSize(100,36);
+    btnCancel->setFixedSize(100, 36);
 
 
     hBoxLayout->setSpacing(0);
     hBoxLayout->addWidget(btnOk);
     hBoxLayout->addSpacing(16);
     hBoxLayout->addWidget(btnCancel);
-    hBoxLayout->setContentsMargins(16,0,16,0);
+    hBoxLayout->setContentsMargins(16, 0, 16, 0);
 
 
     if (stylelist.contains(style_settings->get(STYLE_NAME).toString())) {
@@ -84,7 +84,7 @@ WaterMarkDialog::WaterMarkDialog(QWidget *parent) :
                                  "QPushButton:checked{border:none;background-color:rgb(39,208,127);color:rgb(232,232,232)border-radius:18px;}");
     } else {
         QPalette pal(palette()); // 水印对话框背景
-        pal.setColor(QPalette::Background, QColor(255,255,255));
+        pal.setColor(QPalette::Background, QColor(255, 255, 255));
         setAutoFillBackground(true);
         this->setPalette(pal);
 
@@ -93,11 +93,11 @@ WaterMarkDialog::WaterMarkDialog(QWidget *parent) :
         line->setStyleSheet("QFrame{color:#000000}");
         line->hide (); // 显示线条不好看
         btnOk->setStyleSheet("QPushButton{background-color:#F9F9F9;border:1px solid #939393;color:#000000;border-radius:4px;}"
-                               "QPushButton:hover{border:none;background-color:#3D6BE5;border:rgb(147,147,147);color:#000000;border-radius:4px;}"
-                               "QPushButton:checked{border:none;background-color:#3D6BE5;border:rgb(147,147,147);color:#000000;border-radius:4px;}");
+                             "QPushButton:hover{border:none;background-color:#3D6BE5;border:rgb(147,147,147);color:#000000;border-radius:4px;}"
+                             "QPushButton:checked{border:none;background-color:#3D6BE5;border:rgb(147,147,147);color:#000000;border-radius:4px;}");
         btnCancel->setStyleSheet("QPushButton{background-color:#F9F9F9;border:1px solid #939393;color:#000000;border-radius:4px;}"
-                               "QPushButton:hover{border:none;background-color:#3D6BE5;border:rgb(147,147,147);color:#000000;border-radius:4px;}"
-                               "QPushButton:checked{border:none;background-color:#3D6BE5;border:rgb(147,147,147);color:#000000;border-radius:4px;}");
+                                 "QPushButton:hover{border:none;background-color:#3D6BE5;border:rgb(147,147,147);color:#000000;border-radius:4px;}"
+                                 "QPushButton:checked{border:none;background-color:#3D6BE5;border:rgb(147,147,147);color:#000000;border-radius:4px;}");
     }
     vBoxLayout->setSpacing(0);
     vBoxLayout->addWidget(label);
@@ -107,13 +107,13 @@ WaterMarkDialog::WaterMarkDialog(QWidget *parent) :
     vBoxLayout->addWidget(line);
     vBoxLayout->addSpacing(22);
     vBoxLayout->addLayout(hBoxLayout);
-    vBoxLayout->setContentsMargins(16,30,16,30);
+    vBoxLayout->setContentsMargins(16, 30, 16, 30);
 
     setLayout(vBoxLayout);
 
-    connect(btnOk,SIGNAL(clicked()),this,SLOT(doAccept()));
-    connect(btnCancel,SIGNAL(clicked()),this,SLOT(reject()));
-    connect(style_settings,SIGNAL(changed(QString)),this,SLOT(watermarkdlg_style_changed(QString)));
+    connect(btnOk, SIGNAL(clicked()), this, SLOT(doAccept()));
+    connect(btnCancel, SIGNAL(clicked()), this, SLOT(reject()));
+    connect(style_settings, SIGNAL(changed(QString)), this, SLOT(watermarkdlg_style_changed(QString)));
 }
 
 WaterMarkDialog::~WaterMarkDialog()
@@ -127,13 +127,13 @@ QString WaterMarkDialog::getLineEdit()
 
 void WaterMarkDialog::setWindowMask()
 {
-    QBitmap bitMap(width(),height()); // A bit map has the same size with current widget
+    QBitmap bitMap(width(), height()); // A bit map has the same size with current widget
     bitMap.fill();
     QPainter painter(&bitMap);
     painter.setBrush(Qt::red);
     painter.setPen(Qt::NoPen); // Any color that is not QRgb(0,0,0) is right
     painter.setRenderHint(QPainter::Antialiasing);
-    painter.drawRoundedRect(bitMap.rect(),6,6); //设置圆角弧度
+    painter.drawRoundedRect(bitMap.rect(), 6, 6); //设置圆角弧度
     setMask(bitMap);
 }
 
@@ -156,7 +156,7 @@ void WaterMarkDialog::watermarkdlg_style_changed(QString)
                                  "QPushButton:checked{border:none;background-color:rgb(39,208,127);color:rgb(232,232,232)border-radius:18px;}");
     } else {
         QPalette pal(palette()); // 水印对话框背景
-        pal.setColor(QPalette::Background, QColor(255,255,255));
+        pal.setColor(QPalette::Background, QColor(255, 255, 255));
         setAutoFillBackground(true);
         setPalette(pal);
 
@@ -166,20 +166,19 @@ void WaterMarkDialog::watermarkdlg_style_changed(QString)
         line->hide ();
 
         btnOk->setStyleSheet("QPushButton{background-color:#F9F9F9;border:1px solid #939393;color:#000000;border-radius:4px;}"
-                               "QPushButton:hover{border:none;background-color:#3D6BE5;border:rgb(147,147,147);color:#000000;border-radius:4px;}"
-                               "QPushButton:checked{border:none;background-color:#3D6BE5;border:rgb(147,147,147);color:#000000;border-radius:4px;}");
+                             "QPushButton:hover{border:none;background-color:#3D6BE5;border:rgb(147,147,147);color:#000000;border-radius:4px;}"
+                             "QPushButton:checked{border:none;background-color:#3D6BE5;border:rgb(147,147,147);color:#000000;border-radius:4px;}");
         btnCancel->setStyleSheet("QPushButton{background-color:#F9F9F9;border:1px solid #939393;color:#000000;border-radius:4px;}"
-                               "QPushButton:hover{border:none;background-color:#3D6BE5;border:rgb(147,147,147);color:#000000;border-radius:4px;}"
-                               "QPushButton:checked{border:none;background-color:#3D6BE5;border:rgb(147,147,147);color:#000000;border-radius:4px;}");
-
+                                 "QPushButton:hover{border:none;background-color:#3D6BE5;border:rgb(147,147,147);color:#000000;border-radius:4px;}"
+                                 "QPushButton:checked{border:none;background-color:#3D6BE5;border:rgb(147,147,147);color:#000000;border-radius:4px;}");
     }
 }
 
 void WaterMarkDialog::doAccept()
 {
-    if (lineedit->text() == "")
+    if (lineedit->text() == "") {
         reject();
-    else
+    } else {
         accept();
-
+    }
 }

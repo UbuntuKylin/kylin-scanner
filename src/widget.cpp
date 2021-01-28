@@ -60,13 +60,13 @@ Widget::Widget(QWidget *parent)
 
 #ifdef DEBUG_EDIT
 #else
-        // 未扫描时，左下角的发送邮件和另存为等所有设置都不能点击
-        pScanSet->setKylinScanSetNotEnable();
+    // 未扫描时，左下角的发送邮件和另存为等所有设置都不能点击
+    pScanSet->setKylinScanSetNotEnable();
 #endif
 
     qDebug() << "1 styleName = " << style_settings->get(STYLE_NAME).toString();
     if (stylelist.contains(style_settings->get(STYLE_NAME).toString())) {
-    // 设置窗口背景
+        // 设置窗口背景
         QPalette pal(palette());
         pal.setColor(QPalette::Background, QColor(47, 44, 43));
         setAutoFillBackground(true);
@@ -89,7 +89,7 @@ Widget::Widget(QWidget *parent)
     pHboxLayout->setSpacing(0); // 需要先清空spacing，不然addSpacing会出问题
     pHboxLayout->addWidget(pScanSet);
     pHboxLayout->addWidget(pScandisplay);
-    pHboxLayout->setContentsMargins(0,0,0,0); // 设置窗口左上右下边距
+    pHboxLayout->setContentsMargins(0, 0, 0, 0); // 设置窗口左上右下边距
 
     pLayout->setSpacing(0);
     pLayout->addWidget(pTitleBar);
@@ -103,42 +103,42 @@ Widget::Widget(QWidget *parent)
     setLayout(pLayout);
 
     // For save
-    connect(pScanSet,&ScanSet::saveImageSignal,this,&Widget::saveImage);
+    connect(pScanSet, &ScanSet::saveImageSignal, this, &Widget::saveImage);
 
     // For ORC
-    connect(pFuncBar,&FuncBar::sendOrcBegin,pScandisplay,&ScanDisplay::onOrc);
-    connect(pFuncBar,&FuncBar::sendOrcEnd,pScandisplay,&ScanDisplay::onOrc);
-    connect(pFuncBar,&FuncBar::sendOrcBegin,pScanSet,&ScanSet::modifyBtnSave);
-    connect(pFuncBar,&FuncBar::sendOrcEnd,pScanSet,&ScanSet::modifyBtnSave);
+    connect(pFuncBar, &FuncBar::sendOrcBegin, pScandisplay, &ScanDisplay::onOrc);
+    connect(pFuncBar, &FuncBar::sendOrcEnd, pScandisplay, &ScanDisplay::onOrc);
+    connect(pFuncBar, &FuncBar::sendOrcBegin, pScanSet, &ScanSet::modifyBtnSave);
+    connect(pFuncBar, &FuncBar::sendOrcEnd, pScanSet, &ScanSet::modifyBtnSave);
 
     // 文件扫描成功后默认显示全部编辑框
     //connect(pFuncBar,&FuncBar::sendScanEnd, pScandisplay, &ScanDisplay::switchPage);
 
     // For scan
-    connect(&thread,SIGNAL(scanFinished(bool)),this,SLOT(scanResult(bool)));
-    connect(pScanSet,SIGNAL(openDeviceStatusSignal(bool)),this,SLOT(scanResultDetail(bool)));
+    connect(&thread, SIGNAL(scanFinished(bool)), this, SLOT(scanResult(bool)));
+    connect(pScanSet, SIGNAL(openDeviceStatusSignal(bool)), this, SLOT(scanResultDetail(bool)));
 
-    connect(pFuncBar,SIGNAL(sendScanEnd(bool)),pScandisplay,SLOT(onScan(bool)));
-    connect(pFuncBar,SIGNAL(sendScanEnd(bool)),this,SLOT(setScanSetBtnEnable(bool)));
-    connect(pFuncBar,SIGNAL(sendScanEnd(bool)),this,SLOT(saveScanFile(bool)));
-    connect(pFuncBar,SIGNAL(sendScanEnd(bool)),this,SLOT(scanningResultDetail(bool)));
+    connect(pFuncBar, SIGNAL(sendScanEnd(bool)), pScandisplay, SLOT(onScan(bool)));
+    connect(pFuncBar, SIGNAL(sendScanEnd(bool)), this, SLOT(setScanSetBtnEnable(bool)));
+    connect(pFuncBar, SIGNAL(sendScanEnd(bool)), this, SLOT(saveScanFile(bool)));
+    connect(pFuncBar, SIGNAL(sendScanEnd(bool)), this, SLOT(scanningResultDetail(bool)));
 
     // For rectify
-    connect(pFuncBar,&FuncBar::sendRectifyBegin,pScandisplay,&ScanDisplay::onRectify);
-    connect(pFuncBar,&FuncBar::sendRectifyEnd,pScandisplay,&ScanDisplay::onRectify);
+    connect(pFuncBar, &FuncBar::sendRectifyBegin, pScandisplay, &ScanDisplay::onRectify);
+    connect(pFuncBar, &FuncBar::sendRectifyEnd, pScandisplay, &ScanDisplay::onRectify);
 
     // For beauty
     connect(pFuncBar, &FuncBar::sendBeautifyBegin, pScandisplay, &ScanDisplay::onBeautify);
     connect(pFuncBar, &FuncBar::sendBeautifyEnd, pScandisplay, &ScanDisplay::onBeautify);
 
-    connect(pTitleBar,&TitleBar::isNormal,this,&Widget::setWindowBorderRadius);
-    connect(pTitleBar,&TitleBar::isMax,this,&Widget::setMaskClear);
+    connect(pTitleBar, &TitleBar::isNormal, this, &Widget::setWindowBorderRadius);
+    connect(pTitleBar, &TitleBar::isMax, this, &Widget::setMaskClear);
 
     // For white and black style
-    connect(style_settings,SIGNAL(changed(QString)),this,SLOT(style_changed(QString)));
+    connect(style_settings, SIGNAL(changed(QString)), this, SLOT(style_changed(QString)));
 
     // For icon theme change style
-    connect(icon_theme_settings,SIGNAL(changed(QString)),this,SLOT(icon_theme_changed(QString)));
+    connect(icon_theme_settings, SIGNAL(changed(QString)), this, SLOT(icon_theme_changed(QString)));
 }
 
 Widget::~Widget()
@@ -148,21 +148,20 @@ Widget::~Widget()
 
 int toUnicode(QString str)
 {
-    char*  ch;
+    char  *ch;
     QByteArray ba = str.toLatin1();
-    ch=ba.data();
+    ch = ba.data();
     return ch[0] + (ch[1] ? toUnicode(ch + 1) : 0);
 }
 
-constexpr inline int U(const char* str)
+constexpr inline int U(const char *str)
 {
     return str[0] + (str[1] ? U(str + 1) : 0);
 }
 
 void Widget::setPdfSize(QPdfWriter *pdfWriter, QString size)
 {
-    switch (toUnicode(size))
-    {
+    switch (toUnicode(size)) {
     case U("A0"):
         pdfWriter->setPageSize(QPageSize(QPageSize::A0));
         break;
@@ -205,7 +204,7 @@ void Widget::saveToPdf(QImage img, QString pathName)
     QFile pdfFile(pathName);
     pdfFile.open(QIODevice::WriteOnly);
     QPdfWriter *pdfWriter = new QPdfWriter(&pdfFile);
-    setPdfSize(pdfWriter,pScanSet->getTextSize());
+    setPdfSize(pdfWriter, pScanSet->getTextSize());
     int resolution = pScanSet->getTextResolution().toInt();
     pdfWriter->setResolution(resolution);//像素
 
@@ -242,16 +241,13 @@ void Widget::resultDetail(bool ret)
     ret = true;
 #endif
 
-    if (ret)
-    {
+    if (ret) {
         device = true;
         pScanSet->setKylinComboBox(false);
         pScanSet->setKylinLable();
         pFuncBar->setBtnScanEnable();
         pScanSet->setKylinScanSetEnable();
-    }
-    else
-    {
+    } else {
         device = false;
         pScandisplay->setNoDevice();
         pFuncBar->setKylinScanSetNotEnable();
@@ -290,7 +286,7 @@ void Widget::saveImage(QString fileName)
     QImage *img = NULL;
     img = pScandisplay->imageSave(fileName);
     if (img)
-        saveToPdf(*img,fileName);
+        saveToPdf(*img, fileName);
 }
 
 /**
@@ -324,48 +320,41 @@ void Widget::saveScanFile(bool ret)
     img.load("/tmp/scanner/scan.pnm");
 #endif
     QString pathName = pScanSet->getTextLocation() + "/" + pScanSet->getTextName();
-    qDebug() <<"pathName:"<<pathName;
+    qDebug() << "pathName:" << pathName;
     QString format = pScanSet->getTextFormat();
 
-    if ((format == "jpg") || (format == "png") || (format == "bmp"))
-    {
+    if ((format == "jpg") || (format == "png") || (format == "bmp")) {
         QString newformat = "." + format;
-        qDebug() <<"newformat:"<<newformat;
-        if (pathName.endsWith(newformat,Qt::CaseSensitive))
-        {
-            qDebug() <<"pathName:"<<pathName;
-            if (messageScanFinishedSave(pathName))
-            {
-                QFile::remove(pathName);
-                img.save(pathName);
-            } else return;
-        }
-        else
-        {
+        qDebug() << "newformat:" << newformat;
+        if (pathName.endsWith(newformat, Qt::CaseSensitive)) {
+            qDebug() << "pathName:" << pathName;
+            if (0 == messageScanFinishedSave(pathName)) {
+                return;
+            }
+            QFile::remove(pathName);
+            img.save(pathName);
+        } else {
             pathName += newformat;
-            qDebug() <<"pathName:"<<pathName;
-            if (messageScanFinishedSave(pathName))
-            {
-                QFile::remove(pathName);
-                img.save(pathName);
-            } else return;
+            qDebug() << "pathName:" << pathName;
+            if (0 == messageScanFinishedSave(pathName)) {
+                return;
+            }
+            QFile::remove(pathName);
+            img.save(pathName);
         }
-    }
-    else if (format == "pdf")
-    {
+    } else if (format == "pdf") {
         QString newformat = "." + format;
-        qDebug() <<"newformat:"<<newformat;
-        if (!pathName.endsWith(newformat,Qt::CaseSensitive))
-        {
+        qDebug() << "newformat:" << newformat;
+        if (!pathName.endsWith(newformat, Qt::CaseSensitive)) {
             pathName += newformat;
-            qDebug() <<"pathName:"<<pathName;
+            qDebug() << "pathName:" << pathName;
         }
 
-        if (messageScanFinishedSave(pathName))
-        {
-            QFile::remove(pathName);
-            saveToPdf(img,pathName);
-        } else return;
+        if (0 == messageScanFinishedSave(pathName)) {
+            return;
+        }
+        QFile::remove(pathName);
+        saveToPdf(img, pathName);
     }
 }
 
@@ -378,7 +367,7 @@ void Widget::saveScanFile(bool ret)
  */
 void Widget::scanResult(bool ret)
 {
-    qDebug() <<"ret = " << ret;
+    qDebug() << "ret = " << ret;
     KylinSane &instance = KylinSane::getInstance();
 
 #ifdef DEBUG_EDIT
@@ -392,8 +381,7 @@ void Widget::scanResult(bool ret)
         resultDetail(retStatus);
     }
 #else
-    if (ret)
-    {
+    if (ret) {
         device = true;
 
         pScanSet->setKylinComboBoxScanDeviceName();
@@ -401,9 +389,7 @@ void Widget::scanResult(bool ret)
 
         bool retStatus = instance.getKylinSaneStatus();
         resultDetail(retStatus);
-    }
-    else
-    {
+    } else {
         device = false;
         pScandisplay->setNoDevice();
         pFuncBar->setKylinScanSetNotEnable();
@@ -432,17 +418,14 @@ void Widget::scanResultDetail(bool ret)
         pScanSet->setKylinScanSetEnable();
     }
 #else
-    if (ret)
-    {
+    if (ret) {
         device = true;
         pScandisplay->setInitDevice();
         pScanSet->setKylinComboBox(true);
         pScanSet->setKylinLable();
         pFuncBar->setBtnScanEnable();
         pScanSet->setKylinScanSetEnable();
-    }
-    else
-    {
+    } else {
         device = false;
         pScandisplay->setNoDevice();
         pFuncBar->setKylinScanSetNotEnable();
@@ -465,8 +448,7 @@ void Widget::scanningResultDetail(bool ret)
         pScanSet->setKylinScanSetEnable();
     }
 #else
-    if (!ret)
-    {
+    if (!ret) {
         device = true;
         pScandisplay->setInitDevice();
         pScanSet->setKylinComboBox(true);
@@ -520,9 +502,7 @@ void Widget::style_changed(QString)
 
         line->setStyleSheet("QFrame{color:#DCDCDC}");
     }
-    if (device)
-    {
-        //pScanSet->setKylinComboBox(false);
+    if (device) {
         pScanSet->setKylinLable();
         pFuncBar->setBtnScanEnable();
         pScanSet->setKylinScanSetEnable();
@@ -552,13 +532,10 @@ void CommonScanThread::run()
 
         //instance.open_device(0);
 
-        if (instance.getKylinSaneStatus() == false)
-        {
+        if (!instance.getKylinSaneStatus()) {
             emit scanFinished(false);
             qDebug() << "scan finished!";
-        }
-        else
-        {
+        } else {
             emit scanFinished(true);
         }
     } while (!instance.getKylinSaneStatus ());

@@ -52,7 +52,7 @@ public:
     Widget(QWidget *parent = 0);
     ~Widget();
 
-    void setPdfSize(QPdfWriter *pdfWriter,QString size);
+    void setPdfSize(QPdfWriter *pdfWriter, QString size);
     void saveToPdf(QImage img, QString pathName);
     void resultDetail(bool ret);
     int messageScanFinishedSave(QString pathName);

@@ -41,26 +41,23 @@ using namespace std;
 #define PATH_MAX 1024
 #endif
 
-struct ScanDeviceInfo
-{
-    bool status;			// 是否存在设备，存在status值为true，否则为false
-    QStringList name;		// 设备名
-    QString type;			// 设备类型
-    QStringList color;		// 设备支持的色彩
-    QStringList resolution;	// 设备支持的分辨率
-    QStringList size; 		// 设备支持的尺寸
+struct ScanDeviceInfo {
+    bool status;            // 是否存在设备，存在status值为true，否则为false
+    QStringList name;       // 设备名
+    QString type;           // 设备类型
+    QStringList color;      // 设备支持的色彩
+    QStringList resolution; // 设备支持的分辨率
+    QStringList size;       // 设备支持的尺寸
 };
 
-struct UserSelectedInfo
-{
-    QString name;			// 用户选择设备名
-    QString color;			// 用户选择色彩
-    QString resolution;		// 用户选择分辨率
-    QString size;			// 用户选择尺寸
+struct UserSelectedInfo {
+    QString name;           // 用户选择设备名
+    QString color;          // 用户选择色彩
+    QString resolution;     // 用户选择分辨率
+    QString size;           // 用户选择尺寸
 };
 
-enum sizes_type
-{
+enum sizes_type {
     A2 = 1,
     A3,
     A4,
@@ -78,7 +75,7 @@ public:
     KylinSane &operator = (const KylinSane &) = delete ;
 
     // 线程安全,不用生成对象，防止内存泄漏，是一种很好的懒汉单例模式
-    static KylinSane& getInstance()
+    static KylinSane &getInstance()
     {
         static KylinSane instance; //局部静态变量
         return instance;

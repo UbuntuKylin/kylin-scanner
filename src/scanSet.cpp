@@ -78,15 +78,16 @@ ScanSet::ScanSet(QWidget *parent)
     line4->setFrameStyle(QFrame::HLine);
 
     btnMail->setText(tr("Send email to"));
-    btnMail->setFixedSize(120,32);
+    btnMail->setFixedSize(120, 32);
     btnSave->setText(tr("Save as"));
-    btnSave->setFixedSize(100,32);
+    btnSave->setFixedSize(100, 32);
 
     QFontMetrics elideFont(btnLocation->font());
     if (curPath.isEmpty())
-        curPath=QDir::homePath() ; //获取家目录的路径
-    btnLocation->setText(elideFont.elidedText(curPath,Qt::ElideRight,150));
-    btnLocation->setFixedSize(180,32);
+        curPath = QDir::homePath() ; //获取家目录的路径
+
+    btnLocation->setText(elideFont.elidedText(curPath, Qt::ElideRight, 150));
+    btnLocation->setFixedSize(180, 32);
 
     btnLocation->setIcon(QIcon::fromTheme("folder-open"));
     btnLocation->setLayoutDirection(Qt::LayoutDirection::RightToLeft);
@@ -141,13 +142,13 @@ ScanSet::ScanSet(QWidget *parent)
     vBoxScanSet->addStretch();
     vBoxScanSet->addLayout(hBoxLine4);
     vBoxScanSet->addLayout(hBoxMailText);
-    vBoxScanSet->setContentsMargins(0,0,0,0);
+    vBoxScanSet->setContentsMargins(0, 0, 0, 0);
 
     setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     setLayout(vBoxScanSet);
 
     // For current combobox text, while not change current text
-    KylinSane & instance = KylinSane::getInstance();
+    KylinSane &instance = KylinSane::getInstance();
     QString curDeviceName, curSize, curColor, curResolution;
 
     curDeviceName = textDevice->currentText();
@@ -159,18 +160,13 @@ ScanSet::ScanSet(QWidget *parent)
     curColor = textColor->currentText();
     // Do not direct to return color, because color has been tr()
     if (! QString::compare("黑白", curColor)
-            || ! QString::compare("Lineart", curColor))
-    {
+            || ! QString::compare("Lineart", curColor)) {
         instance.userInfo.color = "Lineart";
-    }
-    else if (! QString::compare("彩色", curColor)
-            || ! QString::compare("Color", curColor))
-    {
-       instance.userInfo.color = "Color";
-    }
-    else if (! QString::compare("灰度", curColor)
-            || ! QString::compare("Gray", curColor))
-    {
+    } else if (! QString::compare("彩色", curColor)
+               || ! QString::compare("Color", curColor)) {
+        instance.userInfo.color = "Color";
+    } else if (! QString::compare("灰度", curColor)
+               || ! QString::compare("Gray", curColor)) {
         instance.userInfo.color = "Gray";
     }
     qDebug() << "userInfo.color = " << instance.userInfo.color;
@@ -180,13 +176,13 @@ ScanSet::ScanSet(QWidget *parent)
     instance.userInfo.resolution = curResolution;
 
     // For save location
-    connect(btnLocation,SIGNAL(clicked()),this,SLOT(onBtnLocationClicked()));
+    connect(btnLocation, SIGNAL(clicked()), this, SLOT(onBtnLocationClicked()));
 
     // For send email
-    connect(btnMail,SIGNAL(clicked()),this,SLOT(onBtnMailClicked()));
+    connect(btnMail, SIGNAL(clicked()), this, SLOT(onBtnMailClicked()));
 
     // For save file
-    connect(btnSave,SIGNAL(clicked()),this,SLOT(onBtnSaveClicked()));
+    connect(btnSave, SIGNAL(clicked()), this, SLOT(onBtnSaveClicked()));
 
     // For device name changed
     connect(textDevice, SIGNAL(currentTextChanged(QString)), this,
@@ -208,7 +204,7 @@ ScanSet::ScanSet(QWidget *parent)
     connect(textSize, SIGNAL(currentTextChanged(QString)), this,
             SLOT(onTextSizeCurrentTextChanged(QString)));
 
-    connect(style_settings,SIGNAL(changed(QString)),this,
+    connect(style_settings, SIGNAL(changed(QString)), this,
             SLOT(scanset_style_changed(QString)));
 }
 
@@ -228,43 +224,41 @@ void ScanSet::setKylinComboBoxAttributes(KylinCmb *combo, QStringList strList)
 
     combo->clear();
     combo->addItems(strList);
-    combo->setFixedSize(180,32);
+    combo->setFixedSize(180, 32);
     combo->setInsertPolicy(QComboBox::NoInsert);  //编辑框的内容不插入到列表项
     combo->setFocusPolicy(Qt::NoFocus); //获取焦点策略：无焦点，也就是不可编辑
     combo->setModel(listView->model()); // avoid warning
     combo->setView(listView);   //使下拉选项样式生效
 }
- 
+
 /**
  * @brief setKylinComboBox 统一设置麒麟扫描组合框ComboBox
  */
 void ScanSet::setKylinComboBox(bool curIndexChanged)
 {
-    QStringList strListDevice, strListColor, strListResolution, strListFormat, strListSize,strListLocation;
-    KylinSane& instance = KylinSane::getInstance();
+    QStringList strListDevice, strListColor, strListResolution, strListFormat, strListSize,
+                strListLocation;
+    KylinSane &instance = KylinSane::getInstance();
     bool device_status = true;
     int defaultResolution = 0;
     int defaultSize = 0;
 
     device_status = instance.getKylinSaneStatus();
 
-    if (!device_status)
-    {
+    if (!device_status) {
         // If not find scan device
         strListDevice << tr("No available device");
         setKylinComboBoxAttributes(textDevice, strListDevice);
 
-        strListColor<<tr("Lineart")<<tr("Color")<<tr("Gray");
+        strListColor << tr("Lineart") << tr("Color") << tr("Gray");
         setKylinComboBoxAttributes(textColor, strListColor);
 
         strListResolution << "4800" << "2400" << "1200" << "600" << "300" << tr("Auto");
-        for (int i=0; i<strListResolution.size(); i++)
-        {
-           if (!QString::compare("300", strListResolution[i], Qt::CaseSensitive))
-           {
-               defaultResolution = i;
-               break;
-           }
+        for (int i = 0; i < strListResolution.size(); ++i) {
+            if (!QString::compare("300", strListResolution[i], Qt::CaseSensitive)) {
+                defaultResolution = i;
+                break;
+            }
         }
         setKylinComboBoxAttributes(textResolution, strListResolution);
         textResolution->setCurrentIndex(defaultResolution);
@@ -279,8 +273,7 @@ void ScanSet::setKylinComboBox(bool curIndexChanged)
     }
 
     // For  default device
-    if (!curIndexChanged) // 当选择设备时，索引发生改变，此时不应该按照读取的字符串进行默认设置
-    {
+    if (!curIndexChanged) { // 当选择设备时，索引发生改变，此时不应该按照读取的字符串进行默认设置
         strListDevice = instance.getKylinSaneNames();
         qDebug() << "sane names: " << strListDevice;
         setKylinComboBoxAttributes(textDevice, strListDevice);
@@ -290,14 +283,12 @@ void ScanSet::setKylinComboBox(bool curIndexChanged)
     strListColor = instance.getKylinSaneColors();
     int defaultColor = 0;
 
-    for(int i=0; i<strListColor.size(); i++)
-    {
-       if (! QString::compare("黑白", strListColor[i], Qt::CaseSensitive)
-               || ! QString::compare("Lineart", strListColor[i], Qt::CaseSensitive))
-       {
-           defaultColor = i;
-           break;
-       }
+    for (int i = 0; i < strListColor.size(); ++i) {
+        if (! QString::compare("黑白", strListColor[i], Qt::CaseSensitive)
+                || ! QString::compare("Lineart", strListColor[i], Qt::CaseSensitive)) {
+            defaultColor = i;
+            break;
+        }
     }
 
     setKylinComboBoxAttributes(textColor, strListColor);
@@ -306,13 +297,11 @@ void ScanSet::setKylinComboBox(bool curIndexChanged)
     // For  default resolution
     strListResolution = instance.getKylinSaneResolutions();
 
-    for(int i=0; i<strListResolution.size(); i++)
-    {
-       if (! QString::compare("300", strListResolution[i], Qt::CaseSensitive))
-       {
-           defaultResolution = i;
-           break;
-       }
+    for (int i = 0; i < strListResolution.size(); ++i) {
+        if (! QString::compare("300", strListResolution[i], Qt::CaseSensitive)) {
+            defaultResolution = i;
+            break;
+        }
     }
 
     setKylinComboBoxAttributes(textResolution, strListResolution);
@@ -321,13 +310,11 @@ void ScanSet::setKylinComboBox(bool curIndexChanged)
     // For  default sizes
     strListSize = instance.getKylinSaneSizes();
 
-    for(int i=0; i<strListSize.size(); i++)
-    {
-       if (! QString::compare("A4", strListSize[i], Qt::CaseSensitive))
-       {
-           defaultSize = i;
-           break;
-       }
+    for (int i = 0; i < strListSize.size(); ++i) {
+        if (! QString::compare("A4", strListSize[i], Qt::CaseSensitive)) {
+            defaultSize = i;
+            break;
+        }
     }
 
     setKylinComboBoxAttributes(textSize, strListSize);
@@ -343,13 +330,12 @@ void ScanSet::setKylinComboBox(bool curIndexChanged)
 void ScanSet::setKylinComboBoxScanDeviceName()
 {
     QStringList strListDevice;
-    KylinSane& instance = KylinSane::getInstance();
+    KylinSane &instance = KylinSane::getInstance();
     bool device_status = true;
 
     device_status = instance.getKylinSaneStatus();
 
-    if (!device_status)
-    {
+    if (!device_status) {
         // If not find scan device
         strListDevice << tr("No available device");
         setKylinComboBoxAttributes(textDevice, strListDevice);
@@ -365,13 +351,12 @@ void ScanSet::setKylinComboBoxScanDeviceName()
 
 void ScanSet::setKylinScanSetNotEnable()
 {
-    KylinSane& instance = KylinSane::getInstance();
+    KylinSane &instance = KylinSane::getInstance();
     bool device_status = true;
 
     device_status = instance.getKylinSaneStatus();
 
-    if (!device_status)
-    {
+    if (!device_status) {
         textColor->setEnabled(false);
         textColor->colorGray();
 
@@ -467,13 +452,12 @@ void ScanSet::setKylinScanSetBtnEnable()
 
 void ScanSet::setKylinScanSetEnable()
 {
-    KylinSane& instance = KylinSane::getInstance();
+    KylinSane &instance = KylinSane::getInstance();
     bool device_status = true;
 
     device_status = instance.getKylinSaneStatus();
 
-    if (device_status)
-    {
+    if (device_status) {
         textDevice->setEnabled(true);
         textDevice->colorInit();
 
@@ -505,51 +489,50 @@ void ScanSet::setKylinScanSetEnable()
  */
 void ScanSet::setKylinLable()
 {
-    KylinSane& instance = KylinSane::getInstance();
+    KylinSane &instance = KylinSane::getInstance();
     bool device_status = true;
 
     device_status = instance.getKylinSaneStatus();
 
     labDevice->setText(tr("Device"));
-    setFontSize(labDevice,10);
+    setFontSize(labDevice, 10);
     setKylinLabelAttributes(labDevice);
 
     labType->setText(tr("Type"));
-    setFontSize(labType,10);
+    setFontSize(labType, 10);
     setKylinLabelAttributes(labType);
 
     labColor->setText(tr("Colour"));
-    setFontSize(labColor,10);
+    setFontSize(labColor, 10);
     setKylinLabelAttributes(labColor);
 
     labResolution->setText(tr("Resolution"));
-    setFontSize(labResolution,10);
+    setFontSize(labResolution, 10);
     setKylinLabelAttributes(labResolution);
 
     labSize->setText(tr("Size"));
-    setFontSize(labSize,10);
+    setFontSize(labSize, 10);
     setKylinLabelAttributes(labSize);
 
     labFormat->setText(tr("Format"));
-    setFontSize(labFormat,10);
+    setFontSize(labFormat, 10);
     setKylinLabelAttributes(labFormat);
 
     labName->setText(tr("Name"));
-    setFontSize(labName,10);
+    setFontSize(labName, 10);
     setKylinLabelAttributes(labName);
 
     labLocation->setText(tr("Scan to"));
-    setFontSize(labLocation,10);
+    setFontSize(labLocation, 10);
     setKylinLabelAttributes(labLocation);
 
-    textType->setFixedSize(180,32);
+    textType->setFixedSize(180, 32);
     textName->setText("scanner01");
 
-    textName->setMaxLength (256-4);
-    textName->setFixedSize(180,32);
+    textName->setMaxLength (256 - 4);
+    textName->setFixedSize(180, 32);
 
-    if (!device_status)
-    {
+    if (!device_status) {
         // No find scan device
         textType->setText(tr("Device type"));
 
@@ -583,7 +566,7 @@ void ScanSet::setKylinLable()
  */
 void ScanSet::setKylinLabelAttributes(QLabel *label)
 {
-    label->setAlignment(Qt::AlignRight|Qt::AlignVCenter);
+    label->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
     if (stylelist.contains(style_settings->get(STYLE_NAME).toString())) {
         label->setStyleSheet("color:rgb(232,232,232)");
     } else {
@@ -601,22 +584,22 @@ void ScanSet::setKylinLabelAttributes(QLabel *label)
 void ScanSet::setKylinHBoxLayout()
 {
     setKylinHBoxLayoutAttributes(hBoxDevice, labDevice, textDevice);
-    hBoxDevice->setContentsMargins(0,24,0,4);
+    hBoxDevice->setContentsMargins(0, 24, 0, 4);
 
     setKylinHBoxLayoutAttributes(hBoxType, labType, textType);
-    hBoxType->setContentsMargins(0,4,0,4);
+    hBoxType->setContentsMargins(0, 4, 0, 4);
 
     setKylinHBoxLayoutAttributes(hBoxColor, labColor, textColor);
-    hBoxColor->setContentsMargins(0,4,0,4);
+    hBoxColor->setContentsMargins(0, 4, 0, 4);
 
     setKylinHBoxLayoutAttributes(hBoxResolution, labResolution, textResolution);
-    hBoxResolution->setContentsMargins(0,4,0,4);
+    hBoxResolution->setContentsMargins(0, 4, 0, 4);
 
     setKylinHBoxLayoutAttributes(hBoxSize, labSize, textSize);
-    hBoxSize->setContentsMargins(0,4,0,16);
+    hBoxSize->setContentsMargins(0, 4, 0, 16);
 
     setKylinHBoxLayoutAttributes(hBoxFormat, labFormat, textFormat);
-    hBoxFormat->setContentsMargins(0,16,0,4);
+    hBoxFormat->setContentsMargins(0, 16, 0, 4);
 
     hBoxName->setSpacing(0);
     hBoxName->addStretch();
@@ -625,7 +608,7 @@ void ScanSet::setKylinHBoxLayout()
     hBoxName->addWidget(textName);
     hBoxName->addSpacing(16);
 //    setKylinHBoxLayoutAttributes(hBoxName, labName, textName);
-    hBoxName->setContentsMargins(0,4,0,4);
+    hBoxName->setContentsMargins(0, 4, 0, 4);
 
     hBoxLocation->setSpacing(0);
     hBoxLocation->addStretch();
@@ -633,21 +616,21 @@ void ScanSet::setKylinHBoxLayout()
     hBoxLocation->addSpacing(8);
     hBoxLocation->addWidget(btnLocation);
     hBoxLocation->addSpacing(16);
-    hBoxLocation->setContentsMargins(0,4,0,4);
+    hBoxLocation->setContentsMargins(0, 4, 0, 4);
 
     hBoxLine3->setSpacing(0);
     hBoxLine3->addWidget(line3);
-    hBoxLine3->setContentsMargins(0,0,0,0);
+    hBoxLine3->setContentsMargins(0, 0, 0, 0);
 
     hBoxLine4->setSpacing(0);
     hBoxLine4->addWidget(line4);
-    hBoxLine4->setContentsMargins(0,112,0,0);
+    hBoxLine4->setContentsMargins(0, 112, 0, 0);
 
     hBoxMailText->setSpacing(0);
     hBoxMailText->addWidget(btnMail);
     hBoxMailText->addSpacing(10);
     hBoxMailText->addWidget(btnSave);
-    hBoxMailText->setContentsMargins(0,20,0,20);
+    hBoxMailText->setContentsMargins(0, 20, 0, 20);
 
 }
 
@@ -657,7 +640,8 @@ void ScanSet::setKylinHBoxLayout()
  * @param labelFirst 水平布局中的第一个标签
  * @param labelSecond 水平布局中的第二个标签
  */
-void ScanSet::setKylinHBoxLayoutAttributes(QHBoxLayout *layout, QLabel *labelFirst, QLabel *labelSecond)
+void ScanSet::setKylinHBoxLayoutAttributes(QHBoxLayout *layout, QLabel *labelFirst,
+                                           QLabel *labelSecond)
 {
     layout->setSpacing(0);
     layout->addStretch();
@@ -743,38 +727,34 @@ void ScanSet::setBtnSaveText()
 void ScanSet::onBtnLocationClicked()
 {
     if (curPath.isEmpty())
-        curPath=QDir::homePath() ; //获取家目录的路径
+        curPath = QDir::homePath() ; //获取家目录的路径
 
-    QString dlgTitle=tr("Select a directory"); //对话框标题
-    QString selectedDir=QFileDialog::getExistingDirectory(this,dlgTitle,curPath,QFileDialog::ShowDirsOnly);
-    if (!selectedDir.isEmpty())
-    {
+    QString dlgTitle = tr("Select a directory"); //对话框标题
+    QString selectedDir = QFileDialog::getExistingDirectory(this, dlgTitle, curPath,
+                                                            QFileDialog::ShowDirsOnly);
+    if (!selectedDir.isEmpty()) {
         QFontMetrics elideFont(btnLocation->font());
         curPath = selectedDir;
-        btnLocation->setText(elideFont.elidedText(selectedDir,Qt::ElideRight,150));
+        btnLocation->setText(elideFont.elidedText(selectedDir, Qt::ElideRight, 150));
     }
 }
 
 void ScanSet::onBtnMailClicked()
 {
-    AppList * maillist = getAppIdList(MAILTYPE);
+    AppList *maillist = getAppIdList(MAILTYPE);
     qDebug() << "Get Applist success.";
 
-    if (!maillist)
-    {
+    if (!maillist) {
         qDebug() << "maillist is null";
         NoMail *dialog = new NoMail(this);
-        int ret= dialog->exec();// 以模态方式显示对话框，用户关闭对话框时返回 DialogCode值
+        int ret = dialog->exec(); // 以模态方式显示对话框，用户关闭对话框时返回 DialogCode值
         qDebug() << "ret = " << ret;
-        if (ret==QDialog::Accepted)
-        {
+        if (ret == QDialog::Accepted) {
             QProcess *process = new QProcess();
             process->start("/usr/bin/ubuntu-kylin-software-center");
         }
         delete dialog; //删除对话框
-    }
-    else
-    {
+    } else {
         qDebug() << "maillist is not null";
         SendMail *dialog = new SendMail(this);
         qDebug() << "begin";
@@ -795,19 +775,21 @@ void ScanSet::onBtnSaveClicked()
 
     while (!flagSave) {
         if (flag == 1) { // 进行OCR ，存储文本
-            if (textName->text().endsWith(".txt"))
+            if (textName->text().endsWith(".txt")) {
                 filename = textName->text();
-            else
+            } else {
                 filename = textName->text() + "." + ".txt";
+            }
             titlename = tr("Store text dialog");
         } else {
             if (textName->text().endsWith(".jpg")
                     || textName->text().endsWith(".png")
                     || textName->text().endsWith(".bmp")
-                    || textName->text().endsWith(".pdf"))
+                    || textName->text().endsWith(".pdf")) {
                 filename = textName->text();
-            else
+            } else {
                 filename = textName->text() + "." + textFormat->currentText();
+            }
             titlename = tr("Save as dialog");
         }
         filepath = curPath;
@@ -836,9 +818,9 @@ void ScanSet::onBtnSaveClicked()
             }
 
             if (!filename.endsWith(".jpg", Qt::CaseInsensitive)
-                && !filename.endsWith("*.png", Qt::CaseInsensitive)
-                && !filename.endsWith("*.pdf", Qt::CaseInsensitive)
-                && !filename.endsWith("*.bmp", Qt::CaseInsensitive)) {
+                    && !filename.endsWith("*.png", Qt::CaseInsensitive)
+                    && !filename.endsWith("*.pdf", Qt::CaseInsensitive)
+                    && !filename.endsWith("*.bmp", Qt::CaseInsensitive)) {
 
                 filetype = saveDialog->getFileType();
                 filepath = filepath.append(filetype);
@@ -860,27 +842,25 @@ void ScanSet::onTextDeviceCurrentTextChanged(QString device)
 {
     bool status = true;
 
-    KylinSane & instance = KylinSane::getInstance();
+    KylinSane &instance = KylinSane::getInstance();
     instance.userInfo.name = device;
     int curTextLen = textDevice->currentText().length();
 
-    qDebug() << "device name: "<< instance.userInfo.name;
+    qDebug() << "device name: " << instance.userInfo.name;
     qDebug() << "textDevice->currentText = " << textDevice->currentText()
              << "length = " << curTextLen;
 
-    if ( curTextLen >= 20)
-    {
+    if ( curTextLen >= 20) {
         textDevice->setToolTip(textDevice->currentText());
-    }
-    else
-    {
+    } else {
         textDevice->setToolTip("");
     }
-    int index = textDevice->currentIndex(); // index是根据所选的进行判断,或者open_device直接根据所选进行判断
+
+    // index是根据所选的进行判断,或者open_device直接根据所选进行判断
+    int index = textDevice->currentIndex();
     if (index == -1)
-    {
         index = 0;
-    }
+
     qDebug() << "device index: " << index;
     //char *deviceName =
 
@@ -888,14 +868,11 @@ void ScanSet::onTextDeviceCurrentTextChanged(QString device)
     instance.openScanDevice(index);
 
     status = instance.getKylinSaneStatus();
-    if (status)
-    {
+    if (status) {
         qDebug() << "open_device true";
         scanFlag = 1;
         emit openDeviceStatusSignal(true);
-    }
-    else
-    {
+    } else {
         qDebug() << "open_device false";
         scanFlag = 0;
         emit openDeviceStatusSignal(false);
@@ -916,36 +893,31 @@ void ScanSet::modifyBtnSave()
 
 void ScanSet::onTextColorCurrentTextChanged(QString color)
 {
-    KylinSane & instance = KylinSane::getInstance();
+    KylinSane &instance = KylinSane::getInstance();
 
     // Do not direct to return color, because color has been tr()
-    if ( !QString::compare("黑白", color) || !QString::compare("Lineart", color) )
-    {
+    if ( !QString::compare("黑白", color) || !QString::compare("Lineart", color) ) {
         instance.userInfo.color = "Lineart";
-    }
-    else if ( !QString::compare("彩色", color) || !QString::compare("Lineart", color) )
-    {
-       instance.userInfo.color = "Color";
-    }
-    else
-    {
+    } else if ( !QString::compare("彩色", color) || !QString::compare("Lineart", color) ) {
+        instance.userInfo.color = "Color";
+    } else {
         instance.userInfo.color = "Gray";
     }
-    qDebug() << "color: "<< instance.userInfo.color;
+    qDebug() << "color: " << instance.userInfo.color;
 }
 
 void ScanSet::onTextResolutionCurrentTextChanged(QString resolution)
 {
-    KylinSane & instance = KylinSane::getInstance();
+    KylinSane &instance = KylinSane::getInstance();
     instance.userInfo.resolution = resolution;
-    qDebug() << "resolution: "<< instance.userInfo.resolution;
+    qDebug() << "resolution: " << instance.userInfo.resolution;
 }
 
 void ScanSet::onTextSizeCurrentTextChanged(QString size)
 {
-    KylinSane & instance = KylinSane::getInstance();
+    KylinSane &instance = KylinSane::getInstance();
     instance.userInfo.size = size;
-    qDebug() << "size: "<< instance.userInfo.size;
+    qDebug() << "size: " << instance.userInfo.size;
 }
 
 void ScanSet::onTextNameTextChanged(QString)
@@ -954,13 +926,13 @@ void ScanSet::onTextNameTextChanged(QString)
     if (textName->text().contains(QChar('/'), Qt::CaseInsensitive)) {
         msg = tr("cannot contain '/' character.");
         warnMsg(msg);
-        textName->cursorBackward(true,1); // 向左移动一个字符的长度
+        textName->cursorBackward(true, 1); // 向左移动一个字符的长度
         textName->del(); // 删除光标右侧字符或选中文本
     }
     if (textName->text().startsWith(QChar('.'), Qt::CaseInsensitive)) {
         msg = tr("cannot save as hidden file.");
         warnMsg(msg);
-        textName->cursorBackward(true,1);
+        textName->cursorBackward(true, 1);
         textName->del();
     }
 

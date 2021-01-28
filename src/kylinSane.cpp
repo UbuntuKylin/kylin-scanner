@@ -23,8 +23,7 @@ extern "C" {
 
 #define STRIP_HEIGHT 256
 
-typedef struct
-{
+typedef struct {
     uint8_t *data;
     int width;
     int height;
@@ -32,8 +31,7 @@ typedef struct
     int y;
 } Image;
 
-typedef struct
-{
+typedef struct {
     int numColorMode;
     int numSource;
     int numResolution;
@@ -46,7 +44,7 @@ static SANE_Handle gs_device = nullptr;
 static int gs_verbose;
 static SANE_Byte *gs_buf;
 static size_t gs_BufSize;
-const SANE_Device ** gs_deviceList = nullptr;
+const SANE_Device **gs_deviceList = nullptr;
 
 #define SET_1_BIT(n,i) ((1<<(i))|(n))
 #define SET_0_BIT(n,i) ((~(1<<(i)))&(n))
@@ -56,67 +54,58 @@ const SANE_Device ** gs_deviceList = nullptr;
 
 static void writePnmHeader (SANE_Frame format, int width, int height, int depth, FILE *ofp)
 {
-    switch (format)
-    {
-        case SANE_FRAME_RED:
-        case SANE_FRAME_GREEN:
-        case SANE_FRAME_BLUE:
-        case SANE_FRAME_RGB:
-            fprintf(ofp, "P6\n# SANE data follows\n%d %d\n%d\n",
+    switch (format) {
+    case SANE_FRAME_RED:
+    case SANE_FRAME_GREEN:
+    case SANE_FRAME_BLUE:
+    case SANE_FRAME_RGB:
+        fprintf(ofp, "P6\n# SANE data follows\n%d %d\n%d\n",
+                width, height, (depth <= 8) ? 255 : 65535);
+        qInfo() << "#P6 SANE data follows width = " << width << "height = " << height
+                << "depth = " << ((depth <= 8) ? 255 : 65535);
+        break;
+    default:
+        if (depth == 1) {
+            fprintf(ofp, "P4\n# SANE data follows\n%d %d\n", width, height);
+            qInfo() << "#P4 SANE data follows width = " << width << "height = " << height;
+        } else {
+            fprintf(ofp, "P5\n# SANE data follows\n%d %d\n%d\n",
                     width, height, (depth <= 8) ? 255 : 65535);
-            qInfo() << "#P6 SANE data follows width = " << width << "height = " << height
-                  << "depth = " << ((depth <= 8) ? 255 : 65535);
-            break;
-        default:
-            if (depth == 1)
-            {
-                fprintf(ofp, "P4\n# SANE data follows\n%d %d\n", width, height);
-                qInfo() << "#P4 SANE data follows width = " << width << "height = " << height;
-            }
-            else
-            {
-                fprintf(ofp, "P5\n# SANE data follows\n%d %d\n%d\n",
-                        width, height,(depth <= 8) ? 255 : 65535);
-                qInfo() << "#P5 SANE data follows width = " << width << "height = " << height
-                      << "depth = " << ((depth <= 8) ? 255 : 65535);
-            }
-            break;
+            qInfo() << "#P5 SANE data follows width = " << width << "height = " << height
+                    << "depth = " << ((depth <= 8) ? 255 : 65535);
+        }
+        break;
     }
 }
 
-static void * advance (Image * image)
+static void *advance (Image *image)
 {
-    if (++image->x >= image->width)
-    {
-      image->x = 0;
-      if (++image->y >= image->height || !image->data)
-      {
-          size_t old_size = 0, new_size;
+    if (++image->x >= image->width) {
+        image->x = 0;
+        if ((++image->y >= image->height) || !image->data) {
+            size_t old_size = 0, new_size;
 
-          if (image->data)
-            old_size = static_cast<size_t>(image->height * image->width);
+            if (image->data)
+                old_size = static_cast<size_t>(image->height * image->width);
 
-          image->height += STRIP_HEIGHT;
-          new_size = static_cast<size_t>(image->height * image->width);
+            image->height += STRIP_HEIGHT;
+            new_size = static_cast<size_t>(image->height * image->width);
 
-          if (image->data)
-          {
-            image->data = (uint8_t *) realloc (image->data, new_size);
-          }
-          else
-          {
-            image->data = (uint8_t *) malloc (new_size);
-          }
+            if (image->data) {
+                image->data = (uint8_t *) realloc (image->data, new_size);
+            } else {
+                image->data = (uint8_t *) malloc (new_size);
+            }
 
-          if (image->data)
-            memset (image->data + old_size, 0, new_size - old_size);
-      }
+            if (image->data)
+                memset (image->data + old_size, 0, new_size - old_size);
+        }
     }
 
-    if (image->data == NULL)
-    {
-        qInfo() << "Can't allocate image buffer, width = " << image->width << "height = " << image->height;
-    }
+    if (!image->data)
+        qInfo() << "Can't allocate image buffer, width = " << image->width
+                << "height = " << image->height;
+
     return image->data;
 }
 
@@ -130,76 +119,61 @@ static SANE_Status onScanning(FILE *ofp)
     SANE_Word total_bytes = 0;
     SANE_Int hang_over = -1;
 
-    do
-    {
-        if (!first_frame)
-        {
+    do {
+        if (!first_frame) {
             status = sane_start (gs_device);
             if (status != SANE_STATUS_GOOD)
-            {
                 goto cleanup;
-            }
         }
 
         status = sane_get_parameters (gs_device, &parm);
         qInfo() << "Parm : status = " << sane_strstatus(status)
-              << "format = " << parm.format
-              << "last_frame = " << parm.last_frame
-              << "bytes_per_line = " << parm.bytes_per_line
-              << "pixels_per_line = " << parm.pixels_per_line
-              << "lines = " << parm.lines
-              << "depth = " << parm.depth;
+                << "format = " << parm.format
+                << "last_frame = " << parm.last_frame
+                << "bytes_per_line = " << parm.bytes_per_line
+                << "pixels_per_line = " << parm.pixels_per_line
+                << "lines = " << parm.lines
+                << "depth = " << parm.depth;
 
         if (status != SANE_STATUS_GOOD)
-        {
-          goto cleanup;
-        }
+            goto cleanup;
 
-        if (first_frame)
-        {
-            if (parm.lines >= 0)
-            {
+        if (first_frame) {
+            if (parm.lines >= 0) {
                 qInfo() << "Image's size(pixels): " << parm.pixels_per_line << parm.lines
-                      << "Bits/pixel: " <<  parm.depth * (SANE_FRAME_RGB == parm.format ? 3 : 1);
-            }
-            else
-            {
+                        << "Bits/pixel: " <<  parm.depth * (SANE_FRAME_RGB == parm.format ? 3 : 1);
+            } else {
                 qInfo() << "Image's wide pixels: " << parm.pixels_per_line
-                      << "Height for bits/pixel: " << parm.depth * (SANE_FRAME_RGB == parm.format ? 3 : 1);
+                        << "Height for bits/pixel: " << parm.depth * (SANE_FRAME_RGB == parm.format ? 3 : 1);
             }
 
-            switch (parm.format)
-            {
-                case SANE_FRAME_RED:
-                case SANE_FRAME_GREEN:
-                case SANE_FRAME_BLUE:
-                  assert (parm.depth == 8);
-                  must_buffer = 1;
-                  offset = parm.format - SANE_FRAME_RED;
-                  break;
+            switch (parm.format) {
+            case SANE_FRAME_RED:
+            case SANE_FRAME_GREEN:
+            case SANE_FRAME_BLUE:
+                assert (parm.depth == 8);
+                must_buffer = 1;
+                offset = parm.format - SANE_FRAME_RED;
+                break;
 
-                case SANE_FRAME_RGB:
-                    qInfo() << "SANE_FRAME_GRB";
-                  //assert ((parm.depth == 8) || (parm.depth == 16));
+            case SANE_FRAME_RGB:
+                qInfo() << "SANE_FRAME_GRB";
+            //assert ((parm.depth == 8) || (parm.depth == 16));
 
-                case SANE_FRAME_GRAY:
-                    assert ((parm.depth == 1) || (parm.depth == 8) || (parm.depth == 16));
-                    if (parm.lines < 0)
-                    {
-                        must_buffer = 1;
-                        offset = 0;
-                    }
-                    else
-                    {
-                        writePnmHeader (parm.format, parm.pixels_per_line, parm.lines, parm.depth, ofp);
-                    }
-                  break;
-                default:
-                  break;
+            case SANE_FRAME_GRAY:
+                assert ((parm.depth == 1) || (parm.depth == 8) || (parm.depth == 16));
+                if (parm.lines < 0) {
+                    must_buffer = 1;
+                    offset = 0;
+                } else {
+                    writePnmHeader (parm.format, parm.pixels_per_line, parm.lines, parm.depth, ofp);
+                }
+                break;
+            default:
+                break;
             }
 
-            if (must_buffer)
-            {
+            if (must_buffer) {
                 /**
                  * We're either scanning a multi-frame image or the
                  * scanner doesn't know what the eventual image height
@@ -208,32 +182,29 @@ static SANE_Status onScanning(FILE *ofp)
                  * the image.
                  */
                 image.width = parm.bytes_per_line;
-                if (parm.lines >= 0)
+                if (parm.lines >= 0) {
                     image.height = parm.lines - STRIP_HEIGHT + 1;
-                else
+                } else {
                     image.height = 0;
+                }
 
                 image.x = image.width - 1;
                 image.y = -1;
-                if (!advance (&image))
-                {
+                if (!advance (&image)) {
                     status = SANE_STATUS_NO_MEM;
                     goto cleanup;
                 }
             }
-        }
-        else
-        {
+        } else {
             assert (parm.format >= SANE_FRAME_RED && parm.format <= SANE_FRAME_BLUE);
             offset = parm.format - SANE_FRAME_RED;
             image.x = image.y = 0;
         }
 
         hundred_percent = parm.bytes_per_line * parm.lines \
-            *((parm.format==SANE_FRAME_RGB || parm.format==SANE_FRAME_GRAY) ? 1:3);
+                          *((parm.format == SANE_FRAME_RGB || parm.format == SANE_FRAME_GRAY) ? 1 : 3);
 
-        while (1)
-        {
+        while (1) {
             double progr;
             status = sane_read (gs_device, gs_buf, gs_BufSize, &len);
             total_bytes += (SANE_Word) len;
@@ -241,75 +212,59 @@ static SANE_Status onScanning(FILE *ofp)
             if (progr > 100.)
                 progr = 100.;
 
-            if (status != SANE_STATUS_GOOD)
-            {
+            if (status != SANE_STATUS_GOOD) {
                 if (status != SANE_STATUS_EOF)
-                {
                     return status;
-                }
                 break;
             }
 
-            if (must_buffer)
-            {
+            if (must_buffer) {
                 qInfo() << "must_buffer = " << must_buffer;
-                switch (parm.format)
-                {
-                    case SANE_FRAME_RED:
-                    case SANE_FRAME_GREEN:
-                    case SANE_FRAME_BLUE:
-                        for (i = 0; i < len; ++i)
-                        {
-                            image.data[offset + 3 * i] = gs_buf[i];
-                            if (!advance (&image))
-                            {
-                                status = SANE_STATUS_NO_MEM;
-                                goto cleanup;
-                            }
+                switch (parm.format) {
+                case SANE_FRAME_RED:
+                case SANE_FRAME_GREEN:
+                case SANE_FRAME_BLUE:
+                    for (i = 0; i < len; ++i) {
+                        image.data[offset + 3 * i] = gs_buf[i];
+                        if (!advance (&image)) {
+                            status = SANE_STATUS_NO_MEM;
+                            goto cleanup;
                         }
-                        offset += 3 * len;
-                        break;
-                    case SANE_FRAME_RGB:
-                        for (i = 0; i < len; ++i)
-                        {
-                            image.data[offset + i] = gs_buf[i];
-                            if (!advance (&image))
-                            {
-                                status = SANE_STATUS_NO_MEM;
-                                goto cleanup;
-                            }
+                    }
+                    offset += 3 * len;
+                    break;
+                case SANE_FRAME_RGB:
+                    for (i = 0; i < len; ++i) {
+                        image.data[offset + i] = gs_buf[i];
+                        if (!advance (&image)) {
+                            status = SANE_STATUS_NO_MEM;
+                            goto cleanup;
                         }
-                        offset += len;
-                        break;
-                    case SANE_FRAME_GRAY:
-                        for (i = 0; i < len; ++i)
-                        {
-                            image.data[offset + i] = gs_buf[i];
-                            if (!advance (&image))
-                            {
-                                status = SANE_STATUS_NO_MEM;
-                                goto cleanup;
-                            }
+                    }
+                    offset += len;
+                    break;
+                case SANE_FRAME_GRAY:
+                    for (i = 0; i < len; ++i) {
+                        image.data[offset + i] = gs_buf[i];
+                        if (!advance (&image)) {
+                            status = SANE_STATUS_NO_MEM;
+                            goto cleanup;
                         }
-                        offset += len;
-                        break;
-                    default:
-                        break;
+                    }
+                    offset += len;
+                    break;
+                default:
+                    break;
                 }
-            }
-            else /* ! must_buffer */
-            {
-                if ((parm.depth != 16))
+            } else { /* ! must_buffer */
+                if ((parm.depth != 16)) {
                     fwrite (gs_buf, 1, len, ofp);
-                else
-                {
+                } else {
 #if !defined(WORDS_BIGENDIAN)
                     int start = 0;
                     /* check if we have saved one byte from the last sane_read */
-                    if (hang_over > -1)
-                    {
-                        if (len > 0)
-                        {
+                    if (hang_over > -1) {
+                        if (len > 0) {
                             fwrite (gs_buf, 1, 1, ofp);
                             gs_buf[0] = (SANE_Byte) hang_over;
                             hang_over = -1;
@@ -317,16 +272,14 @@ static SANE_Status onScanning(FILE *ofp)
                         }
                     }
                     /* now do the byte-swapping */
-                    for (i = start; i < (len - 1); i += 2)
-                    {
+                    for (i = start; i < (len - 1); i += 2) {
                         unsigned char LSB;
                         LSB = gs_buf[i];
                         gs_buf[i] = gs_buf[i + 1];
                         gs_buf[i + 1] = LSB;
                     }
                     /* check if we have an odd number of bytes */
-                    if (((len - start) % 2) != 0)
-                    {
+                    if (((len - start) % 2) != 0) {
                         hang_over = gs_buf[len - 1];
                         len--;
                     }
@@ -335,28 +288,25 @@ static SANE_Status onScanning(FILE *ofp)
                 }
             }
 
-            if (gs_verbose && parm.depth == 8)
-            {
-              for (i = 0; i < len; ++i)
-                if (gs_buf[i] >= max)
-                    max = gs_buf[i];
-                else if (gs_buf[i] < min)
-                    min = gs_buf[i];
+            if (gs_verbose && parm.depth == 8) {
+                for (i = 0; i < len; ++i)
+                    if (gs_buf[i] >= max) {
+                        max = gs_buf[i];
+                    } else if (gs_buf[i] < min) {
+                        min = gs_buf[i];
+                    }
             }
         }
         first_frame = 0;
-    }while (!parm.last_frame);
+    } while (!parm.last_frame);
 
-    if (must_buffer)
-    {
+    if (must_buffer) {
         image.height = image.y;
-        writePnmHeader (parm.format, parm.pixels_per_line,image.height, parm.depth, ofp);
+        writePnmHeader (parm.format, parm.pixels_per_line, image.height, parm.depth, ofp);
 
 #if !defined(WORDS_BIGENDIAN)
-        if (parm.depth == 16)
-        {
-            for (i = 0; i < image.height * image.width; i += 2)
-            {
+        if (parm.depth == 16) {
+            for (i = 0; i < image.height * image.width; i += 2) {
                 unsigned char LSB;
                 LSB = image.data[i];
                 image.data[i] = image.data[i + 1];
@@ -384,19 +334,19 @@ SANE_Status kylin_sane_get_parameters(SANE_Handle device)
 
     status = sane_get_parameters (device, &parm);
     qInfo() << "Parm : status = " << sane_strstatus(status)
-          << "format = " << parm.format
-          << "last_frame = " << parm.last_frame
-          << "bytes_per_line = " << parm.bytes_per_line
-          << "pixels_per_line = " << parm.pixels_per_line
-          << "lines = " << parm.lines
-          << "depth = " << parm.depth;
+            << "format = " << parm.format
+            << "last_frame = " << parm.last_frame
+            << "bytes_per_line = " << parm.bytes_per_line
+            << "pixels_per_line = " << parm.pixels_per_line
+            << "lines = " << parm.lines
+            << "depth = " << parm.depth;
 
     return status;
 }
 
 SANE_Status doScan(const char *fileName)
 {
-    KylinSane& instance = KylinSane::getInstance();
+    KylinSane &instance = KylinSane::getInstance();
 
     SANE_Status status = SANE_STATUS_GOOD;
     FILE *ofp = nullptr;
@@ -406,22 +356,17 @@ SANE_Status doScan(const char *fileName)
     gs_buf = static_cast<SANE_Byte *>(malloc(gs_BufSize));
 
     string dir = "/tmp/scanner/";
-    if (access(dir.c_str(), 0) == -1)
-    {
+    if (access(dir.c_str(), 0) == -1) {
         qInfo() << " /tmp/scanner/ is not existing, now create it.";
-        int flag=mkdir(dir.c_str(), 0777);
-        if (flag == 0)
-        {
+        int flag = mkdir(dir.c_str(), 0777);
+        if (flag == 0) {
             qInfo() << "create successfully!" ;
-        }
-        else
-        {
+        } else {
             qInfo() << "create failed!" ;
         }
     }
 
-    do
-    {
+    do {
         sprintf (path, "%s%s.pnm", dir.c_str(), fileName);
         strcpy (part_path, path);
         strcat (part_path, ".part");
@@ -429,59 +374,49 @@ SANE_Status doScan(const char *fileName)
 
         status = sane_start (gs_device);
         qInfo() << "status error: " << sane_strstatus(status);
-        if (status != SANE_STATUS_GOOD)
-        {
+        if (status != SANE_STATUS_GOOD) {
             qInfo() << "Cannot start scan devices, sane_status = " << status;
             instance.setKylinSaneStatus(false);
             break;
         }
 
-        if (nullptr == (ofp = fopen (part_path, "w")))
-        {
+        if (nullptr == (ofp = fopen (part_path, "w"))) {
             status = SANE_STATUS_ACCESS_DENIED;
             break;
         }
 
         status = onScanning(ofp);
 
-        switch (status)
-        {
-            case SANE_STATUS_GOOD:
-            case SANE_STATUS_EOF:
-                 {
-                      status = SANE_STATUS_GOOD;
-                      if (!ofp || 0 != fclose(ofp))
-                      {
-                          status = SANE_STATUS_ACCESS_DENIED;
-                          break;
-                      }
-                      else
-                      {
-                          ofp = nullptr;
-                          if (rename (part_path, path))
-                          {
-                              status = SANE_STATUS_ACCESS_DENIED;
-                              break;
-                          }
-                      }
-                  }
-                  break;
-            default:
-                  break;
+        switch (status) {
+        case SANE_STATUS_GOOD:
+        case SANE_STATUS_EOF: {
+            status = SANE_STATUS_GOOD;
+            if (!ofp || (0 != fclose(ofp))) {
+                status = SANE_STATUS_ACCESS_DENIED;
+                break;
+            } else {
+                ofp = nullptr;
+                if (rename (part_path, path)) {
+                    status = SANE_STATUS_ACCESS_DENIED;
+                    break;
+                }
+            }
         }
-    }while (0);
+        break;
+        default:
+            break;
+        }
+    } while (0);
 
     if (SANE_STATUS_GOOD != status)
-    {
         sane_cancel (gs_device);
-    }
-    if (ofp)
-    {
+
+    if (ofp) {
         fclose (ofp);
         ofp = nullptr;
     }
-    if (gs_buf)
-    {
+
+    if (gs_buf) {
         free (gs_buf);
         gs_buf = nullptr;
     }
@@ -489,7 +424,7 @@ SANE_Status doScan(const char *fileName)
     return status;
 }
 
-static void auth_callback (SANE_String_Const resource, SANE_Char * username, SANE_Char * password)
+static void auth_callback (SANE_String_Const resource, SANE_Char *username, SANE_Char *password)
 {
     qInfo() << "auth_callback" << resource << username << password;
 }
@@ -523,9 +458,8 @@ static SANE_Status getSaneDevices(const SANE_Device ***device_list)
     qInfo() << "status = " << status;
 
     if (status)
-    {
         qInfo() << "status = " << sane_strstatus(status);
-    }
+
     return status;
 }
 
@@ -540,15 +474,13 @@ SANE_Status openSaneDevice(SANE_Device *device, SANE_Handle *sane_handle)
     SANE_Status status = SANE_STATUS_INVAL;
 
     qInfo() << "name = " << device->name
-          << "model = " << device->model
-          << "vendor = " << device->vendor
-          << "type = " << device->type;
+            << "model = " << device->model
+            << "vendor = " << device->vendor
+            << "type = " << device->type;
 
     status = sane_open(device->name, sane_handle);
     if (status)
-    {
         qInfo() << "status = " << sane_strstatus(status);
-    }
 
     return status;
 }
@@ -565,7 +497,7 @@ SANE_Status openSaneDevice(SANE_Device *device, SANE_Handle *sane_handle)
  */
 SANE_Status get_option_colors(SANE_Handle sane_handle, int optnum)
 {
-    KylinSane& instance = KylinSane::getInstance();
+    KylinSane &instance = KylinSane::getInstance();
     QStringList colors;
 
     const SANE_Option_Descriptor *opt;
@@ -575,24 +507,17 @@ SANE_Status get_option_colors(SANE_Handle sane_handle, int optnum)
 
     opt = sane_get_option_descriptor(sane_handle, optnum);
 
-    for (int i=0; opt->constraint.string_list[i] != nullptr; i++)
-    {
-        const char *tmp = *(opt->constraint.string_list+i);
+    for (int i = 0; opt->constraint.string_list[i] != nullptr; ++i) {
+        const char *tmp = *(opt->constraint.string_list + i);
         status = SANE_STATUS_GOOD;
         qInfo() << "color strings = " << *(opt->constraint.string_list + i);
 
         if (!strcmp("Color", tmp))
-        {
             colors << QObject::tr("Color");
-        }
         if (!strcmp("Gray", tmp))
-        {
             colors << QObject::tr("Gray");
-        }
         if (!strcmp("Lineart", tmp))
-        {
             colors << QObject::tr("Lineart");
-        }
     }
 
     instance.setKylinSaneColors(colors);
@@ -614,9 +539,9 @@ SANE_Status set_option_colors(SANE_Handle sane_handle, SANE_String val_color)
     qInfo() << "Set color option = " << val_color;
 
     status = sane_control_option(sane_handle,  gs_optDesc.numColorMode,
-            SANE_ACTION_SET_VALUE, val_color, nullptr);
-    if (status != SANE_STATUS_GOOD)
-    {
+                                 SANE_ACTION_SET_VALUE, val_color, nullptr);
+
+    if (status != SANE_STATUS_GOOD) {
         qInfo() << "status = " << status << "desc: " << sane_strstatus(status);
         return status;
     }
@@ -637,7 +562,7 @@ SANE_Status set_option_colors(SANE_Handle sane_handle, SANE_String val_color)
  */
 SANE_Status get_option_sources(SANE_Handle sane_handle, int optnum)
 {
-    KylinSane& instance = KylinSane::getInstance();
+    KylinSane &instance = KylinSane::getInstance();
     QString type;
 
     SANE_Status status = SANE_STATUS_INVAL; // 没有读取到设备类型
@@ -648,24 +573,20 @@ SANE_Status get_option_sources(SANE_Handle sane_handle, int optnum)
 
     opt = sane_get_option_descriptor(sane_handle, optnum);
 
-    for (int i=0; opt->constraint.string_list[i] != nullptr; i++)
-    {
-        const char *tmp = *(opt->constraint.string_list+i);
+    for (int i = 0; opt->constraint.string_list[i] != nullptr; ++i) {
+        const char *tmp = *(opt->constraint.string_list + i);
         status = SANE_STATUS_GOOD;
 
         qInfo() << "source string = " << tmp;
         if (!strcmp("Flatbed", tmp)
                 || strstr(tmp, "flatbed")
-                || strstr(tmp, "multi-function peripheral"))
-        {
+                || strstr(tmp, "multi-function peripheral")) {
             type = QObject::tr("Flatbed"); //平板式
             flag = 1;
         }
     }
     if (flag == 0)
-    {
         type = QObject::tr("Transparency Adapter"); //馈纸式
-    }
 
     instance.setKylinSaneType(type);
     return status;
@@ -687,9 +608,8 @@ SANE_Status set_option_sources(SANE_Handle sane_handle, int optnum, SANE_String 
     qInfo() << "Set source option = " << val_source;
 
     status = sane_control_option(sane_handle, optnum,
-            SANE_ACTION_SET_VALUE, val_source, nullptr);
-    if (status != SANE_STATUS_GOOD)
-    {
+                                 SANE_ACTION_SET_VALUE, val_source, nullptr);
+    if (status != SANE_STATUS_GOOD) {
         qInfo() << "status = " << status << "desc: " << sane_strstatus(status);
         return status;
     }
@@ -709,7 +629,7 @@ SANE_Status set_option_sources(SANE_Handle sane_handle, int optnum, SANE_String 
   */
 static SANE_Status getOptionResolutions(SANE_Handle sane_handle, int optnum)
 {
-    KylinSane& instance = KylinSane::getInstance();
+    KylinSane &instance = KylinSane::getInstance();
     QStringList resolutions;
     SANE_Status status = SANE_STATUS_INVAL;
     const SANE_Option_Descriptor *opt;
@@ -718,40 +638,38 @@ static SANE_Status getOptionResolutions(SANE_Handle sane_handle, int optnum)
 
     opt = sane_get_option_descriptor(sane_handle, optnum);
 
-    for (int i=0; opt->constraint.word_list[i]; i++)
-    {
-        int res = *(opt->constraint.word_list+i);
+    for (int i = 0; opt->constraint.word_list[i]; ++i) {
+        int res = *(opt->constraint.word_list + i);
         status = SANE_STATUS_GOOD;
         qInfo() << "resolution int = " << res;
 
-        switch (res)
-        {
-            case 4800:
-                resolutions << "4800";
-                break;
-            case 2400:
-                resolutions << "2400";
-                break;
-            case 1200:
-                resolutions << "1200";
-                break;
-            case 600:
-                resolutions << "600";
-                break;
-            case 300:
-                resolutions << "300";
-                break;
-            case 150:
-                resolutions << "150";
-                break;
-            case 100:
-                resolutions << "100";
-                break;
-            case 75:
-                resolutions << "75";
-                break;
-            default:
-                break;
+        switch (res) {
+        case 4800:
+            resolutions << "4800";
+            break;
+        case 2400:
+            resolutions << "2400";
+            break;
+        case 1200:
+            resolutions << "1200";
+            break;
+        case 600:
+            resolutions << "600";
+            break;
+        case 300:
+            resolutions << "300";
+            break;
+        case 150:
+            resolutions << "150";
+            break;
+        case 100:
+            resolutions << "100";
+            break;
+        case 75:
+            resolutions << "75";
+            break;
+        default:
+            break;
         }
     }
     resolutions << QObject::tr("Auto");
@@ -761,14 +679,14 @@ static SANE_Status getOptionResolutions(SANE_Handle sane_handle, int optnum)
     return status;
 }
 
- /**
- * @brief set_option_resolutions 设置扫描设备的分辨率
- * 根据传入参数val_resolution进行设置扫描软件的分辨率
- *
- * @param sane_handle 扫描句柄
- * @param val_resolution 需要设置的扫描设备分辨率
- * @return 返回扫描设备设置分辨率情况
- */
+/**
+* @brief set_option_resolutions 设置扫描设备的分辨率
+* 根据传入参数val_resolution进行设置扫描软件的分辨率
+*
+* @param sane_handle 扫描句柄
+* @param val_resolution 需要设置的扫描设备分辨率
+* @return 返回扫描设备设置分辨率情况
+*/
 SANE_Status set_option_resolutions(SANE_Handle sane_handle, SANE_Int val_resolution)
 {
     SANE_Status status = SANE_STATUS_GOOD;
@@ -776,9 +694,8 @@ SANE_Status set_option_resolutions(SANE_Handle sane_handle, SANE_Int val_resolut
     qInfo() << "Set resolution option = " << val_resolution;
 
     status = sane_control_option(sane_handle, gs_optDesc.numResolution,
-            SANE_ACTION_SET_VALUE, &val_resolution, nullptr);
-    if (status != SANE_STATUS_GOOD)
-    {
+                                 SANE_ACTION_SET_VALUE, &val_resolution, nullptr);
+    if (status != SANE_STATUS_GOOD) {
         qInfo() << "status = " << status << "desc: " << sane_strstatus(status);
         return status;
     }
@@ -815,8 +732,7 @@ SANE_Status get_option_sizes(SANE_Handle sane_handle, int optnum)
 
     opt = sane_get_option_descriptor(sane_handle, optnum);
 
-    for (int i=0; opt->constraint.word_list[i]; i++)
-    {
+    for (int i = 0; opt->constraint.word_list[i]; ++i) {
         qInfo() << "int sizes = " << *(opt->constraint.word_list + i);
     }
     return status;
@@ -840,9 +756,8 @@ SANE_Status set_option_sizes(SANE_Handle sane_handle, int optnum, SANE_Int val_s
     qInfo() << "Set size option = " << val_size;
 
     status = sane_control_option(sane_handle, optnum,
-            SANE_ACTION_SET_VALUE, &val_size, nullptr);
-    if (status != SANE_STATUS_GOOD)
-    {
+                                 SANE_ACTION_SET_VALUE, &val_size, nullptr);
+    if (status != SANE_STATUS_GOOD) {
         qInfo() << "status = " << status << "desc: " << sane_strstatus(status);
         return status;
     }
@@ -859,19 +774,20 @@ SANE_Status set_option_sizes(SANE_Handle sane_handle, int optnum, SANE_Int val_s
  * @param val_size_br_y 扫描设备右下角的y坐标
  * @return 返回扫描设备设置尺寸的情况
  */
-SANE_Status set_option_sizes_real(SANE_Handle sane_handle, SANE_Int val_size_br_x, SANE_Int val_size_br_y)
+SANE_Status set_option_sizes_real(SANE_Handle sane_handle, SANE_Int val_size_br_x,
+                                  SANE_Int val_size_br_y)
 {
     SANE_Status status = SANE_STATUS_GOOD;
     qInfo() << "Size bottom-right location(xy) = " << val_size_br_x << val_size_br_y;
 
     status = set_option_sizes(sane_handle, gs_optDesc.numSizeBrX, SANE_FIX(val_size_br_x));
-    if (status != SANE_STATUS_GOOD)
-    {
+    if (status != SANE_STATUS_GOOD) {
         qInfo() << "status = " << sane_strstatus(status);
         return status;
     }
+
     status = set_option_sizes(sane_handle, gs_optDesc.numSizeBrY, SANE_FIX(val_size_br_y));
-    {
+    if (status != SANE_STATUS_GOOD) {
         qInfo() << "status = " << sane_strstatus(status);
         return status;
     }
@@ -891,25 +807,24 @@ SANE_Status set_option_sizes_all(SANE_Handle sane_handle, int type)
 {
     SANE_Status status = SANE_STATUS_GOOD;
 
-    switch (type)
-    {
-        case A2:
-            status = set_option_sizes_real(sane_handle, 420, 594);
-            break;
-        case A3:
-            status = set_option_sizes_real(sane_handle, 297, 420);
-            break;
-        case A4:
-            status = set_option_sizes_real(sane_handle, 210, 297);
-            break;
-        case A5:
-            status = set_option_sizes_real(sane_handle, 148, 210);
-            break;
-        case A6:
-            status = set_option_sizes_real(sane_handle, 105, 144);
-            break;
-        default:
-            status = SANE_STATUS_UNSUPPORTED;
+    switch (type) {
+    case A2:
+        status = set_option_sizes_real(sane_handle, 420, 594);
+        break;
+    case A3:
+        status = set_option_sizes_real(sane_handle, 297, 420);
+        break;
+    case A4:
+        status = set_option_sizes_real(sane_handle, 210, 297);
+        break;
+    case A5:
+        status = set_option_sizes_real(sane_handle, 148, 210);
+        break;
+    case A6:
+        status = set_option_sizes_real(sane_handle, 105, 144);
+        break;
+    default:
+        status = SANE_STATUS_UNSUPPORTED;
     }
 
     return status;
@@ -926,14 +841,14 @@ static void *guards_malloc(size_t size)
 {
     unsigned char *ptr;
 
-    size += 2*GUARDS_SIZE;
+    size += 2 * GUARDS_SIZE;
     ptr = static_cast<unsigned char *>(malloc(size));
 
     assert(ptr);
 
     ptr += GUARDS_SIZE;
 
-    return(ptr);
+    return (ptr);
 }
 
 /* Free some memory allocated by guards_malloc. */
@@ -952,30 +867,29 @@ static void guards_free(void *ptr)
  * @param option_num 扫描参数句柄值
  * @return 扫描选项描述句柄
  */
-static const SANE_Option_Descriptor *get_optdesc_by_name(SANE_Handle device, const char *name, int *option_num)
+static const SANE_Option_Descriptor *get_optdesc_by_name(SANE_Handle device, const char *name,
+                                                         int *option_num)
 {
     SANE_Int num_dev_options;
     SANE_Status status;
 
     /* Get the number of options. */
     status = sane_control_option (device, 0,
-            SANE_ACTION_GET_VALUE, &num_dev_options, nullptr);
+                                  SANE_ACTION_GET_VALUE, &num_dev_options, nullptr);
     qInfo() << "Get option name = " << name << "status = " << status;
 
-    for (*option_num = 0; *option_num < num_dev_options; (*option_num)++)
-    {
+    for (*option_num = 0; *option_num < num_dev_options; (*option_num)++) {
         const SANE_Option_Descriptor *opt;
 
         /* Get the option descriptor */
         opt = sane_get_option_descriptor (device, *option_num);
 
-        if (opt->name && strcmp(opt->name, name) == 0)
-        {
+        if (opt->name && strcmp(opt->name, name) == 0) {
             qInfo() << "Get option desc for " << *option_num << "opt->name = " << opt->name << "name" << name;
-            return(opt);
+            return (opt);
         }
     }
-    return(nullptr);
+    return (nullptr);
 }
 
 void display_option_value(SANE_Handle device, int optnum)
@@ -985,13 +899,13 @@ void display_option_value(SANE_Handle device, int optnum)
     opt = sane_get_option_descriptor(device, optnum);
 
     qInfo() << "Get options: optnum = " << optnum
-          << "name = " << opt->name
-          << "title = " << opt->title
-          << "type = " << opt->type
-          << "desc = " << opt->desc
-          << "cap = " << opt->cap
-          << "size = " << opt->size
-          << "unit = " << opt->unit;
+            << "name = " << opt->name
+            << "title = " << opt->title
+            << "type = " << opt->type
+            << "desc = " << opt->desc
+            << "cap = " << opt->cap
+            << "size = " << opt->size
+            << "unit = " << opt->unit;
 }
 
 
@@ -1003,7 +917,7 @@ void display_option_value(SANE_Handle device, int optnum)
  */
 static SANE_Status getOptionValue(SANE_Handle device, const char *option_name)
 {
-    KylinSane& instance = KylinSane::getInstance();
+    KylinSane &instance = KylinSane::getInstance();
     QStringList sizes;
 
     SANE_Status status = SANE_STATUS_GOOD;
@@ -1020,220 +934,179 @@ static SANE_Status getOptionValue(SANE_Handle device, const char *option_name)
     opt = get_optdesc_by_name(device, option_name, &optnum);
     qInfo() << "optname = " << option_name << "optnum = " << optnum;
 
-    if (opt)
-    {
+    if (opt) {
         void *optval; //扫描选项值
         optval = guards_malloc(opt->size);
         /* Get default optval(different format) */
         status = sane_control_option (device, optnum,
-                SANE_ACTION_GET_VALUE, optval, nullptr);
+                                      SANE_ACTION_GET_VALUE, optval, nullptr);
 
-        if (opt->desc != NULL)
-        {
+        if (opt->desc)
             qInfo() << opt->desc;
-        }
 
         qInfo() << "opt->type = " << opt->type;
-        switch (opt->type)
-        {
-            case SANE_TYPE_INT:
-                qInfo() << "type = int" << "size = " << opt->size;
+        switch (opt->type) {
+        case SANE_TYPE_INT:
+            qInfo() << "type = int" << "size = " << opt->size;
 
-                if (!strcmp(option_name, SANE_NAME_SCAN_RESOLUTION))
-                {
-                    val_resolution = *(SANE_Word*)optval;
+            if (!strcmp(option_name, SANE_NAME_SCAN_RESOLUTION)) {
+                val_resolution = *(SANE_Word *)optval;
 
-                    gs_optDesc.numResolution = optnum;
-                    if (opt->constraint_type == SANE_CONSTRAINT_WORD_LIST)
-                    {
-                        status = getOptionResolutions(device, optnum);
-                    }
-                    qInfo() << "optnum = " << gs_optDesc.numResolution
-                          << "resolution = " << val_resolution
-                          << "constraint_type = " << opt->constraint_type;
-                }
-                break;
-            case SANE_TYPE_BOOL:
-                if (*(SANE_Word*) optval == SANE_FALSE)
-                {
-                    strcpy(str, "FALSE");
-                }
-                else
-                {
-                    strcpy(str, "TRUE");
-                }
-                qInfo() << "type = bool" << "size = " << opt->size << str;
-                break;
-            case SANE_TYPE_FIXED:
-                qInfo() << "type = fixed" << "size = " << opt->size;
+                gs_optDesc.numResolution = optnum;
+                if (opt->constraint_type == SANE_CONSTRAINT_WORD_LIST)
+                    status = getOptionResolutions(device, optnum);
 
-                val_size = SANE_UNFIX(*(SANE_Word*) optval);
-                if (opt->constraint_type == SANE_CONSTRAINT_RANGE)
-                {
-                    status = get_option_sizes(device, optnum);
-                }
+                qInfo() << "optnum = " << gs_optDesc.numResolution
+                        << "resolution = " << val_resolution
+                        << "constraint_type = " << opt->constraint_type;
+            }
+            break;
+        case SANE_TYPE_BOOL:
+            if (*(SANE_Word *) optval == SANE_FALSE) {
+                strcpy(str, "FALSE");
+            } else {
+                strcpy(str, "TRUE");
+            }
+            qInfo() << "type = bool" << "size = " << opt->size << str;
+            break;
+        case SANE_TYPE_FIXED:
+            qInfo() << "type = fixed" << "size = " << opt->size;
 
-                qInfo() << "str_status = " << sane_strstatus(status);
+            val_size = SANE_UNFIX(*(SANE_Word *) optval);
+            if (opt->constraint_type == SANE_CONSTRAINT_RANGE)
+                status = get_option_sizes(device, optnum);
 
-                if (!strcmp(option_name, SANE_NAME_SCAN_TL_X))
-                {
-                    qInfo() << "size tl_x = " << val_size << "constraint_type = " << opt->constraint_type;
-                }
-                else if (!strcmp(option_name, SANE_NAME_SCAN_TL_Y))
-                {
-                    qInfo() << "size tl_y = " << val_size << "constraint_type = " << opt->constraint_type;
+            qInfo() << "str_status = " << sane_strstatus(status);
 
-                }
-                else if (!strcmp(option_name, SANE_NAME_SCAN_BR_X))
+            if (!strcmp(option_name, SANE_NAME_SCAN_TL_X)) {
+                qInfo() << "size tl_x = " << val_size << "constraint_type = " << opt->constraint_type;
+            } else if (!strcmp(option_name, SANE_NAME_SCAN_TL_Y)) {
+                qInfo() << "size tl_y = " << val_size << "constraint_type = " << opt->constraint_type;
+            } else if (!strcmp(option_name, SANE_NAME_SCAN_BR_X)) {
+                gs_optDesc.numSizeBrX = optnum;
+                // Via br_x to decide scan sizes
+                int size_range = static_cast<int>( SANE_UNFIX(opt->constraint.range->max) \
+                                                   - SANE_UNFIX(opt->constraint.range->min));
+                qInfo() << "min = " << SANE_UNFIX(opt->constraint.range->min)
+                        << "max = " << SANE_UNFIX(opt->constraint.range->max)
+                        << "size_range = " << size_range;
                 {
-                    gs_optDesc.numSizeBrX = optnum;
-                    // Via br_x to decide scan sizes
-                    int size_range = static_cast<int>( SANE_UNFIX(opt->constraint.range->max) \
-                            - SANE_UNFIX(opt->constraint.range->min));
-                    qInfo() << "min = " << SANE_UNFIX(opt->constraint.range->min) \
-                             << "max = " << SANE_UNFIX(opt->constraint.range->max) \
-                             << "size_range = " << size_range;
-                    {
-                        if (val_size >= 420)
-                            sizes << "A2";
-                        if (size_range >= 297)
-                            sizes << "A3";
-                        if (size_range >= 210)
-                            sizes << "A4";
-                        if (size_range >= 148)
-                            sizes << "A5";
-                        if (size_range >= 105)
-                            sizes << "A6";
-                    }
-                    instance.setKylinSaneSizes(sizes);
-                    qInfo() << "size optnum = " << gs_optDesc.numSizeBrX
-                          << "br_x" << val_size
-                          << "constraint_type = " << opt->constraint_type;
+                    if (val_size >= 420)
+                        sizes << "A2";
+                    if (size_range >= 297)
+                        sizes << "A3";
+                    if (size_range >= 210)
+                        sizes << "A4";
+                    if (size_range >= 148)
+                        sizes << "A5";
+                    if (size_range >= 105)
+                        sizes << "A6";
                 }
-                else if (!strcmp(option_name, SANE_NAME_SCAN_BR_Y))
-                {
-                    gs_optDesc.numSizeBrY = optnum;
-                    qInfo() << "size optnum = " << gs_optDesc.numSizeBrY
-                          << "br_y" << val_size
-                          << "constraint_type = " << opt->constraint_type;
-                }
+                instance.setKylinSaneSizes(sizes);
+                qInfo() << "size optnum = " << gs_optDesc.numSizeBrX
+                        << "br_x" << val_size
+                        << "constraint_type = " << opt->constraint_type;
+            } else if (!strcmp(option_name, SANE_NAME_SCAN_BR_Y)) {
+                gs_optDesc.numSizeBrY = optnum;
+                qInfo() << "size optnum = " << gs_optDesc.numSizeBrY
+                        << "br_y" << val_size
+                        << "constraint_type = " << opt->constraint_type;
+            }
 
-                break;
-            case SANE_TYPE_STRING:
-                qInfo() << "type = string" << "size = " << opt->size;
+            break;
+        case SANE_TYPE_STRING:
+            qInfo() << "type = string" << "size = " << opt->size;
 
-                if (!strcmp(option_name, SANE_NAME_SCAN_MODE))
-                {
-                    val_string_color = static_cast<SANE_String>(optval);
-                    gs_optDesc.numColorMode = optnum;
-                    status = get_option_colors(device, optnum);
-                    qInfo() << "Default optnum = " << gs_optDesc.numColorMode
-                          << "color = " << val_string_color
-                          << "constraint_type = " << opt->constraint_type;
-                }
-                else if (!strcmp(option_name, SANE_NAME_SCAN_SOURCE))
-                {
-                    val_string_source = static_cast<SANE_String>(optval);
-                    gs_optDesc.numSource = optnum;
-                    status = get_option_sources(device, optnum);
-                    qInfo() << "Default optnum = " << gs_optDesc.numSource
-                          << "source = " << val_string_source
-                          << "constraint_type = " << opt->constraint_type;
-                }
-                else
-                {
-                    // Canon Lide 400 本地连接失败，参数非法
-                    status = SANE_STATUS_INVAL;
-                }
-                break;
-            case SANE_TYPE_BUTTON:
-                qInfo() << "type = button" << "size = " << opt->size;
-                break;
-            case SANE_TYPE_GROUP:
-                qInfo() << "type = button" << "size = " << opt->size;
-                break;
-            default:
-                qInfo() << "type = %d" << opt->type << "size = " << opt->size;
-                break;
+            if (!strcmp(option_name, SANE_NAME_SCAN_MODE)) {
+                val_string_color = static_cast<SANE_String>(optval);
+                gs_optDesc.numColorMode = optnum;
+                status = get_option_colors(device, optnum);
+                qInfo() << "Default optnum = " << gs_optDesc.numColorMode
+                        << "color = " << val_string_color
+                        << "constraint_type = " << opt->constraint_type;
+            } else if (!strcmp(option_name, SANE_NAME_SCAN_SOURCE)) {
+                val_string_source = static_cast<SANE_String>(optval);
+                gs_optDesc.numSource = optnum;
+                status = get_option_sources(device, optnum);
+                qInfo() << "Default optnum = " << gs_optDesc.numSource
+                        << "source = " << val_string_source
+                        << "constraint_type = " << opt->constraint_type;
+            } else {
+                // Canon Lide 400 本地连接失败，参数非法
+                status = SANE_STATUS_INVAL;
+            }
+            break;
+        case SANE_TYPE_BUTTON:
+            qInfo() << "type = button" << "size = " << opt->size;
+            break;
+        case SANE_TYPE_GROUP:
+            qInfo() << "type = button" << "size = " << opt->size;
+            break;
+        default:
+            qInfo() << "type = %d" << opt->type << "size = " << opt->size;
+            break;
         }
 
-        switch (opt->unit)
-        {
-            case SANE_UNIT_NONE:
-                qInfo() << "unit = none";
-                break;
-            case SANE_UNIT_PIXEL:
-                qInfo() << "unit = pixel";
-                break;
-            case SANE_UNIT_BIT:
-                qInfo() << "unit = bit";
-                break;
-            case SANE_UNIT_MM:
-                qInfo() << "unit = mm";
-                break;
-            case SANE_UNIT_DPI:
-                qInfo() << "unit = dpi";
-                break;
-            case SANE_UNIT_PERCENT:
-                qInfo() << "unit = percent";
-                break;
-            case SANE_UNIT_MICROSECOND:
-                qInfo() << "unit = microsecond";
-                break;
-            default:
-                qInfo() << "unit = " << opt->unit;
-                break;
+        switch (opt->unit) {
+        case SANE_UNIT_NONE:
+            qInfo() << "unit = none";
+            break;
+        case SANE_UNIT_PIXEL:
+            qInfo() << "unit = pixel";
+            break;
+        case SANE_UNIT_BIT:
+            qInfo() << "unit = bit";
+            break;
+        case SANE_UNIT_MM:
+            qInfo() << "unit = mm";
+            break;
+        case SANE_UNIT_DPI:
+            qInfo() << "unit = dpi";
+            break;
+        case SANE_UNIT_PERCENT:
+            qInfo() << "unit = percent";
+            break;
+        case SANE_UNIT_MICROSECOND:
+            qInfo() << "unit = microsecond";
+            break;
+        default:
+            qInfo() << "unit = " << opt->unit;
+            break;
         }
 
-        switch (opt->constraint_type)
-        {
-            case SANE_CONSTRAINT_RANGE:
-                if (opt->type == SANE_TYPE_FIXED)
-                {
-                    qInfo() << "min = " << SANE_UNFIX(opt->constraint.range->min) \
-                             << "max = " << SANE_UNFIX(opt->constraint.range->max) \
-                             << "quant = " << opt->constraint.range->quant;
+        switch (opt->constraint_type) {
+        case SANE_CONSTRAINT_RANGE:
+            if (opt->type == SANE_TYPE_FIXED) {
+                qInfo() << "min = " << SANE_UNFIX(opt->constraint.range->min) \
+                        << "max = " << SANE_UNFIX(opt->constraint.range->max) \
+                        << "quant = " << opt->constraint.range->quant;
+            } else {
+                qInfo() << "min = " << opt->constraint.range->min \
+                        << "max = " << opt->constraint.range->max \
+                        << "quant = " << SANE_UNFIX(opt->constraint.range->quant);
+            }
+            break;
+        case SANE_CONSTRAINT_WORD_LIST:
+            for (int i = 0; i < opt->constraint.word_list[0]; ++i) {
+                if (opt->type == SANE_TYPE_INT) {
+                    qInfo() << opt->constraint.word_list[i + 1];
+                } else {
+                    qInfo() << SANE_UNFIX(opt->constraint.word_list[i + 1]);
                 }
-                else
-                {
-                    qInfo() << "min = " << opt->constraint.range->min \
-                             << "max = " << opt->constraint.range->max \
-                             << "quant = " << SANE_UNFIX(opt->constraint.range->quant);
-                }
-                break;
-            case SANE_CONSTRAINT_WORD_LIST:
-                for (int i=0; i<opt->constraint.word_list[0]; i++)
-                {
-                    if (opt->type == SANE_TYPE_INT)
-                    {
-                        qInfo() << opt->constraint.word_list[i+1];
-                    }
-                    else
-                    {
-                        qInfo() << SANE_UNFIX(opt->constraint.word_list[i+1]);
-                    }
-                }
-                break;
-            case SANE_CONSTRAINT_STRING_LIST:
-                for (int i=0; opt->constraint.string_list[i] != NULL; i++)
-                {
-                    qInfo() << opt->constraint.string_list[i];
-                }
-                break;
-            default:
-                qInfo() << "case = %d not found" ;
-                break;
-        }
-
-        if (opt->cap != 0)
-        {
-            //if (opt->cap & sane_cap)
+            }
+            break;
+        case SANE_CONSTRAINT_STRING_LIST:
+            for (int i = 0; opt->constraint.string_list[i] != NULL; ++i) {
+                qInfo() << opt->constraint.string_list[i];
+            }
+            break;
+        default:
+            qInfo() << "case = %d not found" ;
+            break;
         }
 
         guards_free(optval);
-    }
-    else
-    {
+    } else {
         /* The option does not exists. */
         strcpy(str, "backend default");
     }
@@ -1259,8 +1132,7 @@ static SANE_Status kylinDisplayAllScanParams(SANE_Handle device)
 
     // Default source
     status = getOptionValue(device, SANE_NAME_SCAN_SOURCE);
-    if (status != SANE_STATUS_GOOD)
-    {
+    if (status != SANE_STATUS_GOOD) {
         status = SANE_STATUS_INVAL;
         qInfo() << "source parameters error!";
         return status;
@@ -1268,8 +1140,7 @@ static SANE_Status kylinDisplayAllScanParams(SANE_Handle device)
 
     // Default color mode
     status = getOptionValue(device, SANE_NAME_SCAN_MODE);
-    if (status != SANE_STATUS_GOOD)
-    {
+    if (status != SANE_STATUS_GOOD) {
         status = SANE_STATUS_INVAL;
         qInfo() << "color mode parameters error!";
         return status;
@@ -1277,8 +1148,7 @@ static SANE_Status kylinDisplayAllScanParams(SANE_Handle device)
 
     // Default resolution
     status = getOptionValue(device, SANE_NAME_SCAN_RESOLUTION);
-    if (status != SANE_STATUS_GOOD)
-    {
+    if (status != SANE_STATUS_GOOD) {
         status = SANE_STATUS_INVAL;
         qInfo() << "resolution parameters error!";
         return status;
@@ -1286,16 +1156,14 @@ static SANE_Status kylinDisplayAllScanParams(SANE_Handle device)
 
     // Default size coordination, top_left(x, y)
     getOptionValue(device, SANE_NAME_SCAN_TL_X);
-    if (status != SANE_STATUS_GOOD)
-    {
+    if (status != SANE_STATUS_GOOD) {
         status = SANE_STATUS_INVAL;
         qInfo() << "tl_x parameters error!";
         return status;
     }
 
     getOptionValue(device, SANE_NAME_SCAN_TL_Y);
-    if (status != SANE_STATUS_GOOD)
-    {
+    if (status != SANE_STATUS_GOOD) {
         status = SANE_STATUS_INVAL;
         qInfo() << "tl_y parameters error!";
         return status;
@@ -1308,16 +1176,14 @@ static SANE_Status kylinDisplayAllScanParams(SANE_Handle device)
      * s->val[OPT_BR_Y].w = SANE_FIX(297);
      */
     getOptionValue(device, SANE_NAME_SCAN_BR_X);
-    if (status != SANE_STATUS_GOOD)
-    {
+    if (status != SANE_STATUS_GOOD) {
         status = SANE_STATUS_INVAL;
         qInfo() << "br_x parameters error!";
         return status;
     }
 
     status = getOptionValue(device, SANE_NAME_SCAN_BR_Y);
-    if (status != SANE_STATUS_GOOD)
-    {
+    if (status != SANE_STATUS_GOOD) {
         status = SANE_STATUS_INVAL;
         qInfo() << "br_y parameters error!";
         return status;
@@ -1359,7 +1225,7 @@ static void saneCancel(SANE_Handle sane_handle)
  */
 void kylinNorScanFindDevice()
 {
-    KylinSane& instance = KylinSane::getInstance();
+    KylinSane &instance = KylinSane::getInstance();
     QStringList names;
     QString type;
 
@@ -1370,13 +1236,11 @@ void kylinNorScanFindDevice()
     qInfo() << "sane init";
     saneInit();
 
-    do
-    {
+    do {
         // 2. get all devices
         //const SANE_Device ** device_list = nullptr;
         sane_status = getSaneDevices((&gs_deviceList));
-        if (sane_status)
-        {
+        if (sane_status) {
             qInfo() << "Cannot get scan devices, sane_status = " << sane_status;
             instance.setKylinSaneStatus(false);
             break;
@@ -1386,48 +1250,39 @@ void kylinNorScanFindDevice()
         int i = 0;
         unsigned int column = 80;
 
-        for (i = 0; gs_deviceList[i]; ++i)
-        {
+        for (i = 0; gs_deviceList[i]; ++i) {
             if (column + strlen (gs_deviceList[i]->name) + 1 >= 80)
-            {
                 column = 4;
-            }
             if (column > 4)
-            {
                 column += 1;
-            }
+
             column += strlen (gs_deviceList[i]->name);
             qInfo() << "gs_deviceList->name" << gs_deviceList[i]->name
-                  << "column = " << column;
+                    << "column = " << column;
         }
 
-        for (i = 0; gs_deviceList[i]; ++i)
-        {
+        for (i = 0; gs_deviceList[i]; ++i) {
             qInfo() << "deviceName = " << gs_deviceList[i]->name
-                  << "deviceVendor = " << gs_deviceList[i]->vendor
-                  << "deviceModel = " << gs_deviceList[i]->model
-                  << "deviceType = " << gs_deviceList[i]->type;
+                    << "deviceVendor = " << gs_deviceList[i]->vendor
+                    << "deviceModel = " << gs_deviceList[i]->model
+                    << "deviceType = " << gs_deviceList[i]->type;
 
             // just for one scan device
             snprintf(name, 512, "%s %s",
-                    gs_deviceList[i]->vendor, gs_deviceList[i]->model);
+                     gs_deviceList[i]->vendor, gs_deviceList[i]->model);
             qInfo() << "device name:  " << name;
 
             names << name;
 
             //instance.setKylinSaneName(device_list[i]->name);
-            if (i == 0)
-            {
+            if (i == 0) {
                 // Same device have same type
                 qInfo() << "i = " << i << "deviceType = " << gs_deviceList[i]->type;
                 if (!strcmp("Flatbed", gs_deviceList[i]->type)
                         || strstr(gs_deviceList[i]->type, "flatbed")
-                        || strstr(gs_deviceList[i]->type, "multi-function peripheral"))
-                {
+                        || strstr(gs_deviceList[i]->type, "multi-function peripheral")) {
                     type = QObject::tr("Flatbed"); //平板式
-                }
-                else
-                {
+                } else {
                     type = QObject::tr("Transparency Adapter"); //馈纸式
                 }
                 instance.setKylinSaneType(type);
@@ -1440,8 +1295,7 @@ void kylinNorScanFindDevice()
         qInfo() << names;
         instance.setKylinSaneNames(names);
 
-        if (!gs_deviceList[0])
-        {
+        if (!gs_deviceList[0]) {
             qInfo() << "No scan devices !";
             sane_status = SANE_STATUS_UNSUPPORTED;
             instance.setKylinSaneStatus(false);
@@ -1450,57 +1304,48 @@ void kylinNorScanFindDevice()
 
         sane_status = SANE_STATUS_GOOD;
 
-    }while(0);
+    } while (0);
 
-    if (sane_status)
-    {
+    if (sane_status) {
         instance.setKylinSaneStatus(false);
         qInfo() << "find device set status false";
-    }
-    else
-    {
+    } else {
         instance.setKylinSaneStatus(true);
     }
 }
 
 void kylinNorScanOpenDevice(int index)
 {
-    KylinSane& instance = KylinSane::getInstance();
+    KylinSane &instance = KylinSane::getInstance();
     QStringList names;
     QString type;
 
     SANE_Status sane_status;
     char name[512] = {0};
 
-    do
-    {
-        for (int i = 0; gs_deviceList[i]; ++i)
-        {
+    do {
+        for (int i = 0; gs_deviceList[i]; ++i) {
             qInfo() << "deviceName = " << gs_deviceList[i]->name
-                  << "deviceVendor = " << gs_deviceList[i]->vendor
-                  << "deviceModel = " << gs_deviceList[i]->model
-                  << "deviceType = " << gs_deviceList[i]->type;
+                    << "deviceVendor = " << gs_deviceList[i]->vendor
+                    << "deviceModel = " << gs_deviceList[i]->model
+                    << "deviceType = " << gs_deviceList[i]->type;
 
             // just for one scan device
             snprintf(name, 512, "%s %s",
-                    gs_deviceList[i]->vendor, gs_deviceList[i]->model);
+                     gs_deviceList[i]->vendor, gs_deviceList[i]->model);
             qInfo() << "device name:  " << name;
 
             names << name;
 
             //instance.setKylinSaneName(device_list[i]->name);
-            if (i == 0)
-            {
+            if (i == 0) {
                 // Same device have same type
                 qInfo() << "i = " << i << "deviceType = " << gs_deviceList[i]->type;
                 if (!strcmp("Flatbed", gs_deviceList[i]->type)
                         || strstr(gs_deviceList[i]->type, "flatbed")
-                        || strstr(gs_deviceList[i]->type, "multi-function peripheral"))
-                {
+                        || strstr(gs_deviceList[i]->type, "multi-function peripheral")) {
                     type = QObject::tr("Flatbed"); //平板式
-                }
-                else
-                {
+                } else {
                     type = QObject::tr("Transparency Adapter"); //馈纸式
                 }
                 instance.setKylinSaneType(type);
@@ -1512,8 +1357,7 @@ void kylinNorScanOpenDevice(int index)
         qInfo() << names;
         instance.setKylinSaneNames(names);
 
-        if (!gs_deviceList[0])
-        {
+        if (!gs_deviceList[0]) {
             qInfo() << "No scan devices !";
             sane_status = SANE_STATUS_UNSUPPORTED;
             instance.setKylinSaneStatus(false);
@@ -1524,8 +1368,7 @@ void kylinNorScanOpenDevice(int index)
         qInfo() << "Open a scan device, plese waiting ...";
         SANE_Handle sane_handle;
         SANE_Device *saneDevice = const_cast<SANE_Device *>(*(gs_deviceList + index));
-        if (!saneDevice)
-        {
+        if (!saneDevice) {
             qInfo() << "No device connected!";
             sane_status = SANE_STATUS_UNSUPPORTED;
             instance.setKylinSaneStatus(false);
@@ -1533,8 +1376,7 @@ void kylinNorScanOpenDevice(int index)
         }
 
         sane_status = openSaneDevice(saneDevice, &sane_handle);
-        if (sane_status)
-        {
+        if (sane_status) {
             qInfo() << "Open a device failed!";
             instance.setKylinSaneStatus(false);
             break;
@@ -1550,15 +1392,12 @@ void kylinNorScanOpenDevice(int index)
         saneCancel(sane_handle);
 
         //sane_status = SANE_STATUS_GOOD;
-    }while(0);
+    } while (0);
 
-    if (sane_status)
-    {
+    if (sane_status) {
         instance.setKylinSaneStatus(false);
         qInfo() << "open device set status false";
-    }
-    else
-    {
+    } else {
         instance.setKylinSaneStatus(true);
     }
 }
@@ -1647,7 +1486,7 @@ void KylinSane::setKylinSaneColors(QStringList color)
  */
 ScanDeviceInfo KylinSane::findScanDevice()
 {
-    const KylinSane& instance = KylinSane::getInstance();
+    const KylinSane &instance = KylinSane::getInstance();
     kylinNorScanFindDevice();
 
     return instance.devicesInfo;
@@ -1659,7 +1498,7 @@ ScanDeviceInfo KylinSane::findScanDevice()
  */
 ScanDeviceInfo KylinSane::openScanDevice(int index)
 {
-    const KylinSane& instance = KylinSane::getInstance();
+    const KylinSane &instance = KylinSane::getInstance();
     kylinNorScanOpenDevice(index);
 
     return instance.devicesInfo;
@@ -1675,7 +1514,7 @@ ScanDeviceInfo KylinSane::openScanDevice(int index)
 int KylinSane::startScanning(UserSelectedInfo info)
 {
     qInfo() << "startScanning";
-    KylinSane& instance = KylinSane::getInstance();
+    KylinSane &instance = KylinSane::getInstance();
     int ret = 0;
     SANE_Status status = SANE_STATUS_GOOD;
     string strColor, strResolution, strSize;
@@ -1688,59 +1527,44 @@ int KylinSane::startScanning(UserSelectedInfo info)
     // For colors
     s_color = const_cast<SANE_String>(strColor.c_str());
     status = set_option_colors(instance.handle, s_color);
-    if (status != SANE_STATUS_GOOD)
-    {
+    if (status != SANE_STATUS_GOOD) {
         qInfo() << "Failed to set option color: " << s_color
-              << "status = " << sane_strstatus(status);
+                << "status = " << sane_strstatus(status);
     }
 
     // For resolutions
     s_resolution = const_cast<SANE_String>(strResolution.c_str());
     SANE_Int i_resolution;
-    if (!strcmp("Auto", s_resolution) || !strcmp("自动", s_resolution))
-    {
+    if (!strcmp("Auto", s_resolution) || !strcmp("自动", s_resolution)) {
         i_resolution = 300; //自动时设置为300
-    }
-    else
-    {
+    } else {
         i_resolution = static_cast<SANE_Int>(atoi(s_resolution));
     }
 
     status = set_option_resolutions(instance.handle, i_resolution);
-    if (status != SANE_STATUS_GOOD)
-    {
+    if (status != SANE_STATUS_GOOD) {
         qInfo() << "Failed to set option resolution: " << s_resolution
-              << "status = " << sane_strstatus(status);
+                << "status = " << sane_strstatus(status);
     }
 
     // For sizes
     int type = 0;
     s_size = const_cast<SANE_String>(strSize.c_str());
-    if (!strcmp("A2", s_size))
-    {
+    if (!strcmp("A2", s_size)) {
         type = A2;
-    }
-    else if (!strcmp("A3", s_size))
-    {
+    } else if (!strcmp("A3", s_size)) {
         type = A3;
-    }
-    else if (!strcmp("A4", s_size))
-    {
+    } else if (!strcmp("A4", s_size)) {
         type = A4;
-    }
-    else if (!strcmp("A5", s_size))
-    {
+    } else if (!strcmp("A5", s_size)) {
         type = A5;
-    }
-    else if (!strcmp("A6", s_size))
-    {
+    } else if (!strcmp("A6", s_size)) {
         type = A6;
     }
     status = set_option_sizes_all(instance.handle, type);
-    if (status != SANE_STATUS_GOOD)
-    {
+    if (status != SANE_STATUS_GOOD) {
         qInfo() << "Failed to set option size: " << s_size
-              << "status = " << sane_strstatus(status);
+                << "status = " << sane_strstatus(status);
     }
 
     qInfo() << "Start scanning, please waiting ...";

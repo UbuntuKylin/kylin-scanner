@@ -45,7 +45,7 @@ void TailorLabel::paintEvent(QPaintEvent *event)
     borderPath.setFillRule(Qt::WindingFill);
     borderPath.addRect(0, 0, this->width(), this->height()); // need judge
 
-    QRect rect(startX, startY, endX-startX, endY-startY);
+    QRect rect(startX, startY, endX - startX, endY - startY);
     tailorPath.addRect(rect);
 
     painter.drawPath(tailorPath);
@@ -60,8 +60,7 @@ void TailorLabel::mousePressEvent(QMouseEvent *event)
 {
     QApplication::setOverrideCursor(QCursor(Qt::ClosedHandCursor));
 
-    if (event->button() == Qt::LeftButton)
-    {
+    if (event->button() == Qt::LeftButton) {
         startX = event->pos().x();
         startY = event->pos().y();
         endX = event->pos().x();
@@ -75,8 +74,7 @@ void TailorLabel::mouseReleaseEvent(QMouseEvent *event)
 {
     isPressed = false;
 
-    if (event->buttons() & Qt::LeftButton) // For avoid rightButton
-    {
+    if (event->buttons() & Qt::LeftButton) { // For avoid rightButton
         endX = event->pos().x();
         endY = event->pos().y();
     }
@@ -90,8 +88,7 @@ void TailorLabel::mouseReleaseEvent(QMouseEvent *event)
 
 void TailorLabel::mouseMoveEvent(QMouseEvent *event)
 {
-    if (isPressed && (event->buttons() & Qt::LeftButton))
-    {
+    if (isPressed && (event->buttons() & Qt::LeftButton)) {
         endX = event->pos().x();
         endY = event->pos().y();
 
@@ -101,7 +98,8 @@ void TailorLabel::mouseMoveEvent(QMouseEvent *event)
 
 int TailorLabel::judgePosition(int origin, int min, int max)
 {
-    if (origin < min)  return min;
-    if (origin > max)  return max;
+    if ((origin < min) || (origin > max))
+        return min;
+
     return origin;
 }

@@ -52,7 +52,7 @@ KYCAboutDialog::KYCAboutDialog(QWidget *parent) :
     this->move(screenRect.width() / 2, screenRect.height() / 2);
     this->hide();
     connect(ui->btnClose, SIGNAL(clicked()), this, SLOT(hide()));
-    connect(ui->labelSupport, &QLabel::linkActivated, [=](QString s){
+    connect(ui->labelSupport, &QLabel::linkActivated, [ = ](QString s) {
         QUrl url(s);
         QDesktopServices::openUrl(url);
     });
@@ -63,11 +63,13 @@ void KYCAboutDialog::paintEvent(QPaintEvent *event)
     QPalette pal = QApplication::style()->standardPalette();
     QPalette pp = QApplication::style()->standardPalette();
     QColor c;
-    QString text = tr("Kylin Scanner is an interface-friendly scanner, which could be also used as one-click beautification, intelligent correction and text recognition tools.");
+    QString text =
+        tr("Kylin Scanner is an interface-friendly scanner, which could be also used as one-click beautification, intelligent correction and text recognition tools.");
 
-    c.setRed(231); c.setBlue(231); c.setGreen(231);
-    if (c == pal.background().color())
-    {
+    c.setRed(231);
+    c.setBlue(231);
+    c.setGreen(231);
+    if (c == pal.background().color()) {
         pal.setColor(QPalette::Background, QColor("#FFFFFF"));
         ui->labelSupport->setText(tr("Service & Support : ")
                                   + "<a href=\"mailto://support@kylinos.cn\">"
@@ -78,14 +80,13 @@ void KYCAboutDialog::paintEvent(QPaintEvent *event)
                               + text
                               + "</p></body>");
         setPalette(pal);
-    }
-    else
-    {
+    } else {
         setPalette(pal);
         ui->labelSupport->setText(tr("Service & Support : ")
                                   + "<a href=\"mailto://support@kylinos.cn\">"
                                   + "support@kylinos.cn</a>");
-        ui->textEdit->setText(QString("<body style=\"background:%1;\">") .arg(pal.background().color().name(QColor::HexRgb))
+        ui->textEdit->setText(QString("<body style=\"background:%1;\">") .arg(pal.background().color().name(
+                                                                                  QColor::HexRgb))
                               + QString("<p style=\"color: %1\">").arg(pal.windowText().color().name(QColor::HexRgb))
                               + text
                               + "</p></body>");
@@ -96,17 +97,17 @@ void KYCAboutDialog::paintEvent(QPaintEvent *event)
     int w = ui->textEdit->fontMetrics().width(str, str.length());
     int h = ui->textEdit->fontMetrics().height();
     int row = w / ui->textEdit->width();
-    if (w % ui->textEdit->width()) row += 2; // for += 2 因为计算行数方法可能不是很精准，所以额外多加一行。
+
+    // for += 2 因为计算行数方法可能不是很精准，所以额外多加一行。
+    if (w % ui->textEdit->width()) row += 2;
+
     int he = (row * h);
-    if (he < 200)
-    {
+    if (he < 200) {
         ui->textEdit->setFixedHeight(he);
         ui->textEdit->verticalScrollBar()->hide();
         ui->textEdit->setDisabled(true);
         m_iHeight = 336 + he;
-    }
-    else
-    {
+    } else {
         ui->textEdit->setFixedHeight(200);
         ui->textEdit->verticalScrollBar()->show();
         ui->textEdit->setDisabled(false);

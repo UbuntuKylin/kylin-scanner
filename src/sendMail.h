@@ -52,17 +52,15 @@ extern "C" {
 #define MAIL_WINDOW_WIDTH 320
 #define MAIL_WINDOW_HEIGHT 260
 
-typedef struct _Applist
-{
+typedef struct _Applist {
     char *appid;
-}AppList;//用于存放应用列表
-AppList * getAppIdList(const char *contentType);
+} AppList; //用于存放应用列表
+AppList *getAppIdList(const char *contentType);
 
-typedef struct _AppInfo
-{
+typedef struct _AppInfo {
     GAppInfo *item;
-}Appinfo;//用于存放应用列表信息
-Appinfo * _getAppList(const char *contentType);
+} Appinfo; //用于存放应用列表信息
+Appinfo *_getAppList(const char *contentType);
 
 class NoMail : public QDialog
 {
