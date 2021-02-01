@@ -116,8 +116,10 @@ Widget::Widget(QWidget *parent)
 
     // For scan
     connect(&thread, SIGNAL(scanFinished(bool)), this, SLOT(scanResult(bool)));
+    // 当切换扫描设备时的情况
     connect(pScanSet, SIGNAL(openDeviceStatusSignal(bool)), this, SLOT(scanResultDetail(bool)));
 
+    // 发现可用设备,点击扫描按钮后的操作,此过程可能会出现调用API失败，不可扫描的情况，需要额外处理
     connect(pFuncBar, SIGNAL(sendScanEnd(bool)), pScandisplay, SLOT(onScan(bool)));
     connect(pFuncBar, SIGNAL(sendScanEnd(bool)), this, SLOT(setScanSetBtnEnable(bool)));
     connect(pFuncBar, SIGNAL(sendScanEnd(bool)), this, SLOT(saveScanFile(bool)));
@@ -436,7 +438,7 @@ void Widget::scanResultDetail(bool ret)
 
 void Widget::scanningResultDetail(bool ret)
 {
-    qDebug() << "ret = " << ret;
+    qDebug() << "scanningResultDetail ret = " << ret;
 
 #ifdef DEBUG_EDIT
     {
@@ -448,13 +450,20 @@ void Widget::scanningResultDetail(bool ret)
         pScanSet->setKylinScanSetEnable();
     }
 #else
-    if (!ret) {
+    if (ret) {
+        // 打开扫描设备进行扫描成功
         device = true;
-        pScandisplay->setInitDevice();
+        //pScandisplay->setInitDevice();
         pScanSet->setKylinComboBox(true);
         pScanSet->setKylinLable();
         pFuncBar->setBtnScanEnable();
         pScanSet->setKylinScanSetEnable();
+    } else {
+        // 可以查找到扫描设备，但打开扫描设备进行扫描失败
+        device = false;
+        pScandisplay->setNoDevice();
+        pFuncBar->setKylinScanSetNotEnable();
+        pScanSet->setKylinScanSetNotEnable();
     }
 #endif
 }
