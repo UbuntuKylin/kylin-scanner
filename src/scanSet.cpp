@@ -280,7 +280,8 @@ void ScanSet::setKylinComboBox(bool curIndexChanged)
         strListColor << tr("Lineart") << tr("Color") << tr("Gray");
         setKylinComboBoxAttributes(textColor, strListColor);
 
-        strListResolution << "4800" << "2400" << "1200" << "600" << "300" << tr("Auto");
+        //strListResolution << "4800" << "2400" << "1200" << "600" << "300" << tr("Auto");
+        strListResolution << "300" << "600" << "1200" << "2400" << "4800" <<tr("Auto");
         for (int i = 0; i < strListResolution.size(); ++i) {
             if (!QString::compare("300", strListResolution[i], Qt::CaseSensitive)) {
                 defaultResolution = i;
@@ -936,6 +937,16 @@ void ScanSet::onTextColorCurrentTextChanged(QString color)
 void ScanSet::onTextResolutionCurrentTextChanged(QString resolution)
 {
     KylinSane &instance = KylinSane::getInstance();
+    QString curResolution = textResolution->currentText();
+
+    if (instance.getKylinSaneStatus()
+        && (curResolution == "2400" || curResolution == "4800")) {
+        qDebug() << "curResolution = " << curResolution;
+
+        QString msg;
+        msg = tr("This resolution will take a loog time to scan, please choose carelly.");
+        warnMsg(msg);
+    }
     instance.userInfo.resolution = resolution;
     qDebug() << "resolution: " << instance.userInfo.resolution;
 }

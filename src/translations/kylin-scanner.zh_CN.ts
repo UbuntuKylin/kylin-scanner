@@ -4,22 +4,22 @@
 <context>
     <name>EditBar</name>
     <message>
-        <location filename="../scanDisplay.cpp" line="950"/>
+        <location filename="../scanDisplay.cpp" line="894"/>
         <source>rotate</source>
         <translation>旋转</translation>
     </message>
     <message>
-        <location filename="../scanDisplay.cpp" line="951"/>
+        <location filename="../scanDisplay.cpp" line="895"/>
         <source>tailor</source>
         <translation>裁切</translation>
     </message>
     <message>
-        <location filename="../scanDisplay.cpp" line="952"/>
+        <location filename="../scanDisplay.cpp" line="896"/>
         <source>watermark</source>
         <translation>水印</translation>
     </message>
     <message>
-        <location filename="../scanDisplay.cpp" line="953"/>
+        <location filename="../scanDisplay.cpp" line="897"/>
         <source>symmetry</source>
         <translation>对称翻转</translation>
     </message>
@@ -52,7 +52,7 @@
         <translation>文字识别</translation>
     </message>
     <message>
-        <location filename="../funcBar.cpp" line="503"/>
+        <location filename="../funcBar.cpp" line="487"/>
         <source>scan</source>
         <translation>扫描</translation>
     </message>
@@ -82,12 +82,12 @@
         <translation>关于</translation>
     </message>
     <message>
-        <location filename="../kycaboutdialog.cpp" line="66"/>
+        <location filename="../kycaboutdialog.cpp" line="67"/>
         <source>Kylin Scanner is an interface-friendly scanner, which could be also used as one-click beautification, intelligent correction and text recognition tools.</source>
         <translation>麒麟扫描是一款提供普通扫描、一键美化、智能纠偏和文字识别等功能的界面友好的扫描仪软件。</translation>
     </message>
     <message>
-        <location filename="../kycaboutdialog.cpp" line="72"/>
+        <location filename="../kycaboutdialog.cpp" line="74"/>
         <location filename="../kycaboutdialog.cpp" line="85"/>
         <source>Service &amp; Support : </source>
         <translation>技术与支持：</translation>
@@ -107,17 +107,17 @@
         <translation>关闭</translation>
     </message>
     <message>
-        <location filename="../sendMail.cpp" line="74"/>
+        <location filename="../sendMail.cpp" line="75"/>
         <source>Not find email client in the system, please download and install email client firstly.</source>
         <translation>检测到当前系统没有安装邮件客户端，请先下载并安装邮件客户端。</translation>
     </message>
     <message>
-        <location filename="../sendMail.cpp" line="86"/>
+        <location filename="../sendMail.cpp" line="87"/>
         <source>Go to install</source>
         <translation>去安装</translation>
     </message>
     <message>
-        <location filename="../sendMail.cpp" line="88"/>
+        <location filename="../sendMail.cpp" line="89"/>
         <source>Cancel</source>
         <translation>取消</translation>
     </message>
@@ -125,42 +125,42 @@
 <context>
     <name>QObject</name>
     <message>
-        <location filename="../kylinSane.cpp" line="586"/>
+        <location filename="../kylinSane.cpp" line="516"/>
         <source>Color</source>
         <translation>彩色</translation>
     </message>
     <message>
-        <location filename="../kylinSane.cpp" line="590"/>
+        <location filename="../kylinSane.cpp" line="518"/>
         <source>Gray</source>
         <translation>灰度</translation>
     </message>
     <message>
-        <location filename="../kylinSane.cpp" line="594"/>
+        <location filename="../kylinSane.cpp" line="520"/>
         <source>Lineart</source>
         <translation>黑白</translation>
     </message>
     <message>
-        <location filename="../kylinSane.cpp" line="661"/>
-        <location filename="../kylinSane.cpp" line="1427"/>
-        <location filename="../kylinSane.cpp" line="1500"/>
+        <location filename="../kylinSane.cpp" line="584"/>
+        <location filename="../kylinSane.cpp" line="1290"/>
+        <location filename="../kylinSane.cpp" line="1353"/>
         <source>Flatbed</source>
         <translation>平板式</translation>
     </message>
     <message>
-        <location filename="../kylinSane.cpp" line="667"/>
-        <location filename="../kylinSane.cpp" line="1431"/>
-        <location filename="../kylinSane.cpp" line="1504"/>
+        <location filename="../kylinSane.cpp" line="589"/>
+        <location filename="../kylinSane.cpp" line="1292"/>
+        <location filename="../kylinSane.cpp" line="1355"/>
         <source>Transparency Adapter</source>
         <translation>馈纸式</translation>
     </message>
     <message>
-        <location filename="../kylinSane.cpp" line="757"/>
+        <location filename="../kylinSane.cpp" line="681"/>
         <source>Auto</source>
         <translation>自动</translation>
     </message>
     <message>
-        <location filename="../funcBar.cpp" line="379"/>
-        <location filename="../scanSet.cpp" line="714"/>
+        <location filename="../funcBar.cpp" line="369"/>
+        <location filename="../scanSet.cpp" line="726"/>
         <source>warning</source>
         <translation>警告</translation>
     </message>
@@ -168,13 +168,13 @@
 <context>
     <name>ScanDisplay</name>
     <message>
-        <location filename="../scanDisplay.cpp" line="346"/>
-        <location filename="../scanDisplay.cpp" line="382"/>
+        <location filename="../scanDisplay.cpp" line="331"/>
+        <location filename="../scanDisplay.cpp" line="367"/>
         <source>Please connect to a scan device firstly !</source>
         <translation>请先连接扫描仪</translation>
     </message>
     <message>
-        <location filename="../scanDisplay.cpp" line="605"/>
+        <location filename="../scanDisplay.cpp" line="586"/>
         <source>Try to ocr ...</source>
         <translation>正在识别中...</translation>
     </message>
@@ -182,136 +182,141 @@
 <context>
     <name>ScanSet</name>
     <message>
-        <location filename="../scanSet.cpp" line="80"/>
+        <location filename="../scanSet.cpp" line="81"/>
         <source>Send email to</source>
         <translation>发送至邮件</translation>
     </message>
     <message>
-        <location filename="../scanSet.cpp" line="82"/>
-        <location filename="../scanSet.cpp" line="740"/>
-        <location filename="../scanSet.cpp" line="913"/>
+        <location filename="../scanSet.cpp" line="83"/>
+        <location filename="../scanSet.cpp" line="752"/>
+        <location filename="../scanSet.cpp" line="918"/>
         <source>Save as</source>
         <translation>另存为</translation>
     </message>
     <message>
-        <location filename="../scanSet.cpp" line="254"/>
-        <location filename="../scanSet.cpp" line="354"/>
+        <location filename="../scanSet.cpp" line="277"/>
+        <location filename="../scanSet.cpp" line="368"/>
         <source>No available device</source>
         <translation>无可用设备</translation>
     </message>
     <message>
-        <location filename="../scanSet.cpp" line="257"/>
+        <location filename="../scanSet.cpp" line="280"/>
         <source>Lineart</source>
         <translation>黑白</translation>
     </message>
     <message>
-        <location filename="../scanSet.cpp" line="257"/>
+        <location filename="../scanSet.cpp" line="280"/>
         <source>Color</source>
         <translation>彩色</translation>
     </message>
     <message>
-        <location filename="../scanSet.cpp" line="257"/>
+        <location filename="../scanSet.cpp" line="280"/>
         <source>Gray</source>
         <translation>灰度</translation>
     </message>
     <message>
-        <location filename="../scanSet.cpp" line="260"/>
+        <location filename="../scanSet.cpp" line="284"/>
         <source>Auto</source>
         <translation>自动</translation>
     </message>
     <message>
-        <location filename="../scanSet.cpp" line="513"/>
+        <location filename="../scanSet.cpp" line="525"/>
         <source>Device</source>
         <translation>设备</translation>
     </message>
     <message>
-        <location filename="../scanSet.cpp" line="517"/>
+        <location filename="../scanSet.cpp" line="529"/>
         <source>Type</source>
         <translation>类型</translation>
     </message>
     <message>
-        <location filename="../scanSet.cpp" line="521"/>
+        <location filename="../scanSet.cpp" line="533"/>
         <source>Colour</source>
         <translation>色彩</translation>
     </message>
     <message>
-        <location filename="../scanSet.cpp" line="525"/>
+        <location filename="../scanSet.cpp" line="537"/>
         <source>Resolution</source>
         <translation>分辨率</translation>
     </message>
     <message>
-        <location filename="../scanSet.cpp" line="529"/>
+        <location filename="../scanSet.cpp" line="541"/>
         <source>Size</source>
         <translation>尺寸</translation>
     </message>
     <message>
-        <location filename="../scanSet.cpp" line="533"/>
+        <location filename="../scanSet.cpp" line="545"/>
         <source>Format</source>
         <translation>格式</translation>
     </message>
     <message>
-        <location filename="../scanSet.cpp" line="537"/>
+        <location filename="../scanSet.cpp" line="549"/>
         <source>Name</source>
         <translation>名称</translation>
     </message>
     <message>
-        <location filename="../scanSet.cpp" line="541"/>
+        <location filename="../scanSet.cpp" line="553"/>
         <source>Scan to</source>
         <translation>扫描至</translation>
     </message>
     <message>
-        <location filename="../scanSet.cpp" line="554"/>
+        <location filename="../scanSet.cpp" line="565"/>
         <source>Device type</source>
         <translation>设备类型</translation>
     </message>
     <message>
-        <location filename="../scanSet.cpp" line="733"/>
+        <location filename="../scanSet.cpp" line="745"/>
         <source>Scanning images&apos;s length cannot be large than 252</source>
         <translation>扫描图片文件名长度不能超过252个字符</translation>
     </message>
     <message>
-        <location filename="../scanSet.cpp" line="748"/>
+        <location filename="../scanSet.cpp" line="760"/>
         <source>Select a directory</source>
         <translation>选择一个目录</translation>
     </message>
     <message>
-        <location filename="../scanSet.cpp" line="802"/>
+        <location filename="../scanSet.cpp" line="811"/>
         <source>Store text dialog</source>
         <translation>存储文本对话框</translation>
     </message>
     <message>
-        <location filename="../scanSet.cpp" line="811"/>
+        <location filename="../scanSet.cpp" line="821"/>
         <source>Save as dialog</source>
         <translation>另存为对话框</translation>
     </message>
     <message>
-        <location filename="../scanSet.cpp" line="828"/>
-        <location filename="../scanSet.cpp" line="955"/>
+        <location filename="../scanSet.cpp" line="838"/>
+        <location filename="../scanSet.cpp" line="965"/>
         <source>cannot contain &apos;/&apos; character.</source>
         <translation>文件名不能包含‘/’字符。</translation>
     </message>
     <message>
-        <location filename="../scanSet.cpp" line="833"/>
-        <location filename="../scanSet.cpp" line="961"/>
+        <location filename="../scanSet.cpp" line="843"/>
+        <location filename="../scanSet.cpp" line="971"/>
         <source>cannot save as hidden file.</source>
         <translation>不能保存为隐藏文件。</translation>
     </message>
     <message>
-        <location filename="../scanSet.cpp" line="910"/>
+        <location filename="../scanSet.cpp" line="915"/>
         <source>Store text</source>
         <translation>存储文本</translation>
+    </message>
+    <message>
+        <location filename="../scanSet.cpp" line="947"/>
+        <source>This resolution will take a loog time to scan, please choose carelly.</source>
+        <translation>选择该分辨率扫描时间较长，请谨慎选择！</translation>
     </message>
 </context>
 <context>
     <name>SendMail</name>
     <message>
-        <location filename="../sendMail.cpp" line="207"/>
-        <location filename="../sendMail.cpp" line="230"/>
+        <location filename="../sendMail.cpp" line="208"/>
+        <location filename="../sendMail.cpp" line="232"/>
         <source>Select email client</source>
         <translation>选择邮件客户端</translation>
     </message>
     <message>
-        <location filename="../sendMail.cpp" line="217"/>
+        <location filename="../sendMail.cpp" line="219"/>
         <source>Close</source>
         <translation>关闭</translation>
     </message>
@@ -339,29 +344,29 @@
         <translation>退出</translation>
     </message>
     <message>
-        <location filename="../titleBar.cpp" line="85"/>
+        <location filename="../titleBar.cpp" line="87"/>
         <source>mainmenu</source>
         <translation>主菜单</translation>
     </message>
     <message>
-        <location filename="../titleBar.cpp" line="96"/>
+        <location filename="../titleBar.cpp" line="98"/>
         <source>Minimize</source>
         <translation>最小化</translation>
     </message>
     <message>
-        <location filename="../titleBar.cpp" line="105"/>
-        <location filename="../titleBar.cpp" line="181"/>
-        <location filename="../titleBar.cpp" line="305"/>
+        <location filename="../titleBar.cpp" line="107"/>
+        <location filename="../titleBar.cpp" line="177"/>
+        <location filename="../titleBar.cpp" line="287"/>
         <source>Maximize</source>
         <translation>最大化</translation>
     </message>
     <message>
-        <location filename="../titleBar.cpp" line="113"/>
+        <location filename="../titleBar.cpp" line="115"/>
         <source>Close</source>
         <translation>关闭</translation>
     </message>
     <message>
-        <location filename="../titleBar.cpp" line="296"/>
+        <location filename="../titleBar.cpp" line="280"/>
         <source>Restore</source>
         <translation>还原</translation>
     </message>
@@ -392,12 +397,12 @@
         <translation>麒麟扫描</translation>
     </message>
     <message>
-        <location filename="../widget.cpp" line="278"/>
+        <location filename="../widget.cpp" line="274"/>
         <source> already exist, do you want to overwrite it?</source>
         <translation>已经存在，你想覆盖它吗？</translation>
     </message>
     <message>
-        <location filename="../widget.cpp" line="279"/>
+        <location filename="../widget.cpp" line="275"/>
         <source>Question</source>
         <translation>询问对话框</translation>
     </message>
