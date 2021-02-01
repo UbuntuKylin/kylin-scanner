@@ -20,6 +20,7 @@
 #include "kycsavefiledialog.h"
 #include <QMessageBox>
 #include <QTextCursor>
+#include <QStandardItemModel>
 
 ScanSet::ScanSet(QWidget *parent)
     : QWidget(parent)
@@ -231,6 +232,32 @@ void ScanSet::setKylinComboBoxAttributes(KylinCmb *combo, QStringList strList)
     combo->setView(listView);   //使下拉选项样式生效
 }
 
+void ScanSet::setKylinComboBoxTextDeviceAttributes(KylinCmb *combo, QStringList strList)
+{
+    QListView *listView = new QListView(this);
+
+    combo->clear();
+
+    QStandardItemModel *model = new QStandardItemModel();
+    for(int i = 0; i < strList.size(); ++i){
+        //添加提示tootip
+        QStandardItem *item = new QStandardItem(strList.at(i));;
+        int curTextLen = strList.at(i).length();
+        if ( curTextLen >= 20) {
+            item->setToolTip(strList.at(i));
+        } else {
+            item->setToolTip("");
+        }
+        model->appendRow(item);
+        //editor->addItem(Items.at(i));
+    }
+    combo->setModel(model);
+    combo->setFixedSize(180, 32);
+    combo->setInsertPolicy(QComboBox::NoInsert);  //编辑框的内容不插入到列表项
+    combo->setFocusPolicy(Qt::NoFocus); //获取焦点策略：无焦点，也就是不可编辑
+    combo->setView(listView);   //使下拉选项样式生效
+}
+
 /**
  * @brief setKylinComboBox 统一设置麒麟扫描组合框ComboBox
  */
@@ -248,7 +275,7 @@ void ScanSet::setKylinComboBox(bool curIndexChanged)
     if (!device_status) {
         // If not find scan device
         strListDevice << tr("No available device");
-        setKylinComboBoxAttributes(textDevice, strListDevice);
+        setKylinComboBoxTextDeviceAttributes(textDevice, strListDevice);
 
         strListColor << tr("Lineart") << tr("Color") << tr("Gray");
         setKylinComboBoxAttributes(textColor, strListColor);
@@ -276,7 +303,7 @@ void ScanSet::setKylinComboBox(bool curIndexChanged)
     if (!curIndexChanged) { // 当选择设备时，索引发生改变，此时不应该按照读取的字符串进行默认设置
         strListDevice = instance.getKylinSaneNames();
         qDebug() << "sane names: " << strListDevice;
-        setKylinComboBoxAttributes(textDevice, strListDevice);
+        setKylinComboBoxTextDeviceAttributes(textDevice, strListDevice);
     }
 
     // For  default color
@@ -338,7 +365,7 @@ void ScanSet::setKylinComboBoxScanDeviceName()
     if (!device_status) {
         // If not find scan device
         strListDevice << tr("No available device");
-        setKylinComboBoxAttributes(textDevice, strListDevice);
+        setKylinComboBoxTextDeviceAttributes(textDevice, strListDevice);
 
         return;
     }
@@ -346,7 +373,7 @@ void ScanSet::setKylinComboBoxScanDeviceName()
     // For  default device
     strListDevice = instance.getKylinSaneNames();
     qDebug() << "sane names: " << strListDevice;
-    setKylinComboBoxAttributes(textDevice, strListDevice);
+    setKylinComboBoxTextDeviceAttributes(textDevice, strListDevice);
 }
 
 void ScanSet::setKylinScanSetNotEnable()
