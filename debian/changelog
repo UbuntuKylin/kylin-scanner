@@ -1,3 +1,19 @@
+kylin-scanner (1.0.0-1kylin1k12) v101; urgency=medium
+
+  * [English]
+  * Fix #27162, tailor function abnormal
+  * Fix #34914, textDevice display not complete
+  * Fix #19420, Add high resolution message tips
+  * Fix #35558, Handle button status after click scan button
+  *
+  * [中文]
+  * Fix #27162，裁切功能异常
+  * Fix #34914，设备选项显示不完全
+  * Fix #19420，分辨率选择较大时，给出扫描过程较慢的提示
+  * Fix #35558，处理扫描过程中出错时的按钮状态
+
+ -- yushuo1i <yushuo1i@kylinos.cn>  Mon, 01 Feb 2021 20:04:10 +0800
+
 kylin-scanner (1.0.0-1kylin1k11) v101; urgency=medium
 
   * [English] 
