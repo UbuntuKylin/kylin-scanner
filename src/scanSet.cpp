@@ -20,6 +20,7 @@
 #include "kycsavefiledialog.h"
 #include <QMessageBox>
 #include <QTextCursor>
+#include <QStandardItemModel>
 
 ScanSet::ScanSet(QWidget *parent)
     : QWidget(parent)
@@ -231,6 +232,32 @@ void ScanSet::setKylinComboBoxAttributes(KylinCmb *combo, QStringList strList)
     combo->setView(listView);   //使下拉选项样式生效
 }
 
+void ScanSet::setKylinComboBoxTextDeviceAttributes(KylinCmb *combo, QStringList strList)
+{
+    QListView *listView = new QListView(this);
+
+    combo->clear();
+
+    QStandardItemModel *model = new QStandardItemModel();
+    for(int i = 0; i < strList.size(); ++i){
+        //添加提示tootip
+        QStandardItem *item = new QStandardItem(strList.at(i));;
+        int curTextLen = strList.at(i).length();
+        if ( curTextLen >= 20) {
+            item->setToolTip(strList.at(i));
+        } else {
+            item->setToolTip("");
+        }
+        model->appendRow(item);
+        //editor->addItem(Items.at(i));
+    }
+    combo->setModel(model);
+    combo->setFixedSize(180, 32);
+    combo->setInsertPolicy(QComboBox::NoInsert);  //编辑框的内容不插入到列表项
+    combo->setFocusPolicy(Qt::NoFocus); //获取焦点策略：无焦点，也就是不可编辑
+    combo->setView(listView);   //使下拉选项样式生效
+}
+
 /**
  * @brief setKylinComboBox 统一设置麒麟扫描组合框ComboBox
  */
@@ -248,12 +275,13 @@ void ScanSet::setKylinComboBox(bool curIndexChanged)
     if (!device_status) {
         // If not find scan device
         strListDevice << tr("No available device");
-        setKylinComboBoxAttributes(textDevice, strListDevice);
+        setKylinComboBoxTextDeviceAttributes(textDevice, strListDevice);
 
         strListColor << tr("Lineart") << tr("Color") << tr("Gray");
         setKylinComboBoxAttributes(textColor, strListColor);
 
-        strListResolution << "4800" << "2400" << "1200" << "600" << "300" << tr("Auto");
+        //strListResolution << "4800" << "2400" << "1200" << "600" << "300" << tr("Auto");
+        strListResolution << "300" << "600" << "1200" << "2400" << "4800" <<tr("Auto");
         for (int i = 0; i < strListResolution.size(); ++i) {
             if (!QString::compare("300", strListResolution[i], Qt::CaseSensitive)) {
                 defaultResolution = i;
@@ -276,7 +304,7 @@ void ScanSet::setKylinComboBox(bool curIndexChanged)
     if (!curIndexChanged) { // 当选择设备时，索引发生改变，此时不应该按照读取的字符串进行默认设置
         strListDevice = instance.getKylinSaneNames();
         qDebug() << "sane names: " << strListDevice;
-        setKylinComboBoxAttributes(textDevice, strListDevice);
+        setKylinComboBoxTextDeviceAttributes(textDevice, strListDevice);
     }
 
     // For  default color
@@ -338,7 +366,7 @@ void ScanSet::setKylinComboBoxScanDeviceName()
     if (!device_status) {
         // If not find scan device
         strListDevice << tr("No available device");
-        setKylinComboBoxAttributes(textDevice, strListDevice);
+        setKylinComboBoxTextDeviceAttributes(textDevice, strListDevice);
 
         return;
     }
@@ -346,7 +374,7 @@ void ScanSet::setKylinComboBoxScanDeviceName()
     // For  default device
     strListDevice = instance.getKylinSaneNames();
     qDebug() << "sane names: " << strListDevice;
-    setKylinComboBoxAttributes(textDevice, strListDevice);
+    setKylinComboBoxTextDeviceAttributes(textDevice, strListDevice);
 }
 
 void ScanSet::setKylinScanSetNotEnable()
@@ -909,6 +937,16 @@ void ScanSet::onTextColorCurrentTextChanged(QString color)
 void ScanSet::onTextResolutionCurrentTextChanged(QString resolution)
 {
     KylinSane &instance = KylinSane::getInstance();
+    QString curResolution = textResolution->currentText();
+
+    if (instance.getKylinSaneStatus()
+        && (curResolution == "2400" || curResolution == "4800")) {
+        qDebug() << "curResolution = " << curResolution;
+
+        QString msg;
+        msg = tr("This resolution will take a loog time to scan, please choose carelly.");
+        warnMsg(msg);
+    }
     instance.userInfo.resolution = resolution;
     qDebug() << "resolution: " << instance.userInfo.resolution;
 }

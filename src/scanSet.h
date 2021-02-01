@@ -48,6 +48,7 @@ public:
     void setKylinScanSetBtnEnable();
     void setKylinScanSetEnable();
     void setKylinComboBoxAttributes(KylinCmb *combo, QStringList strList);
+    void setKylinComboBoxTextDeviceAttributes(KylinCmb *combo, QStringList strList);
     void setKylinLable();
     void setKylinLabelAttributes(QLabel *label);
     void setKylinHBoxLayout();

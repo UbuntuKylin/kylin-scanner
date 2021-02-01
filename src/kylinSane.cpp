@@ -631,6 +631,7 @@ static SANE_Status getOptionResolutions(SANE_Handle sane_handle, int optnum)
 {
     KylinSane &instance = KylinSane::getInstance();
     QStringList resolutions;
+    QStringList reverseResolutions;
     SANE_Status status = SANE_STATUS_INVAL;
     const SANE_Option_Descriptor *opt;
 
@@ -672,6 +673,11 @@ static SANE_Status getOptionResolutions(SANE_Handle sane_handle, int optnum)
             break;
         }
     }
+
+    // 进行反向排序，有利于用户选择较低分辨率
+    qSort(resolutions.begin(), resolutions.end(), [](const QString& s1, const QString& s2) {
+            return s1.toInt() < s2.toInt();
+    });
     resolutions << QObject::tr("Auto");
 
     instance.setKylinSaneResolutions(resolutions);
