@@ -21,6 +21,7 @@
 
 #include "theme.h"
 #include "kycaboutdialog.h"
+#include "kylinSane.h"
 
 #include <QDialog>
 #include <QWidget>

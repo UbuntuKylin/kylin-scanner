@@ -280,6 +280,7 @@ void FuncBar::setKylinScanSetNotEnable()
     bool device_status = true;
 
     device_status = instance.getKylinSaneStatus();
+    qDebug() << "device_status = " << device_status;
 
     if (!device_status) {
         btnNorScan->setEnabled(false);

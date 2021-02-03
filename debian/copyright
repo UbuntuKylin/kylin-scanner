@@ -55,6 +55,10 @@ Files: Doxyfile
        src/sendMail.h
        src/theme.h
        src/theme.cpp
+       src/usb.h
+       src/usb.cpp
+       src/usbhotplugthread.h
+       src/usbhotplugthread.cpp
        src/titleBar.cpp
        src/titleBar.h
        src/waterMarkDlg.cpp

@@ -1486,6 +1486,14 @@ void KylinSane::setKylinSaneColors(QStringList color)
     devicesInfo.color = color;
 }
 
+/** free sane resource
+ * Neglecting to call this function may result in some resources not being released properly.
+ */
+void KylinSane::saneExit()
+{
+    sane_exit();
+}
+
 /**
  * @brief KylinSane::findScanDevice 统一接口供页面调用，找到扫描设备
  * @return 返回找到扫描设备的扫描参数情况
@@ -1579,4 +1587,15 @@ int KylinSane::startScanning(UserSelectedInfo info)
     saneCancel(instance.handle);
 
     return ret;
+}
+
+void freeScanResource()
+{
+    KylinSane &instance = KylinSane::getInstance();
+    // finish scan
+    sane_cancel(instance.handle);
+    // close scan device
+    sane_close(instance.handle);
+    // release resource
+    sane_exit();
 }

@@ -28,6 +28,7 @@
 #include "scanSet.h"
 #include "titleBar.h"
 #include "theme.h"
+#include "usbhotplugthread.h"
 
 #define MAINWINDOW_WIDTH 860
 #define MAINWINDOW_HEIGHT 680
@@ -56,6 +57,7 @@ public:
     void saveToPdf(QImage img, QString pathName);
     void resultDetail(bool ret);
     int messageScanFinishedSave(QString pathName);
+    void warnMsg(QString msg);
 
 private:
     QGSettings *style_settings;
@@ -71,6 +73,7 @@ private:
     QVBoxLayout *pLayout;
 
     CommonScanThread thread;
+    USBHotplugThread usbThread;
 
 Q_SIGNALS:
     void openScanDeviceFinished(bool);
@@ -80,12 +83,14 @@ private slots:
     void setScanSetBtnEnable(bool ret);
     void saveScanFile(bool ret);
     void scanResult(bool ret);
-    void scanResultDetail(bool ret);
+    void swichScanDeviceResult(bool ret);
     void scanningResultDetail(bool ret);
     void setMaskClear();
     void setWindowBorderRadius();
     void style_changed(QString); // 系统主题风格变化
     void icon_theme_changed(QString); // 系统图标主题风格变化
+    void usbDeviceAdded(QString recvData);
+    void usbDeviceRemoved(QString recvData);
 };
 
 #endif // WIDGET_H

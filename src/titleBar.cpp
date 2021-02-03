@@ -80,6 +80,7 @@ TitleBar::TitleBar(QWidget *parent)
         m_pAbout->show();
     });
     m_pMenu->addAction(tr("Exit"), [ = ]() {
+        //freeScanResource();
         exit(0);
     } );
 
@@ -248,6 +249,7 @@ void TitleBar::onClicked()
         } else if (pButton == m_pMaximizeButton) {
             pWindow->isMaximized() ? pWindow->showNormal() : pWindow->showMaximized();
         } else if (pButton == m_pCloseButton) {
+            //freeScanResource();
             pWindow->close();
         }
     }

@@ -94,6 +94,7 @@ public:
     void setKylinSaneResolutions(QStringList resolution);
     void setKylinSaneSizes(QStringList size);
     void setKylinSaneColors(QStringList color);
+    void saneExit();
 
     ScanDeviceInfo findScanDevice();
     ScanDeviceInfo openScanDevice(int index);
@@ -114,6 +115,7 @@ extern "C" {
 #endif
 
 void kylinNorScanFindDevice(); // open scan device
+void freeScanResource();
 
 #ifdef __cplusplus
 }

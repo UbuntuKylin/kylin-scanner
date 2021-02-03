@@ -48,6 +48,7 @@ Widget::Widget(QWidget *parent)
     instance.setKylinSaneStatus (true);
 #else
     thread.start();
+    usbThread.start();
 #endif
 
     resize(MAINWINDOW_WIDTH, MAINWINDOW_HEIGHT);
@@ -116,8 +117,13 @@ Widget::Widget(QWidget *parent)
 
     // For scan
     connect(&thread, SIGNAL(scanFinished(bool)), this, SLOT(scanResult(bool)));
+
+    // For usb device
+    connect(&usbThread, SIGNAL(usbRemove(QString)), this, SLOT(usbDeviceRemoved(QString)));
+    connect(&usbThread, SIGNAL(usbAdd(QString)), this, SLOT(usbDeviceAdded(QString)));
+
     // 当切换扫描设备时的情况
-    connect(pScanSet, SIGNAL(openDeviceStatusSignal(bool)), this, SLOT(scanResultDetail(bool)));
+    connect(pScanSet, SIGNAL(openDeviceStatusSignal(bool)), this, SLOT(swichScanDeviceResult(bool)));
 
     // 发现可用设备,点击扫描按钮后的操作,此过程可能会出现调用API失败，不可扫描的情况，需要额外处理
     connect(pFuncBar, SIGNAL(sendScanEnd(bool)), pScandisplay, SLOT(onScan(bool)));
@@ -282,6 +288,13 @@ int Widget::messageScanFinishedSave(QString pathName)
         return 0;
 }
 
+void Widget::warnMsg(QString msg)
+{
+    QMessageBox msgBox(QMessageBox::Warning, QObject::tr("warning"), msg);
+    msgBox.setWindowIcon(QIcon::fromTheme("kylin-scanner"));
+    msgBox.exec();
+}
+
 void Widget::saveImage(QString fileName)
 {
     qDebug() << "Save filename: " << fileName;
@@ -302,6 +315,16 @@ void Widget::setScanSetBtnEnable(bool ret)
 
     pScanSet->setKylinScanSetBtnEnable();
     pScanSet->setBtnSaveText();
+
+    // 打开扫描设备进行扫描成功
+    device = true;
+    //pScandisplay->setInitDevice();
+
+    // Do not change scan color mode while scan again
+    //pScanSet->setKylinComboBox(true);
+    pScanSet->setKylinLable();
+    pFuncBar->setBtnScanEnable();
+    pScanSet->setKylinScanSetEnable();
 }
 
 /**
@@ -393,6 +416,8 @@ void Widget::scanResult(bool ret)
         resultDetail(retStatus);
     } else {
         device = false;
+        // free resource for sane devices
+        //instance.saneExit();
         pScandisplay->setNoDevice();
         pFuncBar->setKylinScanSetNotEnable();
         pScanSet->setKylinScanSetNotEnable();
@@ -406,7 +431,7 @@ void Widget::scanResult(bool ret)
  * 此时不应该重新设置该字段，所以应该为setKylinComboBox 的参数为 true 进行跳过设置该字段
  * @param ret
  */
-void Widget::scanResultDetail(bool ret)
+void Widget::swichScanDeviceResult(bool ret)
 {
     qDebug() << "ret = " << ret;
 
@@ -450,20 +475,17 @@ void Widget::scanningResultDetail(bool ret)
         pScanSet->setKylinScanSetEnable();
     }
 #else
-    if (ret) {
-        // 打开扫描设备进行扫描成功
-        device = true;
-        //pScandisplay->setInitDevice();
-        pScanSet->setKylinComboBox(true);
-        pScanSet->setKylinLable();
-        pFuncBar->setBtnScanEnable();
-        pScanSet->setKylinScanSetEnable();
-    } else {
+    if (!ret) {
         // 可以查找到扫描设备，但打开扫描设备进行扫描失败
         device = false;
         pScandisplay->setNoDevice();
+        // scan error, so set scan statu false
+        pScanSet->setkylinScanStatus(false);
         pFuncBar->setKylinScanSetNotEnable();
         pScanSet->setKylinScanSetNotEnable();
+        QString msg;
+        msg = tr("scan process is failed, please check your scanner by connect it again.");
+        warnMsg(msg);
     }
 #endif
 }
@@ -532,9 +554,33 @@ void Widget::icon_theme_changed(QString)
     }
 }
 
+void Widget::usbDeviceAdded(QString recvData)
+{
+    qDebug() << "USB Add: " << recvData;
+//    KylinSane &instance = KylinSane::getInstance();
+//    bool ret = false;
+
+//    instance.findScanDevice();
+//    ret = instance.getKylinSaneStatus();
+//    qDebug() << "USB ret = " << ret;
+//    scanResult(ret);
+}
+
+void Widget::usbDeviceRemoved(QString recvData)
+{
+    qDebug() << "USB Remove: " << recvData;
+//    KylinSane &instance = KylinSane::getInstance();
+//    instance.findScanDevice();
+//    bool ret = false;
+
+//    qDebug() << "USB ret = " << ret;
+    //scanResult(ret);
+}
+
 void CommonScanThread::run()
 {
     KylinSane &instance = KylinSane::getInstance();
+    qDebug() << "get sane status: " << instance.getKylinSaneStatus();
     do {
         qDebug() << "begin findScanDevice()";
         instance.findScanDevice();
