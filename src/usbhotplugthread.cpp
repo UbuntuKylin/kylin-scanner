@@ -20,11 +20,14 @@ void USBHotplugThread::run()
         QString recvData= QString(QLatin1String(buf));
         if (recvData.contains("add@", Qt::CaseInsensitive)
             && recvData.contains("devices", Qt::CaseInsensitive)
-            && recvData.contains("usb", Qt::CaseInsensitive)) {
+            && recvData.contains("usb", Qt::CaseInsensitive)
+            && recvData.endsWith(":1.0", Qt::CaseInsensitive)) {
+            // ":1.0" means each usb device first directory, which is must
             emit usbAdd(recvData);
         } else if (recvData.contains("remove@", Qt::CaseInsensitive)
             && recvData.contains("devices", Qt::CaseInsensitive)
-            && recvData.contains("usb", Qt::CaseInsensitive)) {
+            && recvData.contains("usb", Qt::CaseInsensitive)
+            && recvData.endsWith(":1.0", Qt::CaseInsensitive)) {
             emit usbRemove(recvData);
         }
     }

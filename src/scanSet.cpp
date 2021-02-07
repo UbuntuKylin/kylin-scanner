@@ -354,6 +354,7 @@ void ScanSet::setKylinComboBox(bool curIndexChanged)
 
 /**
 * @brief setKylinComboBoxScanName 设置麒麟扫描组合框的扫描设备名
+* set textDevice while find scanners
  */
 void ScanSet::setKylinComboBoxScanDeviceName()
 {

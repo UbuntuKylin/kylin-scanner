@@ -57,6 +57,11 @@ struct UserSelectedInfo {
     QString size;           // 用户选择尺寸
 };
 
+
+struct UserOpenedInfo {
+    QString openName;           // open device name
+};
+
 enum sizes_type {
     A2 = 1,
     A3,
@@ -87,6 +92,7 @@ public:
     QStringList getKylinSaneResolutions();
     QStringList getKylinSaneSizes();
     QStringList getKylinSaneColors();
+    QString getKylinSaneOpenName();
 
     void setKylinSaneStatus(bool status);
     void setKylinSaneNames(QStringList name);
@@ -94,14 +100,17 @@ public:
     void setKylinSaneResolutions(QStringList resolution);
     void setKylinSaneSizes(QStringList size);
     void setKylinSaneColors(QStringList color);
+    void setKylinSaneOpenName(QString name);
     void saneExit();
 
     ScanDeviceInfo findScanDevice();
     ScanDeviceInfo openScanDevice(int index);
     int startScanning(UserSelectedInfo info);
+    bool testScannerIsAlive(QString deviceName);
 
     SANE_Handle handle;
     struct UserSelectedInfo userInfo;
+    struct UserOpenedInfo openDeviceInfo;
 
 private:
     struct ScanDeviceInfo devicesInfo;

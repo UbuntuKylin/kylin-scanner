@@ -58,6 +58,7 @@ public:
     void resultDetail(bool ret);
     int messageScanFinishedSave(QString pathName);
     void warnMsg(QString msg);
+    QString getScannerPath(QString str);
 
 private:
     QGSettings *style_settings;
@@ -91,6 +92,7 @@ private slots:
     void icon_theme_changed(QString); // 系统图标主题风格变化
     void usbDeviceAdded(QString recvData);
     void usbDeviceRemoved(QString recvData);
+    void scanListResult(int ret);
 };
 
 #endif // WIDGET_H
