@@ -47,7 +47,6 @@ int getScreenWidth()
         return 0;
 
     int width = scrn->width;
-    int height = scrn->height;
 
     if (NULL != disp)
         XCloseDisplay(disp);

@@ -78,5 +78,29 @@
         <file>icon/down_black.svg</file>
         <file>icon/no-conection-dark.svg</file>
         <file>icon/no-conection-light.svg</file>
+        <file>icon/scanning/1-3x.png</file>
+        <file>icon/scanning/2-3x.png</file>
+        <file>icon/scanning/3-3x.png</file>
+        <file>icon/scanning/4-3x.png</file>
+        <file>icon/scanning/5-3x.png</file>
+        <file>icon/scanning/6-3x.png</file>
+        <file>icon/scanning/7-3x.png</file>
+        <file>icon/scanning/8-3x.png</file>
+        <file>icon/scanning/9-3x.png</file>
+        <file>icon/scanning/10-3x.png</file>
+        <file>icon/scanning/11-3x.png</file>
+        <file>icon/scanning/12-3x.png</file>
+        <file>icon/scanning/13-3x.png</file>
+        <file>icon/scanning/14-3x.png</file>
+        <file>icon/scanning/15-3x.png</file>
+        <file>icon/scanning/16-3x.png</file>
+        <file>icon/scanning/17-3x.png</file>
+        <file>icon/scanning/18-3x.png</file>
+        <file>icon/scanning/19-3x.png</file>
+        <file>icon/scanning/20-3x.png</file>
+        <file>icon/scanning/21-3x.png</file>
+        <file>icon/scanning/22-3x.png</file>
+        <file>icon/scanning/23-3x.png</file>
+        <file>icon/scanning/24-3x.png</file>
     </qresource>
 </RCC>
