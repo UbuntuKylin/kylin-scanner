@@ -570,6 +570,7 @@ void ScanDisplay::scandisplay_theme_changed(QString)
 void ScanDisplay::onOrc()
 {
     if (flagOrc == 0) {
+        // not orc before, so click this will flagOrc = 1;
         flagOrc = 1;
         widgetindex = vStackedLayout->currentIndex();
 
@@ -620,6 +621,11 @@ void ScanDisplay::onOrc()
         flagOrc = 0;
         vStackedLayout->setCurrentIndex(widgetindex);
     }
+}
+
+void ScanDisplay::setOrcFlagStatus()
+{
+    flagOrc = 0;
 }
 
 /**

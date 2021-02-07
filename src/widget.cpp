@@ -110,8 +110,11 @@ Widget::Widget(QWidget *parent)
     // For ORC
     connect(pFuncBar, &FuncBar::sendOrcBegin, pScandisplay, &ScanDisplay::onOrc);
     connect(pFuncBar, &FuncBar::sendOrcEnd, pScandisplay, &ScanDisplay::onOrc);
+    connect(pFuncBar, &FuncBar::sendScanAgain, pScandisplay, &ScanDisplay::setOrcFlagStatus);
     connect(pFuncBar, &FuncBar::sendOrcBegin, pScanSet, &ScanSet::modifyBtnSave);
     connect(pFuncBar, &FuncBar::sendOrcEnd, pScanSet, &ScanSet::modifyBtnSave);
+    connect(pFuncBar, &FuncBar::sendScanAgain, pScanSet, &ScanSet::setOrcFlagInit);
+
 
     // 文件扫描成功后默认显示全部编辑框
     //connect(pFuncBar,&FuncBar::sendScanEnd, pScandisplay, &ScanDisplay::switchPage);

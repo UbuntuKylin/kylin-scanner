@@ -122,6 +122,7 @@ private:
 
 public slots:
     void modifyBtnSave();
+    void setOrcFlagInit();
 
 private slots:
     void onBtnLocationClicked();
