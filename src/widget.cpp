@@ -617,16 +617,17 @@ void Widget::usbDeviceRemoved(QString recvData)
                                 qDebug() << "The user choose device: " << str << "has been disconnect!";
                                 // get argument again, because it cannot search using scanner while has opened it
 
-                                instance.openScanDevice(0);
+                                instance.openScanDevice(i);
                                 QString deviceName = instance.getKylinSaneOpenName();
                                 msg = tr("device ") + deviceName + tr(" has been disconnect.");
                                 retStatus = instance.getKylinSaneStatus();
 
                                 qDebug() << "test scanning end, status = " << retStatus;
 
-                                if (!retStatus)
+                                if (!retStatus) {
                                     warnMsg(msg);
-                                //resultDetail(retStatus);
+                                    resultDetail(retStatus);
+                                }
                             }
                         }
                     }
