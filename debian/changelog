@@ -1,3 +1,21 @@
+kylin-scanner (1.0.0-1kylin1k13) v101; urgency=medium
+
+  * [English]
+  * Fix #38223, Make dialog center on the screen without taskbar
+  * Fix #38331, cancel url right click tips
+  * Fix #28932, Modify btnSave text after scan again
+  * Fix #35951, handle hotplug scanner while disconnect scanner
+  * Fix #35960, Handle color mode in english environment
+  *
+  * [中文]
+  * Fix #38223，修复麒麟扫描打开未居中显示
+  * Fix #38331，取消关于界面的链接右击显示内容  
+  * Fix #28932，修复再一次扫描时的另存为对话框显示问题
+  * Fix #35951，修复已选择的设备断开连接未提示问题
+  * Fix #35960，修复英文环境下彩色模式扫描异常问题
+
+ -- yushuoqi <yushuoqi@kylinos.cn>  Sun, 07 Feb 2021 17:13:43 +0800
+
 kylin-scanner (1.0.0-1kylin1k12) v101; urgency=medium
 
   * [English]
