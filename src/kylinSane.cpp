@@ -1608,6 +1608,8 @@ int KylinSane::startScanning(UserSelectedInfo info)
 
 bool KylinSane::testScannerIsAlive(QString deviceName)
 {
+    qDebug() << "deviceName= " << deviceName;
+    return true;
 }
 
 void freeScanResource()

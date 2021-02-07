@@ -34,6 +34,8 @@ public:
     ~KYCAboutDialog();
 protected:
     void paintEvent(QPaintEvent *event) Q_DECL_OVERRIDE;
+
+private slots:
 private:
     int m_iHeight;
 private:
