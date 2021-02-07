@@ -21,6 +21,7 @@
 #include <QLabel>
 #include <QTranslator>
 #include <QMessageBox>
+#include <QProcess>
 
 bool device = false;
 
@@ -48,6 +49,7 @@ Widget::Widget(QWidget *parent)
     instance.setKylinSaneStatus (true);
 #else
     thread.start();
+    usbThread.start();
 #endif
 
     resize(MAINWINDOW_WIDTH, MAINWINDOW_HEIGHT);
@@ -116,8 +118,13 @@ Widget::Widget(QWidget *parent)
 
     // For scan
     connect(&thread, SIGNAL(scanFinished(bool)), this, SLOT(scanResult(bool)));
+
+    // For usb device
+    connect(&usbThread, SIGNAL(usbRemove(QString)), this, SLOT(usbDeviceRemoved(QString)));
+    connect(&usbThread, SIGNAL(usbAdd(QString)), this, SLOT(usbDeviceAdded(QString)));
+
     // 当切换扫描设备时的情况
-    connect(pScanSet, SIGNAL(openDeviceStatusSignal(bool)), this, SLOT(scanResultDetail(bool)));
+    connect(pScanSet, SIGNAL(openDeviceStatusSignal(bool)), this, SLOT(swichScanDeviceResult(bool)));
 
     // 发现可用设备,点击扫描按钮后的操作,此过程可能会出现调用API失败，不可扫描的情况，需要额外处理
     connect(pFuncBar, SIGNAL(sendScanEnd(bool)), pScandisplay, SLOT(onScan(bool)));
@@ -282,6 +289,31 @@ int Widget::messageScanFinishedSave(QString pathName)
         return 0;
 }
 
+void Widget::warnMsg(QString msg)
+{
+    QMessageBox msgBox(QMessageBox::Warning, QObject::tr("warning"), msg);
+    msgBox.setWindowIcon(QIcon::fromTheme("kylin-scanner"));
+    msgBox.exec();
+}
+
+/**
+ * @brief Widget::getScannerPath
+ * Get scanner path from (add|remove)@/devices/pci0000:00/0000:00:11.0/0000:02:03.0/usb1/1-1/1-2:1.0
+ * to /sys/devices/pci0000:00/0000:00:11.0/0000:02:03.0/usb1/1-1/1-2:1.0
+ * @param str
+ * @return
+ */
+QString Widget::getScannerPath(QString str)
+{
+    QStringList list = str.split("@");
+    //path = /devices/pci0000:00/0000:00:11.0/0000:02:03.0/usb1/1-1/1-2:1.0
+    QString path = list[1];
+    QString realPath = "/sys" + path;
+    qDebug() << "path = " << path
+             << "realPath = " << realPath;
+    return realPath;
+}
+
 void Widget::saveImage(QString fileName)
 {
     qDebug() << "Save filename: " << fileName;
@@ -302,6 +334,16 @@ void Widget::setScanSetBtnEnable(bool ret)
 
     pScanSet->setKylinScanSetBtnEnable();
     pScanSet->setBtnSaveText();
+
+    // 打开扫描设备进行扫描成功
+    device = true;
+    //pScandisplay->setInitDevice();
+
+    // Do not change scan color mode while scan again
+    //pScanSet->setKylinComboBox(true);
+    pScanSet->setKylinLable();
+    pFuncBar->setBtnScanEnable();
+    pScanSet->setKylinScanSetEnable();
 }
 
 /**
@@ -393,6 +435,8 @@ void Widget::scanResult(bool ret)
         resultDetail(retStatus);
     } else {
         device = false;
+        // free resource for sane devices
+        //instance.saneExit();
         pScandisplay->setNoDevice();
         pFuncBar->setKylinScanSetNotEnable();
         pScanSet->setKylinScanSetNotEnable();
@@ -406,7 +450,7 @@ void Widget::scanResult(bool ret)
  * 此时不应该重新设置该字段，所以应该为setKylinComboBox 的参数为 true 进行跳过设置该字段
  * @param ret
  */
-void Widget::scanResultDetail(bool ret)
+void Widget::swichScanDeviceResult(bool ret)
 {
     qDebug() << "ret = " << ret;
 
@@ -450,20 +494,17 @@ void Widget::scanningResultDetail(bool ret)
         pScanSet->setKylinScanSetEnable();
     }
 #else
-    if (ret) {
-        // 打开扫描设备进行扫描成功
-        device = true;
-        //pScandisplay->setInitDevice();
-        pScanSet->setKylinComboBox(true);
-        pScanSet->setKylinLable();
-        pFuncBar->setBtnScanEnable();
-        pScanSet->setKylinScanSetEnable();
-    } else {
+    if (!ret) {
         // 可以查找到扫描设备，但打开扫描设备进行扫描失败
         device = false;
         pScandisplay->setNoDevice();
+        // scan error, so set scan statu false
+        pScanSet->setkylinScanStatus(false);
         pFuncBar->setKylinScanSetNotEnable();
         pScanSet->setKylinScanSetNotEnable();
+        QString msg;
+        msg = tr("scan process is failed, please check your scanner by connect it again.");
+        warnMsg(msg);
     }
 #endif
 }
@@ -532,9 +573,79 @@ void Widget::icon_theme_changed(QString)
     }
 }
 
+void Widget::usbDeviceAdded(QString recvData)
+{
+    qDebug() << "USB Add: " << recvData;
+}
+
+void Widget::usbDeviceRemoved(QString recvData)
+{
+    qDebug() << "USB Remove: " << recvData;
+    QProcess *scanList = new QProcess(this);
+    QStringList  argvList;
+    argvList.append("-L");
+    scanList->start("scanimage", argvList);
+    //connect(scanList, SIGNAL(finished(int), this,  SLOT(scanListResult(int));
+    connect(scanList, QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished),
+      [=](int exitCode, QProcess::ExitStatus exitStatus) {
+                qDebug() << "USB Remove exitCode = " << exitCode
+                         << "exitStatus = " << exitStatus;
+                if (0 == exitCode) {
+                    //QProcess *pProces = (QProcess *)sender();
+                    QString result = scanList->readAll();
+                    qDebug() << "result = " << result;
+                    KylinSane &instance = KylinSane::getInstance();
+                    QStringList strListDevice;
+                    strListDevice = instance.getKylinSaneNames();
+                    qDebug() << "current sane names: " << strListDevice
+                             << "userInfo.name= " << instance.userInfo.name
+                             << "size = " << strListDevice.size();
+                    for (int i=0; i<strListDevice.size(); ++i) {
+                        QString str = strListDevice.at(i).toLocal8Bit().constData();
+                        qDebug() << "i=" << i << "str = " << str;
+                        if (str == tr("No available device"))
+                            break;
+                        // There are two cases that we cannot find scanners throught `scanimage -L`:
+                        // case 1. no this scanner in system, which means this scanner has been disconnect
+                        // case 2. this scanner has been connect in kylin-scanner by sane_init
+                        if (!result.contains(str, Qt::CaseInsensitive)) {
+                            QString msg;
+                            bool retStatus;
+                            msg = tr("device ") + str + tr(" has been disconnect.");
+                            //warnMsg(msg);
+                            if (instance.userInfo.name == str) {
+                                qDebug() << "The user choose device: " << str << "has been disconnect!";
+                                // get argument again, because it cannot search using scanner while has opened it
+
+                                instance.openScanDevice(i);
+                                QString deviceName = instance.getKylinSaneOpenName();
+                                msg = tr("device ") + deviceName + tr(" has been disconnect.");
+                                retStatus = instance.getKylinSaneStatus();
+
+                                qDebug() << "test scanning end, status = " << retStatus;
+
+                                if (!retStatus) {
+                                    warnMsg(msg);
+                                    resultDetail(retStatus);
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+}
+
+void Widget::scanListResult(int ret)
+{
+    if (0 == ret) {
+        qDebug() << "test";
+    }
+}
+
 void CommonScanThread::run()
 {
     KylinSane &instance = KylinSane::getInstance();
+    qDebug() << "get sane status: " << instance.getKylinSaneStatus();
     do {
         qDebug() << "begin findScanDevice()";
         instance.findScanDevice();

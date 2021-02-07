@@ -354,6 +354,7 @@ void ScanSet::setKylinComboBox(bool curIndexChanged)
 
 /**
 * @brief setKylinComboBoxScanName 设置麒麟扫描组合框的扫描设备名
+* set textDevice while find scanners
  */
 void ScanSet::setKylinComboBoxScanDeviceName()
 {
@@ -375,6 +376,26 @@ void ScanSet::setKylinComboBoxScanDeviceName()
     strListDevice = instance.getKylinSaneNames();
     qDebug() << "sane names: " << strListDevice;
     setKylinComboBoxTextDeviceAttributes(textDevice, strListDevice);
+}
+
+/**
+ * @brief ScanSet::setkylinScanStatusFalse
+ * set connect scan device status false for widget.cpp
+ */
+void ScanSet::setkylinScanStatus(bool status)
+{
+    qDebug() << "set kylin scanner status: " << status;
+    KylinSane &instance = KylinSane::getInstance();
+    instance.setKylinSaneStatus(status);
+
+    if (!status)
+        scanExecFlag = 0;
+
+    // update
+//    QStringList strListDevice;
+//    // update textDevice will emit signal
+//    strListDevice << tr("No available device");
+//    setKylinComboBoxTextDeviceAttributes(textDevice, strListDevice);
 }
 
 void ScanSet::setKylinScanSetNotEnable()
@@ -898,11 +919,11 @@ void ScanSet::onTextDeviceCurrentTextChanged(QString device)
     status = instance.getKylinSaneStatus();
     if (status) {
         qDebug() << "open_device true";
-        scanFlag = 1;
+        scanOpenFlag = 1;
         emit openDeviceStatusSignal(true);
     } else {
         qDebug() << "open_device false";
-        scanFlag = 0;
+        scanOpenFlag = 0;
         emit openDeviceStatusSignal(false);
     }
 }
@@ -912,9 +933,11 @@ void ScanSet::modifyBtnSave()
     if (flag == 0) {
         // 进行OCR，存储文本
         flag = 1;
+        qDebug() << "btnSave text: " << btnSave;
         btnSave->setText(tr("Store text"));
     } else { // 另存为
         flag = 0;
+        qDebug() << "btnSave text: " << btnSave;
         btnSave->setText(tr("Save as"));
     }
 }
@@ -926,7 +949,7 @@ void ScanSet::onTextColorCurrentTextChanged(QString color)
     // Do not direct to return color, because color has been tr()
     if ( !QString::compare("黑白", color) || !QString::compare("Lineart", color) ) {
         instance.userInfo.color = "Lineart";
-    } else if ( !QString::compare("彩色", color) || !QString::compare("Lineart", color) ) {
+    } else if ( !QString::compare("彩色", color) || !QString::compare("Color", color) ) {
         instance.userInfo.color = "Color";
     } else {
         instance.userInfo.color = "Gray";

@@ -472,11 +472,19 @@ static SANE_Status getSaneDevices(const SANE_Device ***device_list)
 SANE_Status openSaneDevice(SANE_Device *device, SANE_Handle *sane_handle)
 {
     SANE_Status status = SANE_STATUS_INVAL;
+    KylinSane &instance = KylinSane::getInstance();
 
     qInfo() << "name = " << device->name
             << "model = " << device->model
             << "vendor = " << device->vendor
             << "type = " << device->type;
+
+    // just for one scan device
+    char name[512]={0};
+    snprintf(name, 512, "%s %s", device->vendor, device->model);
+    QString openname = QString(QLatin1String(name));
+    qInfo() << "device name:  " << openname;
+    instance.setKylinSaneOpenName(openname);
 
     status = sane_open(device->name, sane_handle);
     if (status)
@@ -1396,7 +1404,6 @@ void kylinNorScanOpenDevice(int index)
         sane_status = kylinDisplayAllScanParams(sane_handle);
 
         saneCancel(sane_handle);
-
         //sane_status = SANE_STATUS_GOOD;
     } while (0);
 
@@ -1456,6 +1463,11 @@ QStringList KylinSane::getKylinSaneColors()
     return devicesInfo.color;
 }
 
+QString KylinSane::getKylinSaneOpenName()
+{
+    return openDeviceInfo.openName;
+}
+
 void KylinSane::setKylinSaneStatus(bool status)
 {
     devicesInfo.status = status;
@@ -1484,6 +1496,19 @@ void KylinSane::setKylinSaneSizes(QStringList size)
 void KylinSane::setKylinSaneColors(QStringList color)
 {
     devicesInfo.color = color;
+}
+
+void KylinSane::setKylinSaneOpenName(QString name)
+{
+    openDeviceInfo.openName = name;
+}
+
+/** free sane resource
+ * Neglecting to call this function may result in some resources not being released properly.
+ */
+void KylinSane::saneExit()
+{
+    sane_exit();
 }
 
 /**
@@ -1579,4 +1604,19 @@ int KylinSane::startScanning(UserSelectedInfo info)
     saneCancel(instance.handle);
 
     return ret;
+}
+
+bool KylinSane::testScannerIsAlive(QString deviceName)
+{
+}
+
+void freeScanResource()
+{
+    KylinSane &instance = KylinSane::getInstance();
+    // finish scan
+    sane_cancel(instance.handle);
+    // close scan device
+    sane_close(instance.handle);
+    // release resource
+    sane_exit();
 }

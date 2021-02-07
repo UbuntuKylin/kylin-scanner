@@ -43,6 +43,7 @@ public:
 
     void setKylinComboBox(bool curIndexChanged);
     void setKylinComboBoxScanDeviceName();
+    void setkylinScanStatus(bool status);
     void setKylinScanSetNotEnable();
     void setKylinScanSetBtnNotEnable();
     void setKylinScanSetBtnEnable();
@@ -71,7 +72,8 @@ Q_SIGNALS:
     void openDeviceStatusSignal(bool);
 
 private:
-    int scanFlag = 0;
+    int scanOpenFlag = 0;
+    int scanExecFlag = 0;
     QStringList stylelist;
     QStringList iconthemelist;
     QGSettings *style_settings;
