@@ -7,6 +7,7 @@
 #include <QStyle>
 #include <QScrollBar>
 
+
 KYCAboutDialog::KYCAboutDialog(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::KYCAboutDialog)
@@ -46,6 +47,7 @@ KYCAboutDialog::KYCAboutDialog(QWidget *parent) :
     ui->btnClose->setIconSize(QSize(16, 16));
     ui->btnClose->installEventFilter(this);
     ui->btnClose->setFlat(true);
+    ui->labelSupport->setContextMenuPolicy(Qt::NoContextMenu); // no right click menu
 
     QScreen *screen = QGuiApplication::primaryScreen ();
     QRect screenRect =  screen->availableGeometry();
