@@ -110,6 +110,7 @@ private slots:
 Q_SIGNALS:
     void sendOrcBegin();
     void sendOrcEnd();
+    void sendScanAgain();
     void sendScanEnd(bool);
     void sendRectifyBegin();
     void sendRectifyEnd();

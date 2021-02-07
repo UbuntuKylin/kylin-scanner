@@ -411,6 +411,7 @@ void FuncBar::onBtnScanClicked()
     if (instance.getKylinSaneStatus() == true) {
         thread.start();
         qDebug() << "btnScan: " << btnScan->size() << btnScan->pos() << btnScan->geometry();
+        emit sendScanAgain();
 
         btnScan->hide();
         btnScan->resize(0, 0);

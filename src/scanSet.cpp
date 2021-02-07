@@ -942,6 +942,12 @@ void ScanSet::modifyBtnSave()
     }
 }
 
+void ScanSet::setOrcFlagInit()
+{
+    // Init btnSave text to save as
+    flag = 0;
+}
+
 void ScanSet::onTextColorCurrentTextChanged(QString color)
 {
     KylinSane &instance = KylinSane::getInstance();

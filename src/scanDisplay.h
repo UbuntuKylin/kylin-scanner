@@ -158,6 +158,7 @@ private:
 
 public slots:
     void onOrc();
+    void setOrcFlagStatus();
     void onScan(bool ret);
     void onRectify();
     void onBeautify();
