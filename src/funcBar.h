@@ -34,6 +34,9 @@
 #include <QMovie>
 #include <QTextDocument>
 #include <QMessageBox>
+#include <QFileInfo>
+#include <QFileInfoList>
+#include <QTimer>
 #include "kylinSane.h"
 #include "beauty.h"
 #include "theme.h"
@@ -69,7 +72,15 @@ public:
     void setStackClear();
     void warnMsg(QString msg);
 
+    QFileInfoList GetFileList(QString path);
+
 private:
+    QFileInfo fileinfo;
+    QString path;
+    int num;
+    int count;
+    QTimer *time;
+
     QStringList stylelist;
     QStringList iconthemelist;
     QGSettings *style_settings;
@@ -80,7 +91,7 @@ private:
     QPushButton *btnRectify;
     QPushButton *btnOrc;
     QPushButton *btnScan;
-    QMovie *movieScan; // 加载扫描动态图片GIF
+    //QMovie *movieScan; // 加载扫描动态图片GIF
     QLabel *labMovieScan; // 加载扫描动态图片标签
     QLabel *labNorScan;
     QLabel *labBeautify;
@@ -106,6 +117,7 @@ private slots:
     void onBtnBeautyClicked();
     void scanResult(int ret);
     void funcbar_style_changed(QString); // 系统主题样式变更
+    void showPictures();
 
 Q_SIGNALS:
     void sendOrcBegin();
