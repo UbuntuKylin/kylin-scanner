@@ -16,10 +16,12 @@
 *
 */
 
+#include <QDir>
 #include "funcBar.h"
 
 FuncBar::FuncBar(QWidget *parent)
     : QWidget(parent)
+    , time (new QTimer())
     , style_settings (new QGSettings(ORG_UKUI_STYLE))
     , icon_theme_settings (new QGSettings(ORG_UKUI_STYLE))
     , btnNorScan (new QPushButton())
@@ -27,7 +29,7 @@ FuncBar::FuncBar(QWidget *parent)
     , btnRectify (new QPushButton())
     , btnOrc (new QPushButton())
     , btnScan (new QPushButton())
-    , movieScan (new QMovie())
+    //, movieScan (new QMovie())
     , labMovieScan (new QLabel())
     , labNorScan (new QLabel())
     , labBeautify (new QLabel())
@@ -59,13 +61,18 @@ FuncBar::FuncBar(QWidget *parent)
     btnScan->setFixedSize(56, 56);
     btnScan->setText(tr("Scan"));
 
+    path = ":/icon/icon/scanning/";
+    num = GetFileList(path).size();
+    qDebug() << "num = " << num;
+    count = 0;
+
     labMovieScan->setFixedSize(56, 56);
     labMovieScan->hide();
-    movieScan->setFileName(":/icon/icon/scanner.gif");
-    movieScan->setCacheMode(QMovie::CacheAll);
-    QSize size = labMovieScan->size();
-    movieScan->setScaledSize(size);
-    labMovieScan->setMovie(movieScan);
+//    movieScan->setFileName(":/icon/icon/scanner.gif");
+//    movieScan->setCacheMode(QMovie::CacheAll);
+//    QSize size = labMovieScan->size();
+//    //movieScan->setScaledSize(size);
+    //labMovieScan->setMovie(movieScan);
 
     setFontSize(labNorScan, 10);
     setFontSize(labBeautify, 10);
@@ -218,6 +225,8 @@ FuncBar::FuncBar(QWidget *parent)
     connect(btnBeautify, SIGNAL(clicked()), this, SLOT(onBtnBeautyClicked()));
 
     connect(style_settings, SIGNAL(changed(QString)), this, SLOT(funcbar_style_changed(QString)));
+
+    connect(time,SIGNAL(timeout()),this,SLOT(showPictures()));
 }
 
 FuncBar::~FuncBar()
@@ -372,6 +381,22 @@ void FuncBar::warnMsg(QString msg)
     msgBox.exec();
 }
 
+QFileInfoList FuncBar::GetFileList(QString path)
+{
+    QDir dir(path);
+    QFileInfoList file_list = dir.entryInfoList(QDir::Files | QDir::Hidden | QDir::NoSymLinks);
+    QFileInfoList folder_list = dir.entryInfoList(QDir::Dirs | QDir::NoDotAndDotDot);
+
+    for(int i = 0; i != folder_list.size(); i++)
+    {
+         QString name = folder_list.at(i).absoluteFilePath();
+         QFileInfoList child_file_list = GetFileList(name);
+         file_list.append(child_file_list);
+    }
+
+    return file_list;
+}
+
 //QString orc_text;
 void FuncBar::onBtnOrcClicked()
 {
@@ -417,7 +442,9 @@ void FuncBar::onBtnScanClicked()
         btnScan->resize(0, 0);
         labMovieScan->resize(56, 56);
         labMovieScan->show();
-        movieScan->start();
+        time->start(100);
+        count = 0;
+        //movieScan->start();
 
         qDebug() << "scan()";
     }
@@ -489,7 +516,8 @@ void FuncBar::scanResult(int ret)
     btnScan->setText(tr("scan"));
     btnScan->setStyleSheet("QPushButton{background-color: rgb(232,160,73);border-radius:28px;color:rgb(232,232,232);}");
 
-    movieScan->stop();
+    //movieScan->stop();
+    time->stop();
     labMovieScan->resize(0, 0);
     labMovieScan->hide();
 
@@ -592,6 +620,22 @@ void FuncBar::funcbar_style_changed(QString)
                                        "QPushButton:checked{image: url(:/icon/icon/beautify_black.svg);border:none;background-color:#3D6BE5;border-radius:6px;}");
         }
     }
+}
+
+void FuncBar::showPictures()
+{
+    QImage image;
+    fileinfo = GetFileList(path).at(count);
+    qDebug() << "filepath = " << fileinfo.filePath();
+    if(!image.load(fileinfo.filePath()))
+        qDebug()<<"fail!";
+
+    image.scaled(labMovieScan->size(), Qt::KeepAspectRatio);
+    labMovieScan->setScaledContents(true);
+    labMovieScan->setPixmap(QPixmap::fromImage(image));
+    ++count;
+    if(count == num)
+        count = 0;
 }
 
 void ThreadScanFuncBar::run()
