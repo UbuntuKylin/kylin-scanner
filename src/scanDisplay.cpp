@@ -174,7 +174,7 @@ ScanDisplay::ScanDisplay(QWidget *parent)
  */
 void ScanDisplay::keyPressEvent(QKeyEvent *e)
 {
-    qDebug() << "key() = " << e->key();
+    //qDebug() << "key() = " << e->key();
     if ((e->key() == Qt::Key_Return || e->key() == Qt::Key_Enter  || e->key() == Qt::Key_Space)
             && (vStackedLayout->currentWidget() == widgetTailor)) {
         qDebug() << "key() = " << e->key();

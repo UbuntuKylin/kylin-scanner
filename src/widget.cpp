@@ -590,52 +590,52 @@ void Widget::usbDeviceRemoved(QString recvData)
     scanList->start("scanimage", argvList);
     //connect(scanList, SIGNAL(finished(int), this,  SLOT(scanListResult(int));
     connect(scanList, QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished),
-      [=](int exitCode, QProcess::ExitStatus exitStatus) {
-                qDebug() << "USB Remove exitCode = " << exitCode
-                         << "exitStatus = " << exitStatus;
-                if (0 == exitCode) {
-                    //QProcess *pProces = (QProcess *)sender();
-                    QString result = scanList->readAll();
-                    qDebug() << "result = " << result;
-                    KylinSane &instance = KylinSane::getInstance();
-                    QStringList strListDevice;
-                    strListDevice = instance.getKylinSaneNames();
-                    qDebug() << "current sane names: " << strListDevice
-                             << "userInfo.name= " << instance.userInfo.name
-                             << "size = " << strListDevice.size();
-                    for (int i=0; i<strListDevice.size(); ++i) {
-                        QString str = strListDevice.at(i).toLocal8Bit().constData();
-                        qDebug() << "i=" << i << "str = " << str;
-                        if (str == tr("No available device"))
-                            break;
-                        // There are two cases that we cannot find scanners throught `scanimage -L`:
-                        // case 1. no this scanner in system, which means this scanner has been disconnect
-                        // case 2. this scanner has been connect in kylin-scanner by sane_init
-                        if (!result.contains(str, Qt::CaseInsensitive)) {
-                            QString msg;
-                            bool retStatus;
-                            msg = tr("device ") + str + tr(" has been disconnect.");
-                            //warnMsg(msg);
-                            if (instance.userInfo.name == str) {
-                                qDebug() << "The user choose device: " << str << "has been disconnect!";
-                                // get argument again, because it cannot search using scanner while has opened it
+    [ = ](int exitCode, QProcess::ExitStatus exitStatus) {
+        qDebug() << "USB Remove exitCode = " << exitCode
+                 << "exitStatus = " << exitStatus;
+        if (0 == exitCode) {
+            //QProcess *pProces = (QProcess *)sender();
+            QString result = scanList->readAll();
+            qDebug() << "result = " << result;
+            KylinSane &instance = KylinSane::getInstance();
+            QStringList strListDevice;
+            strListDevice = instance.getKylinSaneNames();
+            qDebug() << "current sane names: " << strListDevice
+                     << "userInfo.name= " << instance.userInfo.name
+                     << "size = " << strListDevice.size();
+            for (int i = 0; i < strListDevice.size(); ++i) {
+                QString str = strListDevice.at(i).toLocal8Bit().constData();
+                qDebug() << "i=" << i << "str = " << str;
+                if (str == tr("No available device"))
+                    break;
+                // There are two cases that we cannot find scanners throught `scanimage -L`:
+                // case 1. no this scanner in system, which means this scanner has been disconnect
+                // case 2. this scanner has been connect in kylin-scanner by sane_init
+                if (!result.contains(str, Qt::CaseInsensitive)) {
+                    QString msg;
+                    bool retStatus;
+                    msg = tr("device ") + str + tr(" has been disconnect.");
+                    //warnMsg(msg);
+                    if (instance.userInfo.name == str) {
+                        qDebug() << "The user choose device: " << str << "has been disconnect!";
+                        // get argument again, because it cannot search using scanner while has opened it
 
-                                instance.openScanDevice(i);
-                                QString deviceName = instance.getKylinSaneOpenName();
-                                msg = tr("device ") + deviceName + tr(" has been disconnect.");
-                                retStatus = instance.getKylinSaneStatus();
+                        instance.openScanDevice(i);
+                        QString deviceName = instance.getKylinSaneOpenName();
+                        msg = tr("device ") + deviceName + tr(" has been disconnect.");
+                        retStatus = instance.getKylinSaneStatus();
 
-                                qDebug() << "test scanning end, status = " << retStatus;
+                        qDebug() << "test scanning end, status = " << retStatus;
 
-                                if (!retStatus) {
-                                    warnMsg(msg);
-                                    resultDetail(retStatus);
-                                }
-                            }
+                        if (!retStatus) {
+                            warnMsg(msg);
+                            resultDetail(retStatus);
                         }
                     }
                 }
-            });
+            }
+        }
+    });
 }
 
 void Widget::scanListResult(int ret)

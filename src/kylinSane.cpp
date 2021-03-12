@@ -350,8 +350,8 @@ SANE_Status doScan(const char *fileName)
 
     SANE_Status status = SANE_STATUS_GOOD;
     FILE *ofp = nullptr;
-    char path[PATH_MAX];
-    char part_path[PATH_MAX];
+    char path[PATH_MAX] = {0};
+    char part_path[PATH_MAX] = {0};
     gs_BufSize = (32 * 1024);
     gs_buf = static_cast<SANE_Byte *>(malloc(gs_BufSize));
 
@@ -368,7 +368,7 @@ SANE_Status doScan(const char *fileName)
 
     do {
         sprintf (path, "%s%s.pnm", dir.c_str(), fileName);
-        strcpy (part_path, path);
+        strncpy (part_path, path, sizeof(part_path) - 1);
         strcat (part_path, ".part");
         qInfo() << "part_path = " << part_path;
 
@@ -480,7 +480,7 @@ SANE_Status openSaneDevice(SANE_Device *device, SANE_Handle *sane_handle)
             << "type = " << device->type;
 
     // just for one scan device
-    char name[512]={0};
+    char name[512] = {0};
     snprintf(name, 512, "%s %s", device->vendor, device->model);
     QString openname = QString(QLatin1String(name));
     qInfo() << "device name:  " << openname;
@@ -683,8 +683,8 @@ static SANE_Status getOptionResolutions(SANE_Handle sane_handle, int optnum)
     }
 
     // 进行反向排序，有利于用户选择较低分辨率
-    qSort(resolutions.begin(), resolutions.end(), [](const QString& s1, const QString& s2) {
-            return s1.toInt() < s2.toInt();
+    qSort(resolutions.begin(), resolutions.end(), [](const QString & s1, const QString & s2) {
+        return s1.toInt() < s2.toInt();
     });
     resolutions << QObject::tr("Auto");
 

@@ -160,8 +160,8 @@ int main(int argc, char *argv[])
         XAtomHelper::getInstance()->setWindowMotifHint(w.winId(), hints);
 
         w.show();
-        w.move ((QApplication::desktop()->availableGeometry().width() - w.width())/2,
-               (QApplication::desktop()->availableGeometry().height() - w.height())/2);
+        w.move ((QApplication::desktop()->availableGeometry().width() - w.width()) / 2,
+                (QApplication::desktop()->availableGeometry().height() - w.height()) / 2);
         return app.exec();
     }
     return 0;
