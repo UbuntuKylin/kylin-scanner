@@ -1,3 +1,17 @@
+kylin-scanner (1.0.0-1kylin1k15) v101; urgency=medium
+
+  * [English] 
+  * Fix #25752: Modify rectify algorithm to handle scanner images
+  * Fix #42218: Fix 4k display while choose 200%
+  * Fix #28782: Add attach while select a mail client
+  *
+  * [中文]
+  * Fix #25752: 优化智能纠偏算法
+  * Fix #42218: 适配4k显示屏
+  * Fix #28782: 在邮件客户端中自动加载当前界面的图片附件
+
+ -- yushuoqi <yushuoqi@kylinos.cn>  Thu, 18 Mar 2021 18:36:25 +0800
+
 kylin-scanner (1.0.0-1kylin1k14) v101; urgency=medium
 
   * [English] 
@@ -6,7 +20,7 @@ kylin-scanner (1.0.0-1kylin1k14) v101; urgency=medium
   * [中文]
   * Fix #28817, 修改扫描按钮点击后扫描中的动图显示
 
- -- yusq <yusq@yushuoqi>  Fri, 12 Mar 2021 13:56:44 +0800
+ -- yushuoqi <yushuoqi@kylinos.cn>  Fri, 12 Mar 2021 13:56:44 +0800
 
 kylin-scanner (1.0.0-1kylin1k13) v101; urgency=medium
 
