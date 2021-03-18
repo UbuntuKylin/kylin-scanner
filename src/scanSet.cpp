@@ -811,6 +811,7 @@ void ScanSet::onBtnMailClicked()
         qDebug() << "after";
         dialog->exec();
     }
+    emit sendMailSignal();
 }
 
 void ScanSet::onBtnSaveClicked()

@@ -78,6 +78,7 @@ private:
 
 Q_SIGNALS:
     void openScanDeviceFinished(bool);
+    void sendMailInitSignal();
 
 private slots:
     void saveImage(QString fileName);
@@ -86,6 +87,7 @@ private slots:
     void scanResult(bool ret);
     void swichScanDeviceResult(bool ret);
     void scanningResultDetail(bool ret);
+    void sendMailPrepare();
     void setMaskClear();
     void setWindowBorderRadius();
     void style_changed(QString); // 系统主题风格变化

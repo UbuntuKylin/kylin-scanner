@@ -129,11 +129,15 @@ Widget::Widget(QWidget *parent)
     // 当切换扫描设备时的情况
     connect(pScanSet, SIGNAL(openDeviceStatusSignal(bool)), this, SLOT(swichScanDeviceResult(bool)));
 
+    // For send mail: send present pictures
+    connect(pScanSet, &ScanSet::sendMailSignal, pScandisplay, &ScanDisplay::onSaveImageNow);
+
     // 发现可用设备,点击扫描按钮后的操作,此过程可能会出现调用API失败，不可扫描的情况，需要额外处理
     connect(pFuncBar, SIGNAL(sendScanEnd(bool)), pScandisplay, SLOT(onScan(bool)));
     connect(pFuncBar, SIGNAL(sendScanEnd(bool)), this, SLOT(setScanSetBtnEnable(bool)));
     connect(pFuncBar, SIGNAL(sendScanEnd(bool)), this, SLOT(saveScanFile(bool)));
     connect(pFuncBar, SIGNAL(sendScanEnd(bool)), this, SLOT(scanningResultDetail(bool)));
+    connect(pFuncBar, SIGNAL(sendScanEnd(bool)), this, SLOT(sendMailPrepare()));
 
     // For rectify
     connect(pFuncBar, &FuncBar::sendRectifyBegin, pScandisplay, &ScanDisplay::onRectify);
@@ -510,6 +514,11 @@ void Widget::scanningResultDetail(bool ret)
         warnMsg(msg);
     }
 #endif
+}
+
+void Widget::sendMailPrepare()
+{
+    pScandisplay->initSavePresentImage();
 }
 
 void Widget::setMaskClear()

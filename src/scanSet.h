@@ -70,6 +70,7 @@ public:
 Q_SIGNALS:
     void saveImageSignal(QString);
     void openDeviceStatusSignal(bool);
+    void sendMailSignal();
 
 private:
     int scanOpenFlag = 0;

@@ -480,6 +480,20 @@ void ScanDisplay::initStyleTailor()
     }
 }
 
+/**
+ * @brief ScanDisplay::initSavePresentImage
+ * For init save present image to send mail
+ */
+void ScanDisplay::initSavePresentImage()
+{
+    if (vStackedLayout->currentWidget() == widgetNormal) {
+        qDebug() << "save widgetNormal jpg";
+        imgNormal->save(DEFAULT_SAVE_PRESENT_IMAGE_PATH);
+    } else {
+        imgEditLayout->save(DEFAULT_SAVE_PRESENT_IMAGE_PATH);
+    }
+}
+
 void ScanDisplay::rotating()
 {
 
@@ -664,6 +678,20 @@ void ScanDisplay::onScan(bool ret)
     vStackedLayout->setCurrentWidget(widgetNormal);
     *imgEditLayout = imgNormal->copy();
     setPixmapScaled(*imgEditLayout, labEditLayout);
+}
+
+/**
+ * @brief ScanDisplay::onSaveImageNow
+ * Save present display image with format(png), which could called by send mail
+ */
+void ScanDisplay::onSaveImageNow()
+{
+    if (vStackedLayout->currentWidget() == widgetNormal) {
+        qDebug() << "save widgetNormal jpg";
+        imgNormal->save(DEFAULT_SAVE_PRESENT_IMAGE_PATH);
+    } else {
+        imgEditLayout->save(DEFAULT_SAVE_PRESENT_IMAGE_PATH);
+    }
 }
 
 /**

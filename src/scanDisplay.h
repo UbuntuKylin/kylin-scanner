@@ -38,6 +38,8 @@
 #include "interruptDlg.h"
 #include "theme.h"
 
+#define DEFAULT_SAVE_PRESENT_IMAGE_PATH "/tmp/scanner/present_image.jpg"
+
 class myThread : public QThread
 {
     Q_OBJECT
@@ -103,6 +105,7 @@ public:
     void initStyle();
     void initStyleOrc();
     void initStyleTailor();
+    void initSavePresentImage();
 
 private:
     QStringList stylelist;
@@ -160,6 +163,7 @@ public slots:
     void onOrc();
     void setOrcFlagStatus();
     void onScan(bool ret);
+    void onSaveImageNow();
     void onRectify();
     void onBeautify();
     void switchPage();
