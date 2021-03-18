@@ -1,3 +1,13 @@
+kylin-scanner (1.0.0-1kylin1k14) v101; urgency=medium
+
+  * [English] 
+  * Fix #28817, Modify btnScan text while scanning
+  *
+  * [中文]
+  * Fix #28817, 修改扫描按钮点击后扫描中的动图显示
+
+ -- yusq <yusq@yushuoqi>  Fri, 12 Mar 2021 13:56:44 +0800
+
 kylin-scanner (1.0.0-1kylin1k13) v101; urgency=medium
 
   * [English]

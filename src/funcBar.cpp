@@ -29,7 +29,7 @@ FuncBar::FuncBar(QWidget *parent)
     , btnRectify (new QPushButton())
     , btnOrc (new QPushButton())
     , btnScan (new QPushButton())
-    //, movieScan (new QMovie())
+      //, movieScan (new QMovie())
     , labMovieScan (new QLabel())
     , labNorScan (new QLabel())
     , labBeautify (new QLabel())
@@ -226,7 +226,7 @@ FuncBar::FuncBar(QWidget *parent)
 
     connect(style_settings, SIGNAL(changed(QString)), this, SLOT(funcbar_style_changed(QString)));
 
-    connect(time,SIGNAL(timeout()),this,SLOT(showPictures()));
+    connect(time, SIGNAL(timeout()), this, SLOT(showPictures()));
 }
 
 FuncBar::~FuncBar()
@@ -387,11 +387,10 @@ QFileInfoList FuncBar::GetFileList(QString path)
     QFileInfoList file_list = dir.entryInfoList(QDir::Files | QDir::Hidden | QDir::NoSymLinks);
     QFileInfoList folder_list = dir.entryInfoList(QDir::Dirs | QDir::NoDotAndDotDot);
 
-    for(int i = 0; i != folder_list.size(); i++)
-    {
-         QString name = folder_list.at(i).absoluteFilePath();
-         QFileInfoList child_file_list = GetFileList(name);
-         file_list.append(child_file_list);
+    for (int i = 0; i != folder_list.size(); i++) {
+        QString name = folder_list.at(i).absoluteFilePath();
+        QFileInfoList child_file_list = GetFileList(name);
+        file_list.append(child_file_list);
     }
 
     return file_list;
@@ -626,15 +625,15 @@ void FuncBar::showPictures()
 {
     QImage image;
     fileinfo = GetFileList(path).at(count);
-    qDebug() << "filepath = " << fileinfo.filePath();
-    if(!image.load(fileinfo.filePath()))
-        qDebug()<<"fail!";
+    //qDebug() << "filepath = " << fileinfo.filePath();
+    if (!image.load(fileinfo.filePath()))
+        qDebug() << "fail!";
 
     image.scaled(labMovieScan->size(), Qt::KeepAspectRatio);
     labMovieScan->setScaledContents(true);
     labMovieScan->setPixmap(QPixmap::fromImage(image));
     ++count;
-    if(count == num)
+    if (count == num)
         count = 0;
 }
 

@@ -51,6 +51,7 @@ extern "C" {
 #define DESKTOPPATH "/usr/share/applications/"
 #define MAIL_WINDOW_WIDTH 320
 #define MAIL_WINDOW_HEIGHT 260
+#define DEFAULT_SAVE_PRESENT_IMAGE_PATH "/tmp/scanner/present_image.jpg"
 
 typedef struct _Applist {
     char *appid;

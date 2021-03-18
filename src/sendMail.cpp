@@ -404,7 +404,20 @@ void SendMail::openMail(QString name)
     str = str.section(" ", 0, 0);
     qDebug() << "exec str = " << str;
     QProcess *process = new QProcess();
-    process->start(str);
+
+    QStringList  arglists;
+    QString mailPicture = "/tmp/scanner/present_image.jpg";
+    if (str == "thunderbird") {
+        arglists << "-compose" << "attachment='/tmp/scanner/present_image.jpg'";
+    } else if (str == "claws-mail") {
+        arglists << "--attach" << mailPicture;
+    } else if (str == "mutt") {
+        arglists << "-a" << mailPicture;
+    } else {
+        arglists << " ";
+    }
+
+    process->start(str, arglists);
 }
 
 /*
