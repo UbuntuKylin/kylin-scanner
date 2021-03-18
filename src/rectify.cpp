@@ -59,31 +59,35 @@ double CalcDegree(const Mat &srcImage, Mat &dst)
     Canny(srcImage, midImage, 50, 200, 3);
     cvtColor(midImage, dstImage, COLOR_GRAY2BGR);
 
+    int Threshold = 300;
+
     //通过霍夫变换检测直线
+    // 600 dpi: Threshold = 750
     vector<Vec2f> lines;
-    HoughLines(midImage, lines, 1, CV_PI / 180, 300, 0,
+    HoughLines(midImage, lines, 1, CV_PI / 180, Threshold, 0,
                0);//第5个参数就是阈值，阈值越大，检测精度越高
     //qDebug() << lines.size() ;
 
-    //由于图像不同，阈值不好设定，因为阈值设定过高导致无法检测直线，阈值过低直线太多，速度很慢
-    //所以根据阈值由大到小设置了三个阈值，如果经过大量试验后，可以固定一个适合的阈值。
+    // 由于图像不同，阈值不好设定，因为阈值设定过高导致无法检测直线，阈值过低直线太多，速度很慢
+    // 所以根据阈值由大到小设置了三个阈值(300, 200, 100)，如果经过大量试验后，可以固定一个适合的阈值。
+    // While Threshold is too small, lines will be large(>5000).
+    // this will make rectify process slower,
+    // so we should judge lines.size();
+    while (lines.size() > 100 || lines.size() < 10) {
+        if (lines.size() >100)
+            Threshold += 300;
+        else if (lines.size() < 10)
+            Threshold -= 50;
 
-    if (!lines.size())
-        HoughLines(midImage, lines, 1, CV_PI / 180, 200, 0, 0);
+        HoughLines(midImage, lines, 1, CV_PI / 180, Threshold, 0, 0);
 
-    if (!lines.size())
-        HoughLines(midImage, lines, 1, CV_PI / 180, 150, 0, 0);
-
-    if (!lines.size())
-        HoughLines(midImage, lines, 1, CV_PI / 180, 100, 0, 0);
-
-    if (!lines.size())
-        HoughLines(midImage, lines, 1, CV_PI / 180, 50, 0, 0);
-
-    if (!lines.size()) {
-        qDebug() << "没有检测到直线！" ;
-        return ERROR;
+        if (Threshold <= 0) {
+            qDebug() << "没有检测到直线！" ;
+            return ERROR;
+        }
     }
+    qDebug() << "after while, Threshold = " << Threshold
+             << "lines.size() = " << lines.size();
 
     float sum = 0;
     int n = 0;
@@ -100,7 +104,7 @@ double CalcDegree(const Mat &srcImage, Mat &dst)
         pt1.y = cvRound(y0 + 1000 * (a));
         pt2.x = cvRound(x0 - 1000 * (-b));
         pt2.y = cvRound(y0 - 1000 * (a));
-        qDebug() << i << ", " << "DegreeTrans() = " << DegreeTrans (theta);
+        //qDebug() << i << ", " << "DegreeTrans() = " << DegreeTrans (theta);
 
         // 时常会遇到角度为10度返回内的图片，此时处理机制为默认已经高度校正，过滤该线条角度
         if (((DegreeTrans(theta) >= 80) && (DegreeTrans(theta) <= 95))
@@ -111,22 +115,26 @@ double CalcDegree(const Mat &srcImage, Mat &dst)
         }
 
         sum += theta;
-        qDebug() << "sum = " << sum;
+        //qDebug() << "sum = " << sum;
         line(dstImage, pt1, pt2, Scalar(55, 100, 195), 1, LINE_AA); //Scalar函数用于调节线段颜色
+        // mirror picture for deskew(rectify)
+        imwrite("/tmp/scanner/mirror.png", dstImage);
     }
 
     qDebug() << "sum = " << sum << "lines.size()" << lines.size () << "n = " << n;
     if (lines.size () - n == 0 || sum == 0)
         return 0.0;
 
-    float average = sum / (lines.size() -
-                           n); //对所有角度求平均，这样做旋转效果会更好
+    //对所有角度求平均，这样做旋转效果会更好
+    float average = sum / (lines.size() - n);
 
     double angle = DegreeTrans(average);
     qDebug() << "angle = " << angle;
 
-    angle = angle -
-            90; // 经过多次反复测试，此处应该减90，整个线条接近水平，之后可以旋转进行校正。
+    // angel < 0: clockwise rotation
+    // 经过多次反复测试，此处应该减90，整个线条接近水平，之后可以旋转进行校正。
+    angle = angle - 90;
+
     /*
     if (angle >= 135)
         angle = angle - 180;
@@ -134,13 +142,13 @@ double CalcDegree(const Mat &srcImage, Mat &dst)
         angle =angle - 90;
     else if (angle >= 45)
         angle =  angle - 90;
-        */
+    */
+
     qDebug() << "angle = " << angle;
 
     rotateImage(dstImage, dst, angle);
     return angle;
 }
-
 
 int ImageRectify(const char *pInFileName)
 {
