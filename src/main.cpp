@@ -114,12 +114,14 @@ void customOutputMessage(QtMsgType type, const QMessageLogContext &context, cons
 
 int main(int argc, char *argv[])
 {
-    if (getScreenWidth() > 2560) {
 #if (QT_VERSION >= QT_VERSION_CHECK(5, 6, 0))
         QApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
         QApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
 #endif
-    }
+
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 14, 0))
+  QApplication::setHighDpiScaleFactorRoundingPolicy(Qt::HighDpiScaleFactorRoundingPolicy::PassThrough);
+#endif
 
     verifyScannerDir();
     qInstallMessageHandler(customOutputMessage);
