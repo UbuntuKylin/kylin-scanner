@@ -1,3 +1,13 @@
+kylin-scanner (1.0.0-1kylin1k16) v101; urgency=medium
+
+  * [English] 
+  * Fix #40766, Add message notification while open application again
+  *
+  * [中文]
+  * Fix #40766, 增加再次打开应用的信息提示
+
+ -- yushuoqi <yushuoqi@kylinos.cn>  Wed, 24 Mar 2021 19:50:55 +0800
+
 kylin-scanner (1.0.0-1kylin1k15) v101; urgency=medium
 
   * [English] 
