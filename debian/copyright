@@ -28,6 +28,7 @@ Files: Doxyfile
        src/src.pri
        src/beauty.cpp
        src/beauty.h
+       src/common.h
        src/realTimelbl.cpp
        src/realTimelbl.h
        src/daemondbus.cpp

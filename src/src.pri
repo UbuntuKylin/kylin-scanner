@@ -42,6 +42,7 @@ SOURCES += \
     xatomhelper.cpp
 
 HEADERS += \
+    $$PWD/common.h \
     $$PWD/daemondbus.h \
     $$PWD/kycaboutdialog.h \
     $$PWD/kycsavefiledialog.h \
