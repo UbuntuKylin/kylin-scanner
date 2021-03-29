@@ -16,10 +16,33 @@
 *
 */
 
-#include "theme.h"
+#ifndef TIMEWAIT_H
+#define TIMEWAIT_H
 
+#include <QWidget>
+#include <QtGui>
+#include <QQueue>
+#include <QLabel>
+#include <QPainter>
+#include <QPicture>
 
-KYCThemeWidget::KYCThemeWidget(QWidget *parent) : QWidget(parent)
+class KYCRealTimeLabel : public QLabel
 {
+    Q_OBJECT
 
-}
+public:
+    explicit KYCRealTimeLabel(QWidget *parent = nullptr);
+    ~KYCRealTimeLabel();
+
+    int width;
+    int height;
+    const uchar *data;    //图像信息
+
+protected:
+    void paintEvent(QPaintEvent *event);
+
+signals:
+
+};
+
+#endif // TIMEWAIT_H

@@ -1,3 +1,13 @@
+kylin-scanner (1.0.0-17) v101; urgency=medium
+
+  * [English] 
+  * Fix #41090, Modify chinese translation for about dialog
+  *
+  * [中文]
+  * Fix #41090, 关于中，邮箱前文字建议修改为“服务与支持团队”
+
+ -- yushuoqi <yushuoqi@kylinos.cn>  Mon, 29 Mar 2021 14:00:38 +0800
+
 kylin-scanner (1.0.0-1kylin1k16) v101; urgency=medium
 
   * [English] 

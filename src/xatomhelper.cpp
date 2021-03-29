@@ -23,17 +23,17 @@
 #include <X11/X.h>
 #include <X11/Xatom.h>
 
-static XAtomHelper *global_instance = nullptr;
+static KYCXAtomHelperObject *global_instance = nullptr;
 
-XAtomHelper *XAtomHelper::getInstance()
+KYCXAtomHelperObject *KYCXAtomHelperObject::getInstance()
 {
     if (!global_instance)
-        global_instance = new XAtomHelper;
+        global_instance = new KYCXAtomHelperObject;
 
     return global_instance;
 }
 
-bool XAtomHelper::isFrameLessWindow(int winId)
+bool KYCXAtomHelperObject::isFrameLessWindow(int winId)
 {
     auto hints = getInstance()->getWindowMotifHint(winId);
     if (hints.flags == MWM_HINTS_DECORATIONS && hints.functions == 1)
@@ -42,12 +42,12 @@ bool XAtomHelper::isFrameLessWindow(int winId)
     return false;
 }
 
-bool XAtomHelper::isWindowDecorateBorderOnly(int winId)
+bool KYCXAtomHelperObject::isWindowDecorateBorderOnly(int winId)
 {
     return isWindowMotifHintDecorateBorderOnly(getInstance()->getWindowMotifHint(winId));
 }
 
-bool XAtomHelper::isWindowMotifHintDecorateBorderOnly(const MotifWmHints &hint)
+bool KYCXAtomHelperObject::isWindowMotifHintDecorateBorderOnly(const MotifWmHints &hint)
 {
     bool isDeco = false;
     if (hint.flags & MWM_HINTS_DECORATIONS && hint.flags != MWM_HINTS_DECORATIONS)
@@ -57,13 +57,13 @@ bool XAtomHelper::isWindowMotifHintDecorateBorderOnly(const MotifWmHints &hint)
     return isDeco;
 }
 
-bool XAtomHelper::isUKUICsdSupported()
+bool KYCXAtomHelperObject::isUKUICsdSupported()
 {
     // fixme:
     return false;
 }
 
-bool XAtomHelper::isUKUIDecorationWindow(int winId)
+bool KYCXAtomHelperObject::isUKUIDecorationWindow(int winId)
 {
     if (m_ukuiDecorationAtion == None)
         return false;
@@ -89,7 +89,7 @@ bool XAtomHelper::isUKUIDecorationWindow(int winId)
     return isUKUIDecoration;
 }
 
-UnityCorners XAtomHelper::getWindowBorderRadius(int winId)
+UnityCorners KYCXAtomHelperObject::getWindowBorderRadius(int winId)
 {
     UnityCorners corners;
 
@@ -120,7 +120,7 @@ UnityCorners XAtomHelper::getWindowBorderRadius(int winId)
     return corners;
 }
 
-void XAtomHelper::setWindowBorderRadius(int winId, const UnityCorners &data)
+void KYCXAtomHelperObject::setWindowBorderRadius(int winId, const UnityCorners &data)
 {
     if (m_unityBorderRadiusAtom == None)
         return;
@@ -132,7 +132,7 @@ void XAtomHelper::setWindowBorderRadius(int winId, const UnityCorners &data)
                     sizeof (corners) / sizeof (corners[0]));
 }
 
-void XAtomHelper::setWindowBorderRadius(int winId, int topLeft, int topRight, int bottomLeft,
+void KYCXAtomHelperObject::setWindowBorderRadius(int winId, int topLeft, int topRight, int bottomLeft,
                                         int bottomRight)
 {
     if (m_unityBorderRadiusAtom == None)
@@ -145,7 +145,7 @@ void XAtomHelper::setWindowBorderRadius(int winId, int topLeft, int topRight, in
                     sizeof (corners) / sizeof (corners[0]));
 }
 
-void XAtomHelper::setUKUIDecoraiontHint(int winId, bool set)
+void KYCXAtomHelperObject::setUKUIDecoraiontHint(int winId, bool set)
 {
     if (m_ukuiDecorationAtion == None)
         return;
@@ -154,7 +154,7 @@ void XAtomHelper::setUKUIDecoraiontHint(int winId, bool set)
                     XCB_PROP_MODE_REPLACE, (const unsigned char *) &set, 1);
 }
 
-void XAtomHelper::setWindowMotifHint(int winId, const MotifWmHints &hints)
+void KYCXAtomHelperObject::setWindowMotifHint(int winId, const MotifWmHints &hints)
 {
     if (m_unityBorderRadiusAtom == None)
         return;
@@ -163,7 +163,7 @@ void XAtomHelper::setWindowMotifHint(int winId, const MotifWmHints &hints)
                     32, XCB_PROP_MODE_REPLACE, (const unsigned char *)&hints, sizeof (MotifWmHints) / sizeof (ulong));
 }
 
-MotifWmHints XAtomHelper::getWindowMotifHint(int winId)
+MotifWmHints KYCXAtomHelperObject::getWindowMotifHint(int winId)
 {
     MotifWmHints hints;
 
@@ -190,7 +190,7 @@ MotifWmHints XAtomHelper::getWindowMotifHint(int winId)
     return hints;
 }
 
-XAtomHelper::XAtomHelper(QObject *parent) : QObject(parent)
+KYCXAtomHelperObject::KYCXAtomHelperObject(QObject *parent) : QObject(parent)
 {
     if (!QX11Info::isPlatformX11())
         return;
@@ -200,13 +200,13 @@ XAtomHelper::XAtomHelper(QObject *parent) : QObject(parent)
     m_ukuiDecorationAtion = XInternAtom(QX11Info::display(), "_KWIN_UKUI_DECORAION", false);
 }
 
-Atom XAtomHelper::registerUKUICsdNetWmSupportAtom()
+Atom KYCXAtomHelperObject::registerUKUICsdNetWmSupportAtom()
 {
     // fixme:
     return None;
 }
 
-void XAtomHelper::unregisterUKUICsdNetWmSupportAtom()
+void KYCXAtomHelperObject::unregisterUKUICsdNetWmSupportAtom()
 {
     // fixme:
 }

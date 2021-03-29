@@ -119,12 +119,12 @@ void oneClickBeauty(const char *filename);
 
 
 
-class Beauty : public QWidget
+class KYCBeautyWidget : public QWidget
 {
     Q_OBJECT
 
 public:
-    explicit Beauty(QWidget *parent = nullptr);
+    explicit KYCBeautyWidget(QWidget *parent = nullptr);
 
 };
 

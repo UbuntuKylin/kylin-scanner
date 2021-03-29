@@ -16,7 +16,7 @@
 *
 */
 #include "widget.h"
-#include "singleApplication.h"
+#include "singleapplication.h"
 #include "xatomhelper.h"
 #include "common.h"
 #include <QApplication>
@@ -52,37 +52,39 @@ void verifyScannerDir()
     }
 }
 
-void myMessageOutput(QtMsgType type, const QMessageLogContext &context, const QString &msg)
+void KYCMessageOutput(QtMsgType type, const QMessageLogContext &context, const QString &msg)
 {
     static QMutex mutex;
     mutex.lock();
 
     QByteArray localMsg = msg.toLocal8Bit();
+    QFileInfo filePath(context.file);
+    QString context_info = QString("%1:%2").arg(filePath.fileName()).arg(context.line);
 
     QString strMsg("");
     switch(type)
     {
     case QtDebugMsg:
-        strMsg = QString("Debug  ");
+        strMsg = QString("Debug:");
         break;
     case QtWarningMsg:
-        strMsg = QString("Warning  ");
+        strMsg = QString("Warning:");
         break;
     case QtCriticalMsg:
-        strMsg = QString("Critical  ");
+        strMsg = QString("Critical:");
         break;
     case QtFatalMsg:
-        strMsg = QString("Fatal  ");
+        strMsg = QString("Fatal:");
         break;
     case QtInfoMsg:
-        strMsg = QString("Info  ");
+        strMsg = QString("Info:");
         break;
     }
 
     // Message format
     QString strDateTime = QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss ddd");
-    QString strMessage = QString("[%1] [%2:%3]: %4")
-            .arg(strDateTime).arg(context.function).arg(context.line).arg(localMsg.constData());
+    QString strMessage = QString("%1 %2 %3: %4")
+            .arg(strDateTime).arg(strMsg).arg(context_info).arg(localMsg.constData());
 
     QFile file(LOGFILE_PATH);
     // If not open file correctly, maybe logfile's permission(rwx) are limited.
@@ -99,7 +101,7 @@ void myMessageOutput(QtMsgType type, const QMessageLogContext &context, const QS
                         | QFileDevice::ReadOther | QFileDevice::WriteOther);
 
     QTextStream stream(&file);
-    stream << strMsg << strMessage << "\r\n";
+    stream << strMessage << "\r\n";
     file.flush();
     file.close();
 
@@ -377,7 +379,7 @@ int main(int argc, char *argv[])
 #endif
 
     verifyScannerDir();
-    qInstallMessageHandler(myMessageOutput);
+    qInstallMessageHandler(KYCMessageOutput);
     //qInstallMessageHandler(customOutputMessage);
     qDebug() << "Init";
 
@@ -491,14 +493,14 @@ int main(int argc, char *argv[])
 
         doWrite(userNow, pidNow);
 
-        Widget w;
+        KYCWidget w;
         //app.w = &w; // Need by SingleApplication class
 
         MotifWmHints hints;
         hints.flags = MWM_HINTS_FUNCTIONS | MWM_HINTS_DECORATIONS;
         hints.functions = MWM_FUNC_ALL;
         hints.decorations = MWM_DECOR_BORDER;
-        XAtomHelper::getInstance()->setWindowMotifHint(w.winId(), hints);
+        KYCXAtomHelperObject::getInstance()->setWindowMotifHint(w.winId(), hints);
 
         w.show();
         w.move ((QApplication::desktop()->availableGeometry().width() - w.width()) / 2,

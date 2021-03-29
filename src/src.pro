@@ -20,7 +20,7 @@ QT += core gui network printsupport concurrent KWindowSystem dbus x11extras
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-VERSION = 1.0.16
+VERSION = 1.0.0-17
 TARGET = kylin-scanner
 TEMPLATE = app
 

@@ -17,55 +17,55 @@
 #-------------------------------------------------
 
 SOURCES += \
+    $$PWD/about.cpp \
+    $$PWD/customcombobox.cpp \
     $$PWD/daemondbus.cpp \
-    $$PWD/kycaboutdialog.cpp \
-    $$PWD/kycsavefiledialog.cpp \
+    $$PWD/deskew.cpp \
+    $$PWD/display.cpp \
+    $$PWD/functionbar.cpp \
+    $$PWD/interrupt.cpp \
+    $$PWD/sane.cpp \
+    $$PWD/savefile.cpp \
+    $$PWD/sendmail.cpp \
+    $$PWD/settings.cpp \
+    $$PWD/singleapplication.cpp \
+    $$PWD/tailor.cpp \
+    $$PWD/timewait.cpp \
+    $$PWD/titlebar.cpp \
     $$PWD/usb.cpp \
-    $$PWD/usbhotplugthread.cpp \
+    $$PWD/usbhotplug.cpp \
+    $$PWD/watermark.cpp \
     beauty.cpp \
-    funcBar.cpp \
-    interruptDlg.cpp \
-    kylinCmb.cpp \
-    kylinSane.cpp \
         main.cpp \
-    realTimelbl.cpp \
-    rectify.cpp \
-    scanDisplay.cpp \
-    scanSet.cpp \
-    sendMail.cpp \
-    singleApplication.cpp \
-    tailorLabel.cpp \
     theme.cpp \
-    titleBar.cpp \
-    waterMarkDlg.cpp \
         widget.cpp \
     xatomhelper.cpp
 
 HEADERS += \
+    $$PWD/about.h \
     $$PWD/common.h \
+    $$PWD/customcombobox.h \
     $$PWD/daemondbus.h \
-    $$PWD/kycaboutdialog.h \
-    $$PWD/kycsavefiledialog.h \
+    $$PWD/deskew.h \
+    $$PWD/display.h \
+    $$PWD/functionbar.h \
+    $$PWD/interrupt.h \
+    $$PWD/sane.h \
+    $$PWD/savefile.h \
+    $$PWD/sendmail.h \
+    $$PWD/settings.h \
+    $$PWD/singleapplication.h \
+    $$PWD/tailor.h \
+    $$PWD/timewait.h \
+    $$PWD/titlebar.h \
     $$PWD/usb.h \
-    $$PWD/usbhotplugthread.h \
+    $$PWD/usbhotplug.h \
+    $$PWD/watermark.h \
     beauty.h \
-    funcBar.h \
-    interruptDlg.h \
-    kylinCmb.h \
-    kylinSane.h \
-    realTimelbl.h \
-    rectify.h \
-    scanDisplay.h \
-    scanSet.h \
-    sendMail.h \
-    singleApplication.h \
-    tailorLabel.h \
     theme.h \
-    titleBar.h \
-    waterMarkDlg.h \
         widget.h \
     xatomhelper.h
 
 FORMS += \
-    $$PWD/kycaboutdialog.ui
+    $$PWD/about.ui
 

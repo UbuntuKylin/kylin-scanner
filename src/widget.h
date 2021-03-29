@@ -24,16 +24,16 @@
 #include <QSplitter>
 #include <QLine>
 #include <QString>
-#include "scanDisplay.h"
-#include "scanSet.h"
-#include "titleBar.h"
+#include "display.h"
+#include "settings.h"
+#include "titlebar.h"
 #include "theme.h"
-#include "usbhotplugthread.h"
+#include "usbhotplug.h"
 
 #define MAINWINDOW_WIDTH 860
 #define MAINWINDOW_HEIGHT 680
 
-class CommonScanThread : public QThread
+class KYCCommonScanThread : public QThread
 {
     Q_OBJECT
 public:
@@ -45,13 +45,13 @@ Q_SIGNALS:
     void scanFinished(bool);
 };
 
-class Widget : public QWidget
+class KYCWidget : public QWidget
 {
     Q_OBJECT
 
 public:
-    Widget(QWidget *parent = 0);
-    ~Widget();
+    KYCWidget(QWidget *parent = 0);
+    ~KYCWidget();
 
     void setPdfSize(QPdfWriter *pdfWriter, QString size);
     void saveToPdf(QImage img, QString pathName);
@@ -65,16 +65,16 @@ private:
     QGSettings *icon_theme_settings;
     QStringList stylelist;
     QStringList iconthemelist;
-    TitleBar *pTitleBar;
+    KYCTitleBarDialog *pTitleBar;
     QFrame *line;
-    FuncBar *pFuncBar;
-    ScanSet *pScanSet;
-    ScanDisplay *pScandisplay;
+    KYCFunctionBarWidget *pFuncBar;
+    KYCScanSettingsWidget *pScanSet;
+    KYCScanDisplayWidget *pScandisplay;
     QHBoxLayout *pHboxLayout;
     QVBoxLayout *pLayout;
 
-    CommonScanThread thread;
-    USBHotplugThread usbThread;
+    KYCCommonScanThread thread;
+    KYCUsbHotplugThread usbThread;
 
 Q_SIGNALS:
     void openScanDeviceFinished(bool);

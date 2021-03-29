@@ -16,10 +16,23 @@
 *
 */
 
-#include "theme.h"
+#ifndef USBHOTPLUG_H
+#define USBHOTPLUG_H
 
+#include <QObject>
+#include <QThread>
+#include <QString>
 
-KYCThemeWidget::KYCThemeWidget(QWidget *parent) : QWidget(parent)
+class KYCUsbHotplugThread : public QThread
 {
+    Q_OBJECT
+public:
+    KYCUsbHotplugThread();
+    void run() Q_DECL_OVERRIDE;
 
-}
+Q_SIGNALS:
+    void usbRemove(QString);
+    void usbAdd(QString);
+};
+
+#endif // USBHOTPLUG_H

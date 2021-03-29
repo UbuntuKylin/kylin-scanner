@@ -18,7 +18,7 @@
 
 #include "beauty.h"
 
-Beauty::Beauty(QWidget *parent) : QWidget(parent)
+KYCBeautyWidget::KYCBeautyWidget(QWidget *parent) : QWidget(parent)
 {
 
 }
