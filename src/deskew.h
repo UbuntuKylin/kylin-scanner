@@ -16,10 +16,22 @@
 *
 */
 
-#include "theme.h"
+#ifndef DESKEW_H
+#define DESKEW_H
+
+#include <cmath>
+#include <iostream>
+#include <opencv2/imgproc.hpp>
+#include <opencv2/highgui.hpp>
+#include <QImage>
+#include <QPixmap>
+#include <QDebug>
+using namespace cv;
+using namespace std;
+
+#define ERROR 1234
 
 
-KYCThemeWidget::KYCThemeWidget(QWidget *parent) : QWidget(parent)
-{
+int ImageRectify(const char *pInFileName);
 
-}
+#endif // DESKEW_H

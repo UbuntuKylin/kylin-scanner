@@ -16,10 +16,32 @@
 *
 */
 
-#include "theme.h"
+#ifndef SAVEFILE_H
+#define SAVEFILE_H
 
+#include <QWidget>
+#include <QFileDialog>
+#include <QPoint>
 
-KYCThemeWidget::KYCThemeWidget(QWidget *parent) : QWidget(parent)
+class KYCSaveFileDialog : public QFileDialog
 {
+    Q_OBJECT
+public:
+    explicit KYCSaveFileDialog(QWidget *parent = nullptr);
 
-}
+    // flag = 1: ocr dialog
+    explicit KYCSaveFileDialog(QWidget *parent = nullptr, int flag = 0,
+                               QString filename = nullptr, QString titlename = nullptr);
+
+    QString getFileName();
+    QString getFileType();
+
+    void kycSetDirectory(QString directory);
+    void kycSetFilename(QString filename);
+
+private:
+    QString filetype;
+    QString initFilename;
+};
+
+#endif // SAVEFILE_H

@@ -18,7 +18,7 @@
 
 #include "daemondbus.h"
 
-int DaemonDbus::daemonIsNotRunning()
+int KYCDaemonDbusObject::daemonIsNotRunning()
 {
     char service_name[SERVICE_NAME_SIZE];
     memset(service_name, 0, SERVICE_NAME_SIZE);
@@ -31,7 +31,7 @@ int DaemonDbus::daemonIsNotRunning()
     return reply.value() == "";
 }
 
-void DaemonDbus::showGuide(QString appName)
+void KYCDaemonDbusObject::showGuide(QString appName)
 {
     qDebug() << Q_FUNC_INFO << appName;
     bool bRet  = false;

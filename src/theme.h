@@ -44,11 +44,11 @@
 #define ICON_THEME_MENU "open-menu-symbolic"
 #define ICON_THEME_RESTORE "window-restore-symbolic"
 
-class Theme : public QWidget
+class KYCThemeWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit Theme(QWidget *parent = nullptr);
+    explicit KYCThemeWidget(QWidget *parent = nullptr);
 
 signals:
 

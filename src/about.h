@@ -16,10 +16,30 @@
 *
 */
 
-#include "theme.h"
+#ifndef ABOUT_H
+#define ABOUT_H
 
+#include <QDialog>
 
-KYCThemeWidget::KYCThemeWidget(QWidget *parent) : QWidget(parent)
-{
-
+namespace Ui {
+class KYCAboutDialog;
 }
+
+class KYCAboutDialog : public QDialog
+{
+    Q_OBJECT
+
+public:
+    explicit KYCAboutDialog(QWidget *parent = nullptr);
+    ~KYCAboutDialog();
+protected:
+    void paintEvent(QPaintEvent *event) Q_DECL_OVERRIDE;
+
+private slots:
+private:
+    int m_iHeight;
+private:
+    Ui::KYCAboutDialog *ui;
+};
+
+#endif // ABOUT_H

@@ -16,8 +16,8 @@
 *
 */
 
-#ifndef DAEMONIPCDBUS_H
-#define DAEMONIPCDBUS_H
+#ifndef DAEMONDBUS_H
+#define DAEMONDBUS_H
 
 #define KYLIN_USER_GUIDE_PATH "/"
 
@@ -38,14 +38,14 @@
 #include <unistd.h>
 #include <sys/types.h>
 
-class DaemonDbus : public QObject
+class KYCDaemonDbusObject : public QObject
 {
     Q_OBJECT
     // 定义Interface名称为com.scorpio.test.value
     // Q_CLASSINFO("D-Bus Interface", "com.scorpio.test.value")
 public:
 
-    DaemonDbus() {}
+    KYCDaemonDbusObject() {}
 
 public slots:
 
@@ -54,4 +54,4 @@ public slots:
 
 };
 
-#endif // DAEMONIPCDBUS_H
+#endif // DAEMONDBUS_H

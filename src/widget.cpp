@@ -25,15 +25,15 @@
 
 bool device = false;
 
-Widget::Widget(QWidget *parent)
+KYCWidget::KYCWidget(QWidget *parent)
     : QWidget(parent)
     , style_settings (new QGSettings(ORG_UKUI_STYLE))
     , icon_theme_settings (new QGSettings(ORG_UKUI_STYLE))
-    , pTitleBar (new TitleBar())
+    , pTitleBar (new KYCTitleBarDialog())
     , line (new QFrame())
-    , pFuncBar (new  FuncBar())
-    , pScanSet (new ScanSet())
-    , pScandisplay (new ScanDisplay())
+    , pFuncBar (new  KYCFunctionBarWidget())
+    , pScanSet (new KYCScanSettingsWidget())
+    , pScandisplay (new KYCScanDisplayWidget())
     , pHboxLayout (new QHBoxLayout())
     , pLayout (new QVBoxLayout())
 {
@@ -105,15 +105,15 @@ Widget::Widget(QWidget *parent)
     setLayout(pLayout);
 
     // For save
-    connect(pScanSet, &ScanSet::saveImageSignal, this, &Widget::saveImage);
+    connect(pScanSet, &KYCScanSettingsWidget::saveImageSignal, this, &KYCWidget::saveImage);
 
     // For ORC
-    connect(pFuncBar, &FuncBar::sendOrcBegin, pScandisplay, &ScanDisplay::onOrc);
-    connect(pFuncBar, &FuncBar::sendOrcEnd, pScandisplay, &ScanDisplay::onOrc);
-    connect(pFuncBar, &FuncBar::sendScanAgain, pScandisplay, &ScanDisplay::setOrcFlagStatus);
-    connect(pFuncBar, &FuncBar::sendOrcBegin, pScanSet, &ScanSet::modifyBtnSave);
-    connect(pFuncBar, &FuncBar::sendOrcEnd, pScanSet, &ScanSet::modifyBtnSave);
-    connect(pFuncBar, &FuncBar::sendScanAgain, pScanSet, &ScanSet::setOrcFlagInit);
+    connect(pFuncBar, &KYCFunctionBarWidget::sendOrcBegin, pScandisplay, &KYCScanDisplayWidget::onOrc);
+    connect(pFuncBar, &KYCFunctionBarWidget::sendOrcEnd, pScandisplay, &KYCScanDisplayWidget::onOrc);
+    connect(pFuncBar, &KYCFunctionBarWidget::sendScanAgain, pScandisplay, &KYCScanDisplayWidget::setOrcFlagStatus);
+    connect(pFuncBar, &KYCFunctionBarWidget::sendOrcBegin, pScanSet, &KYCScanSettingsWidget::modifyBtnSave);
+    connect(pFuncBar, &KYCFunctionBarWidget::sendOrcEnd, pScanSet, &KYCScanSettingsWidget::modifyBtnSave);
+    connect(pFuncBar, &KYCFunctionBarWidget::sendScanAgain, pScanSet, &KYCScanSettingsWidget::setOrcFlagInit);
 
 
     // 文件扫描成功后默认显示全部编辑框
@@ -130,7 +130,7 @@ Widget::Widget(QWidget *parent)
     connect(pScanSet, SIGNAL(openDeviceStatusSignal(bool)), this, SLOT(swichScanDeviceResult(bool)));
 
     // For send mail: send present pictures
-    connect(pScanSet, &ScanSet::sendMailSignal, pScandisplay, &ScanDisplay::onSaveImageNow);
+    connect(pScanSet, &KYCScanSettingsWidget::sendMailSignal, pScandisplay, &KYCScanDisplayWidget::onSaveImageNow);
 
     // 发现可用设备,点击扫描按钮后的操作,此过程可能会出现调用API失败，不可扫描的情况，需要额外处理
     connect(pFuncBar, SIGNAL(sendScanEnd(bool)), pScandisplay, SLOT(onScan(bool)));
@@ -140,15 +140,15 @@ Widget::Widget(QWidget *parent)
     connect(pFuncBar, SIGNAL(sendScanEnd(bool)), this, SLOT(sendMailPrepare()));
 
     // For rectify
-    connect(pFuncBar, &FuncBar::sendRectifyBegin, pScandisplay, &ScanDisplay::onRectify);
-    connect(pFuncBar, &FuncBar::sendRectifyEnd, pScandisplay, &ScanDisplay::onRectify);
+    connect(pFuncBar, &KYCFunctionBarWidget::sendRectifyBegin, pScandisplay, &KYCScanDisplayWidget::onRectify);
+    connect(pFuncBar, &KYCFunctionBarWidget::sendRectifyEnd, pScandisplay, &KYCScanDisplayWidget::onRectify);
 
     // For beauty
-    connect(pFuncBar, &FuncBar::sendBeautifyBegin, pScandisplay, &ScanDisplay::onBeautify);
-    connect(pFuncBar, &FuncBar::sendBeautifyEnd, pScandisplay, &ScanDisplay::onBeautify);
+    connect(pFuncBar, &KYCFunctionBarWidget::sendBeautifyBegin, pScandisplay, &KYCScanDisplayWidget::onBeautify);
+    connect(pFuncBar, &KYCFunctionBarWidget::sendBeautifyEnd, pScandisplay, &KYCScanDisplayWidget::onBeautify);
 
-    connect(pTitleBar, &TitleBar::isNormal, this, &Widget::setWindowBorderRadius);
-    connect(pTitleBar, &TitleBar::isMax, this, &Widget::setMaskClear);
+    connect(pTitleBar, &KYCTitleBarDialog::isNormal, this, &KYCWidget::setWindowBorderRadius);
+    connect(pTitleBar, &KYCTitleBarDialog::isMax, this, &KYCWidget::setMaskClear);
 
     // For white and black style
     connect(style_settings, SIGNAL(changed(QString)), this, SLOT(style_changed(QString)));
@@ -157,7 +157,7 @@ Widget::Widget(QWidget *parent)
     connect(icon_theme_settings, SIGNAL(changed(QString)), this, SLOT(icon_theme_changed(QString)));
 }
 
-Widget::~Widget()
+KYCWidget::~KYCWidget()
 {
 
 }
@@ -175,7 +175,7 @@ constexpr inline int U(const char *str)
     return str[0] + (str[1] ? U(str + 1) : 0);
 }
 
-void Widget::setPdfSize(QPdfWriter *pdfWriter, QString size)
+void KYCWidget::setPdfSize(QPdfWriter *pdfWriter, QString size)
 {
     switch (toUnicode(size)) {
     case U("A0"):
@@ -214,7 +214,7 @@ void Widget::setPdfSize(QPdfWriter *pdfWriter, QString size)
     }
 }
 
-void Widget::saveToPdf(QImage img, QString pathName)
+void KYCWidget::saveToPdf(QImage img, QString pathName)
 {
 
     QFile pdfFile(pathName);
@@ -251,7 +251,7 @@ void Widget::saveToPdf(QImage img, QString pathName)
  * 初始化时，应该根据获取的扫描信息进行设置textDevice，所以应该为setKylinComboBox 的参数为 false
  * @param ret 获取的扫描结果状态
  */
-void Widget::resultDetail(bool ret)
+void KYCWidget::resultDetail(bool ret)
 {
 #ifdef DEBUG_EDIT
     ret = true;
@@ -271,9 +271,9 @@ void Widget::resultDetail(bool ret)
     }
 }
 
-int Widget::messageScanFinishedSave(QString pathName)
+int KYCWidget::messageScanFinishedSave(QString pathName)
 {
-    KylinSane &instance = KylinSane::getInstance();
+    KYCSaneWidget &instance = KYCSaneWidget::getInstance();
     bool retStatus = instance.getKylinSaneStatus();
     if (!retStatus)
         return 0;
@@ -296,7 +296,7 @@ int Widget::messageScanFinishedSave(QString pathName)
         return 0;
 }
 
-void Widget::warnMsg(QString msg)
+void KYCWidget::warnMsg(QString msg)
 {
     QMessageBox msgBox(QMessageBox::Warning, QObject::tr("warning"), msg);
     msgBox.setWindowIcon(QIcon::fromTheme("kylin-scanner"));
@@ -310,7 +310,7 @@ void Widget::warnMsg(QString msg)
  * @param str
  * @return
  */
-QString Widget::getScannerPath(QString str)
+QString KYCWidget::getScannerPath(QString str)
 {
     QStringList list = str.split("@");
     //path = /devices/pci0000:00/0000:00:11.0/0000:02:03.0/usb1/1-1/1-2:1.0
@@ -321,7 +321,7 @@ QString Widget::getScannerPath(QString str)
     return realPath;
 }
 
-void Widget::saveImage(QString fileName)
+void KYCWidget::saveImage(QString fileName)
 {
     qDebug() << "Save filename: " << fileName;
     QImage *img = NULL;
@@ -334,7 +334,7 @@ void Widget::saveImage(QString fileName)
  * @brief Widget::setScanSetBtnEnable
  * 设置发邮件和另存为控件可用
  */
-void Widget::setScanSetBtnEnable(bool ret)
+void KYCWidget::setScanSetBtnEnable(bool ret)
 {
     if (!ret)
         return;
@@ -356,7 +356,7 @@ void Widget::setScanSetBtnEnable(bool ret)
 /**
  * @brief Widget::save_scan_file存储为不同的格式
  */
-void Widget::saveScanFile(bool ret)
+void KYCWidget::saveScanFile(bool ret)
 {
     if (!ret)
         return;
@@ -416,10 +416,10 @@ void Widget::saveScanFile(bool ret)
  *
  * @param ret 线程的处理结果
  */
-void Widget::scanResult(bool ret)
+void KYCWidget::scanResult(bool ret)
 {
     qDebug() << "ret = " << ret;
-    KylinSane &instance = KylinSane::getInstance();
+    KYCSaneWidget &instance = KYCSaneWidget::getInstance();
 
 #ifdef DEBUG_EDIT
     {
@@ -457,7 +457,7 @@ void Widget::scanResult(bool ret)
  * 此时不应该重新设置该字段，所以应该为setKylinComboBox 的参数为 true 进行跳过设置该字段
  * @param ret
  */
-void Widget::swichScanDeviceResult(bool ret)
+void KYCWidget::swichScanDeviceResult(bool ret)
 {
     qDebug() << "ret = " << ret;
 
@@ -487,7 +487,7 @@ void Widget::swichScanDeviceResult(bool ret)
 #endif
 }
 
-void Widget::scanningResultDetail(bool ret)
+void KYCWidget::scanningResultDetail(bool ret)
 {
     qDebug() << "scanningResultDetail ret = " << ret;
 
@@ -516,12 +516,12 @@ void Widget::scanningResultDetail(bool ret)
 #endif
 }
 
-void Widget::sendMailPrepare()
+void KYCWidget::sendMailPrepare()
 {
     pScandisplay->initSavePresentImage();
 }
 
-void Widget::setMaskClear()
+void KYCWidget::setMaskClear()
 {
     clearMask();
     pScandisplay->updateWindowSize();
@@ -532,7 +532,7 @@ void Widget::setMaskClear()
 /**
  * @brief Widget::set_mask 设置窗口圆角
  */
-void Widget::setWindowBorderRadius()
+void KYCWidget::setWindowBorderRadius()
 {
     clearMask();
     pScandisplay->updateWindowSize();
@@ -540,7 +540,7 @@ void Widget::setWindowBorderRadius()
     pTitleBar->setMainWindowAttribute(this->width(), this->height());
 }
 
-void Widget::style_changed(QString)
+void KYCWidget::style_changed(QString)
 {
     qDebug() << "style_changed";
     if (stylelist.contains(style_settings->get(STYLE_NAME).toString())) {
@@ -574,7 +574,7 @@ void Widget::style_changed(QString)
     }
 }
 
-void Widget::icon_theme_changed(QString)
+void KYCWidget::icon_theme_changed(QString)
 {
     qDebug() << "icon_theme_changed";
     if (iconthemelist.contains (icon_theme_settings->get(ICON_THEME_NAME).toString())) {
@@ -585,12 +585,12 @@ void Widget::icon_theme_changed(QString)
     }
 }
 
-void Widget::usbDeviceAdded(QString recvData)
+void KYCWidget::usbDeviceAdded(QString recvData)
 {
     qDebug() << "USB Add: " << recvData;
 }
 
-void Widget::usbDeviceRemoved(QString recvData)
+void KYCWidget::usbDeviceRemoved(QString recvData)
 {
     qDebug() << "USB Remove: " << recvData;
     QProcess *scanList = new QProcess(this);
@@ -606,7 +606,7 @@ void Widget::usbDeviceRemoved(QString recvData)
             //QProcess *pProces = (QProcess *)sender();
             QString result = scanList->readAll();
             qDebug() << "result = " << result;
-            KylinSane &instance = KylinSane::getInstance();
+            KYCSaneWidget &instance = KYCSaneWidget::getInstance();
             QStringList strListDevice;
             strListDevice = instance.getKylinSaneNames();
             qDebug() << "current sane names: " << strListDevice
@@ -647,16 +647,16 @@ void Widget::usbDeviceRemoved(QString recvData)
     });
 }
 
-void Widget::scanListResult(int ret)
+void KYCWidget::scanListResult(int ret)
 {
     if (0 == ret) {
         qDebug() << "test";
     }
 }
 
-void CommonScanThread::run()
+void KYCCommonScanThread::run()
 {
-    KylinSane &instance = KylinSane::getInstance();
+    KYCSaneWidget &instance = KYCSaneWidget::getInstance();
     qDebug() << "get sane status: " << instance.getKylinSaneStatus();
     do {
         qDebug() << "begin findScanDevice()";

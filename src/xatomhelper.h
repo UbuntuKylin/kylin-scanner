@@ -72,12 +72,12 @@ namespace UKUI {
 class Decoration;
 }
 
-class XAtomHelper : public QObject
+class KYCXAtomHelperObject : public QObject
 {
     friend class UKUI::Decoration;
     Q_OBJECT
 public:
-    static XAtomHelper *getInstance();
+    static KYCXAtomHelperObject *getInstance();
 
     static bool isFrameLessWindow(int winId);
 
@@ -95,7 +95,7 @@ public:
     MotifWmHints getWindowMotifHint(int winId);
 
 private:
-    explicit XAtomHelper(QObject *parent = nullptr);
+    explicit KYCXAtomHelperObject(QObject *parent = nullptr);
 
     Atom registerUKUICsdNetWmSupportAtom();
     void unregisterUKUICsdNetWmSupportAtom();

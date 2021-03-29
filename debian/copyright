@@ -29,45 +29,45 @@ Files: Doxyfile
        src/beauty.cpp
        src/beauty.h
        src/common.h
-       src/realTimelbl.cpp
-       src/realTimelbl.h
+       src/timewait.cpp
+       src/timewait.h
        src/daemondbus.cpp
        src/daemondbus.h
-       src/funcBar.cpp
-       src/funcBar.h
-       src/kycaboutdialog.cpp
-       src/kycaboutdialog.h
-       src/kycsavefiledialog.cpp
-       src/kycsavefiledialog.h
-       src/kylinCmb.cpp
-       src/kylinCmb.h
-       src/tailorLabel.cpp
-       src/tailorLabel.h
-       src/kylinSane.cpp
-       src/kylinSane.h
+       src/functionbar.cpp
+       src/functionbar.h
+       src/about.cpp
+       src/about.h
+       src/savefile.cpp
+       src/savefile.h
+       src/customcombobox.cpp
+       src/customcombobox.h
+       src/tailor.cpp
+       src/tailor.h
+       src/sane.cpp
+       src/sane.h
        src/main.cpp
        src/rectify.cpp
        src/rectify.h
-       src/scanDisplay.cpp
-       src/scanDisplay.h
-       src/scanSet.cpp
-       src/scanSet.h
-       src/sendMail.cpp
-       src/sendMail.h
+       src/display.cpp
+       src/display.h
+       src/settings.cpp
+       src/settings.h
+       src/sendmail.cpp
+       src/sendmail.h
        src/theme.h
        src/theme.cpp
        src/usb.h
        src/usb.cpp
-       src/usbhotplugthread.h
-       src/usbhotplugthread.cpp
-       src/titleBar.cpp
-       src/titleBar.h
-       src/waterMarkDlg.cpp
-       src/waterMarkDlg.h
-       src/interruptDlg.cpp
-       src/interruptDlg.h
-       src/singleApplication.cpp
-       src/singleApplication.h
+       src/usbhotplug.h
+       src/usbhotplug.cpp
+       src/titlebar.cpp
+       src/titlebar.h
+       src/watermark.cpp
+       src/watermark.h
+       src/interrupt.cpp
+       src/interrupt.h
+       src/singleapplication.cpp
+       src/singleapplication.h
        src/widget.cpp
        src/widget.h
        src/xatomhelper.cpp
