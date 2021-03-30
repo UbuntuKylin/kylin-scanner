@@ -21,7 +21,7 @@
 
 #include "theme.h"
 #include "about.h"
-#include "sane.h"
+#include "scanner.h"
 
 #include <QDialog>
 #include <QWidget>

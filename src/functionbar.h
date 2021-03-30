@@ -37,7 +37,7 @@
 #include <QFileInfo>
 #include <QFileInfoList>
 #include <QTimer>
-#include "sane.h"
+#include "scanner.h"
 #include "beauty.h"
 #include "theme.h"
 

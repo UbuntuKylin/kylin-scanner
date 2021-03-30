@@ -30,7 +30,7 @@
 #include <QHash>
 #include "customcombobox.h"
 #include "sendmail.h"
-#include "sane.h"
+#include "scanner.h"
 #include "theme.h"
 
 class KYCScanSettingsWidget  : public QWidget

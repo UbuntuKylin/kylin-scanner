@@ -43,8 +43,8 @@ Files: Doxyfile
        src/customcombobox.h
        src/tailor.cpp
        src/tailor.h
-       src/sane.cpp
-       src/sane.h
+       src/scanner.cpp
+       src/scanner.h
        src/main.cpp
        src/rectify.cpp
        src/rectify.h

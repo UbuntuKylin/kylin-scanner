@@ -33,7 +33,7 @@
 #include "functionbar.h"
 #include "deskew.h"
 #include "beauty.h"
-#include "sane.h"
+#include "scanner.h"
 #include "timewait.h"
 #include "interrupt.h"
 #include "theme.h"

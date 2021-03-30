@@ -890,6 +890,7 @@ void KYCScanSettingsWidget::onBtnSaveClicked()
 
 void KYCScanSettingsWidget::onTextDeviceCurrentTextChanged(QString device)
 {
+    qDebug() << "Device changed, therefore, we need open device again.";
     bool status = true;
 
     KYCSaneWidget &instance = KYCSaneWidget::getInstance();
