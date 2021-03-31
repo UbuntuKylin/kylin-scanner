@@ -773,6 +773,12 @@ void KYCScanSettingsWidget::setBtnSaveText()
     btnSave->setText(tr("Save as"));
 }
 
+void KYCScanSettingsWidget::setFlagTextDeviceChangedWork()
+{
+    // onTextDeviceCurrentTextChanged will work
+    flagTextDeviceChangedWork = 1;
+}
+
 void KYCScanSettingsWidget::onBtnLocationClicked()
 {
     if (curPath.isEmpty())
@@ -890,6 +896,10 @@ void KYCScanSettingsWidget::onBtnSaveClicked()
 
 void KYCScanSettingsWidget::onTextDeviceCurrentTextChanged(QString device)
 {
+    if (0 == flagTextDeviceChangedWork) {
+        qDebug() << "Device changed before openSaneDevice, so this function will not work.";
+        return;
+    }
     qDebug() << "Device changed, therefore, we need open device again.";
     bool status = true;
 

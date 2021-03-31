@@ -376,7 +376,7 @@ SANE_Status doScan(const char *fileName)
         qInfo() << "part_path = " << part_path;
 
         status = sane_start (g_device);
-        qInfo() << "status error: " << sane_strstatus(status);
+        qInfo() << "`sane_start` status: " << sane_strstatus(status);
         if (status != SANE_STATUS_GOOD) {
             qInfo() << "Cannot start scan devices, sane_status = " << status;
             instance.setKylinSaneStatus(false);

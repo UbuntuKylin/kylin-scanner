@@ -108,13 +108,9 @@ KYCWidget::KYCWidget(QWidget *parent)
     connect(pScanSet, &KYCScanSettingsWidget::saveImageSignal, this, &KYCWidget::saveImage);
 
     // For ORC
-    connect(pFuncBar, &KYCFunctionBarWidget::sendOrcBegin, pScandisplay, &KYCScanDisplayWidget::onOrc);
-    connect(pFuncBar, &KYCFunctionBarWidget::sendOrcEnd, pScandisplay, &KYCScanDisplayWidget::onOrc);
-    connect(pFuncBar, &KYCFunctionBarWidget::sendScanAgain, pScandisplay, &KYCScanDisplayWidget::setOrcFlagStatus);
-    connect(pFuncBar, &KYCFunctionBarWidget::sendOrcBegin, pScanSet, &KYCScanSettingsWidget::modifyBtnSave);
-    connect(pFuncBar, &KYCFunctionBarWidget::sendOrcEnd, pScanSet, &KYCScanSettingsWidget::modifyBtnSave);
-    connect(pFuncBar, &KYCFunctionBarWidget::sendScanAgain, pScanSet, &KYCScanSettingsWidget::setOrcFlagInit);
-
+    connect(pFuncBar, &KYCFunctionBarWidget::sendOrcBegin, this, &KYCWidget::setOcrBeginOperation);
+    connect(pFuncBar, &KYCFunctionBarWidget::sendOrcEnd, this, &KYCWidget::setOcrEndOperation);
+    connect(pFuncBar, &KYCFunctionBarWidget::sendScanAgain, this, &KYCWidget::setOcrFlags);
 
     // 文件扫描成功后默认显示全部编辑框
     //connect(pFuncBar,&FuncBar::sendScanEnd, pScandisplay, &ScanDisplay::switchPage);
@@ -133,11 +129,7 @@ KYCWidget::KYCWidget(QWidget *parent)
     connect(pScanSet, &KYCScanSettingsWidget::sendMailSignal, pScandisplay, &KYCScanDisplayWidget::onSaveImageNow);
 
     // 发现可用设备,点击扫描按钮后的操作,此过程可能会出现调用API失败，不可扫描的情况，需要额外处理
-    connect(pFuncBar, SIGNAL(sendScanEnd(bool)), pScandisplay, SLOT(onScan(bool)));
-    connect(pFuncBar, SIGNAL(sendScanEnd(bool)), this, SLOT(setScanSetBtnEnable(bool)));
-    connect(pFuncBar, SIGNAL(sendScanEnd(bool)), this, SLOT(saveScanFile(bool)));
-    connect(pFuncBar, SIGNAL(sendScanEnd(bool)), this, SLOT(scanningResultDetail(bool)));
-    connect(pFuncBar, SIGNAL(sendScanEnd(bool)), this, SLOT(sendMailPrepare()));
+    connect(pFuncBar, SIGNAL(sendScanEnd(bool)), this, SLOT(setScanEndOperation(bool)));
 
     // For rectify
     connect(pFuncBar, &KYCFunctionBarWidget::sendRectifyBegin, pScandisplay, &KYCScanDisplayWidget::onRectify);
@@ -347,7 +339,6 @@ void KYCWidget::setScanSetBtnEnable(bool ret)
     //pScandisplay->setInitDevice();
 
     // Do not change scan color mode while scan again
-    //pScanSet->setKylinComboBox(true);
     pScanSet->setKylinLable();
     pFuncBar->setBtnScanEnable();
     pScanSet->setKylinScanSetEnable();
@@ -440,6 +431,8 @@ void KYCWidget::scanResult(bool ret)
 
         bool retStatus = instance.getKylinSaneStatus();
         resultDetail(retStatus);
+
+        pScanSet->setFlagTextDeviceChangedWork();
     } else {
         device = false;
         // free resource for sane devices
@@ -519,6 +512,11 @@ void KYCWidget::scanningResultDetail(bool ret)
 void KYCWidget::sendMailPrepare()
 {
     pScandisplay->initSavePresentImage();
+}
+
+void KYCWidget::setUsbThreadQuit()
+{
+    usbThread.quit();
 }
 
 void KYCWidget::setMaskClear()
@@ -652,6 +650,39 @@ void KYCWidget::scanListResult(int ret)
     if (0 == ret) {
         qDebug() << "test";
     }
+}
+
+/**
+ * @brief KYCWidget::setScanEndOperation
+ * Operations after scan end
+ * @param retScan
+ * scan finished status
+ */
+void KYCWidget::setScanEndOperation(bool retScan)
+{
+    pScandisplay->onScan(retScan);
+    setScanSetBtnEnable(retScan);
+    saveScanFile(retScan);
+    scanningResultDetail(retScan);
+    sendMailPrepare();
+}
+
+void KYCWidget::setOcrFlags()
+{
+    pScandisplay->setOrcFlagStatus();
+    pScanSet->setOrcFlagInit();
+}
+
+void KYCWidget::setOcrBeginOperation()
+{
+    pScandisplay->onOcr();
+    pScanSet->modifyBtnSave();
+}
+
+void KYCWidget::setOcrEndOperation()
+{
+    pScandisplay->onOcr();
+    pScanSet->modifyBtnSave();
 }
 
 void KYCCommonScanThread::run()

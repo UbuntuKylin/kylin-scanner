@@ -79,6 +79,28 @@ class KYCScanDisplayWidget  : public QWidget
     Q_OBJECT
 
 public:
+    KYCScanDisplayWidget(QWidget *parent = nullptr);
+    void keyPressEvent(QKeyEvent *e);
+    void timerEvent(QTimerEvent *e);
+
+    QImage *imageSave(QString fileName);
+    void setNoDevice();
+    void setInitDevice();
+    void setOrcThreadQuit();
+    void setPixmap(QImage img, QLabel *lab);
+    float setPixmapScaled(QImage img, QLabel *lab);
+    void updateWindowSize();
+    void setOrcFlagStatus();
+
+    void initBeforeScanAgain();
+    void initStyle();
+    void initStyleOrc();
+    void initStyleTailor();
+    void initSavePresentImage();
+    void onOcr();
+    void onScan(bool ret);
+
+private:
     int flagBeautify = 0; //一键美化标志
     int flagRectify = 0; //智能纠偏标志
     int flagOrc = 0; //文字识别标志
@@ -87,30 +109,13 @@ public:
     int flagWaterMark = 0; // 用于扫描完成后添加水印时的覆盖问题
     float scaledNum = 1; //缩放倍数
     int index = 0; // 控制工具栏的打开和关闭
-
-    KYCScanDisplayWidget(QWidget *parent = nullptr);
-    void keyPressEvent(QKeyEvent *e);
-    QImage *imageSave(QString fileName);
-    void setNoDevice();
-    void setInitDevice();
-    void setPixmap(QImage img, QLabel *lab);
-    float setPixmapScaled(QImage img, QLabel *lab);
-    void updateWindowSize();
-
     int m_timerNum = 0; // 计时器执行次数
     int m_timeScanId; // 正常扫描结束后显示扫描结果定时器id
-//    void showEvent(QShowEvent *event);
-    void timerEvent(QTimerEvent *e);
+    QStack<QImage> stack;        //用于保存图片
+    QList<QString> list;
 
-    void initStyle();
-    void initStyleOrc();
-    void initStyleTailor();
-    void initSavePresentImage();
-
-private:
     QStringList stylelist;
     QStringList iconthemelist;
-
     QGSettings *style_settings;
     QGSettings *icon_theme_settings;
     QTimer *timerScan; // 实时显示扫描结果定时器
@@ -136,8 +141,6 @@ private:
     QImage *imgBeautify;         //一键美化图片
     QImage *imgRectify;          //智能纠偏图片
 
-    QStack<QImage> stack;        //用于保存图片
-
     QVBoxLayout *vBoxConnectError;
     QVBoxLayout *vBoxScanSet;
     QVBoxLayout *vBoxOrc;
@@ -156,13 +159,9 @@ private:
     QScrollArea *scrollArea;
 
     int widgetindex;
-    QList<QString> list;
     KYCOcrThread thread;
 
 public slots:
-    void onOrc();
-    void setOrcFlagStatus();
-    void onScan(bool ret);
     void onSaveImageNow();
     void onRectify();
     void onBeautify();
