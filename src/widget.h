@@ -56,8 +56,14 @@ public:
     void setPdfSize(QPdfWriter *pdfWriter, QString size);
     void saveToPdf(QImage img, QString pathName);
     void resultDetail(bool ret);
-    int messageScanFinishedSave(QString pathName);
+    void setScanSetBtnEnable(bool ret);
+    void saveScanFile(bool ret);
     void warnMsg(QString msg);
+    void scanningResultDetail(bool ret);
+    void sendMailPrepare();
+    void setUsbThreadQuit();
+
+    int messageScanFinishedSave(QString pathName);
     QString getScannerPath(QString str);
 
 private:
@@ -82,12 +88,8 @@ Q_SIGNALS:
 
 private slots:
     void saveImage(QString fileName);
-    void setScanSetBtnEnable(bool ret);
-    void saveScanFile(bool ret);
     void scanResult(bool ret);
     void swichScanDeviceResult(bool ret);
-    void scanningResultDetail(bool ret);
-    void sendMailPrepare();
     void setMaskClear();
     void setWindowBorderRadius();
     void style_changed(QString); // 系统主题风格变化
@@ -95,6 +97,10 @@ private slots:
     void usbDeviceAdded(QString recvData);
     void usbDeviceRemoved(QString recvData);
     void scanListResult(int ret);
+    void setScanEndOperation(bool ret);
+    void setOcrFlags();
+    void setOcrBeginOperation();
+    void setOcrEndOperation();
 };
 
 #endif // WIDGET_H

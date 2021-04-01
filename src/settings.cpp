@@ -21,6 +21,7 @@
 #include <QMessageBox>
 #include <QTextCursor>
 #include <QStandardItemModel>
+#include <QFileInfo>
 
 KYCScanSettingsWidget::KYCScanSettingsWidget(QWidget *parent)
     : QWidget(parent)
@@ -773,18 +774,37 @@ void KYCScanSettingsWidget::setBtnSaveText()
     btnSave->setText(tr("Save as"));
 }
 
+void KYCScanSettingsWidget::setFlagTextDeviceChangedWork()
+{
+    // onTextDeviceCurrentTextChanged will work
+    flagTextDeviceChangedWork = 1;
+}
+
 void KYCScanSettingsWidget::onBtnLocationClicked()
 {
     if (curPath.isEmpty())
         curPath = QDir::homePath() ; //获取家目录的路径
 
+    QString midPath = curPath;
     QString dlgTitle = tr("Select a directory"); //对话框标题
     QString selectedDir = QFileDialog::getExistingDirectory(this, dlgTitle, curPath,
                                                             QFileDialog::ShowDirsOnly);
+    qDebug() << "selected directory: " << selectedDir;
+
     if (!selectedDir.isEmpty()) {
-        QFontMetrics elideFont(btnLocation->font());
-        curPath = selectedDir;
-        btnLocation->setText(elideFont.elidedText(selectedDir, Qt::ElideRight, 150));
+        QFileInfo file(selectedDir);
+        if (file.permission(QFileDevice::WriteUser | QFileDevice::ReadGroup)) {
+            qDebug() << "The user could read and write " << selectedDir;
+
+            QFontMetrics elideFont(btnLocation->font());
+            curPath = selectedDir;
+            btnLocation->setText(elideFont.elidedText(selectedDir, Qt::ElideRight, 150));
+        } else {
+            qDebug() << "The user can't read and write " << selectedDir;
+
+            QString msg = tr("Currently user has no permission to modify directory ") + selectedDir;
+            warnMsg(msg);
+        }
     }
 }
 
@@ -890,6 +910,11 @@ void KYCScanSettingsWidget::onBtnSaveClicked()
 
 void KYCScanSettingsWidget::onTextDeviceCurrentTextChanged(QString device)
 {
+    if (0 == flagTextDeviceChangedWork) {
+        qDebug() << "Device changed before openSaneDevice, so this function will not work.";
+        return;
+    }
+    qDebug() << "Device changed, therefore, we need open device again.";
     bool status = true;
 
     KYCSaneWidget &instance = KYCSaneWidget::getInstance();

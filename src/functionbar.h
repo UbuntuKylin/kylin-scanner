@@ -37,7 +37,7 @@
 #include <QFileInfo>
 #include <QFileInfoList>
 #include <QTimer>
-#include "sane.h"
+#include "scanner.h"
 #include "beauty.h"
 #include "theme.h"
 
@@ -60,10 +60,6 @@ public:
     explicit KYCFunctionBarWidget(QWidget *parent = nullptr);
     ~KYCFunctionBarWidget();
 
-    int flagBeautify = 0; //一键美化标志
-    int flagRectify = 0; //智能纠偏标志
-    int flagOrc = 0; //文字识别标志
-
     void keyPressEvent(QKeyEvent *e);
     void setKylinScanSetNotEnable();
     void setKylinScanSetEnable();
@@ -75,10 +71,14 @@ public:
     QFileInfoList GetFileList(QString path);
 
 private:
-    QFileInfo fileinfo;
-    QString path;
+    int flagBeautify = 0; //一键美化标志
+    int flagRectify = 0; //智能纠偏标志
+    int flagOrc = 0; //文字识别标志
     int num;
     int count;
+
+    QFileInfo fileinfo;
+    QString path;
     QTimer *time;
 
     QStringList stylelist;

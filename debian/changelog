@@ -1,3 +1,17 @@
+kylin-scanner (1.0.0-18) v101; urgency=medium
+
+  * [English] 
+  * Fix #46157, Modify init connection for Canon Lide 300 and Canon Lide 400
+  * Fix #44423, Modify application version for about dialog
+  * Fix #39825, Add judge save file directory permission
+  *
+  * [中文]
+  * Fix #46157, 解决佳能Lide 300和佳能Lide 400系列扫描仪识别失败的问题
+  * Fix #44423, 解决关于界面的版本和软件包版本不一致问题
+  * Fix $39825, 增加扫描文件夹路径为当前用户没有权限时的提示
+
+ -- yushuoqi <yusq@yusq-PC>  Thu, 01 Apr 2021 16:08:23 +0800
+
 kylin-scanner (1.0.0-17) v101; urgency=medium
 
   * [English] 

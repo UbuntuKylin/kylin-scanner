@@ -262,6 +262,11 @@ void KYCScanDisplayWidget::setInitDevice()
     vStackedLayout->setCurrentWidget(labInit);
 }
 
+void KYCScanDisplayWidget::setOrcThreadQuit()
+{
+    thread.quit();
+}
+
 void KYCScanDisplayWidget::setPixmap(QImage img, QLabel *lab)
 {
     int width = lab->width();
@@ -581,7 +586,7 @@ void KYCScanDisplayWidget::scandisplay_theme_changed(QString)
     initStyleTailor ();
 }
 
-void KYCScanDisplayWidget::onOrc()
+void KYCScanDisplayWidget::onOcr()
 {
     if (flagOrc == 0) {
         // not orc before, so click this will flagOrc = 1;
@@ -643,6 +648,25 @@ void KYCScanDisplayWidget::setOrcFlagStatus()
 }
 
 /**
+ * @brief KYCScanDisplayWidget::initBeforeScanAgain
+ * initialize some flags before click btnScan to scan again
+ */
+void KYCScanDisplayWidget::initBeforeScanAgain()
+{
+    // 重新扫描时，应该都初始化，避免撤销到之前的图片情况
+    stack.clear();
+    list.clear();
+    flagOrc = 0;
+    flagOrcInit = 0;
+    flagRectify = 0;
+    flagBeautify = 0;
+    flagTailor = 0;
+
+    // 需要置0，避免多次扫描造成水印的图片切换到上一次扫描的图片
+    flagWaterMark = 0;
+}
+
+/**
  * @brief scan_display::scan 扫描功能结束后显示图片
  */
 void KYCScanDisplayWidget::onScan(bool ret)
@@ -656,16 +680,7 @@ void KYCScanDisplayWidget::onScan(bool ret)
     vStackedLayout->setCurrentIndex(2);
     vStackedLayout->setCurrentIndex(3);
 
-    // 重新扫描时，应该都初始化，避免撤销到之前的图片情况
-    stack.clear();
-    list.clear();
-    flagOrc = 0;
-    flagOrcInit = 0;
-    flagRectify = 0;
-    flagBeautify = 0;
-    flagTailor = 0;
-    flagWaterMark =
-        0; // 需要置0，避免多次扫描造成水印的图片切换到上一次扫描的图片
+    initBeforeScanAgain();
 
     //timerScan->start(100);
 

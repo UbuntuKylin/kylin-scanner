@@ -30,7 +30,7 @@
 #include <QHash>
 #include "customcombobox.h"
 #include "sendmail.h"
-#include "sane.h"
+#include "scanner.h"
 #include "theme.h"
 
 class KYCScanSettingsWidget  : public QWidget
@@ -58,6 +58,10 @@ public:
     void setFontSize(QLabel *label, int n);
     void setTextNameToolTip();
     void setBtnSaveText();
+    void setOrcFlagInit();
+    void setFlagTextDeviceChangedWork();
+    void warnMsg(QString msg);
+    void modifyBtnSave();
 
     QString getTextResolution();
     QString getTextSize();
@@ -65,16 +69,12 @@ public:
     QString getTextName();
     QString getTextLocation();
 
-    void warnMsg(QString msg);
-
-Q_SIGNALS:
-    void saveImageSignal(QString);
-    void openDeviceStatusSignal(bool);
-    void sendMailSignal();
-
 private:
+    int flag = 0; // 当前按钮为另存为还是文字识别后的存储文本
+    int flagTextDeviceChangedWork = 0; // textDeviceChanged will not work before openSaneDevice() successfully
     int scanOpenFlag = 0;
     int scanExecFlag = 0;
+
     QStringList stylelist;
     QStringList iconthemelist;
     QGSettings *style_settings;
@@ -119,11 +119,10 @@ private:
     QVBoxLayout *vBoxScanSet;
     QVBoxLayout *vBoxScanSet1;
 
-    int flag = 0; // 当前按钮为另存为还是文字识别后的存储文本
-
-public slots:
-    void modifyBtnSave();
-    void setOrcFlagInit();
+Q_SIGNALS:
+    void saveImageSignal(QString);
+    void openDeviceStatusSignal(bool);
+    void sendMailSignal();
 
 private slots:
     void onBtnLocationClicked();

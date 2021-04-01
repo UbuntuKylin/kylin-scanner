@@ -24,8 +24,8 @@ SOURCES += \
     $$PWD/display.cpp \
     $$PWD/functionbar.cpp \
     $$PWD/interrupt.cpp \
-    $$PWD/sane.cpp \
     $$PWD/savefile.cpp \
+    $$PWD/scanner.cpp \
     $$PWD/sendmail.cpp \
     $$PWD/settings.cpp \
     $$PWD/singleapplication.cpp \
@@ -50,8 +50,8 @@ HEADERS += \
     $$PWD/display.h \
     $$PWD/functionbar.h \
     $$PWD/interrupt.h \
-    $$PWD/sane.h \
     $$PWD/savefile.h \
+    $$PWD/scanner.h \
     $$PWD/sendmail.h \
     $$PWD/settings.h \
     $$PWD/singleapplication.h \
