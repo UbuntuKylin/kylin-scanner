@@ -10,7 +10,7 @@ kylin-scanner (1.0.0-18) v101; urgency=medium
   * Fix #44423, 解决关于界面的版本和软件包版本不一致问题
   * Fix $39825, 增加扫描文件夹路径为当前用户没有权限时的提示
 
- -- yushuoqi <yusq@yusq-PC>  Thu, 01 Apr 2021 16:08:23 +0800
+ -- yushuoqi <yushuoqi@kylinos.cn>  Thu, 01 Apr 2021 16:08:23 +0800
 
 kylin-scanner (1.0.0-17) v101; urgency=medium
 

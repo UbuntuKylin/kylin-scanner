@@ -50,6 +50,8 @@ Files: Doxyfile
        src/rectify.h
        src/display.cpp
        src/display.h
+       src/deskew.cpp
+       src/deskew.h
        src/settings.cpp
        src/settings.h
        src/sendmail.cpp
