@@ -24,6 +24,8 @@
 #define LOG_PATH 							"/tmp/scanner/"
 #define LOGFILE_PATH						"/tmp/scanner/kylin-scanner.log"
 #define EXIST_USERNAME_AND_PID_PATH 		"/tmp/scanner/user.pid"
+#define MAIL_PICTURE_PATH					"/tmp/scanner/mail.jpg"
+#define SCANNING_PICTURE_PATH				"/tmp/scanner/scanning.png"
 
 #define BASH_TYPE 							"/bin/bash"
 

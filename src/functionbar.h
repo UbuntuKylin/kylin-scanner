@@ -73,7 +73,7 @@ public:
 private:
     int flagBeautify = 0; //一键美化标志
     int flagRectify = 0; //智能纠偏标志
-    int flagOrc = 0; //文字识别标志
+    int flagOcr = 0; //文字识别标志
     int num;
     int count;
 
@@ -89,14 +89,14 @@ private:
     QPushButton *btnNorScan ;
     QPushButton *btnBeautify;
     QPushButton *btnRectify;
-    QPushButton *btnOrc;
+    QPushButton *btnOcr;
     QPushButton *btnScan;
     //QMovie *movieScan; // 加载扫描动态图片GIF
     QLabel *labMovieScan; // 加载扫描动态图片标签
     QLabel *labNorScan;
     QLabel *labBeautify;
     QLabel *labRectify;
-    QLabel *labOrc;
+    QLabel *labOcr;
     QFrame *line1; // 左边第一个竖线，已屏蔽
     QFrame *line2;
     QVBoxLayout *vBoxLay1;
@@ -111,7 +111,7 @@ private:
     KYCFuctionBarThread thread;
 
 private slots:
-    void onBtnOrcClicked();
+    void onBtnOcrClicked();
     void onBtnScanClicked();
     void onBtnRectifyClicked();
     void onBtnBeautyClicked();
@@ -120,10 +120,10 @@ private slots:
     void showPictures();
 
 Q_SIGNALS:
-    void sendOrcBegin();
-    void sendOrcEnd();
-    void sendScanAgain();
-    void sendScanEnd(bool);
+    void sendOcrBegin();
+    void sendOcrEnd();
+    void clickBtnScanStart();
+    void clickBtnScanEnd(bool);
     void sendRectifyBegin();
     void sendRectifyEnd();
     void sendBeautifyBegin();

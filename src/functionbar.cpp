@@ -27,14 +27,14 @@ KYCFunctionBarWidget::KYCFunctionBarWidget(QWidget *parent)
     , btnNorScan (new QPushButton())
     , btnBeautify (new QPushButton())
     , btnRectify (new QPushButton())
-    , btnOrc (new QPushButton())
+    , btnOcr (new QPushButton())
     , btnScan (new QPushButton())
       //, movieScan (new QMovie())
     , labMovieScan (new QLabel())
     , labNorScan (new QLabel())
     , labBeautify (new QLabel())
     , labRectify (new QLabel())
-    , labOrc (new QLabel())
+    , labOcr (new QLabel())
     , line1 (new QFrame())
     , line2 (new QFrame())
     , vBoxLay1 (new QVBoxLayout())
@@ -57,7 +57,7 @@ KYCFunctionBarWidget::KYCFunctionBarWidget(QWidget *parent)
     btnNorScan->setFixedSize(60, 32);
     btnBeautify->setFixedSize(60, 32);
     btnRectify->setFixedSize(60, 32);
-    btnOrc->setFixedSize(60, 32);
+    btnOcr->setFixedSize(60, 32);
     btnScan->setFixedSize(56, 56);
     btnScan->setText(tr("Scan"));
 
@@ -77,7 +77,7 @@ KYCFunctionBarWidget::KYCFunctionBarWidget(QWidget *parent)
     setFontSize(labNorScan, 10);
     setFontSize(labBeautify, 10);
     setFontSize(labRectify, 10);
-    setFontSize(labOrc, 10);
+    setFontSize(labOcr, 10);
     labNorScan->setText(tr("Normal scanning"));
     labNorScan->setAlignment(Qt::AlignCenter);
     labNorScan->setFixedSize(60, 16);
@@ -90,9 +90,9 @@ KYCFunctionBarWidget::KYCFunctionBarWidget(QWidget *parent)
     labRectify->setAlignment(Qt::AlignCenter);
     labRectify->setFixedSize(56, 16);
 
-    labOrc->setText(tr("Text OCR"));
-    labOrc->setAlignment(Qt::AlignCenter);
-    labOrc->setFixedSize(56, 16);
+    labOcr->setText(tr("Text OCR"));
+    labOcr->setAlignment(Qt::AlignCenter);
+    labOcr->setFixedSize(56, 16);
 
     line1->setObjectName(QString::fromUtf8("line1"));
     line1->setMaximumWidth(1);
@@ -117,7 +117,7 @@ KYCFunctionBarWidget::KYCFunctionBarWidget(QWidget *parent)
         btnRectify->setStyleSheet("QPushButton{image: url(:/icon/icon/rectify.svg);border:none;background-color:rgb(15,08,01);border-radius:6px;}"
                                   "QPushButton:hover{image: url(:/icon/icon/rectify.svg);border:none;background-color:#3D6BE5;border-radius:6px;}"
                                   "QPushButton:checked{image: url(:/icon/icon/rectify.svg);border:none;background-color:#3D6BE5;border-radius:6px;}");
-        btnOrc->setStyleSheet("QPushButton{image: url(:/icon/icon/ocr.svg);border:none;background-color:rgb(15,08,01);border-radius:6px;}"
+        btnOcr->setStyleSheet("QPushButton{image: url(:/icon/icon/ocr.svg);border:none;background-color:rgb(15,08,01);border-radius:6px;}"
                               "QPushButton:hover{image: url(:/icon/icon/ocr.svg);border:none;background-color:#3D6BE5;border-radius:6px;}"
                               "QPushButton:checked{image: url(:/icon/icon/ocr.svg);border:none;background-color:#3D6BE5;border-radius:6px;}");
 
@@ -134,7 +134,7 @@ KYCFunctionBarWidget::KYCFunctionBarWidget(QWidget *parent)
         btnRectify->setStyleSheet("QPushButton{image: url(:/icon/icon/rectify_black.svg);border:none;background-color:#E7E7E7;border-radius:6px;}"
                                   "QPushButton:hover{image: url(:/icon/icon/rectify_black.svg);border:none;background-color:#3D6BE5;border-radius:6px;}"
                                   "QPushButton:checked{image: url(:/icon/icon/rectify_black.svg);border:none;background-color:#3D6BE5;border-radius:6px;}");
-        btnOrc->setStyleSheet("QPushButton{image: url(:/icon/icon/ocr_black.svg);border:none;background-color:#E7E7E7;border-radius:6px;}"
+        btnOcr->setStyleSheet("QPushButton{image: url(:/icon/icon/ocr_black.svg);border:none;background-color:#E7E7E7;border-radius:6px;}"
                               "QPushButton:hover{image: url(:/icon/icon/ocr_black.svg);border:none;background-color:#3D6BE5;border-radius:6px;}"
                               "QPushButton:checked{image: url(:/icon/icon/ocr_black.svg);border:none;background-color:#3D6BE5;border-radius:6px;}");
 
@@ -179,9 +179,9 @@ KYCFunctionBarWidget::KYCFunctionBarWidget(QWidget *parent)
 
     vBoxLay4->setSpacing(0);
     vBoxLay4->addSpacing(2);
-    vBoxLay4->addWidget(btnOrc);
+    vBoxLay4->addWidget(btnOcr);
     vBoxLay4->addSpacing(10);
-    vBoxLay4->addWidget(labOrc);
+    vBoxLay4->addWidget(labOcr);
 
     hBoxLay1->setSpacing(0);
     hBoxLay1->addStretch();
@@ -211,8 +211,8 @@ KYCFunctionBarWidget::KYCFunctionBarWidget(QWidget *parent)
     hBoxLay4->addLayout(hBoxLay3);
     setLayout(hBoxLay4);
 
-    // For orc
-    connect(btnOrc, SIGNAL(clicked()), this, SLOT(onBtnOrcClicked()));
+    // For ocr
+    connect(btnOcr, SIGNAL(clicked()), this, SLOT(onBtnOcrClicked()));
 
     // For scan
     connect(btnScan, SIGNAL(clicked()), this, SLOT(onBtnScanClicked()));
@@ -239,18 +239,18 @@ void KYCFunctionBarWidget::keyPressEvent(QKeyEvent *e)
     if ((e->key() == Qt::Key_Z) && (e->modifiers() ==  Qt::ControlModifier)) {
         if (!stack.isEmpty()) {
             QString flagName = stack.pop();
-            if (flagName == "flagOrc") {
-                flagOrc = 0;
+            if (flagName == "flagOcr") {
+                flagOcr = 0;
                 if (stylelist.contains(style_settings->get(STYLE_NAME).toString())) {
-                    btnOrc->setStyleSheet("QPushButton{image: url(:/icon/icon/ocr.svg);border:none;background-color:rgb(15,08,01);border-radius:6px;}"
+                    btnOcr->setStyleSheet("QPushButton{image: url(:/icon/icon/ocr.svg);border:none;background-color:rgb(15,08,01);border-radius:6px;}"
                                           "QPushButton:hover{image: url(:/icon/icon/ocr.svg);border:none;background-color:#3D6BE5;border-radius:6px;}"
                                           "QPushButton:checked{image: url(:/icon/icon/ocr.svg);border:none;background-color:#3D6BE5;border-radius:6px;}");
                 } else {
-                    btnOrc->setStyleSheet("QPushButton{image: url(:/icon/icon/ocr_black.svg);border:none;background-color:#E7E7E7;border-radius:6px;}"
+                    btnOcr->setStyleSheet("QPushButton{image: url(:/icon/icon/ocr_black.svg);border:none;background-color:#E7E7E7;border-radius:6px;}"
                                           "QPushButton:hover{image: url(:/icon/icon/ocr_black.svg);border:none;background-color:#3D6BE5;border-radius:6px;}"
                                           "QPushButton:checked{image: url(:/icon/icon/ocr_black.svg);border:none;background-color:#3D6BE5;border-radius:6px;}");
                 }
-                emit sendOrcEnd();
+                emit sendOcrEnd();
             }
             if (flagName == "flagBeautify") {
                 flagBeautify = 0;
@@ -295,13 +295,13 @@ void KYCFunctionBarWidget::setKylinScanSetNotEnable()
         btnNorScan->setEnabled(false);
         btnBeautify->setEnabled(false);
         btnRectify->setEnabled(false);
-        btnOrc->setEnabled(false);
+        btnOcr->setEnabled(false);
         btnScan->setEnabled(false);
     } else {
         btnNorScan->setEnabled(true);
         btnBeautify->setEnabled(true);
         btnRectify->setEnabled(true);
-        btnOrc->setEnabled(true);
+        btnOcr->setEnabled(true);
         btnScan->setEnabled(true);
     }
 }
@@ -317,7 +317,7 @@ void KYCFunctionBarWidget::setKylinScanSetEnable()
         btnNorScan->setEnabled(true);
         btnBeautify->setEnabled(true);
         btnRectify->setEnabled(true);
-        btnOrc->setEnabled(true);
+        btnOcr->setEnabled(true);
         btnScan->setEnabled(true);
     }
 }
@@ -344,11 +344,11 @@ void KYCFunctionBarWidget::setFontSize(QLabel *label, int n)
 void KYCFunctionBarWidget::setStackClear()
 {
     stack.clear();
-    flagOrc = 0;
+    flagOcr = 0;
     flagRectify = 0;
     flagBeautify = 0;
     if (stylelist.contains(style_settings->get(STYLE_NAME).toString())) {
-        btnOrc->setStyleSheet("QPushButton{image: url(:/icon/icon/ocr.svg);border:none;background-color:rgb(15,08,01);border-radius:6px;}"
+        btnOcr->setStyleSheet("QPushButton{image: url(:/icon/icon/ocr.svg);border:none;background-color:rgb(15,08,01);border-radius:6px;}"
                               "QPushButton:hover{image: url(:/icon/icon/ocr.svg);border:none;background-color:#3D6BE5;border-radius:6px;}"
                               "QPushButton:checked{image: url(:/icon/icon/ocr.svg);border:none;background-color:#3D6BE5;border-radius:6px;}");
 
@@ -360,7 +360,7 @@ void KYCFunctionBarWidget::setStackClear()
                                    "QPushButton:hover{image: url(:/icon/icon/beautify.svg);border:none;background-color:#3D6BE5;border-radius:6px;}"
                                    "QPushButton:checked{image: url(:/icon/icon/beautify.svg);border:none;background-color:#3D6BE5;border-radius:6px;}");
     } else {
-        btnOrc->setStyleSheet("QPushButton{image: url(:/icon/icon/ocr_black.svg);border:none;background-color:#E7E7E7;border-radius:6px;}"
+        btnOcr->setStyleSheet("QPushButton{image: url(:/icon/icon/ocr_black.svg);border:none;background-color:#E7E7E7;border-radius:6px;}"
                               "QPushButton:hover{image: url(:/icon/icon/ocr_black.svg);border:none;background-color:#3D6BE5;border-radius:6px;}"
                               "QPushButton:checked{image: url(:/icon/icon/ocr_black.svg);border:none;background-color:#3D6BE5;border-radius:6px;}");
 
@@ -396,35 +396,35 @@ QFileInfoList KYCFunctionBarWidget::GetFileList(QString path)
     return file_list;
 }
 
-//QString orc_text;
-void KYCFunctionBarWidget::onBtnOrcClicked()
+//QString ocr_text;
+void KYCFunctionBarWidget::onBtnOcrClicked()
 {
-    if (flagOrc == 0) {
-        flagOrc = 1;
-        stack.push("flagOrc");
+    if (flagOcr == 0) {
+        flagOcr = 1;
+        stack.push("flagOcr");
         if (stylelist.contains(style_settings->get(STYLE_NAME).toString())) {
-            btnOrc->setStyleSheet("QPushButton{image: url(:/icon/icon/ocr.svg);border:none;background-color:#3D6BE5;border-radius:6px;}");
+            btnOcr->setStyleSheet("QPushButton{image: url(:/icon/icon/ocr.svg);border:none;background-color:#3D6BE5;border-radius:6px;}");
         } else {
-            btnOrc->setStyleSheet("QPushButton{image: url(:/icon/icon/ocr_black.svg);border:none;background-color:#3D6BE5;border-radius:6px;}");
+            btnOcr->setStyleSheet("QPushButton{image: url(:/icon/icon/ocr_black.svg);border:none;background-color:#3D6BE5;border-radius:6px;}");
         }
 
 
-        emit sendOrcBegin();
+        emit sendOcrBegin();
     } else {
-        flagOrc = 0;
+        flagOcr = 0;
         stack.pop();
         if (stylelist.contains(style_settings->get(STYLE_NAME).toString())) {
-            btnOrc->setStyleSheet("QPushButton{image: url(:/icon/icon/ocr.svg);border:none;background-color:rgb(15,08,01);border-radius:6px;}"
+            btnOcr->setStyleSheet("QPushButton{image: url(:/icon/icon/ocr.svg);border:none;background-color:rgb(15,08,01);border-radius:6px;}"
                                   "QPushButton:hover{image: url(:/icon/icon/ocr.svg);border:none;background-color:#3D6BE5;border-radius:6px;}"
                                   "QPushButton:checked{image: url(:/icon/icon/ocr.svg);border:none;background-color:#3D6BE5;border-radius:6px;}");
 
         } else {
-            btnOrc->setStyleSheet("QPushButton{image: url(:/icon/icon/ocr_black.svg);border:none;background-color:#E7E7E7;border-radius:6px;}"
+            btnOcr->setStyleSheet("QPushButton{image: url(:/icon/icon/ocr_black.svg);border:none;background-color:#E7E7E7;border-radius:6px;}"
                                   "QPushButton:hover{image: url(:/icon/icon/ocr_black.svg);border:none;background-color:#3D6BE5;border-radius:6px;}"
                                   "QPushButton:checked{image: url(:/icon/icon/ocr_black.svg);border:none;background-color:#3D6BE5;border-radius:6px;}");
         }
 
-        emit sendOrcEnd();
+        emit sendOcrEnd();
     }
 }
 
@@ -435,7 +435,7 @@ void KYCFunctionBarWidget::onBtnScanClicked()
     if (instance.getKylinSaneStatus() == true) {
         thread.start();
         qDebug() << "btnScan: " << btnScan->size() << btnScan->pos() << btnScan->geometry();
-        emit sendScanAgain();
+        emit clickBtnScanStart();
 
         btnScan->hide();
         btnScan->resize(0, 0);
@@ -521,9 +521,9 @@ void KYCFunctionBarWidget::scanResult(int ret)
     labMovieScan->hide();
 
     if (ret == 0)
-        emit sendScanEnd(true);
+        emit clickBtnScanEnd(true);
     else
-        emit sendScanEnd(false);
+        emit clickBtnScanEnd(false);
 }
 
 void KYCFunctionBarWidget::funcbar_style_changed(QString)
@@ -538,7 +538,7 @@ void KYCFunctionBarWidget::funcbar_style_changed(QString)
         btnRectify->setStyleSheet("QPushButton{image: url(:/icon/icon/rectify.svg);border:none;background-color:rgb(15,08,01);border-radius:6px;}"
                                   "QPushButton:hover{image: url(:/icon/icon/rectify.svg);border:none;background-color:#3D6BE5;border-radius:6px;}"
                                   "QPushButton:checked{image: url(:/icon/icon/rectify.svg);border:none;background-color:#3D6BE5;border-radius:6px;}");
-        btnOrc->setStyleSheet("QPushButton{image: url(:/icon/icon/ocr.svg);border:none;background-color:rgb(15,08,01);border-radius:6px;}"
+        btnOcr->setStyleSheet("QPushButton{image: url(:/icon/icon/ocr.svg);border:none;background-color:rgb(15,08,01);border-radius:6px;}"
                               "QPushButton:hover{image: url(:/icon/icon/ocr.svg);border:none;background-color:#3D6BE5;border-radius:6px;}"
                               "QPushButton:checked{image: url(:/icon/icon/ocr.svg);border:none;background-color:#3D6BE5;border-radius:6px;}");
 
@@ -555,7 +555,7 @@ void KYCFunctionBarWidget::funcbar_style_changed(QString)
         btnRectify->setStyleSheet("QPushButton{image: url(:/icon/icon/rectify_black.svg);border:none;background-color:#E7E7E7;border-radius:6px;}"
                                   "QPushButton:hover{image: url(:/icon/icon/rectify_black.svg);border:none;background-color:#3D6BE5;border-radius:6px;}"
                                   "QPushButton:checked{image: url(:/icon/icon/rectify_black.svg);border:none;background-color:#3D6BE5;border-radius:6px;}");
-        btnOrc->setStyleSheet("QPushButton{image: url(:/icon/icon/ocr_black.svg);border:none;background-color:#E7E7E7;border-radius:6px;}"
+        btnOcr->setStyleSheet("QPushButton{image: url(:/icon/icon/ocr_black.svg);border:none;background-color:#E7E7E7;border-radius:6px;}"
                               "QPushButton:hover{image: url(:/icon/icon/ocr_black.svg);border:none;background-color:#3D6BE5;border-radius:6px;}"
                               "QPushButton:checked{image: url(:/icon/icon/ocr_black.svg);border:none;background-color:#3D6BE5;border-radius:6px;}");
 
@@ -565,20 +565,20 @@ void KYCFunctionBarWidget::funcbar_style_changed(QString)
     }
 
 
-    if (flagOrc == 1) { // 在主题变换时，正在文字识别的按钮应该还是选中状态
+    if (flagOcr == 1) { // 在主题变换时，正在文字识别的按钮应该还是选中状态
         if (stylelist.contains(style_settings->get(STYLE_NAME).toString())) {
-            btnOrc->setStyleSheet("QPushButton{image: url(:/icon/icon/ocr.svg);border:none;background-color:#3D6BE5;border-radius:6px;}");
+            btnOcr->setStyleSheet("QPushButton{image: url(:/icon/icon/ocr.svg);border:none;background-color:#3D6BE5;border-radius:6px;}");
         } else {
-            btnOrc->setStyleSheet("QPushButton{image: url(:/icon/icon/ocr_black.svg);border:none;background-color:#3D6BE5;border-radius:6px;}");
+            btnOcr->setStyleSheet("QPushButton{image: url(:/icon/icon/ocr_black.svg);border:none;background-color:#3D6BE5;border-radius:6px;}");
         }
     } else {
         if (stylelist.contains(style_settings->get(STYLE_NAME).toString())) {
-            btnOrc->setStyleSheet("QPushButton{image: url(:/icon/icon/ocr.svg);border:none;background-color:rgb(15,08,01);border-radius:6px;}"
+            btnOcr->setStyleSheet("QPushButton{image: url(:/icon/icon/ocr.svg);border:none;background-color:rgb(15,08,01);border-radius:6px;}"
                                   "QPushButton:hover{image: url(:/icon/icon/ocr.svg);border:none;background-color:#3D6BE5;border-radius:6px;}"
                                   "QPushButton:checked{image: url(:/icon/icon/ocr.svg);border:none;background-color:#3D6BE5;border-radius:6px;}");
 
         } else {
-            btnOrc->setStyleSheet("QPushButton{image: url(:/icon/icon/ocr_black.svg);border:none;background-color:#E7E7E7;border-radius:6px;}"
+            btnOcr->setStyleSheet("QPushButton{image: url(:/icon/icon/ocr_black.svg);border:none;background-color:#E7E7E7;border-radius:6px;}"
                                   "QPushButton:hover{image: url(:/icon/icon/ocr_black.svg);border:none;background-color:#3D6BE5;border-radius:6px;}"
                                   "QPushButton:checked{image: url(:/icon/icon/ocr_black.svg);border:none;background-color:#3D6BE5;border-radius:6px;}");
         }

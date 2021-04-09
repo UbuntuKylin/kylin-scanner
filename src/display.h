@@ -38,8 +38,6 @@
 #include "interrupt.h"
 #include "theme.h"
 
-#define DEFAULT_SAVE_PRESENT_IMAGE_PATH "/tmp/scanner/present_image.jpg"
-
 class KYCOcrThread : public QThread
 {
     Q_OBJECT
@@ -47,7 +45,7 @@ public:
     void run() Q_DECL_OVERRIDE;
 
 signals:
-    void orcFinished();
+    void ocrFinished();
 };
 
 class KYCEditBarWidget  :   public QWidget
@@ -86,15 +84,15 @@ public:
     QImage *imageSave(QString fileName);
     void setNoDevice();
     void setInitDevice();
-    void setOrcThreadQuit();
+    void setOcrThreadQuit();
     void setPixmap(QImage img, QLabel *lab);
     float setPixmapScaled(QImage img, QLabel *lab);
     void updateWindowSize();
-    void setOrcFlagStatus();
+    void setOcrFlagStatus();
 
     void initBeforeScanAgain();
     void initStyle();
-    void initStyleOrc();
+    void initStyleOcr();
     void initStyleTailor();
     void initSavePresentImage();
     void onOcr();
@@ -103,8 +101,8 @@ public:
 private:
     int flagBeautify = 0; //一键美化标志
     int flagRectify = 0; //智能纠偏标志
-    int flagOrc = 0; //文字识别标志
-    int flagOrcInit = 0; // 文字识别已出现样式标志
+    int flagOcr = 0; //文字识别标志
+    int flagOcrInit = 0; // 文字识别已出现样式标志
     int flagTailor = 0; // 用于裁切的主题切换问题
     int flagWaterMark = 0; // 用于扫描完成后添加水印时的覆盖问题
     float scaledNum = 1; //缩放倍数
@@ -126,8 +124,8 @@ private:
     QLabel *labNormalRight;      //正常显示界面右部分
     QLabel *labEditLayout;       //编辑栏展开界面的显示部分
     KYCTailorLabel *labTailor;         //编辑栏
-    QLabel *labOrcLeft;          //文字识别图片显示部分
-    QLabel *labOrcRight;         //文字识别文字显示部分
+    QLabel *labOcrLeft;          //文字识别图片显示部分
+    QLabel *labOcrRight;         //文字识别文字显示部分
     QPushButton *btnNormal;      //正常显示界面按钮
     QPushButton *btnEditLayout;  //编辑栏展开界面按钮
     QPushButton *btnTailorLayout;      //裁剪界面按钮
@@ -143,16 +141,16 @@ private:
 
     QVBoxLayout *vBoxConnectError;
     QVBoxLayout *vBoxScanSet;
-    QVBoxLayout *vBoxOrc;
+    QVBoxLayout *vBoxOcr;
     QHBoxLayout *hBoxNormal;
     QHBoxLayout *hBoxEditLayout;
     QHBoxLayout *hBoxTailor;
-    QHBoxLayout *hBoxOrc;
+    QHBoxLayout *hBoxOcr;
     QWidget *widgetConnectError;
     QWidget *widgetNormal;
     QWidget *widgetEditLayout;
     QWidget *widgetTailor;
-    QWidget *widgetOrc;
+    QWidget *widgetOcr;
     QStackedLayout *vStackedLayout;
     KYCEditBarWidget *editLayout;
     KYCEditBarWidget *editLayoutTailor;
@@ -173,7 +171,7 @@ private slots:
     void rotating();
     void symmetry();
     void addWatermark();
-    void orcText();
+    void ocrText();
     void scandisplay_theme_changed(QString);
 
 signals:

@@ -16,6 +16,7 @@
 *
 */
 
+#include "common.h"
 #include "sendmail.h"
 #include "xatomhelper.h"
 
@@ -387,13 +388,17 @@ void KYCSendMailDialog::setBtnList()
 void KYCSendMailDialog::openMail(QString name)
 {
     QFile aFile(DESKTOPPATH + name);
+    QString cmd(BASH_TYPE);
+    QString str;
+    QStringList  arglists;
+    QString mailPicture(MAIL_PICTURE_PATH);
+
     if (!aFile.exists())
         qDebug() << DESKTOPPATH << name << " no exists!";
     if (!aFile.open(QIODevice::ReadOnly | QIODevice::Text))
         qDebug() << DESKTOPPATH << name << " open false!";
 
     QTextStream aStream(&aFile);
-    QString str;
     aStream.setAutoDetectUnicode(true);
     while (!aStream.atEnd()) {
         str = aStream.readLine();
@@ -405,8 +410,8 @@ void KYCSendMailDialog::openMail(QString name)
     qDebug() << "exec str = " << str;
     QProcess *process = new QProcess();
 
-    QStringList  arglists;
-    QString mailPicture = "/tmp/scanner/present_image.jpg";
+    arglists << "-c";
+    arglists << str;
     if (str == "thunderbird") {
         arglists << "-compose" << "attachment='/tmp/scanner/present_image.jpg'";
     } else if (str == "claws-mail") {
@@ -417,7 +422,7 @@ void KYCSendMailDialog::openMail(QString name)
         arglists << " ";
     }
 
-    process->start(str, arglists);
+    process->start(cmd, arglists);
 }
 
 /*

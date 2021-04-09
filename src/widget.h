@@ -37,12 +37,11 @@ class KYCCommonScanThread : public QThread
 {
     Q_OBJECT
 public:
-    // 将连接设备，获取设备信息放在线程中，因为这个过程耗费资源
     void run() Q_DECL_OVERRIDE;
 
 Q_SIGNALS:
-    // 此结束信号，用来处理是否获取到设备信息的界面操作
-    void scanFinished(bool);
+    // Whether find scanners in the first time
+    void initFindScanDevicesFinished(bool);
 };
 
 class KYCWidget : public QWidget
@@ -53,6 +52,7 @@ public:
     KYCWidget(QWidget *parent = 0);
     ~KYCWidget();
 
+    void initConnect();
     void setPdfSize(QPdfWriter *pdfWriter, QString size);
     void saveToPdf(QImage img, QString pathName);
     void resultDetail(bool ret);
@@ -89,7 +89,7 @@ Q_SIGNALS:
 private slots:
     void saveImage(QString fileName);
     void scanResult(bool ret);
-    void swichScanDeviceResult(bool ret);
+    void switchScanDeviceResult(bool ret);
     void setMaskClear();
     void setWindowBorderRadius();
     void style_changed(QString); // 系统主题风格变化

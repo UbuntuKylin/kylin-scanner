@@ -17,6 +17,7 @@
 */
 
 #include "deskew.h"
+#include "common.h"
 
 //度数转换
 double DegreeTrans(double theta)
@@ -171,6 +172,6 @@ int ImageRectify(const char *pInFileName)
 
     src = imread(pInFileName);
     rotateImage(src, dst, degree);
-    imwrite("/tmp/scanner/scan1.png", dst);
+    imwrite(SCANNING_PICTURE_PATH, dst);
     return 0;
 }

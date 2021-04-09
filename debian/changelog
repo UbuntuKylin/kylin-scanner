@@ -1,3 +1,13 @@
+kylin-scanner (1.0.0-19) v101; urgency=medium
+
+  * [English]
+  * Fix #45705, Fix send mail dialog not work while running evolution
+  *
+  * [中文]
+  * Fix 45705, 点击邮件客户端后直接退出提示框，没有调用出邮件客户端登录界面
+
+ -- yushuoqi <yushuoqi@kylinos.cn>  Thu, 08 Apr 2021 15:58:45 +0800
+
 kylin-scanner (1.0.0-18) v101; urgency=medium
 
   * [English] 

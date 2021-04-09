@@ -149,6 +149,18 @@ KYCScanSettingsWidget::KYCScanSettingsWidget(QWidget *parent)
     setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     setLayout(vBoxScanSet);
 
+    initSettings();
+
+    initConnectSettings();
+}
+
+KYCScanSettingsWidget::~KYCScanSettingsWidget()
+{
+
+}
+
+void KYCScanSettingsWidget::initSettings()
+{
     // For current combobox text, while not change current text
     KYCSaneWidget &instance = KYCSaneWidget::getInstance();
     QString curDeviceName, curSize, curColor, curResolution;
@@ -176,7 +188,10 @@ KYCScanSettingsWidget::KYCScanSettingsWidget(QWidget *parent)
 
     curResolution = textResolution->currentText();
     instance.userInfo.resolution = curResolution;
+}
 
+void KYCScanSettingsWidget::initConnectSettings()
+{
     // For save location
     connect(btnLocation, SIGNAL(clicked()), this, SLOT(onBtnLocationClicked()));
 
@@ -208,11 +223,6 @@ KYCScanSettingsWidget::KYCScanSettingsWidget(QWidget *parent)
 
     connect(style_settings, SIGNAL(changed(QString)), this,
             SLOT(scanset_style_changed(QString)));
-}
-
-KYCScanSettingsWidget::~KYCScanSettingsWidget()
-{
-
 }
 
 /**
@@ -399,6 +409,10 @@ void KYCScanSettingsWidget::setkylinScanStatus(bool status)
 //    setKylinComboBoxTextDeviceAttributes(textDevice, strListDevice);
 }
 
+/**
+ * @brief KYCScanSettingsWidget::setKylinScanSetNotEnable
+ * Case 1: Cannot click btnMail and btnSave before click btnScan
+ */
 void KYCScanSettingsWidget::setKylinScanSetNotEnable()
 {
     KYCSaneWidget &instance = KYCSaneWidget::getInstance();
@@ -603,9 +617,15 @@ void KYCScanSettingsWidget::setKylinLable()
         if (stylelist.contains(style_settings->get(STYLE_NAME).toString())) {
             textType->setStyleSheet("QLabel{border:1px solid #0D0400;background-color:rgb(15,08,01);color:rgb(232,232,232);border-radius:4px;}");
             textName->setStyleSheet("QLineEdit{border:1px solid #0D0400;background-color:rgb(15,08,01);color:rgb(232,232,232);border-radius:4px;}");
+#ifdef DEBUG_EDIT
+            btnLocation->setStyleSheet("QPushButton{border:4px solid #0D0400;background-repeat:no-repeat;background-position:right;background-color:#0D0400;color:gray;border-radius:4px;text-align:left;}");
+#endif
         } else {
             textType->setStyleSheet("QLabel{background-color:#E7E7E7;color:#000000;border-radius:4px;}");
             textName->setStyleSheet("QLineEdit{background-color:#E7E7E7;color:#000000;border-radius:4px;}");
+#ifdef DEBUG_EDIT
+            btnLocation->setStyleSheet("QPushButton{border:4px solid #E7E7E7;background-color:#E7E7E7;background-repeat:no-repeat;background-position:right;color:gray;border-radius:4px;text-align:left;}");
+#endif
         }
     }
 }
@@ -968,7 +988,7 @@ void KYCScanSettingsWidget::modifyBtnSave()
     }
 }
 
-void KYCScanSettingsWidget::setOrcFlagInit()
+void KYCScanSettingsWidget::setOcrFlagInit()
 {
     // Init btnSave text to save as
     flag = 0;
