@@ -62,11 +62,30 @@ KYCScanSettingsWidget::KYCScanSettingsWidget(QWidget *parent)
     , vBoxScanSet (new QVBoxLayout())
     , vBoxScanSet1 (new QVBoxLayout())
 {
+    initWindow();
+
+    initLayout();
+
+    initStyle();
+
+    initSettings();
+
+    initConnect();
+}
+
+KYCScanSettingsWidget::~KYCScanSettingsWidget()
+{
+
+}
+
+void KYCScanSettingsWidget::initWindow()
+{
     setFixedWidth(268);
+    setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+}
 
-    stylelist << STYLE_NAME_KEY_DARK << STYLE_NAME_KEY_BLACK;
-    iconthemelist << ICON_THEME_KEY_BASIC << ICON_THEME_KEY_CLASSICAL << ICON_THEME_KEY_DEFAULT;
-
+void KYCScanSettingsWidget::initLayout()
+{
     line3->setObjectName(QString::fromUtf8("line3"));
     line3->setMaximumHeight(1);
     line3->setMaximumWidth(230);
@@ -94,8 +113,30 @@ KYCScanSettingsWidget::KYCScanSettingsWidget(QWidget *parent)
     btnLocation->setIcon(QIcon::fromTheme("folder-open"));
     btnLocation->setLayoutDirection(Qt::LayoutDirection::RightToLeft);
 
-    setKylinLable();
-    setKylinComboBox(false);
+    vBoxScanSet->setSpacing(0);
+    vBoxScanSet->addLayout(hBoxDevice);
+    vBoxScanSet->addLayout(hBoxType);
+    vBoxScanSet->addLayout(hBoxColor);
+    vBoxScanSet->addLayout(hBoxResolution);
+    vBoxScanSet->addLayout(hBoxSize);
+    vBoxScanSet->addLayout(hBoxLine3);
+    vBoxScanSet->addLayout(hBoxFormat);
+    vBoxScanSet->addLayout(hBoxName);
+    vBoxScanSet->addLayout(hBoxLocation);
+    vBoxScanSet->addStretch();
+    vBoxScanSet->addLayout(hBoxLine4);
+    vBoxScanSet->addLayout(hBoxMailText);
+    vBoxScanSet->setContentsMargins(0, 0, 0, 0);
+
+    setLayout(vBoxScanSet);
+
+}
+
+void KYCScanSettingsWidget::initStyle()
+{
+    stylelist << STYLE_NAME_KEY_DARK << STYLE_NAME_KEY_BLACK;
+    iconthemelist << ICON_THEME_KEY_BASIC << ICON_THEME_KEY_CLASSICAL << ICON_THEME_KEY_DEFAULT;
+
     if (stylelist.contains(style_settings->get(STYLE_NAME).toString())) {
         // 背景颜色
         QPalette pal(palette());
@@ -129,38 +170,15 @@ KYCScanSettingsWidget::KYCScanSettingsWidget(QWidget *parent)
         line4->setStyleSheet("QFrame{color:#DCDCDC}");
 
     }
-    setKylinHBoxLayout();
-
-    vBoxScanSet->setSpacing(0);
-    vBoxScanSet->addLayout(hBoxDevice);
-    vBoxScanSet->addLayout(hBoxType);
-    vBoxScanSet->addLayout(hBoxColor);
-    vBoxScanSet->addLayout(hBoxResolution);
-    vBoxScanSet->addLayout(hBoxSize);
-    vBoxScanSet->addLayout(hBoxLine3);
-    vBoxScanSet->addLayout(hBoxFormat);
-    vBoxScanSet->addLayout(hBoxName);
-    vBoxScanSet->addLayout(hBoxLocation);
-    vBoxScanSet->addStretch();
-    vBoxScanSet->addLayout(hBoxLine4);
-    vBoxScanSet->addLayout(hBoxMailText);
-    vBoxScanSet->setContentsMargins(0, 0, 0, 0);
-
-    setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-    setLayout(vBoxScanSet);
-
-    initSettings();
-
-    initConnectSettings();
-}
-
-KYCScanSettingsWidget::~KYCScanSettingsWidget()
-{
-
 }
 
 void KYCScanSettingsWidget::initSettings()
 {
+    setKylinLable();
+    setKylinComboBox(false);
+
+    setKylinHBoxLayout();
+
     // For current combobox text, while not change current text
     KYCSaneWidget &instance = KYCSaneWidget::getInstance();
     QString curDeviceName, curSize, curColor, curResolution;
@@ -190,7 +208,7 @@ void KYCScanSettingsWidget::initSettings()
     instance.userInfo.resolution = curResolution;
 }
 
-void KYCScanSettingsWidget::initConnectSettings()
+void KYCScanSettingsWidget::initConnect()
 {
     // For save location
     connect(btnLocation, SIGNAL(clicked()), this, SLOT(onBtnLocationClicked()));

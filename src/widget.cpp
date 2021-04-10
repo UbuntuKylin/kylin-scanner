@@ -23,7 +23,7 @@
 #include <QMessageBox>
 #include <QProcess>
 
-bool device = false;
+bool g_device = false;
 
 KYCWidget::KYCWidget(QWidget *parent)
     : QWidget(parent)
@@ -37,22 +37,31 @@ KYCWidget::KYCWidget(QWidget *parent)
     , pHboxLayout (new QHBoxLayout())
     , pLayout (new QVBoxLayout())
 {
+    initWindow();
+
+    initLayout();
+
+    initStyle();
+
+    initSetting();
+
+    initConnect();
+}
+
+KYCWidget::~KYCWidget()
+{
+
+}
+
+void KYCWidget::initWindow()
+{
     setWindowTitle (tr("kylin-scanner")); // For system tray text
     setWindowIcon (QIcon::fromTheme("kylin-scanner"));
-
-    //stylelist << STYLE_NAME_KEY_DARK << STYLE_NAME_KEY_BLACK << STYLE_NAME_KEY_DEFAULT;
-    stylelist << STYLE_NAME_KEY_DARK << STYLE_NAME_KEY_BLACK;
-    iconthemelist << ICON_THEME_KEY_BASIC << ICON_THEME_KEY_CLASSICAL << ICON_THEME_KEY_DEFAULT;
-
-#ifdef DEBUG_EDIT
-    KYCSaneWidget &instance = KYCSaneWidget::getInstance();
-    instance.setKylinSaneStatus (true);
-#else
-    thread.start();
-    usbThread.start();
-#endif
-
     resize(MAINWINDOW_WIDTH, MAINWINDOW_HEIGHT);
+}
+
+void KYCWidget::initLayout()
+{
     pTitleBar->setMainWindowAttribute(this->width(), this->height());
 
     line->setObjectName(QString::fromUtf8("line"));
@@ -60,10 +69,27 @@ KYCWidget::KYCWidget(QWidget *parent)
     line->setFrameShape(QFrame::HLine);
     line->hide ();
 
-#ifdef DEBUG_EDIT
-#else
-    pScanSet->setKylinScanSetNotEnable();
-#endif
+    pHboxLayout->setSpacing(0); // Need init setSpacing()，or addSpacing() is incorrect.
+    pHboxLayout->addWidget(pScanSet);
+    pHboxLayout->addWidget(pScandisplay);
+    pHboxLayout->setContentsMargins(0, 0, 0, 0);
+
+    pLayout->setSpacing(0);
+    pLayout->addWidget(pTitleBar);
+    pLayout->addWidget(line);
+    pLayout->addWidget(pFuncBar);
+    pLayout->addLayout(pHboxLayout);
+    pLayout->setContentsMargins(0, 0, 0, 0);
+
+    //setWindowBorderRadius();
+    setLayout(pLayout);
+}
+
+void KYCWidget::initStyle()
+{
+    //stylelist << STYLE_NAME_KEY_DARK << STYLE_NAME_KEY_BLACK << STYLE_NAME_KEY_DEFAULT;
+    stylelist << STYLE_NAME_KEY_DARK << STYLE_NAME_KEY_BLACK;
+    iconthemelist << ICON_THEME_KEY_BASIC << ICON_THEME_KEY_CLASSICAL << ICON_THEME_KEY_DEFAULT;
 
     qDebug() << "1 styleName = " << style_settings->get(STYLE_NAME).toString();
     if (stylelist.contains(style_settings->get(STYLE_NAME).toString())) {
@@ -82,32 +108,23 @@ KYCWidget::KYCWidget(QWidget *parent)
 
         line->setStyleSheet("QFrame{color:#DCDCDC}");
     }
+}
+
+void KYCWidget::initSetting()
+{
+#ifdef DEBUG_EDIT
+    KYCSaneWidget &instance = KYCSaneWidget::getInstance();
+    instance.setKylinSaneStatus (true);
+#else
+    thread.start();
+    usbThread.start();
+
+    pScanSet->setKylinScanSetNotEnable();
+#endif
 
     installEventFilter(pTitleBar);
     installEventFilter(pFuncBar);
     installEventFilter(pScanSet);
-
-    pHboxLayout->setSpacing(0); // Need init setSpacing()，or addSpacing() is incorrect.
-    pHboxLayout->addWidget(pScanSet);
-    pHboxLayout->addWidget(pScandisplay);
-    pHboxLayout->setContentsMargins(0, 0, 0, 0);
-
-    pLayout->setSpacing(0);
-    pLayout->addWidget(pTitleBar);
-    pLayout->addWidget(line);
-    pLayout->addWidget(pFuncBar);
-    pLayout->addLayout(pHboxLayout);
-    pLayout->setContentsMargins(0, 0, 0, 0);
-
-    //setWindowBorderRadius();
-    setLayout(pLayout);
-
-    initConnect();
-}
-
-KYCWidget::~KYCWidget()
-{
-
 }
 
 void KYCWidget::initConnect()
@@ -254,13 +271,13 @@ void KYCWidget::resultDetail(bool ret)
 #endif
 
     if (ret) {
-        device = true;
+        g_device = true;
         pScanSet->setKylinComboBox(false);
         pScanSet->setKylinLable();
         pFuncBar->setBtnScanEnable();
         pScanSet->setKylinScanSetEnable();
     } else {
-        device = false;
+        g_device = false;
         pScandisplay->setNoDevice();
         pFuncBar->setKylinScanSetNotEnable();
         pScanSet->setKylinScanSetNotEnable();
@@ -282,9 +299,8 @@ int KYCWidget::messageScanFinishedSave(QString pathName)
     if (! fileInfo.exists()) // Not exists, so save it
         return 1;
 
-    QMessageBox::StandardButton msgBox;
     QString msg = pathName + tr(" already exist, do you want to overwrite it?");
-    msgBox = QMessageBox::question(0, tr("Question"), msg);
+    QMessageBox::StandardButton msgBox = QMessageBox::question(0, tr("Question"), msg);
 
     if (msgBox == QMessageBox::Yes)
         return 1;
@@ -339,7 +355,7 @@ void KYCWidget::setScanSetBtnEnable(bool ret)
     pScanSet->setBtnSaveText();
 
     // 打开扫描设备进行扫描成功
-    device = true;
+    g_device = true;
     //pScandisplay->setInitDevice();
 
     // Do not change scan color mode while scan again
@@ -418,14 +434,14 @@ void KYCWidget::scanResult(bool ret)
 
 #ifdef DEBUG_EDIT
     {
-        device = true;
+        g_device = true;
 
         pScanSet->setKylinComboBoxScanDeviceName();
         //resultDetail(true);
     }
 #else
     if (ret) {
-        device = true;
+        g_device = true;
 
         pScanSet->setKylinComboBoxScanDeviceName();
         instance.openScanDevice(0);
@@ -435,7 +451,7 @@ void KYCWidget::scanResult(bool ret)
 
         pScanSet->setFlagTextDeviceChangedWork();
     } else {
-        device = false;
+        g_device = false;
         // free resource for sane devices
         //instance.saneExit();
         pScandisplay->setNoDevice();
@@ -457,7 +473,7 @@ void KYCWidget::switchScanDeviceResult(bool ret)
 
 #ifdef DEBUG_EDIT
     {
-        device = true;
+        g_device = true;
         pScandisplay->setInitDevice();
         pScanSet->setKylinComboBox(true);
         pScanSet->setKylinLable();
@@ -466,14 +482,14 @@ void KYCWidget::switchScanDeviceResult(bool ret)
     }
 #else
     if (ret) {
-        device = true;
+        g_device = true;
         pScandisplay->setInitDevice();
         pScanSet->setKylinComboBox(true);
         pScanSet->setKylinLable();
         pFuncBar->setBtnScanEnable();
         pScanSet->setKylinScanSetEnable();
     } else {
-        device = false;
+        g_device = false;
         pScandisplay->setNoDevice();
         pFuncBar->setKylinScanSetNotEnable();
         pScanSet->setKylinScanSetNotEnable();
@@ -487,7 +503,7 @@ void KYCWidget::scanningResultDetail(bool ret)
 
 #ifdef DEBUG_EDIT
     {
-        device = true;
+        g_device = true;
         pScandisplay->setInitDevice();
         //pScanSet->setKylinComboBox(true);
         //pScanSet->setKylinLable();
@@ -497,7 +513,7 @@ void KYCWidget::scanningResultDetail(bool ret)
 #else
     if (!ret) {
         // 可以查找到扫描设备，但打开扫描设备进行扫描失败
-        device = false;
+        g_device = false;
         pScandisplay->setNoDevice();
         // scan error, so set scan statu false
         pScanSet->setkylinScanStatus(false);
@@ -563,7 +579,7 @@ void KYCWidget::style_changed(QString)
 
         line->setStyleSheet("QFrame{color:#DCDCDC}");
     }
-    if (device) {
+    if (g_device) {
         pScanSet->setKylinLable();
         pFuncBar->setBtnScanEnable();
         pScanSet->setKylinScanSetEnable();

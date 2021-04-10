@@ -41,16 +41,32 @@ KYCTitleBarDialog::KYCTitleBarDialog(QWidget *parent)
     , pButtonLayout (new QHBoxLayout())
     , pLayout (new QHBoxLayout())
 {
+    initWindow();
+
+    initLayout();
+
+    initStyle();
+
+    initConnect();
+}
+
+KYCTitleBarDialog::~KYCTitleBarDialog()
+{
+
+}
+
+void KYCTitleBarDialog::initWindow()
+{
     setFixedHeight(36);
     setMinimumWidth(860);
     mainWindowHeight = MAINWINDOW_HEIGHT;
     mainWindowWidth = MAINWINDOW_WIDTH;
 
-    stylelist << STYLE_NAME_KEY_DARK << STYLE_NAME_KEY_BLACK;
-    iconthemelist << ICON_THEME_KEY_BASIC << ICON_THEME_KEY_CLASSICAL << ICON_THEME_KEY_DEFAULT;
-
     flagMaxWindow = false;
+}
 
+void KYCTitleBarDialog::initLayout()
+{
     m_logo->setFixedSize (24, 24);
     m_logo->setPixmap(QIcon::fromTheme("kylin-scanner").pixmap(m_logo->size()));
 
@@ -145,18 +161,22 @@ KYCTitleBarDialog::KYCTitleBarDialog(QWidget *parent)
     pLayout->setContentsMargins(0, 0, 0, 0);
 
     setLayout(pLayout);
+}
 
+void KYCTitleBarDialog::initStyle()
+{
+    stylelist << STYLE_NAME_KEY_DARK << STYLE_NAME_KEY_BLACK;
+    iconthemelist << ICON_THEME_KEY_BASIC << ICON_THEME_KEY_CLASSICAL << ICON_THEME_KEY_DEFAULT;
+}
+
+void KYCTitleBarDialog::initConnect()
+{
     connect(m_pMinimizeButton, SIGNAL(clicked(bool)), this, SLOT(onClicked()));
     connect(m_pMaximizeButton, SIGNAL(clicked(bool)), this, SLOT(onClicked()));
     connect(m_pCloseButton, SIGNAL(clicked(bool)), this, SLOT(onClicked()));
     connect(style_settings, SIGNAL(changed(QString)), this, SLOT(titlebar_style_changed(QString)));
     connect(icon_theme_settings, SIGNAL(changed(QString)), this,
             SLOT(titlebar_icon_theme_changed(QString)));
-}
-
-KYCTitleBarDialog::~KYCTitleBarDialog()
-{
-
 }
 
 void KYCTitleBarDialog::mouseDoubleClickEvent(QMouseEvent *event)

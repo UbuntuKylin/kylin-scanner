@@ -29,9 +29,7 @@
 #include "titlebar.h"
 #include "theme.h"
 #include "usbhotplug.h"
-
-#define MAINWINDOW_WIDTH 860
-#define MAINWINDOW_HEIGHT 680
+#include "common.h"
 
 class KYCCommonScanThread : public QThread
 {
@@ -52,7 +50,12 @@ public:
     KYCWidget(QWidget *parent = 0);
     ~KYCWidget();
 
+    void initWindow();
+    void initLayout();
+    void initStyle();
+    void initSetting();
     void initConnect();
+
     void setPdfSize(QPdfWriter *pdfWriter, QString size);
     void saveToPdf(QImage img, QString pathName);
     void resultDetail(bool ret);

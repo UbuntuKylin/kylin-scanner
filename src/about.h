@@ -32,6 +32,10 @@ class KYCAboutDialog : public QDialog
 public:
     explicit KYCAboutDialog(QWidget *parent = nullptr);
     ~KYCAboutDialog();
+
+    void initWindow();
+    void initLayout();
+    void initConnect();
 protected:
     void paintEvent(QPaintEvent *event) Q_DECL_OVERRIDE;
 

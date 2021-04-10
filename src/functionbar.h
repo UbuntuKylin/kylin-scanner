@@ -61,6 +61,13 @@ public:
     ~KYCFunctionBarWidget();
 
     void keyPressEvent(QKeyEvent *e);
+
+    void initWindow();
+    void initLayout();
+    void initStyle();
+    void initConnect();
+
+    void getFileListNum();
     void setKylinScanSetNotEnable();
     void setKylinScanSetEnable();
     void setBtnScanEnable();

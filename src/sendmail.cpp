@@ -34,6 +34,22 @@ KYCNoMailDialog::KYCNoMailDialog(QWidget *parent) :
     , hBoxLayoutClose (new QHBoxLayout())
     , vBoxLayout (new QVBoxLayout())
 {
+    initWindow();
+
+    initLayout();
+
+    initStyle();
+
+    initConnect();
+}
+
+KYCNoMailDialog::~KYCNoMailDialog()
+{
+
+}
+
+void KYCNoMailDialog::initWindow()
+{
     MotifWmHints hints;
     hints.flags = MWM_HINTS_FUNCTIONS | MWM_HINTS_DECORATIONS;
     hints.functions = MWM_FUNC_ALL;
@@ -42,10 +58,10 @@ KYCNoMailDialog::KYCNoMailDialog(QWidget *parent) :
 
     setWindowTitle (tr("No email client")); // For system tray text
     setFixedSize(MAIL_WINDOW_WIDTH, MAIL_WINDOW_HEIGHT); // 窗口固定大小
+}
 
-    stylelist << STYLE_NAME_KEY_DARK << STYLE_NAME_KEY_BLACK;
-    iconthemelist << ICON_THEME_KEY_BASIC << ICON_THEME_KEY_CLASSICAL << ICON_THEME_KEY_DEFAULT;
-
+void KYCNoMailDialog::initLayout()
+{
     btnClose->setIcon (QIcon::fromTheme (ICON_THEME_CLOSE));
     btnClose->setToolTip(tr("Close"));
     btnClose->setFixedSize(30, 30);
@@ -90,12 +106,28 @@ KYCNoMailDialog::KYCNoMailDialog(QWidget *parent) :
     btnCancel->setText(tr("Cancel"));
     btnCancel->setFixedSize(120, 36);
 
-
     hBoxLayout->setSpacing(0);
     hBoxLayout->addWidget(btnOk);
     hBoxLayout->addSpacing(16);
     hBoxLayout->addWidget(btnCancel);
     hBoxLayout->setContentsMargins(0, 0, 32, 0);
+
+    vBoxLayout->setSpacing(0);
+    vBoxLayout->addLayout(hBoxLayoutClose);
+    vBoxLayout->addSpacing(18);
+    vBoxLayout->addWidget(labTitle);
+    vBoxLayout->addSpacing(24);
+    vBoxLayout->addWidget(textEdit);
+    vBoxLayout->addSpacing(40);
+    vBoxLayout->addLayout(hBoxLayout);
+    vBoxLayout->setContentsMargins(32, 0, 0, 48);
+    setLayout(vBoxLayout);
+}
+
+void KYCNoMailDialog::initStyle()
+{
+    stylelist << STYLE_NAME_KEY_DARK << STYLE_NAME_KEY_BLACK;
+    iconthemelist << ICON_THEME_KEY_BASIC << ICON_THEME_KEY_CLASSICAL << ICON_THEME_KEY_DEFAULT;
 
     if (stylelist.contains(style_settings->get(STYLE_NAME).toString())) {
         QPalette pal(palette());
@@ -128,27 +160,14 @@ KYCNoMailDialog::KYCNoMailDialog(QWidget *parent) :
                                  "QPushButton:hover{border:none;background-color:#3D6BE5;color:#F0F0F0;border-radius:4px;}"
                                  "QPushButton:checked{border:none;background-color:#D93D6BE5;color:#F0F0F0;border-radius:4px;}");
     }
+}
 
-
-    vBoxLayout->setSpacing(0);
-    vBoxLayout->addLayout(hBoxLayoutClose);
-    vBoxLayout->addSpacing(18);
-    vBoxLayout->addWidget(labTitle);
-    vBoxLayout->addSpacing(24);
-    vBoxLayout->addWidget(textEdit);
-    vBoxLayout->addSpacing(40);
-    vBoxLayout->addLayout(hBoxLayout);
-    vBoxLayout->setContentsMargins(32, 0, 0, 48);
-
+void KYCNoMailDialog::initConnect()
+{
     connect(btnOk, SIGNAL(clicked()), this, SLOT(accept()));
     connect(btnCancel, SIGNAL(clicked()), this, SLOT(reject()));
     connect(btnClose, SIGNAL(clicked()), this, SLOT(reject()));
     connect(style_settings, SIGNAL(changed(QString)), this, SLOT(nomail_style_changed(QString)));
-}
-
-KYCNoMailDialog::~KYCNoMailDialog()
-{
-
 }
 
 void KYCNoMailDialog::nomail_style_changed(QString)
@@ -200,6 +219,22 @@ KYCSendMailDialog::KYCSendMailDialog(QWidget *parent) :
     , scrollArea (new QScrollArea())
     , widget (new QWidget())
 {
+    initWindow();
+
+    initLayout();
+
+    initStyle();
+
+    initConnect();
+}
+
+KYCSendMailDialog::~KYCSendMailDialog()
+{
+
+}
+
+void KYCSendMailDialog::initWindow()
+{
     MotifWmHints hints;
     hints.flags = MWM_HINTS_FUNCTIONS | MWM_HINTS_DECORATIONS;
     hints.functions = MWM_FUNC_ALL;
@@ -207,15 +242,17 @@ KYCSendMailDialog::KYCSendMailDialog(QWidget *parent) :
     KYCXAtomHelperObject::getInstance()->setWindowMotifHint(winId(), hints);
 
     setWindowTitle (tr("Select email client"));
-    setFixedSize(MAIL_WINDOW_WIDTH, MAIL_WINDOW_HEIGHT); // 窗口固定大小
+    setFixedSize(MAIL_WINDOW_WIDTH, MAIL_WINDOW_HEIGHT);
 
     stylelist << STYLE_NAME_KEY_DARK << STYLE_NAME_KEY_BLACK;
     iconthemelist << ICON_THEME_KEY_BASIC << ICON_THEME_KEY_CLASSICAL << ICON_THEME_KEY_DEFAULT;
 
     widget->setFixedSize(MAIL_WINDOW_WIDTH, MAIL_WINDOW_HEIGHT);
-    widget->setWindowFlags(Qt::FramelessWindowHint | Qt::Tool |
-                           Qt::WindowStaysOnTopHint); // 去掉标题栏,去掉任务栏显示，窗口置顶
+    widget->setWindowFlags(Qt::FramelessWindowHint | Qt::Tool | Qt::WindowStaysOnTopHint);
+}
 
+void KYCSendMailDialog::initLayout()
+{
     btnClose->setIcon (QIcon::fromTheme (ICON_THEME_CLOSE));
     btnClose->setToolTip(tr("Close"));
     btnClose->setFixedSize(30, 30);
@@ -242,6 +279,15 @@ KYCSendMailDialog::KYCSendMailDialog(QWidget *parent) :
     hBoxLayout1->addStretch();
     hBoxLayout1->setContentsMargins(0, 0, 0, 0);
 
+    vBoxLayout->setSpacing(0);
+    vBoxLayout->addLayout(hBoxLayout);
+    vBoxLayout->addLayout(hBoxLayout1);
+    vBoxLayout->setContentsMargins(0, 0, 0, 0);
+    setLayout(vBoxLayout);
+}
+
+void KYCSendMailDialog::initStyle()
+{
     if (stylelist.contains(style_settings->get(STYLE_NAME).toString())) {
         QPalette pal(palette());
         pal.setColor(QPalette::Background, QColor(47, 44, 43));
@@ -257,13 +303,10 @@ KYCSendMailDialog::KYCSendMailDialog(QWidget *parent) :
 
         labTitle->setStyleSheet("color:#D9000000"); // 85% => D9, 255,255,255 => FFFFFF
     }
+}
 
-    vBoxLayout->setSpacing(0);
-    vBoxLayout->addLayout(hBoxLayout);
-    vBoxLayout->addLayout(hBoxLayout1);
-    vBoxLayout->setContentsMargins(0, 0, 0, 0);
-    setLayout(vBoxLayout);
-
+void KYCSendMailDialog::initConnect()
+{
     connect(btnClose, SIGNAL(clicked()), this, SLOT(reject()));
     connect(style_settings, SIGNAL(changed(QString)), this, SLOT(sendmail_style_changed(QString)));
 }

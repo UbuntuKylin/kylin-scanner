@@ -46,6 +46,11 @@ public:
     explicit KYCTitleBarDialog(QWidget *parent = nullptr);
     ~KYCTitleBarDialog();
 
+    void initWindow();
+    void initLayout();
+    void initStyle();
+    void initConnect();
+
     void setMainWindowAttribute(int w, int h);
 
 protected:

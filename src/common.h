@@ -18,6 +18,9 @@
 #ifndef COMMON_H
 #define COMMON_H
 
+#define MAINWINDOW_WIDTH 860
+#define MAINWINDOW_HEIGHT 680
+
 #define APP_NAME							"kylin-scanner"
 #define CN_TRANSLATION_FILE_PATH			"/usr/share/kylin-scanner/translations/kylin-scanner."
 

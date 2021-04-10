@@ -81,7 +81,11 @@ public:
     void keyPressEvent(QKeyEvent *e);
     void timerEvent(QTimerEvent *e);
 
-    QImage *imageSave(QString fileName);
+    void initWindow();
+    void initLayout();
+    void initStyle();
+    void initConnect();
+
     void setNoDevice();
     void setInitDevice();
     void setOcrThreadQuit();
@@ -91,12 +95,13 @@ public:
     void setOcrFlagStatus();
 
     void initBeforeScanAgain();
-    void initStyle();
     void initStyleOcr();
     void initStyleTailor();
     void initSavePresentImage();
     void onOcr();
     void onScan(bool ret);
+
+    QImage *imageSave(QString fileName);
 
 private:
     int flagBeautify = 0; //一键美化标志

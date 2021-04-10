@@ -41,8 +41,12 @@ public:
     explicit KYCScanSettingsWidget(QWidget *parent = nullptr);
     ~KYCScanSettingsWidget();
 
+    void initWindow();
+    void initLayout();
+    void initStyle();
     void initSettings();
-    void initConnectSettings();
+    void initConnect();
+
     void setKylinComboBox(bool curIndexChanged);
     void setKylinComboBoxScanDeviceName();
     void setkylinScanStatus(bool status);

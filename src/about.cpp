@@ -13,51 +13,12 @@ KYCAboutDialog::KYCAboutDialog(QWidget *parent) :
     ui(new Ui::KYCAboutDialog)
 {
     ui->setupUi(this);
-    MotifWmHints hints;
-    hints.flags = MWM_HINTS_FUNCTIONS | MWM_HINTS_DECORATIONS;
-    hints.functions = MWM_FUNC_ALL;
-    hints.decorations = MWM_DECOR_BORDER;
-    KYCXAtomHelperObject::getInstance()->setWindowMotifHint(winId(), hints);
 
-    QFont f = ui->labelTitle->font();
-    f.setPixelSize(14);
-    ui->labelTitle->setText(tr("kylin-scanner"));
-    f.setWeight(28);
-    f.setPixelSize(18);
-    ui->labelName->setFont(f);
-    ui->labelName->setText(tr("kylin-scanner"));
-    f.setWeight(24);
-    f.setPixelSize(14);
-    ui->labelVersion->setFont(f);
+    initWindow();
 
-    QString appVersion = QCoreApplication::applicationVersion();
-    ui->labelVersion->setText(tr("Version: " ) + appVersion);
-    //ui->labelVersion->setAlignment(Qt::AlignCenter);
-    f.setPixelSize(12);
-    f.setPixelSize(14);
-    setWindowModality(Qt::WindowModal);
-    setWindowTitle(tr("About"));
-    ui->labelLogo->setPixmap(QIcon::fromTheme("kylin-scanner").pixmap(ui->labelLogo->size()));
-    ui->labelIcon->setPixmap(QIcon::fromTheme("kylin-scanner").pixmap(96, 96));
+    initLayout();
 
-    ui->labelTitle->setText(tr("kylin-scanner"));
-    ui->btnClose->setIcon(QIcon::fromTheme("window-close-symbolic"));
-    ui->btnClose->setProperty("isWindowButton", 0x2);
-    ui->btnClose->setProperty("useIconHighlightEffect", 0x8);
-    ui->btnClose->setIconSize(QSize(16, 16));
-    ui->btnClose->installEventFilter(this);
-    ui->btnClose->setFlat(true);
-    ui->labelSupport->setContextMenuPolicy(Qt::NoContextMenu); // no right click menu
-
-    QScreen *screen = QGuiApplication::primaryScreen ();
-    QRect screenRect =  screen->availableGeometry();
-    this->move(screenRect.width() / 2, screenRect.height() / 2);
-    this->hide();
-    connect(ui->btnClose, SIGNAL(clicked()), this, SLOT(hide()));
-    connect(ui->labelSupport, &QLabel::linkActivated, [ = ](QString s) {
-        QUrl url(s);
-        QDesktopServices::openUrl(url);
-    });
+    initConnect();
 }
 
 void KYCAboutDialog::paintEvent(QPaintEvent *event)
@@ -143,4 +104,61 @@ void KYCAboutDialog::paintEvent(QPaintEvent *event)
 KYCAboutDialog::~KYCAboutDialog()
 {
     delete ui;
+}
+
+void KYCAboutDialog::initWindow()
+{
+    MotifWmHints hints;
+    hints.flags = MWM_HINTS_FUNCTIONS | MWM_HINTS_DECORATIONS;
+    hints.functions = MWM_FUNC_ALL;
+    hints.decorations = MWM_DECOR_BORDER;
+    KYCXAtomHelperObject::getInstance()->setWindowMotifHint(winId(), hints);
+
+    setWindowModality(Qt::WindowModal);
+    setWindowTitle(tr("About"));
+}
+
+void KYCAboutDialog::initLayout()
+{
+    QFont f = ui->labelTitle->font();
+    f.setPixelSize(14);
+    ui->labelTitle->setText(tr("kylin-scanner"));
+    f.setWeight(28);
+    f.setPixelSize(18);
+    ui->labelName->setFont(f);
+    ui->labelName->setText(tr("kylin-scanner"));
+    f.setWeight(24);
+    f.setPixelSize(14);
+    ui->labelVersion->setFont(f);
+
+    QString appVersion = QCoreApplication::applicationVersion();
+    ui->labelVersion->setText(tr("Version: " ) + appVersion);
+    //ui->labelVersion->setAlignment(Qt::AlignCenter);
+    f.setPixelSize(12);
+    f.setPixelSize(14);
+    ui->labelLogo->setPixmap(QIcon::fromTheme("kylin-scanner").pixmap(ui->labelLogo->size()));
+    ui->labelIcon->setPixmap(QIcon::fromTheme("kylin-scanner").pixmap(96, 96));
+
+    ui->labelTitle->setText(tr("kylin-scanner"));
+    ui->btnClose->setIcon(QIcon::fromTheme("window-close-symbolic"));
+    ui->btnClose->setProperty("isWindowButton", 0x2);
+    ui->btnClose->setProperty("useIconHighlightEffect", 0x8);
+    ui->btnClose->setIconSize(QSize(16, 16));
+    ui->btnClose->installEventFilter(this);
+    ui->btnClose->setFlat(true);
+    ui->labelSupport->setContextMenuPolicy(Qt::NoContextMenu); // no right click menu
+
+    QScreen *screen = QGuiApplication::primaryScreen ();
+    QRect screenRect =  screen->availableGeometry();
+    this->move(screenRect.width() / 2, screenRect.height() / 2);
+    this->hide();
+}
+
+void KYCAboutDialog::initConnect()
+{
+    connect(ui->btnClose, SIGNAL(clicked()), this, SLOT(hide()));
+    connect(ui->labelSupport, &QLabel::linkActivated, [ = ](QString s) {
+        QUrl url(s);
+        QDesktopServices::openUrl(url);
+    });
 }

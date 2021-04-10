@@ -37,7 +37,6 @@ KYCInterruptDialog::KYCInterruptDialog(QWidget *parent) :
     // For close button
     connect(btnClose, SIGNAL(clicked()), this, SLOT(reject()));
     connect(btnKnow, SIGNAL(clicked()), this, SLOT(accept()));
-
 }
 
 KYCInterruptDialog::~KYCInterruptDialog()

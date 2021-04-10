@@ -68,6 +68,11 @@ class KYCNoMailDialog : public QDialog
 public:
     explicit KYCNoMailDialog(QWidget *parent = nullptr);
     ~KYCNoMailDialog();
+
+    void initWindow();
+    void initLayout();
+    void initStyle();
+    void initConnect();
 private:
     QStringList stylelist;
     QStringList iconthemelist;
@@ -94,6 +99,13 @@ class KYCSendMailDialog : public QDialog
 
 public:
     explicit KYCSendMailDialog(QWidget *parent = nullptr);
+    ~KYCSendMailDialog();
+
+    void initWindow();
+    void initLayout();
+    void initStyle();
+    void initConnect();
+
     void setBtnList();
     void openMail(QString name);
     //void paintEvent(QPaintEvent *event); // 窗口阴影

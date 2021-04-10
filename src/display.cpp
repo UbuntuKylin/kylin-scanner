@@ -60,111 +60,13 @@ KYCScanDisplayWidget::KYCScanDisplayWidget(QWidget *parent)
     , editLayoutTailor (new KYCEditBarWidget())
     , scrollArea (new QScrollArea())
 {
-    setFocusPolicy(Qt::StrongFocus);
-    setMinimumSize(600, 567);
+    initWindow();
 
-    stylelist << STYLE_NAME_KEY_DARK << STYLE_NAME_KEY_BLACK;
-    iconthemelist << ICON_THEME_KEY_BASIC << ICON_THEME_KEY_CLASSICAL << ICON_THEME_KEY_DEFAULT;
+    initLayout();
 
-    labConnectError->setParent(widgetConnectError);
-    labConnectErrorText->setParent(widgetConnectError);
-    labInit->setMinimumSize(600, 567);
-    labConnectError->setMinimumSize(600, 320);
-    labConnectErrorText->setMinimumSize(600, 231);
-    labNormalLeft->setMinimumSize(360, 490);
-    labNormalRight->setFixedWidth(40);
-    labEditLayout->setMinimumSize(360, 490);
+    initStyle();
 
-    labInit->setText("");
-
-    vBoxConnectError->setSpacing(0);
-    vBoxConnectError->addStretch();
-    vBoxConnectError->addWidget(labConnectError);
-    vBoxConnectError->addSpacing(16);
-    vBoxConnectError->addWidget(labConnectErrorText);
-    vBoxConnectError->addStretch();
-    vBoxConnectError->setContentsMargins(0, 0, 0, 0);
-    widgetConnectError->setLayout(vBoxConnectError);
-
-    labNormalLeft->setParent(widgetNormal);
-    labNormalLeft->setAlignment(Qt::AlignCenter);
-
-    labNormalRight->setParent(widgetNormal);
-    btnNormal->setParent(widgetNormal);
-    btnNormal->setFixedSize(12, 30);
-
-    hBoxNormal->setSpacing(0);
-    hBoxNormal->addSpacing(93);
-    hBoxNormal->addStretch();
-    hBoxNormal->addWidget(labNormalLeft);
-    hBoxNormal->addStretch();
-    hBoxNormal->addSpacing(93);
-    hBoxNormal->addWidget(labNormalRight);
-    hBoxNormal->addSpacing(2);
-    hBoxNormal->addWidget(btnNormal);
-    hBoxNormal->setContentsMargins(0, 45, 0, 32);
-    widgetNormal->setLayout(hBoxNormal);
-
-
-    labEditLayout->setParent(widgetEditLayout);
-    labEditLayout->setAlignment(Qt::AlignCenter);
-
-    btnEditLayout->setParent(widgetEditLayout);
-    btnEditLayout->setFixedSize(12, 30);
-    editLayout->setParent(widgetEditLayout);
-
-
-    hBoxEditLayout->setSpacing(0);
-    hBoxEditLayout->addSpacing(93);
-    hBoxEditLayout->addStretch();
-    hBoxEditLayout->addWidget(labEditLayout);
-    hBoxEditLayout->addStretch();
-    hBoxEditLayout->addSpacing(93);
-    hBoxEditLayout->addWidget(editLayout);
-    hBoxEditLayout->addSpacing(2);
-    hBoxEditLayout->addWidget(btnEditLayout);
-    hBoxEditLayout->setContentsMargins(0, 45, 0, 32);
-    widgetEditLayout->setLayout(hBoxEditLayout);
-
-    vStackedLayout->addWidget(widgetNormal);
-    vStackedLayout->addWidget(widgetEditLayout);
-    vStackedLayout->addWidget(widgetConnectError);
-    vStackedLayout->addWidget(labInit);
-
-
-    vBoxScanSet->setSpacing(0);
-    vBoxScanSet->addLayout(vStackedLayout);
-    vBoxScanSet->setContentsMargins(0, 0, 0, 0);
-    setLayout(vBoxScanSet);
-    vStackedLayout->setCurrentWidget(labInit);
-    vStackedLayout->setContentsMargins(0, 0, 0, 0);
-
-    initStyle ();
-
-    // For switch page
-    connect(btnNormal, SIGNAL(clicked()), this, SLOT(switchPage()));
-    connect(btnEditLayout, SIGNAL(clicked()), this, SLOT(switchPage()));
-
-    //For rotate
-    connect(editLayout->btnRotate, SIGNAL(clicked()), this, SLOT(rotating()));
-
-    // For tailor
-    connect(editLayout->btnTailor, SIGNAL(clicked()), this, SLOT(tailor()));
-
-    // For symmetry
-    connect(editLayout->btnSymmetry, SIGNAL(clicked()), this, SLOT(symmetry()));
-
-    // For watermark
-    connect(editLayout->btnWatermark, SIGNAL(clicked()), this, SLOT(addWatermark()));
-
-    // For OCR
-    connect(&thread, SIGNAL(ocrFinished()), this, SLOT(ocrText()));
-
-    // For timerScan
-    //connect(timerScan, SIGNAL(timeout()), this, SLOT(timerScanUpdate()));
-
-    connect(icon_theme_settings, SIGNAL(changed(QString)), this,
-            SLOT(scandisplay_theme_changed(QString)));
+    initConnect();
 }
 
 /**
@@ -319,8 +221,90 @@ void KYCScanDisplayWidget::timerEvent(QTimerEvent *e)
     }
 }
 
+void KYCScanDisplayWidget::initWindow()
+{
+    setFocusPolicy(Qt::StrongFocus);
+    setMinimumSize(600, 567);
+}
+
+void KYCScanDisplayWidget::initLayout()
+{
+    labConnectError->setParent(widgetConnectError);
+    labConnectErrorText->setParent(widgetConnectError);
+    labInit->setMinimumSize(600, 567);
+    labConnectError->setMinimumSize(600, 320);
+    labConnectErrorText->setMinimumSize(600, 231);
+    labNormalLeft->setMinimumSize(360, 490);
+    labNormalRight->setFixedWidth(40);
+    labEditLayout->setMinimumSize(360, 490);
+
+    labInit->setText("");
+
+    vBoxConnectError->setSpacing(0);
+    vBoxConnectError->addStretch();
+    vBoxConnectError->addWidget(labConnectError);
+    vBoxConnectError->addSpacing(16);
+    vBoxConnectError->addWidget(labConnectErrorText);
+    vBoxConnectError->addStretch();
+    vBoxConnectError->setContentsMargins(0, 0, 0, 0);
+    widgetConnectError->setLayout(vBoxConnectError);
+
+    labNormalLeft->setParent(widgetNormal);
+    labNormalLeft->setAlignment(Qt::AlignCenter);
+
+    labNormalRight->setParent(widgetNormal);
+    btnNormal->setParent(widgetNormal);
+    btnNormal->setFixedSize(12, 30);
+
+    hBoxNormal->setSpacing(0);
+    hBoxNormal->addSpacing(93);
+    hBoxNormal->addStretch();
+    hBoxNormal->addWidget(labNormalLeft);
+    hBoxNormal->addStretch();
+    hBoxNormal->addSpacing(93);
+    hBoxNormal->addWidget(labNormalRight);
+    hBoxNormal->addSpacing(2);
+    hBoxNormal->addWidget(btnNormal);
+    hBoxNormal->setContentsMargins(0, 45, 0, 32);
+    widgetNormal->setLayout(hBoxNormal);
+
+    labEditLayout->setParent(widgetEditLayout);
+    labEditLayout->setAlignment(Qt::AlignCenter);
+
+    btnEditLayout->setParent(widgetEditLayout);
+    btnEditLayout->setFixedSize(12, 30);
+    editLayout->setParent(widgetEditLayout);
+
+    hBoxEditLayout->setSpacing(0);
+    hBoxEditLayout->addSpacing(93);
+    hBoxEditLayout->addStretch();
+    hBoxEditLayout->addWidget(labEditLayout);
+    hBoxEditLayout->addStretch();
+    hBoxEditLayout->addSpacing(93);
+    hBoxEditLayout->addWidget(editLayout);
+    hBoxEditLayout->addSpacing(2);
+    hBoxEditLayout->addWidget(btnEditLayout);
+    hBoxEditLayout->setContentsMargins(0, 45, 0, 32);
+    widgetEditLayout->setLayout(hBoxEditLayout);
+
+    vStackedLayout->addWidget(widgetNormal);
+    vStackedLayout->addWidget(widgetEditLayout);
+    vStackedLayout->addWidget(widgetConnectError);
+    vStackedLayout->addWidget(labInit);
+
+    vBoxScanSet->setSpacing(0);
+    vBoxScanSet->addLayout(vStackedLayout);
+    vBoxScanSet->setContentsMargins(0, 0, 0, 0);
+    setLayout(vBoxScanSet);
+    vStackedLayout->setCurrentWidget(labInit);
+    vStackedLayout->setContentsMargins(0, 0, 0, 0);
+}
+
 void KYCScanDisplayWidget::initStyle()
 {
+    stylelist << STYLE_NAME_KEY_DARK << STYLE_NAME_KEY_BLACK;
+    iconthemelist << ICON_THEME_KEY_BASIC << ICON_THEME_KEY_CLASSICAL << ICON_THEME_KEY_DEFAULT;
+
     if (stylelist.contains(style_settings->get(STYLE_NAME).toString())) {
         QPalette init_pacolor_black;
         init_pacolor_black.setColor (QPalette::Background, QColor(15, 8, 1));
@@ -402,6 +386,34 @@ void KYCScanDisplayWidget::initStyle()
                                  "}");
         labNormalRight->setStyleSheet("QLabel{background-color:#E7E7E7;}");
     }
+}
+
+void KYCScanDisplayWidget::initConnect()
+{
+    // For switch page
+    connect(btnNormal, SIGNAL(clicked()), this, SLOT(switchPage()));
+    connect(btnEditLayout, SIGNAL(clicked()), this, SLOT(switchPage()));
+
+    //For rotate
+    connect(editLayout->btnRotate, SIGNAL(clicked()), this, SLOT(rotating()));
+
+    // For tailor
+    connect(editLayout->btnTailor, SIGNAL(clicked()), this, SLOT(tailor()));
+
+    // For symmetry
+    connect(editLayout->btnSymmetry, SIGNAL(clicked()), this, SLOT(symmetry()));
+
+    // For watermark
+    connect(editLayout->btnWatermark, SIGNAL(clicked()), this, SLOT(addWatermark()));
+
+    // For OCR
+    connect(&thread, SIGNAL(ocrFinished()), this, SLOT(ocrText()));
+
+    // For timerScan
+    //connect(timerScan, SIGNAL(timeout()), this, SLOT(timerScanUpdate()));
+
+    connect(icon_theme_settings, SIGNAL(changed(QString)), this,
+            SLOT(scandisplay_theme_changed(QString)));
 }
 
 void KYCScanDisplayWidget::initStyleOcr()
