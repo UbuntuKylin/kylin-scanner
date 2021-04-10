@@ -112,6 +112,10 @@ void KYCWidget::initStyle()
 
 void KYCWidget::initSetting()
 {
+    installEventFilter(pTitleBar);
+    installEventFilter(pFuncBar);
+    installEventFilter(pScanSet);
+
 #ifdef DEBUG_EDIT
     KYCSaneWidget &instance = KYCSaneWidget::getInstance();
     instance.setKylinSaneStatus (true);
@@ -121,10 +125,6 @@ void KYCWidget::initSetting()
 
     pScanSet->setKylinScanSetNotEnable();
 #endif
-
-    installEventFilter(pTitleBar);
-    installEventFilter(pFuncBar);
-    installEventFilter(pScanSet);
 }
 
 void KYCWidget::initConnect()

@@ -6,6 +6,7 @@
 #include <QDesktopServices>
 #include <QStyle>
 #include <QScrollBar>
+#include <QDebug>
 
 
 KYCAboutDialog::KYCAboutDialog(QWidget *parent) :
@@ -116,6 +117,8 @@ void KYCAboutDialog::initWindow()
 
     setWindowModality(Qt::WindowModal);
     setWindowTitle(tr("About"));
+
+    moveCenter();
 }
 
 void KYCAboutDialog::initLayout()
@@ -148,9 +151,6 @@ void KYCAboutDialog::initLayout()
     ui->btnClose->setFlat(true);
     ui->labelSupport->setContextMenuPolicy(Qt::NoContextMenu); // no right click menu
 
-    QScreen *screen = QGuiApplication::primaryScreen ();
-    QRect screenRect =  screen->availableGeometry();
-    this->move(screenRect.width() / 2, screenRect.height() / 2);
     this->hide();
 }
 
@@ -161,4 +161,15 @@ void KYCAboutDialog::initConnect()
         QUrl url(s);
         QDesktopServices::openUrl(url);
     });
+}
+
+void KYCAboutDialog::moveCenter()
+{
+    QScreen *screen = QGuiApplication::primaryScreen ();
+    QRect screenRect =  screen->availableGeometry();
+    qDebug() << "screen: " << screen
+             << "screenRect: " <<screenRect
+             << "screenRect.width = " << screenRect.width()/2
+             << "screenRect.height = " << screenRect.height()/2;
+    this->move(screenRect.width() / 2, screenRect.height() / 2);
 }

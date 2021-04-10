@@ -36,6 +36,8 @@ public:
     void initWindow();
     void initLayout();
     void initConnect();
+
+    void moveCenter();
 protected:
     void paintEvent(QPaintEvent *event) Q_DECL_OVERRIDE;
 

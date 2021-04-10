@@ -53,7 +53,7 @@ KYCScanDisplayWidget::KYCScanDisplayWidget(QWidget *parent)
     , widgetConnectError (new QWidget())
     , widgetNormal (new QWidget())
     , widgetEditLayout (new QWidget())
-      //, widgetTailor (new QWidget())
+    , widgetTailor (new QWidget())
     , widgetOcr (new QWidget())
     , vStackedLayout (new QStackedLayout())
     , editLayout (new KYCEditBarWidget())
@@ -921,7 +921,6 @@ void KYCScanDisplayWidget::tailor()
     flagTailor = 1;
 
     initStyleTailor ();
-
 }
 
 /**

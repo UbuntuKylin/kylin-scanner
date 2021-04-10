@@ -90,9 +90,20 @@ void KYCTitleBarDialog::initLayout()
 
     m_pMenu->addAction(tr("About"), this, [ = ]() {
         QPoint globalPos = this->mapToGlobal(QPoint(0, 0));
+
         int m_x = (mainWindowWidth - m_pAbout->width()) / 2;
         int m_y = (mainWindowHeight - m_pAbout->height()) / 2;
         m_pAbout->move(globalPos.x() + m_x, globalPos.y() + m_y);
+        //m_pAbout->moveCenter();
+
+        qDebug() << "mainWindowWidth= " << mainWindowWidth
+                 << "mainWindowHeight= " << mainWindowHeight
+                 << "aboutWidth = " << m_pAbout->width()
+                 << "aboutHeight = " << m_pAbout->height()
+                 << "m_y = " << m_y
+                 << "m_x = " << m_x
+                 << "globalPox.x+m_x " << globalPos.x()+m_x
+                 << "globalPox.y+m_y " << globalPos.y()+m_y;
         m_pAbout->show();
     });
     m_pMenu->addAction(tr("Exit"), [ = ]() {
