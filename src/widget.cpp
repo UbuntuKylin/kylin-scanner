@@ -30,6 +30,8 @@ KYCWidget::KYCWidget(QWidget *parent)
     , style_settings (new QGSettings(ORG_UKUI_STYLE))
     , icon_theme_settings (new QGSettings(ORG_UKUI_STYLE))
     , pTitleBar (new KYCTitleBarDialog())
+    //, m_pAbout (new KYCAboutDialog(this))
+    //, m_pAbout (new KYCInterruptDialog(this))
     , line (new QFrame())
     , pFuncBar (new  KYCFunctionBarWidget())
     , pScanSet (new KYCScanSettingsWidget())
@@ -132,6 +134,9 @@ void KYCWidget::initConnect()
     // For window size change
     connect(pTitleBar, &KYCTitleBarDialog::isNormal, this, &KYCWidget::setWindowBorderRadius);
     connect(pTitleBar, &KYCTitleBarDialog::isMax, this, &KYCWidget::setMaskClear);
+
+    // For showing About dialog
+    connect(pTitleBar, &KYCTitleBarDialog::showAboutDialog, this, &KYCWidget::showAboutDialogCenter);
 
     // For white and black style
     connect(style_settings, SIGNAL(changed(QString)), this, SLOT(style_changed(QString)));
@@ -542,6 +547,27 @@ void KYCWidget::setMaskClear()
     pScandisplay->updateWindowSize();
 
     pTitleBar->setMainWindowAttribute(this->width(), this->height());
+}
+
+void KYCWidget::showAboutDialogCenter()
+{
+    m_pAbout = new KYCAboutDialog(this);
+
+    QPoint globalPos = this->mapToGlobal(QPoint(0, 0));
+    int mainWindowWidth = this->width();
+    int mainWindowHeight = this->height();
+    int m_x = (mainWindowWidth - m_pAbout->width()) / 2;
+    int m_y = (mainWindowHeight - m_pAbout->height()) / 2;
+        qDebug() << "mainWindowWidth= " << mainWindowWidth
+                 << "mainWindowHeight= " << mainWindowHeight
+                 << "aboutWidth = " << m_pAbout->width()
+                 << "aboutHeight = " << m_pAbout->height()
+                 << "m_y = " << m_y
+                 << "m_x = " << m_x
+                 << "globalPox.x+m_x " << globalPos.x()+m_x
+                 << "globalPox.y+m_y " << globalPos.y()+m_y;
+    m_pAbout->move(globalPos.x() + m_x, globalPos.y() + m_y);
+    m_pAbout->show();
 }
 
 /**

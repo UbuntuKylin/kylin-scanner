@@ -30,6 +30,8 @@
 #include "theme.h"
 #include "usbhotplug.h"
 #include "common.h"
+#include "about.h"
+#include "interrupt.h"
 
 class KYCCommonScanThread : public QThread
 {
@@ -75,6 +77,8 @@ private:
     QStringList stylelist;
     QStringList iconthemelist;
     KYCTitleBarDialog *pTitleBar;
+    KYCAboutDialog *m_pAbout;
+    //KYCInterruptDialog *m_pAbout;
     QFrame *line;
     KYCFunctionBarWidget *pFuncBar;
     KYCScanSettingsWidget *pScanSet;
@@ -94,6 +98,7 @@ private slots:
     void scanResult(bool ret);
     void switchScanDeviceResult(bool ret);
     void setMaskClear();
+    void showAboutDialogCenter();
     void setWindowBorderRadius();
     void style_changed(QString); // 系统主题风格变化
     void icon_theme_changed(QString); // 系统图标主题风格变化

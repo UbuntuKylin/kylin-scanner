@@ -17,6 +17,7 @@
 */
 
 #include "interrupt.h"
+#include "xatomhelper.h"
 
 KYCInterruptDialog::KYCInterruptDialog(QWidget *parent) :
     QDialog(parent),
@@ -59,7 +60,12 @@ void KYCInterruptDialog::setDialogAttrbutes()
 {
     setFixedSize(322, 200);
     //setWindowFlags(Qt::FramelessWindowHint | Qt::Dialog);
-    setWindowFlags(Qt::Dialog);
+    //setWindowFlags(Qt::Dialog);
+    MotifWmHints hints;
+    hints.flags = MWM_HINTS_FUNCTIONS | MWM_HINTS_DECORATIONS;
+    hints.functions = MWM_FUNC_ALL;
+    hints.decorations = MWM_DECOR_BORDER;
+    KYCXAtomHelperObject::getInstance()->setWindowMotifHint(winId(), hints);
 
     QPalette pal(palette());
     pal.setColor(QPalette::Background, QColor(47, 44, 43));

@@ -20,6 +20,7 @@
 #define ABOUT_H
 
 #include <QDialog>
+#include "theme.h"
 
 namespace Ui {
 class KYCAboutDialog;
@@ -35,17 +36,24 @@ public:
 
     void initWindow();
     void initLayout();
+    void initStyle();
     void initConnect();
-
+    void setTextLightStyle();
+    void setTextDarkStyle();
     void moveCenter();
-protected:
-    void paintEvent(QPaintEvent *event) Q_DECL_OVERRIDE;
 
-private slots:
-private:
-    int m_iHeight;
 private:
     Ui::KYCAboutDialog *ui;
+    int m_iHeight;
+
+    QStringList stylelist;
+    QStringList iconthemelist;
+    QGSettings *style_settings;
+    QGSettings *icon_theme_settings;
+
+private slots:
+    void titlebar_icon_theme_changed(QString);
+    void titlebar_style_changed(QString);
 };
 
 #endif // ABOUT_H

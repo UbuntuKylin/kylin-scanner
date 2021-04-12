@@ -36,7 +36,7 @@ KYCTitleBarDialog::KYCTitleBarDialog(QWidget *parent)
     , m_pCloseButton (new QPushButton())
     , m_pMenuButton(new QToolButton(this))
     , m_pMenu(new QMenu(this))
-    , m_pAbout(new KYCAboutDialog(this))
+    //, m_pAbout(new KYCAboutDialog(this))
     , pTitleLayout (new QHBoxLayout())
     , pButtonLayout (new QHBoxLayout())
     , pLayout (new QHBoxLayout())
@@ -89,6 +89,8 @@ void KYCTitleBarDialog::initLayout()
     }, QKeySequence(Qt::Key_F1));
 
     m_pMenu->addAction(tr("About"), this, [ = ]() {
+        emit showAboutDialog();
+        /*
         QPoint globalPos = this->mapToGlobal(QPoint(0, 0));
 
         int m_x = (mainWindowWidth - m_pAbout->width()) / 2;
@@ -105,6 +107,7 @@ void KYCTitleBarDialog::initLayout()
                  << "globalPox.x+m_x " << globalPos.x()+m_x
                  << "globalPox.y+m_y " << globalPos.y()+m_y;
         m_pAbout->show();
+        */
     });
     m_pMenu->addAction(tr("Exit"), [ = ]() {
         //freeScanResource();
@@ -186,8 +189,7 @@ void KYCTitleBarDialog::initConnect()
     connect(m_pMaximizeButton, SIGNAL(clicked(bool)), this, SLOT(onClicked()));
     connect(m_pCloseButton, SIGNAL(clicked(bool)), this, SLOT(onClicked()));
     connect(style_settings, SIGNAL(changed(QString)), this, SLOT(titlebar_style_changed(QString)));
-    connect(icon_theme_settings, SIGNAL(changed(QString)), this,
-            SLOT(titlebar_icon_theme_changed(QString)));
+    connect(icon_theme_settings, SIGNAL(changed(QString)), this, SLOT(titlebar_icon_theme_changed(QString)));
 }
 
 void KYCTitleBarDialog::mouseDoubleClickEvent(QMouseEvent *event)
