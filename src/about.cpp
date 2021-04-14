@@ -131,8 +131,6 @@ void KYCAboutDialog::initLayout()
     ui->btnClose->installEventFilter(this);
     ui->btnClose->setFlat(true);
     ui->labelSupport->setContextMenuPolicy(Qt::NoContextMenu); // no right click menu
-
-    //this->hide();
 }
 
 void KYCAboutDialog::initStyle()
@@ -150,6 +148,7 @@ void KYCAboutDialog::initStyle()
     c.setBlue(231);
     c.setGreen(231);
     if (c == pal.background().color()) {
+        // light theme
         pal.setColor(QPalette::Background, QColor("#FFFFFF"));
         ui->labelSupport->setText(tr("Service & Support : ")
                                   + "<a href=\"mailto://support@kylinos.cn\" style=\"color:rgba(0,0,0,1)\">"
@@ -161,6 +160,7 @@ void KYCAboutDialog::initStyle()
                               + "</p></body>");
         setPalette(pal);
     } else {
+        // dark theme
         setPalette(pal);
         ui->labelSupport->setText(tr("Service & Support : ")
                                   + "<a href=\"mailto://support@kylinos.cn\" style=\"color:rgba(255,255,255,1)\">"
