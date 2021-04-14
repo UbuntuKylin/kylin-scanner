@@ -1,10 +1,10 @@
 kylin-scanner (1.0.0-20) v101; urgency=medium
 
-  *  [English]
-  * Fix #47292, center about the interface
-  *
-  * [中文]
-  * Fix #47292, 修复了关于界面初始显示不居中问题
+  * BUG 号: 47292, 47329, 48671
+  * 需求号: 26483, 26143
+  * 其他改动说明：
+  *     1. 依照代码变量名规范修改代码
+  *     2. 简化界面代码的初始化
 
  -- yushuoqi <yushuoqi@kylinos.cn>  Wed, 14 Apr 2021 09:58:26 +0800
 

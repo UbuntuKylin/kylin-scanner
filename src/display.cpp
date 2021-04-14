@@ -318,8 +318,9 @@ void KYCScanDisplayWidget::initStyle()
         labConnectErrorText->setFont(ft);
         labConnectErrorText->setText (tr("Please connect to a scan device firstly !"));
         labConnectErrorText->setAlignment(Qt::AlignHCenter | Qt::AlignTop);
+        // Color: gray
         labConnectErrorText->setStyleSheet ("QLabel{background-color:rgb(15,8,1);"
-                                            "color:rgb(232,232,232);}");
+                                            "color:gray;}");
 
         imgConnectError->load(":/icon/icon/no-conection-dark.svg");
         labConnectError->setPixmap(QPixmap::fromImage(*imgConnectError));
@@ -354,8 +355,9 @@ void KYCScanDisplayWidget::initStyle()
         labConnectErrorText->setFont(ft);
         labConnectErrorText->setText (tr("Please connect to a scan device firstly !"));
         labConnectErrorText->setAlignment(Qt::AlignHCenter | Qt::AlignTop);
+        // Color: gray
         labConnectErrorText->setStyleSheet ("QLabel{background-color:rgb(232,232,232);"
-                                            "color:rgb(15,8,1);}");
+                                            "color:gray;}");
 
         imgConnectError->load(":/icon/icon/no-conection-light.svg");
         labConnectError->setPixmap(QPixmap::fromImage(*imgConnectError));
