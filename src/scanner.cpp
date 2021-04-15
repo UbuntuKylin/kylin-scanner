@@ -1356,6 +1356,7 @@ void kylinNorScanFindDevice()
 
 void kylinNorScanOpenDevice(int index)
 {
+    qDebug() << "begin open device";
     KYCSaneWidget &instance = KYCSaneWidget::getInstance();
     QStringList names;
     QString type;
@@ -1369,6 +1370,7 @@ void kylinNorScanOpenDevice(int index)
              * Deal with open same scanner device again meeting `SANE_STATUS_DEVICE_BUSY`,
              * Thus, should `sane_close` the open handle before next `sane_open`
              */
+            qDebug() << "begin to sane_close()";;
             sane_close(instance.handle);
         }
 

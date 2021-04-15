@@ -22,6 +22,8 @@
 #include <QTextCursor>
 #include <QStandardItemModel>
 #include <QFileInfo>
+#include <QWidgetList>
+#include <QApplication>
 
 KYCScanSettingsWidget::KYCScanSettingsWidget(QWidget *parent)
     : QWidget(parent)
@@ -902,7 +904,24 @@ void KYCScanSettingsWidget::onBtnSaveClicked()
         }
         filepath = curPath;
 
-        KYCSaveFileDialog *saveDialog = new KYCSaveFileDialog(this, flag, filename, titlename);
+        KYCSaveFileDialog *saveDialog = new KYCSaveFileDialog(this->parentWidget(), flag, filename, titlename);
+
+        // center saveDialog in mainwindow
+        QWidget *widget = nullptr;
+        QWidgetList widgetList = QApplication::allWidgets();
+        for (int i=0; i<widgetList.length(); ++i) {
+            if (widgetList.at(i)->objectName() == "MainWindow") {
+                widget = widgetList.at(i);
+            }
+        }
+        if (widget) {
+            QRect rect = widget->geometry();
+            int x = rect.x() + rect.width()/2 - saveDialog->width()/2;
+            int y = rect.y() + rect.height()/2 - saveDialog->height()/2;
+            qDebug() << "x = " << x << "y = " << y;
+            saveDialog->move(x,y);
+        }
+
         saveDialog->kycSetDirectory(filepath);
 
         if (saveDialog->exec() == QFileDialog::Accepted) {
