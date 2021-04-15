@@ -38,9 +38,15 @@ class KYCWaterMarkDialog : public QDialog
 public:
     explicit KYCWaterMarkDialog(QWidget *parent = nullptr);
     ~KYCWaterMarkDialog();
-    QString getLineEdit();
 
+
+    void initWindow();
+    void initLayout();
+    void initStyle();
+    void initConnect();
     void setWindowMask();
+
+    QString getLineEdit();
 
 private:
     QStringList stylelist;

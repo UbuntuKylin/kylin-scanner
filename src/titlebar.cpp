@@ -36,21 +36,37 @@ KYCTitleBarDialog::KYCTitleBarDialog(QWidget *parent)
     , m_pCloseButton (new QPushButton())
     , m_pMenuButton(new QToolButton(this))
     , m_pMenu(new QMenu(this))
-    , m_pAbout(new KYCAboutDialog(this))
+    //, m_pAbout(new KYCAboutDialog(this))
     , pTitleLayout (new QHBoxLayout())
     , pButtonLayout (new QHBoxLayout())
     , pLayout (new QHBoxLayout())
+{
+    initWindow();
+
+    initLayout();
+
+    initStyle();
+
+    initConnect();
+}
+
+KYCTitleBarDialog::~KYCTitleBarDialog()
+{
+
+}
+
+void KYCTitleBarDialog::initWindow()
 {
     setFixedHeight(36);
     setMinimumWidth(860);
     mainWindowHeight = MAINWINDOW_HEIGHT;
     mainWindowWidth = MAINWINDOW_WIDTH;
 
-    stylelist << STYLE_NAME_KEY_DARK << STYLE_NAME_KEY_BLACK;
-    iconthemelist << ICON_THEME_KEY_BASIC << ICON_THEME_KEY_CLASSICAL << ICON_THEME_KEY_DEFAULT;
-
     flagMaxWindow = false;
+}
 
+void KYCTitleBarDialog::initLayout()
+{
     m_logo->setFixedSize (24, 24);
     m_logo->setPixmap(QIcon::fromTheme("kylin-scanner").pixmap(m_logo->size()));
 
@@ -73,11 +89,25 @@ KYCTitleBarDialog::KYCTitleBarDialog(QWidget *parent)
     }, QKeySequence(Qt::Key_F1));
 
     m_pMenu->addAction(tr("About"), this, [ = ]() {
+        emit showAboutDialog();
+        /*
         QPoint globalPos = this->mapToGlobal(QPoint(0, 0));
+
         int m_x = (mainWindowWidth - m_pAbout->width()) / 2;
         int m_y = (mainWindowHeight - m_pAbout->height()) / 2;
         m_pAbout->move(globalPos.x() + m_x, globalPos.y() + m_y);
+        //m_pAbout->moveCenter();
+
+        qDebug() << "mainWindowWidth= " << mainWindowWidth
+                 << "mainWindowHeight= " << mainWindowHeight
+                 << "aboutWidth = " << m_pAbout->width()
+                 << "aboutHeight = " << m_pAbout->height()
+                 << "m_y = " << m_y
+                 << "m_x = " << m_x
+                 << "globalPox.x+m_x " << globalPos.x()+m_x
+                 << "globalPox.y+m_y " << globalPos.y()+m_y;
         m_pAbout->show();
+        */
     });
     m_pMenu->addAction(tr("Exit"), [ = ]() {
         //freeScanResource();
@@ -145,18 +175,21 @@ KYCTitleBarDialog::KYCTitleBarDialog(QWidget *parent)
     pLayout->setContentsMargins(0, 0, 0, 0);
 
     setLayout(pLayout);
+}
 
+void KYCTitleBarDialog::initStyle()
+{
+    stylelist << STYLE_NAME_KEY_DARK << STYLE_NAME_KEY_BLACK;
+    iconthemelist << ICON_THEME_KEY_BASIC << ICON_THEME_KEY_CLASSICAL << ICON_THEME_KEY_DEFAULT;
+}
+
+void KYCTitleBarDialog::initConnect()
+{
     connect(m_pMinimizeButton, SIGNAL(clicked(bool)), this, SLOT(onClicked()));
     connect(m_pMaximizeButton, SIGNAL(clicked(bool)), this, SLOT(onClicked()));
     connect(m_pCloseButton, SIGNAL(clicked(bool)), this, SLOT(onClicked()));
     connect(style_settings, SIGNAL(changed(QString)), this, SLOT(titlebar_style_changed(QString)));
-    connect(icon_theme_settings, SIGNAL(changed(QString)), this,
-            SLOT(titlebar_icon_theme_changed(QString)));
-}
-
-KYCTitleBarDialog::~KYCTitleBarDialog()
-{
-
+    connect(icon_theme_settings, SIGNAL(changed(QString)), this, SLOT(titlebar_icon_theme_changed(QString)));
 }
 
 void KYCTitleBarDialog::mouseDoubleClickEvent(QMouseEvent *event)

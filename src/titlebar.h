@@ -46,6 +46,11 @@ public:
     explicit KYCTitleBarDialog(QWidget *parent = nullptr);
     ~KYCTitleBarDialog();
 
+    void initWindow();
+    void initLayout();
+    void initStyle();
+    void initConnect();
+
     void setMainWindowAttribute(int w, int h);
 
 protected:
@@ -82,7 +87,7 @@ private:
     QPushButton *m_pCloseButton;
     QToolButton *m_pMenuButton;
     QMenu       *m_pMenu;
-    KYCAboutDialog *m_pAbout;
+    //KYCAboutDialog *m_pAbout;
 
     QHBoxLayout *pTitleLayout;
     QHBoxLayout *pButtonLayout;
@@ -100,5 +105,6 @@ private slots:
 Q_SIGNALS:
     void isNormal();
     void isMax();
+    void showAboutDialog();
 };
 #endif // TITLEBAR_H

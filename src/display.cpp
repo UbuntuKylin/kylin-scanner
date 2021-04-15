@@ -17,6 +17,7 @@
 */
 
 #include "display.h"
+#include "common.h"
 
 QString outText;
 
@@ -31,8 +32,8 @@ KYCScanDisplayWidget::KYCScanDisplayWidget(QWidget *parent)
     , labNormalLeft (new QLabel())
     , labNormalRight (new QLabel())
     , labEditLayout (new QLabel())
-    , labOrcLeft (new QLabel())
-    , labOrcRight (new QLabel())
+    , labOcrLeft (new QLabel())
+    , labOcrRight (new QLabel())
     , btnNormal (new QPushButton())
     , btnEditLayout (new QPushButton())
     , btnTailorLayout (new QPushButton())
@@ -46,126 +47,26 @@ KYCScanDisplayWidget::KYCScanDisplayWidget(QWidget *parent)
     , imgRectify (new QImage())
     , vBoxConnectError (new QVBoxLayout())
     , vBoxScanSet (new QVBoxLayout())
-    , vBoxOrc (new QVBoxLayout())
+    , vBoxOcr (new QVBoxLayout())
     , hBoxNormal (new QHBoxLayout())
     , hBoxEditLayout (new QHBoxLayout())
     , widgetConnectError (new QWidget())
     , widgetNormal (new QWidget())
     , widgetEditLayout (new QWidget())
-      //, widgetTailor (new QWidget())
-    , widgetOrc (new QWidget())
+    , widgetTailor (new QWidget())
+    , widgetOcr (new QWidget())
     , vStackedLayout (new QStackedLayout())
     , editLayout (new KYCEditBarWidget())
     , editLayoutTailor (new KYCEditBarWidget())
     , scrollArea (new QScrollArea())
 {
-    setFocusPolicy(Qt::StrongFocus);
-    setMinimumSize(600, 567);
+    initWindow();
 
-    stylelist << STYLE_NAME_KEY_DARK << STYLE_NAME_KEY_BLACK;
-    iconthemelist << ICON_THEME_KEY_BASIC << ICON_THEME_KEY_CLASSICAL << ICON_THEME_KEY_DEFAULT;
+    initLayout();
 
-    labConnectError->setParent(widgetConnectError);
-    labConnectErrorText->setParent(widgetConnectError);
-    labInit->setMinimumSize(600, 567);
-    labConnectError->setMinimumSize(600, 320);
-    labConnectErrorText->setMinimumSize(600, 231);
-    labNormalLeft->setMinimumSize(360, 490);
-    labNormalRight->setFixedWidth(40);
-    labEditLayout->setMinimumSize(360, 490);
+    initStyle();
 
-    labInit->setText("");
-
-    vBoxConnectError->setSpacing(0);
-    vBoxConnectError->addStretch();
-    vBoxConnectError->addWidget(labConnectError);
-    vBoxConnectError->addSpacing(16);
-    vBoxConnectError->addWidget(labConnectErrorText);
-    vBoxConnectError->addStretch();
-    vBoxConnectError->setContentsMargins(0, 0, 0, 0);
-    widgetConnectError->setLayout(vBoxConnectError);
-
-    labNormalLeft->setParent(widgetNormal);
-    labNormalLeft->setAlignment(Qt::AlignCenter);
-
-    labNormalRight->setParent(widgetNormal);
-    btnNormal->setParent(widgetNormal);
-    btnNormal->setFixedSize(12, 30);
-
-    hBoxNormal->setSpacing(0);
-    hBoxNormal->addSpacing(93);
-    hBoxNormal->addStretch();
-    hBoxNormal->addWidget(labNormalLeft);
-    hBoxNormal->addStretch();
-    hBoxNormal->addSpacing(93);
-    hBoxNormal->addWidget(labNormalRight);
-    hBoxNormal->addSpacing(2);
-    hBoxNormal->addWidget(btnNormal);
-    hBoxNormal->setContentsMargins(0, 45, 0, 32);
-    widgetNormal->setLayout(hBoxNormal);
-
-
-    labEditLayout->setParent(widgetEditLayout);
-    labEditLayout->setAlignment(Qt::AlignCenter);
-
-    btnEditLayout->setParent(widgetEditLayout);
-    btnEditLayout->setFixedSize(12, 30);
-    editLayout->setParent(widgetEditLayout);
-
-
-    hBoxEditLayout->setSpacing(0);
-    hBoxEditLayout->addSpacing(93);
-    hBoxEditLayout->addStretch();
-    hBoxEditLayout->addWidget(labEditLayout);
-    hBoxEditLayout->addStretch();
-    hBoxEditLayout->addSpacing(93);
-    hBoxEditLayout->addWidget(editLayout);
-    hBoxEditLayout->addSpacing(2);
-    hBoxEditLayout->addWidget(btnEditLayout);
-    hBoxEditLayout->setContentsMargins(0, 45, 0, 32);
-    widgetEditLayout->setLayout(hBoxEditLayout);
-
-    vStackedLayout->addWidget(widgetNormal);
-    vStackedLayout->addWidget(widgetEditLayout);
-    vStackedLayout->addWidget(widgetConnectError);
-    vStackedLayout->addWidget(labInit);
-
-
-    vBoxScanSet->setSpacing(0);
-    vBoxScanSet->addLayout(vStackedLayout);
-    vBoxScanSet->setContentsMargins(0, 0, 0, 0);
-    setLayout(vBoxScanSet);
-    vStackedLayout->setCurrentWidget(labInit);
-    vStackedLayout->setContentsMargins(0, 0, 0, 0);
-
-
-    initStyle ();
-
-
-    // For switch page
-    connect(btnNormal, SIGNAL(clicked()), this, SLOT(switchPage()));
-    connect(btnEditLayout, SIGNAL(clicked()), this, SLOT(switchPage()));
-
-    //For rotate
-    connect(editLayout->btnRotate, SIGNAL(clicked()), this, SLOT(rotating()));
-
-    // For tailor
-    connect(editLayout->btnTailor, SIGNAL(clicked()), this, SLOT(tailor()));
-
-    // For symmetry
-    connect(editLayout->btnSymmetry, SIGNAL(clicked()), this, SLOT(symmetry()));
-
-    // For watermark
-    connect(editLayout->btnWatermark, SIGNAL(clicked()), this, SLOT(addWatermark()));
-
-    // For ORC
-    connect(&thread, SIGNAL(orcFinished()), this, SLOT(orcText()));
-
-    // For timerScan
-    //connect(timerScan, SIGNAL(timeout()), this, SLOT(timerScanUpdate()));
-
-    connect(icon_theme_settings, SIGNAL(changed(QString)), this,
-            SLOT(scandisplay_theme_changed(QString)));
+    initConnect();
 }
 
 /**
@@ -225,7 +126,7 @@ void KYCScanDisplayWidget::keyPressEvent(QKeyEvent *e)
 QImage *KYCScanDisplayWidget::imageSave(QString filename)
 {
     qDebug() << "save image: " << filename;
-    if (flagOrc == 0) {
+    if (flagOcr == 0) {
         *imgEditLayout = imgNormal->copy();
         if (filename.endsWith(".pdf"))
             return imgEditLayout;
@@ -262,7 +163,7 @@ void KYCScanDisplayWidget::setInitDevice()
     vStackedLayout->setCurrentWidget(labInit);
 }
 
-void KYCScanDisplayWidget::setOrcThreadQuit()
+void KYCScanDisplayWidget::setOcrThreadQuit()
 {
     thread.quit();
 }
@@ -320,8 +221,90 @@ void KYCScanDisplayWidget::timerEvent(QTimerEvent *e)
     }
 }
 
+void KYCScanDisplayWidget::initWindow()
+{
+    setFocusPolicy(Qt::StrongFocus);
+    setMinimumSize(600, 567);
+}
+
+void KYCScanDisplayWidget::initLayout()
+{
+    labConnectError->setParent(widgetConnectError);
+    labConnectErrorText->setParent(widgetConnectError);
+    labInit->setMinimumSize(600, 567);
+    labConnectError->setMinimumSize(600, 320);
+    labConnectErrorText->setMinimumSize(600, 231);
+    labNormalLeft->setMinimumSize(360, 490);
+    labNormalRight->setFixedWidth(40);
+    labEditLayout->setMinimumSize(360, 490);
+
+    labInit->setText("");
+
+    vBoxConnectError->setSpacing(0);
+    vBoxConnectError->addStretch();
+    vBoxConnectError->addWidget(labConnectError);
+    vBoxConnectError->addSpacing(16);
+    vBoxConnectError->addWidget(labConnectErrorText);
+    vBoxConnectError->addStretch();
+    vBoxConnectError->setContentsMargins(0, 0, 0, 0);
+    widgetConnectError->setLayout(vBoxConnectError);
+
+    labNormalLeft->setParent(widgetNormal);
+    labNormalLeft->setAlignment(Qt::AlignCenter);
+
+    labNormalRight->setParent(widgetNormal);
+    btnNormal->setParent(widgetNormal);
+    btnNormal->setFixedSize(12, 30);
+
+    hBoxNormal->setSpacing(0);
+    hBoxNormal->addSpacing(93);
+    hBoxNormal->addStretch();
+    hBoxNormal->addWidget(labNormalLeft);
+    hBoxNormal->addStretch();
+    hBoxNormal->addSpacing(93);
+    hBoxNormal->addWidget(labNormalRight);
+    hBoxNormal->addSpacing(2);
+    hBoxNormal->addWidget(btnNormal);
+    hBoxNormal->setContentsMargins(0, 45, 0, 32);
+    widgetNormal->setLayout(hBoxNormal);
+
+    labEditLayout->setParent(widgetEditLayout);
+    labEditLayout->setAlignment(Qt::AlignCenter);
+
+    btnEditLayout->setParent(widgetEditLayout);
+    btnEditLayout->setFixedSize(12, 30);
+    editLayout->setParent(widgetEditLayout);
+
+    hBoxEditLayout->setSpacing(0);
+    hBoxEditLayout->addSpacing(93);
+    hBoxEditLayout->addStretch();
+    hBoxEditLayout->addWidget(labEditLayout);
+    hBoxEditLayout->addStretch();
+    hBoxEditLayout->addSpacing(93);
+    hBoxEditLayout->addWidget(editLayout);
+    hBoxEditLayout->addSpacing(2);
+    hBoxEditLayout->addWidget(btnEditLayout);
+    hBoxEditLayout->setContentsMargins(0, 45, 0, 32);
+    widgetEditLayout->setLayout(hBoxEditLayout);
+
+    vStackedLayout->addWidget(widgetNormal);
+    vStackedLayout->addWidget(widgetEditLayout);
+    vStackedLayout->addWidget(widgetConnectError);
+    vStackedLayout->addWidget(labInit);
+
+    vBoxScanSet->setSpacing(0);
+    vBoxScanSet->addLayout(vStackedLayout);
+    vBoxScanSet->setContentsMargins(0, 0, 0, 0);
+    setLayout(vBoxScanSet);
+    vStackedLayout->setCurrentWidget(labInit);
+    vStackedLayout->setContentsMargins(0, 0, 0, 0);
+}
+
 void KYCScanDisplayWidget::initStyle()
 {
+    stylelist << STYLE_NAME_KEY_DARK << STYLE_NAME_KEY_BLACK;
+    iconthemelist << ICON_THEME_KEY_BASIC << ICON_THEME_KEY_CLASSICAL << ICON_THEME_KEY_DEFAULT;
+
     if (stylelist.contains(style_settings->get(STYLE_NAME).toString())) {
         QPalette init_pacolor_black;
         init_pacolor_black.setColor (QPalette::Background, QColor(15, 8, 1));
@@ -335,8 +318,9 @@ void KYCScanDisplayWidget::initStyle()
         labConnectErrorText->setFont(ft);
         labConnectErrorText->setText (tr("Please connect to a scan device firstly !"));
         labConnectErrorText->setAlignment(Qt::AlignHCenter | Qt::AlignTop);
+        // Color: gray
         labConnectErrorText->setStyleSheet ("QLabel{background-color:rgb(15,8,1);"
-                                            "color:rgb(232,232,232);}");
+                                            "color:gray;}");
 
         imgConnectError->load(":/icon/icon/no-conection-dark.svg");
         labConnectError->setPixmap(QPixmap::fromImage(*imgConnectError));
@@ -371,8 +355,9 @@ void KYCScanDisplayWidget::initStyle()
         labConnectErrorText->setFont(ft);
         labConnectErrorText->setText (tr("Please connect to a scan device firstly !"));
         labConnectErrorText->setAlignment(Qt::AlignHCenter | Qt::AlignTop);
+        // Color: gray
         labConnectErrorText->setStyleSheet ("QLabel{background-color:rgb(232,232,232);"
-                                            "color:rgb(15,8,1);}");
+                                            "color:gray;}");
 
         imgConnectError->load(":/icon/icon/no-conection-light.svg");
         labConnectError->setPixmap(QPixmap::fromImage(*imgConnectError));
@@ -405,29 +390,57 @@ void KYCScanDisplayWidget::initStyle()
     }
 }
 
-void KYCScanDisplayWidget::initStyleOrc()
+void KYCScanDisplayWidget::initConnect()
 {
-    if (flagOrc == 1) {
-        QHBoxLayout *hBoxOrc = new QHBoxLayout();
-        hBoxOrc->setSpacing(0);
-        hBoxOrc->addStretch();
-        hBoxOrc->addWidget(labOrcLeft);
-        hBoxOrc->addSpacing(24);
-        hBoxOrc->addWidget(scrollArea);
-        hBoxOrc->addStretch();
-        hBoxOrc->setContentsMargins(32, 32, 32, 32);
+    // For switch page
+    connect(btnNormal, SIGNAL(clicked()), this, SLOT(switchPage()));
+    connect(btnEditLayout, SIGNAL(clicked()), this, SLOT(switchPage()));
 
-        widgetOrc->setLayout(hBoxOrc);
-        vStackedLayout->addWidget(widgetOrc);
-        vStackedLayout->setCurrentWidget(widgetOrc);
+    //For rotate
+    connect(editLayout->btnRotate, SIGNAL(clicked()), this, SLOT(rotating()));
+
+    // For tailor
+    connect(editLayout->btnTailor, SIGNAL(clicked()), this, SLOT(tailor()));
+
+    // For symmetry
+    connect(editLayout->btnSymmetry, SIGNAL(clicked()), this, SLOT(symmetry()));
+
+    // For watermark
+    connect(editLayout->btnWatermark, SIGNAL(clicked()), this, SLOT(addWatermark()));
+
+    // For OCR
+    connect(&thread, SIGNAL(ocrFinished()), this, SLOT(ocrText()));
+
+    // For timerScan
+    //connect(timerScan, SIGNAL(timeout()), this, SLOT(timerScanUpdate()));
+
+    connect(icon_theme_settings, SIGNAL(changed(QString)), this,
+            SLOT(scandisplay_theme_changed(QString)));
+}
+
+void KYCScanDisplayWidget::initStyleOcr()
+{
+    if (flagOcr == 1) {
+        QHBoxLayout *hBoxOcr = new QHBoxLayout();
+        hBoxOcr->setSpacing(0);
+        hBoxOcr->addStretch();
+        hBoxOcr->addWidget(labOcrLeft);
+        hBoxOcr->addSpacing(24);
+        hBoxOcr->addWidget(scrollArea);
+        hBoxOcr->addStretch();
+        hBoxOcr->setContentsMargins(32, 32, 32, 32);
+
+        widgetOcr->setLayout(hBoxOcr);
+        vStackedLayout->addWidget(widgetOcr);
+        vStackedLayout->setCurrentWidget(widgetOcr);
     }
 
     if (stylelist.contains(style_settings->get(STYLE_NAME).toString())) {
         QPalette palette;
         palette.setColor(QPalette::Background, QColor(192, 253, 123, 100)); // palette可以模糊
-        labOrcLeft->setPalette(palette);
+        labOcrLeft->setPalette(palette);
 
-        labOrcRight->setStyleSheet("background-color:rgb(15,8,1);color:rgb(255,255,255);border:1px solid #717171;");
+        labOcrRight->setStyleSheet("background-color:rgb(15,8,1);color:rgb(255,255,255);border:1px solid #717171;");
 
         scrollArea->setStyleSheet("QScrollBar:vertical {width:6px;background:#2f2c2b;margin:0px,0px,0px,0px;padding-top:0px;padding-bottom:0px;padding-right:3px;}"
                                   "QScrollBar::handle:vertical {width:6px;background:rgba(255,255,255,50%);border-radius:3px;min-height:20;}"
@@ -438,9 +451,9 @@ void KYCScanDisplayWidget::initStyleOrc()
     } else {
         QPalette palette;
         palette.setColor(QPalette::Background, QColor(192, 253, 123, 100)); // palette可以模糊
-        labOrcLeft->setPalette(palette);
+        labOcrLeft->setPalette(palette);
 
-        labOrcRight->setStyleSheet("background-color:rgb(255,255,255);color:rgb(15,8,1);border:1px solid #FFFFFF;");
+        labOcrRight->setStyleSheet("background-color:rgb(255,255,255);color:rgb(15,8,1);border:1px solid #FFFFFF;");
 
         scrollArea->setStyleSheet("QScrollBar:vertical {width:6px;background:#E7E7E7;margin:0px,0px,0px,0px;padding-top:0px;padding-bottom:0px;padding-right:3px;}"
                                   "QScrollBar::handle:vertical {width:6px;background:rgba(15,8,1,50%);border-radius:3px;min-height:20;}"
@@ -493,9 +506,9 @@ void KYCScanDisplayWidget::initSavePresentImage()
 {
     if (vStackedLayout->currentWidget() == widgetNormal) {
         qDebug() << "save widgetNormal jpg";
-        imgNormal->save(DEFAULT_SAVE_PRESENT_IMAGE_PATH);
+        imgNormal->save(MAIL_PICTURE_PATH);
     } else {
-        imgEditLayout->save(DEFAULT_SAVE_PRESENT_IMAGE_PATH);
+        imgEditLayout->save(MAIL_PICTURE_PATH);
     }
 }
 
@@ -573,58 +586,57 @@ void KYCScanDisplayWidget::addWatermark()
     delete dialog; //删除对话框
 }
 
-void KYCScanDisplayWidget::orcText()
+void KYCScanDisplayWidget::ocrText()
 {
-    labOrcRight->setText(outText);
+    labOcrRight->setText(outText);
     qDebug() << outText;
 }
 
 void KYCScanDisplayWidget::scandisplay_theme_changed(QString)
 {
     initStyle ();
-    initStyleOrc ();
+    initStyleOcr ();
     initStyleTailor ();
 }
 
 void KYCScanDisplayWidget::onOcr()
 {
-    if (flagOrc == 0) {
-        // not orc before, so click this will flagOrc = 1;
-        flagOrc = 1;
+    if (flagOcr == 0) {
+        // not ocr before, so click this will flagOcr = 1;
+        flagOcr = 1;
         widgetindex = vStackedLayout->currentIndex();
 
-        labOrcLeft->setFixedWidth(120);
+        labOcrLeft->setFixedWidth(120);
         *imgEditLayout = imgNormal->copy();
-        imgEditLayout->save("/tmp/scanner/scan1.png");
+        imgEditLayout->save(SCANNING_PICTURE_PATH);
         *imgBackup = imgEditLayout->copy();
         thread.start();
         *imgBackup = imgBackup->scaled(120, 166);
 
-        labOrcLeft->setPixmap(QPixmap::fromImage(*imgBackup));
-        labOrcLeft->setAlignment(Qt::AlignTop);
+        labOcrLeft->setPixmap(QPixmap::fromImage(*imgBackup));
+        labOcrLeft->setAlignment(Qt::AlignTop);
 
         outText = tr("Try to ocr ...");
         QFont ft1;
         ft1.setPointSize(14);
-        labOrcRight->setFont(ft1);
-        labOrcRight->setText(outText);
+        labOcrRight->setFont(ft1);
+        labOcrRight->setText(outText);
 
-        labOrcRight->setMargin(20);
-        labOrcRight->setAlignment(Qt::AlignTop);
-        labOrcRight->setWordWrap(true);
-        labOrcLeft->setParent(widgetOrc);
-        labOrcRight->setParent(widgetOrc);
-        vBoxOrc->setSpacing(0);
-        vBoxOrc->addWidget(labOrcRight);
-        vBoxOrc->setContentsMargins(0, 0, 0, 0);
-        scrollArea->setParent(widgetOrc);
+        labOcrRight->setMargin(20);
+        labOcrRight->setAlignment(Qt::AlignTop);
+        labOcrRight->setWordWrap(true);
+        labOcrLeft->setParent(widgetOcr);
+        labOcrRight->setParent(widgetOcr);
+        vBoxOcr->setSpacing(0);
+        vBoxOcr->addWidget(labOcrRight);
+        vBoxOcr->setContentsMargins(0, 0, 0, 0);
+        scrollArea->setParent(widgetOcr);
         QWidget *widget = new QWidget();
 
-        widget->setMinimumHeight(labOrcRight->height());
+        widget->setMinimumHeight(labOcrRight->height());
         //widget->setWindowFlags(Qt::FramelessWindowHint | Qt::Tool | Qt::WindowStaysOnTopHint); // 去掉标题栏,去掉任务栏显示，窗口置顶
-        widget->setWindowFlags(Qt::Tool |
-                               Qt::WindowStaysOnTopHint); // 去掉标题栏,去掉任务栏显示，窗口置顶
-        widget->setLayout(vBoxOrc);
+        widget->setWindowFlags(Qt::Tool | Qt::WindowStaysOnTopHint);
+        widget->setLayout(vBoxOcr);
         widget->setContentsMargins(0, 0, 0, 0);
 
         scrollArea->setFixedWidth(392);
@@ -633,41 +645,40 @@ void KYCScanDisplayWidget::onOcr()
         scrollArea->setWidgetResizable(true);
         scrollArea->setFrameShape(QFrame::NoFrame);
 
-        initStyleOrc ();
+        initStyleOcr ();
 
-        flagOrcInit++; //每次都加，但在第一次扫描时应该置0
+        flagOcrInit++;
     } else {
-        flagOrc = 0;
+        flagOcr = 0;
         vStackedLayout->setCurrentIndex(widgetindex);
     }
 }
 
-void KYCScanDisplayWidget::setOrcFlagStatus()
+void KYCScanDisplayWidget::setOcrFlagStatus()
 {
-    flagOrc = 0;
+    flagOcr = 0;
 }
 
 /**
  * @brief KYCScanDisplayWidget::initBeforeScanAgain
- * initialize some flags before click btnScan to scan again
+ * Initialize some flags before click btnScan to scan again.
+ * Avoid undoing to the previous picture while multiple click btnScan
  */
 void KYCScanDisplayWidget::initBeforeScanAgain()
 {
-    // 重新扫描时，应该都初始化，避免撤销到之前的图片情况
     stack.clear();
     list.clear();
-    flagOrc = 0;
-    flagOrcInit = 0;
+    flagOcr = 0;
+    flagOcrInit = 0;
     flagRectify = 0;
     flagBeautify = 0;
     flagTailor = 0;
-
-    // 需要置0，避免多次扫描造成水印的图片切换到上一次扫描的图片
     flagWaterMark = 0;
 }
 
 /**
- * @brief scan_display::scan 扫描功能结束后显示图片
+ * @brief scan_display::scan
+ * Display picture after click btnScan
  */
 void KYCScanDisplayWidget::onScan(bool ret)
 {
@@ -703,46 +714,47 @@ void KYCScanDisplayWidget::onSaveImageNow()
 {
     if (vStackedLayout->currentWidget() == widgetNormal) {
         qDebug() << "save widgetNormal jpg";
-        imgNormal->save(DEFAULT_SAVE_PRESENT_IMAGE_PATH);
+        imgNormal->save(MAIL_PICTURE_PATH);
     } else {
-        imgEditLayout->save(DEFAULT_SAVE_PRESENT_IMAGE_PATH);
+        imgEditLayout->save(MAIL_PICTURE_PATH);
     }
 }
 
 /**
- * @brief scan_display::rectify 智能纠偏
+ * @brief scan_display::rectify
+ * Smart rectify
  */
 void KYCScanDisplayWidget::onRectify()
 {
     qDebug() << "flagRectify = " << flagRectify;
     if (flagRectify == 0) {
-        // 此时代表用户点击了智能纠偏按钮
+        // User has click btnRectify
         flagRectify = 1;
         if (vStackedLayout->currentWidget() == widgetNormal) {
             qDebug() << "currentWidget == widgetNormal";
-            imgNormal->save("/tmp/scanner/scan1.png");
-            // 为了撤销
+            imgNormal->save(SCANNING_PICTURE_PATH);
+            // For undo operation(ctrl+z)
             *imgRectify = imgNormal->copy();
             list.append("Rectify");
             qDebug() << "before ImageRectify()";
-            ImageRectify("/tmp/scanner/scan1.png");
+            ImageRectify(SCANNING_PICTURE_PATH);
             qDebug() << "end ImageRectify()";
-            imgNormal->load("/tmp/scanner/scan1.png");
+            imgNormal->load(SCANNING_PICTURE_PATH);
             setPixmapScaled(*imgNormal, labNormalLeft);
             *imgEditLayout = imgNormal->copy();
             setPixmapScaled(*imgEditLayout, labEditLayout);
         } else {
-            imgEditLayout->save("/tmp/scanner/scan1.png");
+            imgEditLayout->save(SCANNING_PICTURE_PATH);
             *imgRectify = imgEditLayout->copy();
             list.append("Rectify");
-            ImageRectify("/tmp/scanner/scan1.png");
-            imgEditLayout->load("/tmp/scanner/scan1.png");
+            ImageRectify(SCANNING_PICTURE_PATH);
+            imgEditLayout->load(SCANNING_PICTURE_PATH);
             setPixmapScaled(*imgEditLayout, labEditLayout);
             *imgNormal = imgEditLayout->copy();
             setPixmapScaled(*imgNormal, labNormalLeft);
         }
     } else {
-        // 此时代表用户重复点击智能纠偏按钮，应该进行撤销操作
+        // Mean user has repeatedly clicked btnRectify, so ought to carry out undo operation
         flagRectify = 0;
         if (vStackedLayout->currentWidget() == widgetNormal) {
             qDebug() << "currentWidget == widgetNormal";
@@ -756,11 +768,11 @@ void KYCScanDisplayWidget::onRectify()
                 // 撤销的是智能纠偏：先全部清空，后把一键美化的加上
                 if (list[0] == "Rectify") {
                     list.clear();
-                    imgNormal->save("/tmp/scanner/scan1.png");
+                    imgNormal->save(SCANNING_PICTURE_PATH);
                     *imgBeautify = imgNormal->copy();
                     list.append("Beautify");
-                    oneClickBeauty("/tmp/scanner/scan1.png");
-                    imgNormal->load("/tmp/scanner/scan1.png");
+                    oneClickBeauty(SCANNING_PICTURE_PATH);
+                    imgNormal->load(SCANNING_PICTURE_PATH);
                 } else {
                     // 撤销的是一键美化：撤销到之前一个就行
                     list.removeLast();
@@ -777,11 +789,11 @@ void KYCScanDisplayWidget::onRectify()
                 if (list[0] == "Rectify") {
                     qDebug() << "list[0] = " << list[0];
                     list.clear();
-                    imgEditLayout->save("/tmp/scanner/scan1.png");
+                    imgEditLayout->save(SCANNING_PICTURE_PATH);
                     *imgBeautify = imgEditLayout->copy();
                     list.append("Beautify");
-                    oneClickBeauty("/tmp/scanner/scan1.png");
-                    imgEditLayout->load("/tmp/scanner/scan1.png");
+                    oneClickBeauty(SCANNING_PICTURE_PATH);
+                    imgEditLayout->load(SCANNING_PICTURE_PATH);
                 } else
                     list.removeLast();
             } else
@@ -794,7 +806,8 @@ void KYCScanDisplayWidget::onRectify()
 }
 
 /**
- * @brief scan_display::beautify 一键美化
+ * @brief scan_display::beautify
+ * One click beauty
  */
 void KYCScanDisplayWidget::onBeautify()
 {
@@ -802,20 +815,20 @@ void KYCScanDisplayWidget::onBeautify()
     if (flagBeautify == 0) {
         flagBeautify = 1;
         if (vStackedLayout->currentWidget() == widgetNormal) {
-            imgNormal->save("/tmp/scanner/scan1.png");
+            imgNormal->save(SCANNING_PICTURE_PATH);
             *imgBeautify = imgNormal->copy();
             list.append("Beautify");
-            oneClickBeauty("/tmp/scanner/scan1.png");
-            imgNormal->load("/tmp/scanner/scan1.png");
+            oneClickBeauty(SCANNING_PICTURE_PATH);
+            imgNormal->load(SCANNING_PICTURE_PATH);
             setPixmapScaled(*imgNormal, labNormalLeft);
             *imgEditLayout = imgNormal->copy();
             setPixmapScaled(*imgEditLayout, labEditLayout);
         } else {
-            imgEditLayout->save("/tmp/scanner/scan1.png");
+            imgEditLayout->save(SCANNING_PICTURE_PATH);
             *imgBeautify = imgEditLayout->copy();
             list.append("Beautify");
-            oneClickBeauty("/tmp/scanner/scan1.png");
-            imgEditLayout->load("/tmp/scanner/scan1.png");
+            oneClickBeauty(SCANNING_PICTURE_PATH);
+            imgEditLayout->load(SCANNING_PICTURE_PATH);
             setPixmapScaled(*imgEditLayout, labEditLayout);
             *imgNormal = imgEditLayout->copy();
             setPixmapScaled(*imgNormal, labNormalLeft);
@@ -827,11 +840,11 @@ void KYCScanDisplayWidget::onBeautify()
             if (list.count() == 2) {
                 if (list[0] == "Beautify") {
                     list.clear();
-                    imgNormal->save("/tmp/scanner/scan1.png");
+                    imgNormal->save(SCANNING_PICTURE_PATH);
                     *imgRectify = imgNormal->copy();
                     list.append("Rectify");
-                    ImageRectify("/tmp/scanner/scan1.png");
-                    imgNormal->load("/tmp/scanner/scan1.png");
+                    ImageRectify(SCANNING_PICTURE_PATH);
+                    imgNormal->load(SCANNING_PICTURE_PATH);
                 } else
                     list.removeLast();
             } else
@@ -844,11 +857,11 @@ void KYCScanDisplayWidget::onBeautify()
             if (list.count() == 2) {
                 if (list[0] == "Beautify") {
                     list.clear();
-                    imgEditLayout->save("/tmp/scanner/scan1.png");
+                    imgEditLayout->save(SCANNING_PICTURE_PATH);
                     *imgRectify = imgEditLayout->copy();
                     list.append("Rectify");
-                    ImageRectify("/tmp/scanner/scan1.png");
-                    imgEditLayout->load("/tmp/scanner/scan1.png");
+                    ImageRectify(SCANNING_PICTURE_PATH);
+                    imgEditLayout->load(SCANNING_PICTURE_PATH);
                 } else
                     list.removeLast();
             } else
@@ -910,7 +923,6 @@ void KYCScanDisplayWidget::tailor()
     flagTailor = 1;
 
     initStyleTailor ();
-
 }
 
 /**
@@ -1000,7 +1012,7 @@ void KYCEditBarWidget::onBtnTailorClicked()
 void KYCOcrThread::run()
 {
     tesseract::TessBaseAPI *api = new tesseract::TessBaseAPI();
-    qDebug() << "orc run!\n";
+    qDebug() << "ocr run!\n";
     //使用中文初始化tesseract-ocr，而不指定tessdata路径。正在识别中
     if (api->Init(NULL, "chi_sim")) {
         qDebug() << "Could not initialize tesseract.\n";
@@ -1009,11 +1021,11 @@ void KYCOcrThread::run()
         exit(1);
     }
     // 使用leptonica库打开输入图像。
-    Pix *image = pixRead("/tmp/scanner/scan1.png");
+    Pix *image = pixRead(SCANNING_PICTURE_PATH);
     if (!image) {
         qDebug() << "pixRead error!";
         outText = "Unable to read text";
-        emit orcFinished();
+        emit ocrFinished();
         // 销毁使用过的对象并释放内存。
         api->End();
         // pixDestroy(&image);
@@ -1022,7 +1034,7 @@ void KYCOcrThread::run()
     api->SetImage(image);
     // 得到光学字符识别结果
     outText = api->GetUTF8Text();
-    emit orcFinished();
+    emit ocrFinished();
     // 销毁使用过的对象并释放内存。
     api->End();
     pixDestroy(&image);

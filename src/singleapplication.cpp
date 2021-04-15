@@ -29,7 +29,6 @@ KYCSingleApplication::KYCSingleApplication(int &argc, char **argv)
     , _isRunning(false)
     , _localServer(NULL)
 {
-
     // 取应用程序名作为LocalServer的名字
     qDebug() << "DISPLAY: " << QLatin1String(getenv ("DISPLAY"));
     _serverName = QFileInfo(QCoreApplication::applicationFilePath()).fileName()

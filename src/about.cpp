@@ -6,19 +6,104 @@
 #include <QDesktopServices>
 #include <QStyle>
 #include <QScrollBar>
+#include <QDebug>
 
 
-KYCAboutDialog::KYCAboutDialog(QWidget *parent) :
-    QDialog(parent),
-    ui(new Ui::KYCAboutDialog)
+KYCAboutDialog::KYCAboutDialog(QWidget *parent)
+    : QDialog(parent)
+    , ui(new Ui::KYCAboutDialog)
+    , style_settings (new QGSettings(ORG_UKUI_STYLE))
+    , icon_theme_settings (new QGSettings(ORG_UKUI_STYLE))
 {
     ui->setupUi(this);
+
+    initWindow();
+
+    initLayout();
+
+    initStyle();
+
+    initConnect();
+}
+
+
+void KYCAboutDialog::titlebar_icon_theme_changed(QString)
+{
+
+}
+
+void KYCAboutDialog::titlebar_style_changed(QString)
+{
+    qDebug() << "titlebar_style_changed = " << style_settings->get (STYLE_NAME).toString ();
+    QPalette pal = QApplication::style()->standardPalette();
+    QPalette pp = QApplication::style()->standardPalette();
+    QColor c;
+    QString text =
+        tr("Kylin Scanner is an interface-friendly scanner, which could be also used as one-click beautification, intelligent correction and text recognition tools.");
+
+    c.setRed(231);
+    c.setBlue(231);
+    c.setGreen(231);
+    if (c == pal.background().color()) {
+        // light theme
+        pal.setColor(QPalette::Background, QColor("#FFFFFF"));
+        ui->labelSupport->setText(tr("Service & Support : ")
+                                  + "<a href=\"mailto://support@kylinos.cn\" style=\"color:rgba(0,0,0,1)\">"
+                                  + "support@kylinos.cn</a>");
+
+        ui->textEdit->setText("<body style=\"background:#FFFFFF;\">"
+                              + QString("<p style=\"color: %1\">").arg(pal.windowText().color().name(QColor::HexRgb))
+                              + text
+                              + "</p></body>");
+        setPalette(pal);
+    } else {
+        // dark theme
+        setPalette(pal);
+        ui->labelSupport->setText(tr("Service & Support : ")
+                                  + "<a href=\"mailto://support@kylinos.cn\" style=\"color:rgba(255,255,255,1)\">"
+                                  + "support@kylinos.cn</a>");
+        ui->textEdit->setText(QString("<body style=\"background:%1;\">") .arg(pal.background().color().name(
+                                                                                  QColor::HexRgb))
+                              + QString("<p style=\"color: %1\">").arg(pal.windowText().color().name(QColor::HexRgb))
+                              + text
+                              + "</p></body>");
+    }
+
+
+    QFont f = ui->labelTitle->font();
+    f.setPixelSize(14);
+    ui->labelTitle->setFont(f);
+    f.setPixelSize(18);
+    ui->labelName->setFont(f);
+    f.setPixelSize(14);
+    ui->labelVersion->setFont(f);
+    f.setFamily(font().family());
+    ui->labelVersion->setPalette(pp);
+    ui->textEdit->setFont(f);
+    ui->textEdit->setPalette(pp);
+    ui->labelSupport->setFont(f);
+    ui->labelSupport->setPalette(pp);
+}
+
+KYCAboutDialog::~KYCAboutDialog()
+{
+    delete ui;
+}
+
+void KYCAboutDialog::initWindow()
+{
     MotifWmHints hints;
     hints.flags = MWM_HINTS_FUNCTIONS | MWM_HINTS_DECORATIONS;
     hints.functions = MWM_FUNC_ALL;
     hints.decorations = MWM_DECOR_BORDER;
     KYCXAtomHelperObject::getInstance()->setWindowMotifHint(winId(), hints);
 
+    setWindowModality(Qt::ApplicationModal);
+    setWindowTitle(tr("About"));
+}
+
+void KYCAboutDialog::initLayout()
+{
     QFont f = ui->labelTitle->font();
     f.setPixelSize(14);
     ui->labelTitle->setText(tr("kylin-scanner"));
@@ -35,8 +120,6 @@ KYCAboutDialog::KYCAboutDialog(QWidget *parent) :
     //ui->labelVersion->setAlignment(Qt::AlignCenter);
     f.setPixelSize(12);
     f.setPixelSize(14);
-    setWindowModality(Qt::WindowModal);
-    setWindowTitle(tr("About"));
     ui->labelLogo->setPixmap(QIcon::fromTheme("kylin-scanner").pixmap(ui->labelLogo->size()));
     ui->labelIcon->setPixmap(QIcon::fromTheme("kylin-scanner").pixmap(96, 96));
 
@@ -48,20 +131,13 @@ KYCAboutDialog::KYCAboutDialog(QWidget *parent) :
     ui->btnClose->installEventFilter(this);
     ui->btnClose->setFlat(true);
     ui->labelSupport->setContextMenuPolicy(Qt::NoContextMenu); // no right click menu
-
-    QScreen *screen = QGuiApplication::primaryScreen ();
-    QRect screenRect =  screen->availableGeometry();
-    this->move(screenRect.width() / 2, screenRect.height() / 2);
-    this->hide();
-    connect(ui->btnClose, SIGNAL(clicked()), this, SLOT(hide()));
-    connect(ui->labelSupport, &QLabel::linkActivated, [ = ](QString s) {
-        QUrl url(s);
-        QDesktopServices::openUrl(url);
-    });
 }
 
-void KYCAboutDialog::paintEvent(QPaintEvent *event)
+void KYCAboutDialog::initStyle()
 {
+    stylelist << STYLE_NAME_KEY_DARK << STYLE_NAME_KEY_BLACK;
+    iconthemelist << ICON_THEME_KEY_BASIC << ICON_THEME_KEY_CLASSICAL << ICON_THEME_KEY_DEFAULT;
+
     QPalette pal = QApplication::style()->standardPalette();
     QPalette pp = QApplication::style()->standardPalette();
     QColor c;
@@ -72,9 +148,10 @@ void KYCAboutDialog::paintEvent(QPaintEvent *event)
     c.setBlue(231);
     c.setGreen(231);
     if (c == pal.background().color()) {
+        // light theme
         pal.setColor(QPalette::Background, QColor("#FFFFFF"));
         ui->labelSupport->setText(tr("Service & Support : ")
-                                  + "<a href=\"mailto://support@kylinos.cn\">"
+                                  + "<a href=\"mailto://support@kylinos.cn\" style=\"color:rgba(0,0,0,1)\">"
                                   + "support@kylinos.cn</a>");
 
         ui->textEdit->setText("<body style=\"background:#FFFFFF;\">"
@@ -83,9 +160,10 @@ void KYCAboutDialog::paintEvent(QPaintEvent *event)
                               + "</p></body>");
         setPalette(pal);
     } else {
+        // dark theme
         setPalette(pal);
         ui->labelSupport->setText(tr("Service & Support : ")
-                                  + "<a href=\"mailto://support@kylinos.cn\">"
+                                  + "<a href=\"mailto://support@kylinos.cn\" style=\"color:rgba(255,255,255,1)\">"
                                   + "support@kylinos.cn</a>");
         ui->textEdit->setText(QString("<body style=\"background:%1;\">") .arg(pal.background().color().name(
                                                                                   QColor::HexRgb))
@@ -95,52 +173,50 @@ void KYCAboutDialog::paintEvent(QPaintEvent *event)
     }
 
 
-    QString str = ui->textEdit->toPlainText();
-    int w = ui->textEdit->fontMetrics().width(str, str.length());
-    int h = ui->textEdit->fontMetrics().height();
-    int row = w / ui->textEdit->width();
-
-    // for += 2 因为计算行数方法可能不是很精准，所以额外多加一行。
-    if (w % ui->textEdit->width()) row += 2;
-
-    int he = (row * h);
-    if (he < 200) {
-        ui->textEdit->setFixedHeight(he);
-        ui->textEdit->verticalScrollBar()->hide();
-        ui->textEdit->setDisabled(true);
-        m_iHeight = 336 + he;
-    } else {
-        ui->textEdit->setFixedHeight(200);
-        ui->textEdit->verticalScrollBar()->show();
-        ui->textEdit->setDisabled(false);
-        m_iHeight = 336 + 200;
-    }
-    setFixedSize(420, m_iHeight);
-
     QFont f = ui->labelTitle->font();
     f.setPixelSize(14);
     ui->labelTitle->setFont(f);
-    //f.setWeight(28);
     f.setPixelSize(18);
     ui->labelName->setFont(f);
-    //f.setWeight(24);
     f.setPixelSize(14);
     ui->labelVersion->setFont(f);
     f.setFamily(font().family());
     ui->labelVersion->setPalette(pp);
     ui->textEdit->setFont(f);
     ui->textEdit->setPalette(pp);
-    //ui->labelOfficalWebsite->setFont(f);
-    //ui->labelOfficalWebsite->setPalette(pp);
     ui->labelSupport->setFont(f);
     ui->labelSupport->setPalette(pp);
-    //ui->labelHotLine->setFont(f);
-    //ui->labelHotLine->setPalette(pp);
 
-    QDialog::paintEvent(event);
 }
 
-KYCAboutDialog::~KYCAboutDialog()
+void KYCAboutDialog::initConnect()
 {
-    delete ui;
+    connect(ui->btnClose, SIGNAL(clicked()), this, SLOT(hide()));
+    connect(ui->labelSupport, &QLabel::linkActivated, [ = ](QString s) {
+        QUrl url(s);
+        QDesktopServices::openUrl(url);
+    });
+    connect(style_settings, SIGNAL(changed(QString)), this, SLOT(titlebar_style_changed(QString)));
+    connect(icon_theme_settings, SIGNAL(changed(QString)), this, SLOT(titlebar_icon_theme_changed(QString)));
+}
+
+void KYCAboutDialog::setTextDarkStyle()
+{
+
+}
+
+void KYCAboutDialog::setTextLightStyle()
+{
+
+}
+
+void KYCAboutDialog::moveCenter()
+{
+    QScreen *screen = QGuiApplication::primaryScreen ();
+    QRect screenRect =  screen->availableGeometry();
+    qDebug() << "screen: " << screen
+             << "screenRect: " <<screenRect
+             << "screenRect.width = " << screenRect.width()/2
+             << "screenRect.height = " << screenRect.height()/2;
+    this->move(screenRect.width() / 2, screenRect.height() / 2);
 }

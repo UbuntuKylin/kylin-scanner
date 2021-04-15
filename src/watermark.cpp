@@ -30,14 +30,28 @@ KYCWaterMarkDialog::KYCWaterMarkDialog(QWidget *parent) :
     , hBoxLayout (new QHBoxLayout())
     , vBoxLayout (new QVBoxLayout(this))
 {
+    initWindow();
+
+    initLayout();
+
+    initStyle();
+
+    initConnect();
+}
+
+KYCWaterMarkDialog::~KYCWaterMarkDialog()
+{
+}
+
+void KYCWaterMarkDialog::initWindow()
+{
     setWindowFlags(Qt::FramelessWindowHint | Qt::Dialog);
     setFixedSize(320, 250);
-
-    stylelist << STYLE_NAME_KEY_DARK << STYLE_NAME_KEY_BLACK;
-    iconthemelist << ICON_THEME_KEY_BASIC << ICON_THEME_KEY_CLASSICAL << ICON_THEME_KEY_DEFAULT;
-
     setWindowMask ();
+}
 
+void KYCWaterMarkDialog::initLayout()
+{
     label->setText(tr("Input watermark content"));
     label->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
     label->setFixedSize(192, 32);
@@ -59,13 +73,29 @@ KYCWaterMarkDialog::KYCWaterMarkDialog(QWidget *parent) :
     btnCancel->setText(tr("Cancel"));
     btnCancel->setFixedSize(100, 36);
 
-
     hBoxLayout->setSpacing(0);
     hBoxLayout->addWidget(btnOk);
     hBoxLayout->addSpacing(16);
     hBoxLayout->addWidget(btnCancel);
     hBoxLayout->setContentsMargins(16, 0, 16, 0);
 
+    vBoxLayout->setSpacing(0);
+    vBoxLayout->addWidget(label);
+    vBoxLayout->addSpacing(32);
+    vBoxLayout->addWidget(lineedit);
+    vBoxLayout->addSpacing(22);
+    vBoxLayout->addWidget(line);
+    vBoxLayout->addSpacing(22);
+    vBoxLayout->addLayout(hBoxLayout);
+    vBoxLayout->setContentsMargins(16, 30, 16, 30);
+
+    setLayout(vBoxLayout);
+}
+
+void KYCWaterMarkDialog::initStyle()
+{
+    stylelist << STYLE_NAME_KEY_DARK << STYLE_NAME_KEY_BLACK;
+    iconthemelist << ICON_THEME_KEY_BASIC << ICON_THEME_KEY_CLASSICAL << ICON_THEME_KEY_DEFAULT;
 
     if (stylelist.contains(style_settings->get(STYLE_NAME).toString())) {
         QPalette pal(palette()); // 水印对话框背景
@@ -99,25 +129,13 @@ KYCWaterMarkDialog::KYCWaterMarkDialog(QWidget *parent) :
                                  "QPushButton:hover{border:none;background-color:#3D6BE5;border:rgb(147,147,147);color:#000000;border-radius:4px;}"
                                  "QPushButton:checked{border:none;background-color:#3D6BE5;border:rgb(147,147,147);color:#000000;border-radius:4px;}");
     }
-    vBoxLayout->setSpacing(0);
-    vBoxLayout->addWidget(label);
-    vBoxLayout->addSpacing(32);
-    vBoxLayout->addWidget(lineedit);
-    vBoxLayout->addSpacing(22);
-    vBoxLayout->addWidget(line);
-    vBoxLayout->addSpacing(22);
-    vBoxLayout->addLayout(hBoxLayout);
-    vBoxLayout->setContentsMargins(16, 30, 16, 30);
+}
 
-    setLayout(vBoxLayout);
-
+void KYCWaterMarkDialog::initConnect()
+{
     connect(btnOk, SIGNAL(clicked()), this, SLOT(doAccept()));
     connect(btnCancel, SIGNAL(clicked()), this, SLOT(reject()));
     connect(style_settings, SIGNAL(changed(QString)), this, SLOT(watermarkdlg_style_changed(QString)));
-}
-
-KYCWaterMarkDialog::~KYCWaterMarkDialog()
-{
 }
 
 QString KYCWaterMarkDialog::getLineEdit()

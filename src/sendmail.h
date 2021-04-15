@@ -51,7 +51,6 @@ extern "C" {
 #define DESKTOPPATH "/usr/share/applications/"
 #define MAIL_WINDOW_WIDTH 320
 #define MAIL_WINDOW_HEIGHT 260
-#define DEFAULT_SAVE_PRESENT_IMAGE_PATH "/tmp/scanner/present_image.jpg"
 
 typedef struct _Applist {
     char *appid;
@@ -69,6 +68,11 @@ class KYCNoMailDialog : public QDialog
 public:
     explicit KYCNoMailDialog(QWidget *parent = nullptr);
     ~KYCNoMailDialog();
+
+    void initWindow();
+    void initLayout();
+    void initStyle();
+    void initConnect();
 private:
     QStringList stylelist;
     QStringList iconthemelist;
@@ -95,6 +99,13 @@ class KYCSendMailDialog : public QDialog
 
 public:
     explicit KYCSendMailDialog(QWidget *parent = nullptr);
+    ~KYCSendMailDialog();
+
+    void initWindow();
+    void initLayout();
+    void initStyle();
+    void initConnect();
+
     void setBtnList();
     void openMail(QString name);
     //void paintEvent(QPaintEvent *event); // 窗口阴影

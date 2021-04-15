@@ -22,6 +22,8 @@
 #include <QTextCursor>
 #include <QStandardItemModel>
 #include <QFileInfo>
+#include <QWidgetList>
+#include <QApplication>
 
 KYCScanSettingsWidget::KYCScanSettingsWidget(QWidget *parent)
     : QWidget(parent)
@@ -62,11 +64,30 @@ KYCScanSettingsWidget::KYCScanSettingsWidget(QWidget *parent)
     , vBoxScanSet (new QVBoxLayout())
     , vBoxScanSet1 (new QVBoxLayout())
 {
+    initWindow();
+
+    initLayout();
+
+    initStyle();
+
+    initSettings();
+
+    initConnect();
+}
+
+KYCScanSettingsWidget::~KYCScanSettingsWidget()
+{
+
+}
+
+void KYCScanSettingsWidget::initWindow()
+{
     setFixedWidth(268);
+    setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+}
 
-    stylelist << STYLE_NAME_KEY_DARK << STYLE_NAME_KEY_BLACK;
-    iconthemelist << ICON_THEME_KEY_BASIC << ICON_THEME_KEY_CLASSICAL << ICON_THEME_KEY_DEFAULT;
-
+void KYCScanSettingsWidget::initLayout()
+{
     line3->setObjectName(QString::fromUtf8("line3"));
     line3->setMaximumHeight(1);
     line3->setMaximumWidth(230);
@@ -94,8 +115,30 @@ KYCScanSettingsWidget::KYCScanSettingsWidget(QWidget *parent)
     btnLocation->setIcon(QIcon::fromTheme("folder-open"));
     btnLocation->setLayoutDirection(Qt::LayoutDirection::RightToLeft);
 
-    setKylinLable();
-    setKylinComboBox(false);
+    vBoxScanSet->setSpacing(0);
+    vBoxScanSet->addLayout(hBoxDevice);
+    vBoxScanSet->addLayout(hBoxType);
+    vBoxScanSet->addLayout(hBoxColor);
+    vBoxScanSet->addLayout(hBoxResolution);
+    vBoxScanSet->addLayout(hBoxSize);
+    vBoxScanSet->addLayout(hBoxLine3);
+    vBoxScanSet->addLayout(hBoxFormat);
+    vBoxScanSet->addLayout(hBoxName);
+    vBoxScanSet->addLayout(hBoxLocation);
+    vBoxScanSet->addStretch();
+    vBoxScanSet->addLayout(hBoxLine4);
+    vBoxScanSet->addLayout(hBoxMailText);
+    vBoxScanSet->setContentsMargins(0, 0, 0, 0);
+
+    setLayout(vBoxScanSet);
+
+}
+
+void KYCScanSettingsWidget::initStyle()
+{
+    stylelist << STYLE_NAME_KEY_DARK << STYLE_NAME_KEY_BLACK;
+    iconthemelist << ICON_THEME_KEY_BASIC << ICON_THEME_KEY_CLASSICAL << ICON_THEME_KEY_DEFAULT;
+
     if (stylelist.contains(style_settings->get(STYLE_NAME).toString())) {
         // 背景颜色
         QPalette pal(palette());
@@ -129,25 +172,14 @@ KYCScanSettingsWidget::KYCScanSettingsWidget(QWidget *parent)
         line4->setStyleSheet("QFrame{color:#DCDCDC}");
 
     }
+}
+
+void KYCScanSettingsWidget::initSettings()
+{
+    setKylinLable();
+    setKylinComboBox(false);
+
     setKylinHBoxLayout();
-
-    vBoxScanSet->setSpacing(0);
-    vBoxScanSet->addLayout(hBoxDevice);
-    vBoxScanSet->addLayout(hBoxType);
-    vBoxScanSet->addLayout(hBoxColor);
-    vBoxScanSet->addLayout(hBoxResolution);
-    vBoxScanSet->addLayout(hBoxSize);
-    vBoxScanSet->addLayout(hBoxLine3);
-    vBoxScanSet->addLayout(hBoxFormat);
-    vBoxScanSet->addLayout(hBoxName);
-    vBoxScanSet->addLayout(hBoxLocation);
-    vBoxScanSet->addStretch();
-    vBoxScanSet->addLayout(hBoxLine4);
-    vBoxScanSet->addLayout(hBoxMailText);
-    vBoxScanSet->setContentsMargins(0, 0, 0, 0);
-
-    setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-    setLayout(vBoxScanSet);
 
     // For current combobox text, while not change current text
     KYCSaneWidget &instance = KYCSaneWidget::getInstance();
@@ -176,7 +208,10 @@ KYCScanSettingsWidget::KYCScanSettingsWidget(QWidget *parent)
 
     curResolution = textResolution->currentText();
     instance.userInfo.resolution = curResolution;
+}
 
+void KYCScanSettingsWidget::initConnect()
+{
     // For save location
     connect(btnLocation, SIGNAL(clicked()), this, SLOT(onBtnLocationClicked()));
 
@@ -208,11 +243,6 @@ KYCScanSettingsWidget::KYCScanSettingsWidget(QWidget *parent)
 
     connect(style_settings, SIGNAL(changed(QString)), this,
             SLOT(scanset_style_changed(QString)));
-}
-
-KYCScanSettingsWidget::~KYCScanSettingsWidget()
-{
-
 }
 
 /**
@@ -399,6 +429,10 @@ void KYCScanSettingsWidget::setkylinScanStatus(bool status)
 //    setKylinComboBoxTextDeviceAttributes(textDevice, strListDevice);
 }
 
+/**
+ * @brief KYCScanSettingsWidget::setKylinScanSetNotEnable
+ * Case 1: Cannot click btnMail and btnSave before click btnScan
+ */
 void KYCScanSettingsWidget::setKylinScanSetNotEnable()
 {
     KYCSaneWidget &instance = KYCSaneWidget::getInstance();
@@ -603,9 +637,15 @@ void KYCScanSettingsWidget::setKylinLable()
         if (stylelist.contains(style_settings->get(STYLE_NAME).toString())) {
             textType->setStyleSheet("QLabel{border:1px solid #0D0400;background-color:rgb(15,08,01);color:rgb(232,232,232);border-radius:4px;}");
             textName->setStyleSheet("QLineEdit{border:1px solid #0D0400;background-color:rgb(15,08,01);color:rgb(232,232,232);border-radius:4px;}");
+#ifdef DEBUG_EDIT
+            btnLocation->setStyleSheet("QPushButton{border:4px solid #0D0400;background-repeat:no-repeat;background-position:right;background-color:#0D0400;color:gray;border-radius:4px;text-align:left;}");
+#endif
         } else {
             textType->setStyleSheet("QLabel{background-color:#E7E7E7;color:#000000;border-radius:4px;}");
             textName->setStyleSheet("QLineEdit{background-color:#E7E7E7;color:#000000;border-radius:4px;}");
+#ifdef DEBUG_EDIT
+            btnLocation->setStyleSheet("QPushButton{border:4px solid #E7E7E7;background-color:#E7E7E7;background-repeat:no-repeat;background-position:right;color:gray;border-radius:4px;text-align:left;}");
+#endif
         }
     }
 }
@@ -864,7 +904,24 @@ void KYCScanSettingsWidget::onBtnSaveClicked()
         }
         filepath = curPath;
 
-        KYCSaveFileDialog *saveDialog = new KYCSaveFileDialog(this, flag, filename, titlename);
+        KYCSaveFileDialog *saveDialog = new KYCSaveFileDialog(this->parentWidget(), flag, filename, titlename);
+
+        // center saveDialog in mainwindow
+        QWidget *widget = nullptr;
+        QWidgetList widgetList = QApplication::allWidgets();
+        for (int i=0; i<widgetList.length(); ++i) {
+            if (widgetList.at(i)->objectName() == "MainWindow") {
+                widget = widgetList.at(i);
+            }
+        }
+        if (widget) {
+            QRect rect = widget->geometry();
+            int x = rect.x() + rect.width()/2 - saveDialog->width()/2;
+            int y = rect.y() + rect.height()/2 - saveDialog->height()/2;
+            qDebug() << "x = " << x << "y = " << y;
+            saveDialog->move(x,y);
+        }
+
         saveDialog->kycSetDirectory(filepath);
 
         if (saveDialog->exec() == QFileDialog::Accepted) {
@@ -968,7 +1025,7 @@ void KYCScanSettingsWidget::modifyBtnSave()
     }
 }
 
-void KYCScanSettingsWidget::setOrcFlagInit()
+void KYCScanSettingsWidget::setOcrFlagInit()
 {
     // Init btnSave text to save as
     flag = 0;

@@ -29,20 +29,19 @@
 #include "titlebar.h"
 #include "theme.h"
 #include "usbhotplug.h"
-
-#define MAINWINDOW_WIDTH 860
-#define MAINWINDOW_HEIGHT 680
+#include "common.h"
+#include "about.h"
+#include "interrupt.h"
 
 class KYCCommonScanThread : public QThread
 {
     Q_OBJECT
 public:
-    // 将连接设备，获取设备信息放在线程中，因为这个过程耗费资源
     void run() Q_DECL_OVERRIDE;
 
 Q_SIGNALS:
-    // 此结束信号，用来处理是否获取到设备信息的界面操作
-    void scanFinished(bool);
+    // Whether find scanners in the first time
+    void initFindScanDevicesFinished(bool);
 };
 
 class KYCWidget : public QWidget
@@ -52,6 +51,12 @@ class KYCWidget : public QWidget
 public:
     KYCWidget(QWidget *parent = 0);
     ~KYCWidget();
+
+    void initWindow();
+    void initLayout();
+    void initStyle();
+    void initSetting();
+    void initConnect();
 
     void setPdfSize(QPdfWriter *pdfWriter, QString size);
     void saveToPdf(QImage img, QString pathName);
@@ -72,6 +77,8 @@ private:
     QStringList stylelist;
     QStringList iconthemelist;
     KYCTitleBarDialog *pTitleBar;
+    KYCAboutDialog *m_pAbout;
+    //KYCInterruptDialog *m_pAbout;
     QFrame *line;
     KYCFunctionBarWidget *pFuncBar;
     KYCScanSettingsWidget *pScanSet;
@@ -89,8 +96,9 @@ Q_SIGNALS:
 private slots:
     void saveImage(QString fileName);
     void scanResult(bool ret);
-    void swichScanDeviceResult(bool ret);
+    void switchScanDeviceResult(bool ret);
     void setMaskClear();
+    void showAboutDialogCenter();
     void setWindowBorderRadius();
     void style_changed(QString); // 系统主题风格变化
     void icon_theme_changed(QString); // 系统图标主题风格变化

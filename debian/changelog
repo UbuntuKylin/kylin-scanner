@@ -1,3 +1,23 @@
+kylin-scanner (1.0.0-20) v101; urgency=medium
+
+  * BUG 号: 47292, 47329, 48671
+  * 需求号: 26483, 26143
+  * 其他改动说明：
+  *     1. 依照代码变量名规范修改代码
+  *     2. 简化界面代码的初始化
+
+ -- yushuoqi <yushuoqi@kylinos.cn>  Wed, 14 Apr 2021 09:58:26 +0800
+
+kylin-scanner (1.0.0-19) v101; urgency=medium
+
+  * [English]
+  * Fix #45705, Fix send mail dialog not work while running evolution
+  *
+  * [中文]
+  * Fix #45705, 点击邮件客户端后直接退出提示框，没有调用出邮件客户端登录界面
+
+ -- yushuoqi <yushuoqi@kylinos.cn>  Thu, 08 Apr 2021 15:58:45 +0800
+
 kylin-scanner (1.0.0-18) v101; urgency=medium
 
   * [English] 
