@@ -57,7 +57,7 @@ KYCWidget::~KYCWidget()
 
 void KYCWidget::initWindow()
 {
-    setWindowTitle (tr("kylin-scanner")); // For system tray text
+    setWindowTitle (tr("Scanner")); // For system tray text
     setWindowIcon (QIcon::fromTheme("kylin-scanner"));
     resize(MAINWINDOW_WIDTH, MAINWINDOW_HEIGHT);
     setObjectName("MainWindow");
@@ -321,7 +321,7 @@ void KYCWidget::warnMsg(QString msg)
     msgBox->setText(msg);
     msgBox->setIcon(QMessageBox::Warning);
     msgBox->setWindowIcon(QIcon::fromTheme("kylin-scanner")); // This not work
-    msgBox->setWindowTitle(tr("kylin-scanner")); // This not work
+    msgBox->setWindowTitle(tr("Scanner")); // This not work
     msgBox->setStandardButtons(QMessageBox::Yes); // Add buttons by `|`
     msgBox->setContextMenuPolicy(Qt::NoContextMenu);
     msgBox->button(QMessageBox::Yes)->setText(tr("Yes")); // set buttonText
@@ -660,7 +660,9 @@ void KYCWidget::style_changed(QString)
 
 void KYCWidget::icon_theme_changed(QString)
 {
-    qDebug() << "icon_theme_changed";
+    qDebug() << "update MainWindown icon with theme changed";
+    setWindowIcon (QIcon::fromTheme("kylin-scanner"));
+
     if (iconthemelist.contains (icon_theme_settings->get(ICON_THEME_NAME).toString())) {
         qDebug() << "icon-theme: " << icon_theme_settings->get(ICON_THEME_NAME).toString();
         //setWindowIcon (QIcon::fromTheme("kylin-scanner"));

@@ -29,7 +29,10 @@ KYCAboutDialog::KYCAboutDialog(QWidget *parent)
 
 void KYCAboutDialog::titlebar_icon_theme_changed(QString)
 {
-
+    qDebug() << "update titlebar icon with theme";
+    setWindowIcon(QIcon::fromTheme("kylin-scanner"));
+    ui->labelLogo->setPixmap(QIcon::fromTheme("kylin-scanner").pixmap(ui->labelLogo->size()));
+    ui->labelIcon->setPixmap(QIcon::fromTheme("kylin-scanner").pixmap(96, 96));
 }
 
 void KYCAboutDialog::titlebar_style_changed(QString)
@@ -39,7 +42,7 @@ void KYCAboutDialog::titlebar_style_changed(QString)
     QPalette pp = QApplication::style()->standardPalette();
     QColor c;
     QString text =
-        tr("Kylin Scanner is an interface-friendly scanner, which could be also used as one-click beautification, intelligent correction and text recognition tools.");
+        tr("Scanner is an interface-friendly scanner, which could be also used as one-click beautification, intelligent correction and text recognition tools.");
 
     c.setRed(231);
     c.setBlue(231);
@@ -100,17 +103,18 @@ void KYCAboutDialog::initWindow()
 
     setWindowModality(Qt::ApplicationModal);
     setWindowTitle(tr("About"));
+    setWindowIcon(QIcon::fromTheme("kylin-scanner"));
 }
 
 void KYCAboutDialog::initLayout()
 {
     QFont f = ui->labelTitle->font();
     f.setPixelSize(14);
-    ui->labelTitle->setText(tr("kylin-scanner"));
+    ui->labelTitle->setText(tr("Scanner"));
     f.setWeight(28);
     f.setPixelSize(18);
     ui->labelName->setFont(f);
-    ui->labelName->setText(tr("kylin-scanner"));
+    ui->labelName->setText(tr("Scanner"));
     f.setWeight(24);
     f.setPixelSize(14);
     ui->labelVersion->setFont(f);
@@ -123,7 +127,7 @@ void KYCAboutDialog::initLayout()
     ui->labelLogo->setPixmap(QIcon::fromTheme("kylin-scanner").pixmap(ui->labelLogo->size()));
     ui->labelIcon->setPixmap(QIcon::fromTheme("kylin-scanner").pixmap(96, 96));
 
-    ui->labelTitle->setText(tr("kylin-scanner"));
+    ui->labelTitle->setText(tr("Scanner"));
     ui->btnClose->setIcon(QIcon::fromTheme("window-close-symbolic"));
     ui->btnClose->setProperty("isWindowButton", 0x2);
     ui->btnClose->setProperty("useIconHighlightEffect", 0x8);
@@ -142,7 +146,7 @@ void KYCAboutDialog::initStyle()
     QPalette pp = QApplication::style()->standardPalette();
     QColor c;
     QString text =
-        tr("Kylin Scanner is an interface-friendly scanner, which could be also used as one-click beautification, intelligent correction and text recognition tools.");
+        tr("Scanner is an interface-friendly scanner, which could be also used as one-click beautification, intelligent correction and text recognition tools.");
 
     c.setRed(231);
     c.setBlue(231);

@@ -21,7 +21,7 @@
 #define MAINWINDOW_WIDTH 860
 #define MAINWINDOW_HEIGHT 680
 
-#define APP_NAME							"kylin-scanner"
+#define APP_NAME							"Scanner"
 #define CN_TRANSLATION_FILE_PATH			"/usr/share/kylin-scanner/translations/kylin-scanner."
 
 #define LOG_PATH 							"/tmp/scanner/"
