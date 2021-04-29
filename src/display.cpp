@@ -165,7 +165,7 @@ void KYCScanDisplayWidget::setInitDevice()
 
 void KYCScanDisplayWidget::setOcrThreadQuit()
 {
-    thread.quit();
+    ocrThread.quit();
 }
 
 void KYCScanDisplayWidget::setPixmap(QImage img, QLabel *lab)
@@ -409,7 +409,13 @@ void KYCScanDisplayWidget::initConnect()
     connect(editLayout->btnWatermark, SIGNAL(clicked()), this, SLOT(addWatermark()));
 
     // For OCR
-    connect(&thread, SIGNAL(ocrFinished()), this, SLOT(ocrText()));
+    connect(&ocrThread, SIGNAL(ocrFinished()), this, SLOT(ocrText()), Qt::QueuedConnection);
+
+    // For rectify
+    connect(&rectifyThread, SIGNAL(rectifyFinished()), this, SLOT(rectifyEnd()), Qt::QueuedConnection);
+
+    // For beauty
+    connect(&beautyThread, SIGNAL(beautyFinished()), this, SLOT(beautyEnd()), Qt::QueuedConnection);
 
     // For timerScan
     //connect(timerScan, SIGNAL(timeout()), this, SLOT(timerScanUpdate()));
@@ -592,6 +598,23 @@ void KYCScanDisplayWidget::ocrText()
     qDebug() << outText;
 }
 
+void KYCScanDisplayWidget::rectifyEnd()
+{
+    qDebug() << "rectify end";
+    rectifyThreadQuit();
+
+    imgEditLayout->load(SCANNING_PICTURE_PATH);
+    setPixmapScaled(*imgEditLayout, labEditLayout);
+    *imgNormal = imgEditLayout->copy();
+    setPixmapScaled(*imgNormal, labNormalLeft);
+}
+
+void KYCScanDisplayWidget::beautyEnd()
+{
+    qDebug() << "beauty end";
+    beautifyThreadQuit();
+}
+
 void KYCScanDisplayWidget::scandisplay_theme_changed(QString)
 {
     initStyle ();
@@ -610,7 +633,17 @@ void KYCScanDisplayWidget::onOcr()
         *imgEditLayout = imgNormal->copy();
         imgEditLayout->save(SCANNING_PICTURE_PATH);
         *imgBackup = imgEditLayout->copy();
-        thread.start();
+
+        ocrThread.start();
+        /*
+        m_ocrThread = new QThread();
+        m_ocrThread->start();
+
+        m_ocrTask = new MKYCOcrThread();
+        m_ocrTask->moveToThread(m_ocrThread);
+        */
+
+
         *imgBackup = imgBackup->scaled(120, 166);
 
         labOcrLeft->setPixmap(QPixmap::fromImage(*imgBackup));
@@ -706,6 +739,32 @@ void KYCScanDisplayWidget::onScan(bool ret)
     setPixmapScaled(*imgEditLayout, labEditLayout);
 }
 
+void KYCScanDisplayWidget::setNormalImage()
+{
+    imgNormal->load(SCANNING_PICTURE_PATH);
+    setPixmapScaled(*imgNormal, labNormalLeft);
+    *imgEditLayout = imgNormal->copy();
+    setPixmapScaled(*imgEditLayout, labEditLayout);
+}
+
+void KYCScanDisplayWidget::rectifyThreadQuit()
+{
+    if (rectifyThread.isRunning()) {
+        qDebug() << "Quit rectifyThread";
+        rectifyThread.quit();
+        rectifyThread.wait();
+    }
+}
+
+void KYCScanDisplayWidget::beautifyThreadQuit()
+{
+    if (beautyThread.isRunning()) {
+        qDebug() << "Quit beautifyThread";
+        beautyThread.quit();
+        rectifyThread.wait();
+    }
+}
+
 /**
  * @brief ScanDisplay::onSaveImageNow
  * Save present display image with format(png), which could called by send mail
@@ -721,12 +780,11 @@ void KYCScanDisplayWidget::onSaveImageNow()
 }
 
 /**
- * @brief scan_display::rectify
- * Smart rectify
+ * @brief KYCScanDisplayWidget::onBtnRectifyBegin
+ * First click btnRectify, begin to rectify
  */
-void KYCScanDisplayWidget::onRectify()
+void KYCScanDisplayWidget::onBtnRectifyBegin()
 {
-    qDebug() << "flagRectify = " << flagRectify;
     if (flagRectify == 0) {
         // User has click btnRectify
         flagRectify = 1;
@@ -736,68 +794,17 @@ void KYCScanDisplayWidget::onRectify()
             // For undo operation(ctrl+z)
             *imgRectify = imgNormal->copy();
             list.append("Rectify");
-            qDebug() << "before ImageRectify()";
-            ImageRectify(SCANNING_PICTURE_PATH);
-            qDebug() << "end ImageRectify()";
-            imgNormal->load(SCANNING_PICTURE_PATH);
-            setPixmapScaled(*imgNormal, labNormalLeft);
-            *imgEditLayout = imgNormal->copy();
-            setPixmapScaled(*imgEditLayout, labEditLayout);
+
+            rectifyThread.start();
+
         } else {
             imgEditLayout->save(SCANNING_PICTURE_PATH);
             *imgRectify = imgEditLayout->copy();
             list.append("Rectify");
-            ImageRectify(SCANNING_PICTURE_PATH);
+
+            rectifyThread.start();
+
             imgEditLayout->load(SCANNING_PICTURE_PATH);
-            setPixmapScaled(*imgEditLayout, labEditLayout);
-            *imgNormal = imgEditLayout->copy();
-            setPixmapScaled(*imgNormal, labNormalLeft);
-        }
-    } else {
-        // Mean user has repeatedly clicked btnRectify, so ought to carry out undo operation
-        flagRectify = 0;
-        if (vStackedLayout->currentWidget() == widgetNormal) {
-            qDebug() << "currentWidget == widgetNormal";
-            *imgNormal = imgRectify->copy();
-            /**
-             * 2代表点击了先智能纠偏和后一键美化：
-             * 有2种情况： 1）先撤销一键美化 2）先撤销智能纠偏
-             */
-            qDebug() << "list.count = " << list.count();
-            if (list.count() == 2) {
-                // 撤销的是智能纠偏：先全部清空，后把一键美化的加上
-                if (list[0] == "Rectify") {
-                    list.clear();
-                    imgNormal->save(SCANNING_PICTURE_PATH);
-                    *imgBeautify = imgNormal->copy();
-                    list.append("Beautify");
-                    oneClickBeauty(SCANNING_PICTURE_PATH);
-                    imgNormal->load(SCANNING_PICTURE_PATH);
-                } else {
-                    // 撤销的是一键美化：撤销到之前一个就行
-                    list.removeLast();
-                }
-            } else
-                list.clear();
-            setPixmapScaled(*imgNormal, labNormalLeft);
-            *imgEditLayout = imgNormal->copy();
-            setPixmapScaled(*imgEditLayout, labEditLayout);
-        } else {
-            *imgEditLayout = imgRectify->copy();
-            qDebug() << "list.count = " << list.count();
-            if (list.count() == 2) {
-                if (list[0] == "Rectify") {
-                    qDebug() << "list[0] = " << list[0];
-                    list.clear();
-                    imgEditLayout->save(SCANNING_PICTURE_PATH);
-                    *imgBeautify = imgEditLayout->copy();
-                    list.append("Beautify");
-                    oneClickBeauty(SCANNING_PICTURE_PATH);
-                    imgEditLayout->load(SCANNING_PICTURE_PATH);
-                } else
-                    list.removeLast();
-            } else
-                list.clear();
             setPixmapScaled(*imgEditLayout, labEditLayout);
             *imgNormal = imgEditLayout->copy();
             setPixmapScaled(*imgNormal, labNormalLeft);
@@ -806,10 +813,71 @@ void KYCScanDisplayWidget::onRectify()
 }
 
 /**
- * @brief scan_display::beautify
- * One click beauty
+ * @brief KYCScanDisplayWidget::onBtnRectifyEnd
+ * Repeatedly click btnRectify, end to btnRectify
  */
-void KYCScanDisplayWidget::onBeautify()
+void KYCScanDisplayWidget::onBtnRectifyEnd()
+{
+    qDebug() << "flagRectify = " << flagRectify;
+    // Mean user has repeatedly clicked btnRectify, so ought to carry out undo operation
+    flagRectify = 0;
+    if (vStackedLayout->currentWidget() == widgetNormal) {
+        qDebug() << "currentWidget == widgetNormal";
+        *imgNormal = imgRectify->copy();
+        /**
+             * 2代表点击了先智能纠偏和后一键美化：
+             * 有2种情况： 1）先撤销一键美化 2）先撤销智能纠偏
+             */
+        qDebug() << "list.count = " << list.count();
+        if (list.count() == 2) {
+            // 撤销的是智能纠偏：先全部清空，后把一键美化的加上
+            if (list[0] == "Rectify") {
+                list.clear();
+                imgNormal->save(SCANNING_PICTURE_PATH);
+                *imgBeautify = imgNormal->copy();
+                list.append("Beautify");
+
+                beautyThread.start();
+
+                imgNormal->load(SCANNING_PICTURE_PATH);
+            } else {
+                // 撤销的是一键美化：撤销到之前一个就行
+                list.removeLast();
+            }
+        } else
+            list.clear();
+        setPixmapScaled(*imgNormal, labNormalLeft);
+        *imgEditLayout = imgNormal->copy();
+        setPixmapScaled(*imgEditLayout, labEditLayout);
+    } else {
+        *imgEditLayout = imgRectify->copy();
+        qDebug() << "list.count = " << list.count();
+        if (list.count() == 2) {
+            if (list[0] == "Rectify") {
+                qDebug() << "list[0] = " << list[0];
+                list.clear();
+                imgEditLayout->save(SCANNING_PICTURE_PATH);
+                *imgBeautify = imgEditLayout->copy();
+                list.append("Beautify");
+
+                beautyThread.start();
+
+                imgEditLayout->load(SCANNING_PICTURE_PATH);
+            } else
+                list.removeLast();
+        } else
+            list.clear();
+        setPixmapScaled(*imgEditLayout, labEditLayout);
+        *imgNormal = imgEditLayout->copy();
+        setPixmapScaled(*imgNormal, labNormalLeft);
+    }
+}
+
+/**
+ * @brief KYCScanDisplayWidget::onBtnBeautifyBegin
+ * First click btnBeautify, begin to beautify
+ */
+void KYCScanDisplayWidget::onBtnBeautifyBegin()
 {
     qDebug() << "beauty()";
     if (flagBeautify == 0) {
@@ -818,7 +886,9 @@ void KYCScanDisplayWidget::onBeautify()
             imgNormal->save(SCANNING_PICTURE_PATH);
             *imgBeautify = imgNormal->copy();
             list.append("Beautify");
-            oneClickBeauty(SCANNING_PICTURE_PATH);
+
+            beautyThread.start();
+
             imgNormal->load(SCANNING_PICTURE_PATH);
             setPixmapScaled(*imgNormal, labNormalLeft);
             *imgEditLayout = imgNormal->copy();
@@ -827,49 +897,62 @@ void KYCScanDisplayWidget::onBeautify()
             imgEditLayout->save(SCANNING_PICTURE_PATH);
             *imgBeautify = imgEditLayout->copy();
             list.append("Beautify");
-            oneClickBeauty(SCANNING_PICTURE_PATH);
+
+            beautyThread.start();
+
             imgEditLayout->load(SCANNING_PICTURE_PATH);
             setPixmapScaled(*imgEditLayout, labEditLayout);
             *imgNormal = imgEditLayout->copy();
             setPixmapScaled(*imgNormal, labNormalLeft);
         }
+    }
+}
+
+/**
+ * @brief KYCScanDisplayWidget::onBtnBeautifyEnd
+ * Repeatedly click btnBeautify, end to beautify
+ */
+void KYCScanDisplayWidget::onBtnBeautifyEnd()
+{
+    flagBeautify = 0;
+    if (vStackedLayout->currentWidget() == widgetNormal) {
+        *imgNormal = imgBeautify->copy();
+        if (list.count() == 2) {
+            if (list[0] == "Beautify") {
+                list.clear();
+                imgNormal->save(SCANNING_PICTURE_PATH);
+                *imgRectify = imgNormal->copy();
+                list.append("Rectify");
+
+                rectifyThread.start();
+
+                imgNormal->load(SCANNING_PICTURE_PATH);
+            } else
+                list.removeLast();
+        } else
+            list.clear();
+        setPixmapScaled(*imgNormal, labNormalLeft);
+        *imgEditLayout = imgNormal->copy();
+        setPixmapScaled(*imgEditLayout, labEditLayout);
     } else {
-        flagBeautify = 0;
-        if (vStackedLayout->currentWidget() == widgetNormal) {
-            *imgNormal = imgBeautify->copy();
-            if (list.count() == 2) {
-                if (list[0] == "Beautify") {
-                    list.clear();
-                    imgNormal->save(SCANNING_PICTURE_PATH);
-                    *imgRectify = imgNormal->copy();
-                    list.append("Rectify");
-                    ImageRectify(SCANNING_PICTURE_PATH);
-                    imgNormal->load(SCANNING_PICTURE_PATH);
-                } else
-                    list.removeLast();
-            } else
+        *imgEditLayout = imgBeautify->copy();
+        if (list.count() == 2) {
+            if (list[0] == "Beautify") {
                 list.clear();
-            setPixmapScaled(*imgNormal, labNormalLeft);
-            *imgEditLayout = imgNormal->copy();
-            setPixmapScaled(*imgEditLayout, labEditLayout);
-        } else {
-            *imgEditLayout = imgBeautify->copy();
-            if (list.count() == 2) {
-                if (list[0] == "Beautify") {
-                    list.clear();
-                    imgEditLayout->save(SCANNING_PICTURE_PATH);
-                    *imgRectify = imgEditLayout->copy();
-                    list.append("Rectify");
-                    ImageRectify(SCANNING_PICTURE_PATH);
-                    imgEditLayout->load(SCANNING_PICTURE_PATH);
-                } else
-                    list.removeLast();
+                imgEditLayout->save(SCANNING_PICTURE_PATH);
+                *imgRectify = imgEditLayout->copy();
+                list.append("Rectify");
+
+                rectifyThread.start();
+
+                imgEditLayout->load(SCANNING_PICTURE_PATH);
             } else
-                list.clear();
-            setPixmapScaled(*imgEditLayout, labEditLayout);
-            *imgNormal = imgEditLayout->copy();
-            setPixmapScaled(*imgNormal, labNormalLeft);
-        }
+                list.removeLast();
+        } else
+            list.clear();
+        setPixmapScaled(*imgEditLayout, labEditLayout);
+        *imgNormal = imgEditLayout->copy();
+        setPixmapScaled(*imgNormal, labNormalLeft);
     }
 }
 
@@ -1018,7 +1101,11 @@ void KYCOcrThread::run()
         qDebug() << "Could not initialize tesseract.\n";
         outText = "Unable to read text";
         // exit() will abort application imediately without install `tesseract-ocr-chi-sim` package
-        exit(1);
+        //exit(1);
+        emit ocrFinished();
+        api->End();
+        quit();
+        return;
     }
     // 使用leptonica库打开输入图像。
     Pix *image = pixRead(SCANNING_PICTURE_PATH);
@@ -1040,3 +1127,61 @@ void KYCOcrThread::run()
     pixDestroy(&image);
     quit();
 }
+
+void KYCRectifyThread::run()
+{
+    qDebug() << "before ImageRectify()";
+    ImageRectify(SCANNING_PICTURE_PATH);
+    qDebug() << "end ImageRectify()";
+
+    emit rectifyFinished();
+    quit();
+}
+
+void KYCBeautyThread::run()
+{
+    qDebug() << "before oneClickBeauty()";
+    oneClickBeauty(SCANNING_PICTURE_PATH);
+    qDebug() << "before oneClickBeauty()";
+
+    emit beautyFinished();
+    quit();
+}
+
+/*
+void MKYCOcrThread::ocrTask()
+{
+    tesseract::TessBaseAPI *api = new tesseract::TessBaseAPI();
+    qDebug() << "ocr run!\n";
+    //使用中文初始化tesseract-ocr，而不指定tessdata路径。正在识别中
+    if (api->Init(NULL, "chi_sim")) {
+        qDebug() << "Could not initialize tesseract.\n";
+        outText = "Unable to read text";
+        // exit() will abort application imediately without install `tesseract-ocr-chi-sim` package
+        //exit(1);
+        emit ocrFinished();
+        api->End();
+        return;
+    }
+    // 使用leptonica库打开输入图像。
+    Pix *image = pixRead(SCANNING_PICTURE_PATH);
+    if (!image) {
+        qDebug() << "pixRead error!";
+        outText = "Unable to read text";
+        emit ocrFinished();
+        // 销毁使用过的对象并释放内存。
+        api->End();
+        // pixDestroy(&image);
+        return;
+    }
+    api->SetImage(image);
+    // 得到光学字符识别结果
+    outText = api->GetUTF8Text();
+    emit ocrFinished();
+    // 销毁使用过的对象并释放内存。
+    api->End();
+    pixDestroy(&image);
+        return;
+}
+
+*/

@@ -1,3 +1,11 @@
+kylin-scanner (1.0.0-22) v101; urgency=medium
+
+  * BUG 号: 49259, 34906, 51708
+  * 需求号: 26907
+  * 其他改动说明：无
+
+ -- yushuoqi <yushuoqi@kylinos.cn>  Fri, 23 Apr 2021 14:23:19 +0800
+
 kylin-scanner (1.0.0-21) v101; urgency=medium
 
   * BUG 号: 无

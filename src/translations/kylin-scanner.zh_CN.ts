@@ -97,22 +97,22 @@
 <context>
     <name>KYCEditBarWidget</name>
     <message>
-        <location filename="../display.cpp" line="955"/>
+        <location filename="../display.cpp" line="995"/>
         <source>rotate</source>
         <translation>旋转</translation>
     </message>
     <message>
-        <location filename="../display.cpp" line="956"/>
+        <location filename="../display.cpp" line="996"/>
         <source>tailor</source>
         <translation>裁切</translation>
     </message>
     <message>
-        <location filename="../display.cpp" line="957"/>
+        <location filename="../display.cpp" line="997"/>
         <source>watermark</source>
         <translation>水印</translation>
     </message>
     <message>
-        <location filename="../display.cpp" line="958"/>
+        <location filename="../display.cpp" line="998"/>
         <source>symmetry</source>
         <translation>对称翻转</translation>
     </message>
@@ -188,7 +188,7 @@
         <translation>请先连接扫描仪</translation>
     </message>
     <message>
-        <location filename="../display.cpp" line="619"/>
+        <location filename="../display.cpp" line="645"/>
         <source>Try to ocr ...</source>
         <translation>正在识别中...</translation>
     </message>
@@ -379,7 +379,7 @@
     <message>
         <location filename="../titlebar.cpp" line="138"/>
         <location filename="../titlebar.cpp" line="211"/>
-        <location filename="../titlebar.cpp" line="322"/>
+        <location filename="../titlebar.cpp" line="317"/>
         <source>Maximize</source>
         <translation>最大化</translation>
     </message>
@@ -389,7 +389,7 @@
         <translation>关闭</translation>
     </message>
     <message>
-        <location filename="../titlebar.cpp" line="315"/>
+        <location filename="../titlebar.cpp" line="310"/>
         <source>Restore</source>
         <translation>还原</translation>
     </message>
@@ -420,46 +420,51 @@
     </message>
     <message>
         <location filename="../widget.cpp" line="60"/>
-        <location filename="../widget.cpp" line="324"/>
+        <location filename="../widget.cpp" line="325"/>
         <source>Scanner</source>
         <translation>扫描</translation>
     </message>
     <message>
-        <location filename="../widget.cpp" line="308"/>
+        <location filename="../widget.cpp" line="309"/>
         <source> already exist, do you want to overwrite it?</source>
         <translation>已经存在，你想覆盖它吗？</translation>
     </message>
     <message>
-        <location filename="../widget.cpp" line="309"/>
+        <location filename="../widget.cpp" line="310"/>
         <source>Question</source>
         <translation>询问对话框</translation>
     </message>
     <message>
-        <location filename="../widget.cpp" line="327"/>
+        <location filename="../widget.cpp" line="328"/>
         <source>Yes</source>
         <translation>是</translation>
     </message>
     <message>
-        <location filename="../widget.cpp" line="571"/>
+        <location filename="../widget.cpp" line="572"/>
         <source>scan process is failed, please check your scanner by connect it again.</source>
         <translation>扫描失败，请确认你的扫描仪连接情况。</translation>
     </message>
     <message>
-        <location filename="../widget.cpp" line="704"/>
+        <location filename="../widget.cpp" line="705"/>
         <source>No available device</source>
         <translation>无可用设备</translation>
     </message>
     <message>
-        <location filename="../widget.cpp" line="712"/>
-        <location filename="../widget.cpp" line="720"/>
+        <location filename="../widget.cpp" line="713"/>
+        <location filename="../widget.cpp" line="721"/>
         <source>device </source>
         <translation>设备 </translation>
     </message>
     <message>
-        <location filename="../widget.cpp" line="712"/>
-        <location filename="../widget.cpp" line="720"/>
+        <location filename="../widget.cpp" line="713"/>
+        <location filename="../widget.cpp" line="721"/>
         <source> has been disconnect.</source>
         <translation> 已经断开连接。</translation>
+    </message>
+    <message>
+        <location filename="../widget.cpp" line="781"/>
+        <source>Please load the paper and scan again.</source>
+        <translation>请放入纸张后再次进行扫描。</translation>
     </message>
 </context>
 <context>

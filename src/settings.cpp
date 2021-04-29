@@ -176,7 +176,10 @@ void KYCScanSettingsWidget::initStyle()
 
 void KYCScanSettingsWidget::initSettings()
 {
+    textName->setText("scanner01");
+
     setKylinLable();
+
     setKylinComboBox(false);
 
     setKylinHBoxLayout();
@@ -570,6 +573,8 @@ void KYCScanSettingsWidget::setKylinScanSetEnable()
 
 /**
  * @brief setKylinLable 统一设置麒麟扫描标签Label
+ * This function should not set variable value,
+ * because it will be called by other functions.
  */
 void KYCScanSettingsWidget::setKylinLable()
 {
@@ -611,7 +616,6 @@ void KYCScanSettingsWidget::setKylinLable()
     setKylinLabelAttributes(labLocation);
 
     textType->setFixedSize(180, 32);
-    textName->setText("scanner01");
 
     textName->setMaxLength (256 - 4);
     textName->setFixedSize(180, 32);
@@ -785,9 +789,40 @@ QString KYCScanSettingsWidget::getTextLocation()
 
 void KYCScanSettingsWidget::warnMsg(QString msg)
 {
-    QMessageBox msgBox(QMessageBox::Warning, QObject::tr("warning"), msg);
-    msgBox.setWindowIcon(QIcon::fromTheme("kylin-scanner"));
-    msgBox.exec();
+#if 0
+    QWidget *parent = QApplication::activeWindow();
+    if (!parent)
+        parent = QApplication::activeWindow();
+#endif
+    QMessageBox *msgBox = new QMessageBox(); // Without this pointer
+
+    msgBox->setText(msg);
+    msgBox->setIcon(QMessageBox::Warning);
+    msgBox->setWindowIcon(QIcon::fromTheme("kylin-scanner")); // This not work
+    msgBox->setWindowTitle(tr("Scanner")); // This not work
+    msgBox->setStandardButtons(QMessageBox::Yes); // Add buttons by `|`
+    msgBox->setContextMenuPolicy(Qt::NoContextMenu);
+    msgBox->button(QMessageBox::Yes)->setText(tr("Yes")); // set buttonText
+
+    // center saveDialog in mainwindow
+    QWidget *widget = nullptr;
+    QWidgetList widgetList = QApplication::allWidgets();
+    for (int i=0; i<widgetList.length(); ++i) {
+        if (widgetList.at(i)->objectName() == "MainWindow") {
+            widget = widgetList.at(i);
+        }
+    }
+    if (widget) {
+        msgBox->setParent(widget); // this is important
+        QRect rect = widget->geometry();
+        int x = rect.x() + rect.width()/2 - msgBox->width()/2;
+        int y = rect.y() + rect.height()/2 - msgBox->height()/2;
+        qDebug() << "x = " << x << "y = " << y;
+        msgBox->move(x,y);
+    }
+
+    int result = msgBox->exec();
+    qDebug() << "result = " << result;
 }
 
 void KYCScanSettingsWidget::setFontSize(QLabel *label, int n)

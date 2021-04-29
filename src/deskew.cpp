@@ -69,6 +69,7 @@ double CalcDegree(const Mat &srcImage, Mat &dst)
                0);//第5个参数就是阈值，阈值越大，检测精度越高
     //qDebug() << lines.size() ;
 
+    qDebug() << "Begin to found good threshold.";
     // 由于图像不同，阈值不好设定，因为阈值设定过高导致无法检测直线，阈值过低直线太多，速度很慢
     // 所以根据阈值由大到小设置了三个阈值(300, 200, 100)，如果经过大量试验后，可以固定一个适合的阈值。
     // While Threshold is too small, lines will be large(>5000).
@@ -80,6 +81,7 @@ double CalcDegree(const Mat &srcImage, Mat &dst)
         else if (lines.size() < 10)
             Threshold -= 50;
 
+        qDebug() << "Threshold = " << Threshold << "lines.size = " << lines.size();
         HoughLines(midImage, lines, 1, CV_PI / 180, Threshold, 0, 0);
 
         if (Threshold <= 0) {

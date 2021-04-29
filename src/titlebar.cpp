@@ -292,13 +292,8 @@ void KYCTitleBarDialog::titlebar_icon_theme_changed(QString)
 {
     qDebug() << "titlebar icon-theme: " << icon_theme_settings->get(ICON_THEME_NAME).toString();
 
-    if ("ukui-icon-theme-basic" == icon_theme_settings->get(ICON_THEME_NAME).toString()) {
-        m_logo->setStyleSheet("QLabel{border-image:url(/usr/share/icons/ukui-icon-theme-basic/24x24/apps/kylin-scanner.png);border-radius:4px;}");
-    } else if ("ukui-icon-theme-classical" == icon_theme_settings->get(ICON_THEME_NAME).toString()) {
-        m_logo->setStyleSheet("QLabel{border-image:url(/usr/share/icons/ukui-icon-theme-classical/24x24/apps/kylin-scanner.png);border-radius:4px;}");
-    } else if ("ukui-icon-theme-default" == icon_theme_settings->get(ICON_THEME_NAME).toString()) {
-        m_logo->setStyleSheet("QLabel{border-image:url(/usr/share/icons/ukui-icon-theme-default/24x24/apps/kylin-scanner.png);border-radius:4px;}");
-    }
+    m_logo->setFixedSize (24, 24);
+    m_logo->setPixmap(QIcon::fromTheme("kylin-scanner").pixmap(m_logo->size()));
 }
 
 void KYCTitleBarDialog::titlebar_style_changed(QString)

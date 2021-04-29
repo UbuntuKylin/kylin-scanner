@@ -64,6 +64,7 @@ public:
     void setScanSetBtnEnable(bool ret);
     void saveScanFile(bool ret);
     void warnMsg(QString msg);
+    void commonWarningMessage(int type);
     void scanningResultDetail(bool ret);
     void sendMailPrepare();
     void setUsbThreadQuit();
@@ -109,6 +110,7 @@ private slots:
     void setOcrFlags();
     void setOcrBeginOperation();
     void setOcrEndOperation();
+    void onBtnScanClickedEndNoDoc();
 };
 
 #endif // WIDGET_H

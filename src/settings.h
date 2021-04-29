@@ -129,6 +129,7 @@ Q_SIGNALS:
     void saveImageSignal(QString);
     void openDeviceStatusSignal(bool);
     void sendMailSignal();
+    void warnFilename(int);
 
 private slots:
     void onBtnLocationClicked();

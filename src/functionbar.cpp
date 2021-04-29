@@ -547,10 +547,17 @@ void KYCFunctionBarWidget::scanResult(int ret)
     labMovieScan->resize(0, 0);
     labMovieScan->hide();
 
-    if (ret == 0)
+    if (ret == 0) {
         emit clickBtnScanEnd(true);
-    else
-        emit clickBtnScanEnd(false);
+    } else {
+        // ret = noDoc: Document feeder out of documents
+        if (ret == 7) {
+            emit clickBtnScanEndNoDoc();
+        } else {
+            // other scan error
+            emit clickBtnScanEnd(false);
+        }
+    }
 }
 
 void KYCFunctionBarWidget::funcbar_style_changed(QString)

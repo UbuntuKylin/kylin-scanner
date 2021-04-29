@@ -28,6 +28,8 @@
 #include <QToolTip>
 #include <QSize>
 #include <QTextEdit>
+#include <QTimer>
+#include <QObject>
 #include "tailor.h"
 #include "watermark.h"
 #include "functionbar.h"
@@ -38,6 +40,12 @@
 #include "interrupt.h"
 #include "theme.h"
 
+/**
+ * @brief The KYCOcrThread class
+ * Meet large image, ocr operation will take a long time to run.
+ * So, avoid blocking MainWindow UI, handle it with thread.
+ * this still block GUI
+ */
 class KYCOcrThread : public QThread
 {
     Q_OBJECT
@@ -46,6 +54,60 @@ public:
 
 signals:
     void ocrFinished();
+};
+
+/*
+class MKYCOcrThread: public QWidget
+{
+    Q_OBJECT
+
+public:
+    explicit MKYCOcrThread(QObject *parent = 0)
+    {
+        ocrTimer.setInterval(5000);
+
+        connect(&ocrTimer, SIGNAL(timeout()), this, SLOT(ocrTask()));
+    }
+
+public slots:
+    void ocrTask();
+
+signals:
+    void ocrFinished();
+
+private:
+    QTimer ocrTimer;
+};
+*/
+
+/**
+ * @brief The KYCRectifyThread class
+ * Meet large image, ImageRectify() will take a long time to run.
+ * So, avoid blocking MainWindow UI, handle it with thread.
+ */
+class KYCRectifyThread : public QThread
+{
+    Q_OBJECT
+public:
+    void run() Q_DECL_OVERRIDE;
+
+signals:
+    void rectifyFinished();
+};
+
+/**
+ * @brief The KYCBeautyThread class
+ * Meet large image, oneClickBeauty() will take a long time to run.
+ * So, avoid blocking MainWindow UI, handle it with thread.
+ */
+class KYCBeautyThread : public QThread
+{
+    Q_OBJECT
+public:
+    void run() Q_DECL_OVERRIDE;
+
+signals:
+    void beautyFinished();
 };
 
 class KYCEditBarWidget  :   public QWidget
@@ -100,6 +162,10 @@ public:
     void initSavePresentImage();
     void onOcr();
     void onScan(bool ret);
+
+    void setNormalImage();
+    void rectifyThreadQuit();
+    void beautifyThreadQuit();
 
     QImage *imageSave(QString fileName);
 
@@ -162,12 +228,20 @@ private:
     QScrollArea *scrollArea;
 
     int widgetindex;
-    KYCOcrThread thread;
+    KYCOcrThread ocrThread;
+    KYCRectifyThread rectifyThread;
+    KYCBeautyThread beautyThread;
+    /*
+    QThread *m_ocrThread;
+    MKYCOcrThread *m_ocrTask;
+    */
 
 public slots:
     void onSaveImageNow();
-    void onRectify();
-    void onBeautify();
+    void onBtnRectifyBegin();
+    void onBtnRectifyEnd();
+    void onBtnBeautifyBegin();
+    void onBtnBeautifyEnd();
     void switchPage();
     void timerScanUpdate();
 
@@ -177,6 +251,8 @@ private slots:
     void symmetry();
     void addWatermark();
     void ocrText();
+    void rectifyEnd();
+    void beautyEnd();
     void scandisplay_theme_changed(QString);
 
 signals:

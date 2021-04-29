@@ -52,7 +52,7 @@ KYCWidget::KYCWidget(QWidget *parent)
 
 KYCWidget::~KYCWidget()
 {
-
+    thread.quit();
 }
 
 void KYCWidget::initWindow()
@@ -167,14 +167,15 @@ void KYCWidget::initConnect()
     // For scanning
     connect(pFuncBar, &KYCFunctionBarWidget::clickBtnScanStart, this, &KYCWidget::setOcrFlags);
     connect(pFuncBar, SIGNAL(clickBtnScanEnd(bool)), this, SLOT(setScanEndOperation(bool)));
+    connect(pFuncBar, SIGNAL(clickBtnScanEndNoDoc()), this, SLOT(onBtnScanClickedEndNoDoc()));
 
     // For rectify
-    connect(pFuncBar, &KYCFunctionBarWidget::sendRectifyBegin, pScandisplay, &KYCScanDisplayWidget::onRectify);
-    connect(pFuncBar, &KYCFunctionBarWidget::sendRectifyEnd, pScandisplay, &KYCScanDisplayWidget::onRectify);
+    connect(pFuncBar, &KYCFunctionBarWidget::sendRectifyBegin, pScandisplay, &KYCScanDisplayWidget::onBtnRectifyBegin);
+    connect(pFuncBar, &KYCFunctionBarWidget::sendRectifyEnd, pScandisplay, &KYCScanDisplayWidget::onBtnRectifyEnd);
 
     // For beauty
-    connect(pFuncBar, &KYCFunctionBarWidget::sendBeautifyBegin, pScandisplay, &KYCScanDisplayWidget::onBeautify);
-    connect(pFuncBar, &KYCFunctionBarWidget::sendBeautifyEnd, pScandisplay, &KYCScanDisplayWidget::onBeautify);
+    connect(pFuncBar, &KYCFunctionBarWidget::sendBeautifyBegin, pScandisplay, &KYCScanDisplayWidget::onBtnBeautifyBegin);
+    connect(pFuncBar, &KYCFunctionBarWidget::sendBeautifyEnd, pScandisplay, &KYCScanDisplayWidget::onBtnBeautifyEnd);
 
     // For OCR
     connect(pFuncBar, &KYCFunctionBarWidget::sendOcrBegin, this, &KYCWidget::setOcrBeginOperation);
@@ -317,6 +318,11 @@ int KYCWidget::messageScanFinishedSave(QString pathName)
 void KYCWidget::warnMsg(QString msg)
 {
     QMessageBox *msgBox = new QMessageBox(this);
+    /*
+    QWidget *parent = QApplication::activeWindow();
+    if (!parent)
+        parent = QApplication::activeWindow();
+        */
 
     msgBox->setText(msg);
     msgBox->setIcon(QMessageBox::Warning);
@@ -360,6 +366,15 @@ void KYCWidget::warnMsg(QString msg)
 
     int result = msgBox->exec();
     qDebug() << "result = " << result;
+}
+
+void KYCWidget::commonWarningMessage(int type)
+{
+   if (type == 1)  {
+       QString msg = tr("cannot contain '/' character.");
+
+       warnMsg(msg);
+   }
 }
 
 /**
@@ -772,6 +787,13 @@ void KYCWidget::setOcrEndOperation()
 {
     pScandisplay->onOcr();
     pScanSet->modifyBtnSave();
+}
+
+void KYCWidget::onBtnScanClickedEndNoDoc()
+{
+    QString msg;
+    msg = tr("Please load the paper and scan again.");
+    warnMsg(msg);
 }
 
 /**
