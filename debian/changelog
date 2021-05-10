@@ -1,3 +1,12 @@
+kylin-scanner (1.0.0-23) v101; urgency=medium
+
+  * BUG 号: 52804
+  * 需求号: 无
+  * 其他改动说明：
+  *     1. 增加程序退出时对应开启的线程也退出逻辑
+
+ -- yushuoqi <yushuoqi@kylinos.cn>  Mon, 10 May 2021 17:21:08 +0800
+
 kylin-scanner (1.0.0-22) v101; urgency=medium
 
   * BUG 号: 49259, 34906, 51708

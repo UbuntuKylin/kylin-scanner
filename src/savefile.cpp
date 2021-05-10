@@ -52,30 +52,65 @@ KYCSaveFileDialog::KYCSaveFileDialog(QWidget *parent) : QFileDialog(parent)
     });
 }
 
-KYCSaveFileDialog::KYCSaveFileDialog(QWidget *parent, int flag, QString filename, QString titlename)
+KYCSaveFileDialog::KYCSaveFileDialog(QWidget *parent, int ocrFlag, QString filename, QString titlename)
 {
     Q_UNUSED(parent);
+
     setWindowIcon(QIcon::fromTheme("kylin-scanner"));
-    QString filter = (flag == 1) ? QLatin1String("*.txt") : QLatin1String("*.jpg;;*.png;;*.pdf;;*.bmp");
-    setNameFilter(filter);
     setWindowTitle(titlename);
     setAcceptMode(QFileDialog::AcceptSave);
+
+    QFileInfo filenameInfo(filename);
+    qDebug() << "filename = " << filename;
+
     this->findChildren<QLineEdit *>("fileNameEdit").at(0)->setText(filename);
-    filetype = (flag == 1) ? "*.txt" : ".jpg";
+
+    if (ocrFlag == 1) {
+        filetype = ".txt";
+        filter = QLatin1String("*.txt");
+    } else {
+        qDebug() << "First choose save format: " << filenameInfo.suffix();
+        if (filename.endsWith(".jpg")) {
+            filetype = ".jpg";
+            filter = QLatin1String("*.jpg;;*.png;;*.pdf;;*.bmp");
+        } else if (filename.endsWith(".png")) {
+            filetype = ".png";
+            filter = QLatin1String("*.png;;*.jpg;;*.pdf;;*.bmp");
+        } else if (filename.endsWith(".pdf")) {
+            filetype = ".pdf";
+            filter = QLatin1String("*.pdf;;*.jpg;;*.png;;*.bmp");
+        } else {
+            filetype = ".bmp";
+            filter = QLatin1String("*.bmp;;*.jpg;;*.png;;*.pdf");
+        }
+    }
+    setNameFilter(filter);
+    qDebug() << "filetype = " << filetype;
+    qDebug() << "filter = " << filter
+             << "0: " << filter.mid(1, 4)
+             << "1: " << filter.mid(8, 4)
+             << "2: " << filter.mid(15, 4)
+             << "3: " << filter.mid(22, 4);
+
     connect(this->findChildren<QComboBox *>("fileTypeCombo").at(0),
     QOverload<int>::of(&QComboBox::currentIndexChanged), [ = ](int index) {
+        qDebug() << "currentIndexChanged: index = " << index;
         switch (index) {
         case 0:
-            filetype = (flag == 1) ? "*.txt" : ".jpg";
+            if (ocrFlag == 1) {
+                filetype = ".txt";
+            } else {
+                filetype = filter.mid(1, 4);
+            }
             break;
         case 1:
-            filetype = ".png";
+            filetype = filter.mid(8, 4);
             break;
         case 2:
-            filetype = ".pdf";
+            filetype = filter.mid(15, 4);
             break;
         case 3:
-            filetype = ".bmp";
+            filetype = filter.mid(22, 4);
             break;
         default:
             break;

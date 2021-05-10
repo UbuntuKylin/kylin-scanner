@@ -68,6 +68,7 @@ public:
     void scanningResultDetail(bool ret);
     void sendMailPrepare();
     void setUsbThreadQuit();
+    void freeResources();
 
     int messageScanFinishedSave(QString pathName);
     QString getScannerPath(QString str);
@@ -79,7 +80,6 @@ private:
     QStringList iconthemelist;
     KYCTitleBarDialog *pTitleBar;
     KYCAboutDialog *m_pAbout;
-    //KYCInterruptDialog *m_pAbout;
     QFrame *line;
     KYCFunctionBarWidget *pFuncBar;
     KYCScanSettingsWidget *pScanSet;
