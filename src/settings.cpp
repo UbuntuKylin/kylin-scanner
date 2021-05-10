@@ -979,10 +979,12 @@ void KYCScanSettingsWidget::onBtnSaveClicked()
                 continue;
             }
 
+            // While not endsWith (".jpg" | ".png" | "pdf" | "bmp"),
+            // we neet add suffix behind.
             if (!filename.endsWith(".jpg", Qt::CaseInsensitive)
-                    && !filename.endsWith("*.png", Qt::CaseInsensitive)
-                    && !filename.endsWith("*.pdf", Qt::CaseInsensitive)
-                    && !filename.endsWith("*.bmp", Qt::CaseInsensitive)) {
+                    && !filename.endsWith(".png", Qt::CaseInsensitive)
+                    && !filename.endsWith(".pdf", Qt::CaseInsensitive)
+                    && !filename.endsWith(".bmp", Qt::CaseInsensitive)) {
 
                 filetype = saveDialog->getFileType();
                 filepath = filepath.append(filetype);

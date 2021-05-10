@@ -21,6 +21,7 @@
 
 #include <QWidget>
 #include <QFileDialog>
+#include <QFileInfo>
 #include <QPoint>
 
 class KYCSaveFileDialog : public QFileDialog
@@ -29,8 +30,8 @@ class KYCSaveFileDialog : public QFileDialog
 public:
     explicit KYCSaveFileDialog(QWidget *parent = nullptr);
 
-    // flag = 1: ocr dialog
-    explicit KYCSaveFileDialog(QWidget *parent = nullptr, int flag = 0,
+    // ocrFlag = 1: ocr dialog
+    explicit KYCSaveFileDialog(QWidget *parent = nullptr, int ocrFlag = 0,
                                QString filename = nullptr, QString titlename = nullptr);
 
     QString getFileName();
@@ -41,6 +42,7 @@ public:
 
 private:
     QString filetype;
+    QString filter; // filter list
     QString initFilename;
 };
 
