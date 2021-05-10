@@ -36,7 +36,6 @@ KYCTitleBarDialog::KYCTitleBarDialog(QWidget *parent)
     , m_pCloseButton (new QPushButton())
     , m_pMenuButton(new QToolButton(this))
     , m_pMenu(new QMenu(this))
-    //, m_pAbout(new KYCAboutDialog(this))
     , pTitleLayout (new QHBoxLayout())
     , pButtonLayout (new QHBoxLayout())
     , pLayout (new QHBoxLayout())
@@ -90,27 +89,9 @@ void KYCTitleBarDialog::initLayout()
 
     m_pMenu->addAction(tr("About"), this, [ = ]() {
         emit showAboutDialog();
-        /*
-        QPoint globalPos = this->mapToGlobal(QPoint(0, 0));
-
-        int m_x = (mainWindowWidth - m_pAbout->width()) / 2;
-        int m_y = (mainWindowHeight - m_pAbout->height()) / 2;
-        m_pAbout->move(globalPos.x() + m_x, globalPos.y() + m_y);
-        //m_pAbout->moveCenter();
-
-        qDebug() << "mainWindowWidth= " << mainWindowWidth
-                 << "mainWindowHeight= " << mainWindowHeight
-                 << "aboutWidth = " << m_pAbout->width()
-                 << "aboutHeight = " << m_pAbout->height()
-                 << "m_y = " << m_y
-                 << "m_x = " << m_x
-                 << "globalPox.x+m_x " << globalPos.x()+m_x
-                 << "globalPox.y+m_y " << globalPos.y()+m_y;
-        m_pAbout->show();
-        */
     });
     m_pMenu->addAction(tr("Exit"), [ = ]() {
-        //freeScanResource();
+        emit isExit();
         exit(0);
     } );
 
@@ -185,9 +166,9 @@ void KYCTitleBarDialog::initStyle()
 
 void KYCTitleBarDialog::initConnect()
 {
-    connect(m_pMinimizeButton, SIGNAL(clicked(bool)), this, SLOT(onClicked()));
-    connect(m_pMaximizeButton, SIGNAL(clicked(bool)), this, SLOT(onClicked()));
-    connect(m_pCloseButton, SIGNAL(clicked(bool)), this, SLOT(onClicked()));
+    connect(m_pMinimizeButton, SIGNAL(clicked(bool)), this, SLOT(onClickedMinButton()));
+    connect(m_pMaximizeButton, SIGNAL(clicked(bool)), this, SLOT(onClickedMaxButton()));
+    connect(m_pCloseButton, SIGNAL(clicked(bool)), this, SLOT(onClickedCloseButton()));
     connect(style_settings, SIGNAL(changed(QString)), this, SLOT(titlebar_style_changed(QString)));
     connect(icon_theme_settings, SIGNAL(changed(QString)), this, SLOT(titlebar_icon_theme_changed(QString)));
 }
@@ -272,22 +253,6 @@ void KYCTitleBarDialog::setMainWindowAttribute(int w, int h)
     mainWindowHeight = h;
 }
 
-void KYCTitleBarDialog::onClicked()
-{
-    QPushButton *pButton = qobject_cast<QPushButton *>(sender());
-    QWidget *pWindow = this->window();
-    if (pWindow->isTopLevel()) {
-        if (pButton == m_pMinimizeButton) {
-            pWindow->showMinimized();
-        } else if (pButton == m_pMaximizeButton) {
-            pWindow->isMaximized() ? pWindow->showNormal() : pWindow->showMaximized();
-        } else if (pButton == m_pCloseButton) {
-            //freeScanResource();
-            pWindow->close();
-        }
-    }
-}
-
 void KYCTitleBarDialog::titlebar_icon_theme_changed(QString)
 {
     qDebug() << "titlebar icon-theme: " << icon_theme_settings->get(ICON_THEME_NAME).toString();
@@ -318,6 +283,42 @@ void KYCTitleBarDialog::updateMaximize()
             m_pMaximizeButton->setIcon (QIcon::fromTheme (ICON_THEME_MAXIMAZE));
             flagMaxWindow = false;
             emit isNormal();
+        }
+    }
+}
+
+void KYCTitleBarDialog::onClickedMinButton()
+{
+    QPushButton *pButton = qobject_cast<QPushButton *>(sender());
+    QWidget *pWindow = this->window();
+    if (pWindow->isTopLevel()) {
+        if (pButton == m_pMinimizeButton) {
+            pWindow->showMinimized();
+        }
+    }
+}
+
+void KYCTitleBarDialog::onClickedMaxButton()
+{
+    QPushButton *pButton = qobject_cast<QPushButton *>(sender());
+    QWidget *pWindow = this->window();
+    if (pWindow->isTopLevel()) {
+        if (pButton == m_pMaximizeButton) {
+            pWindow->isMaximized() ? pWindow->showNormal() : pWindow->showMaximized();
+        }
+    }
+}
+
+void KYCTitleBarDialog::onClickedCloseButton()
+{
+    qDebug() << "Having click exit button, begin to exit this application ...";
+    QPushButton *pButton = qobject_cast<QPushButton *>(sender());
+    QWidget *pWindow = this->window();
+    if (pWindow->isTopLevel()) {
+        if (pButton == m_pCloseButton) {
+            emit isExit();
+            //pWindow->close(); // This will exit abnormal
+            exit(0);
         }
     }
 }

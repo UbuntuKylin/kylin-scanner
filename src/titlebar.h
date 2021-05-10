@@ -87,7 +87,6 @@ private:
     QPushButton *m_pCloseButton;
     QToolButton *m_pMenuButton;
     QMenu       *m_pMenu;
-    //KYCAboutDialog *m_pAbout;
 
     QHBoxLayout *pTitleLayout;
     QHBoxLayout *pButtonLayout;
@@ -98,7 +97,9 @@ private:
 
 private slots:
     // 进行最小化、最大化/还原、关闭操作
-    void onClicked();
+    void onClickedMinButton();
+    void onClickedMaxButton();
+    void onClickedCloseButton();
     void titlebar_icon_theme_changed(QString); // 系统图标主题风格变化
     void titlebar_style_changed(QString); // 系统黑白主题样式变换
 
@@ -106,5 +107,6 @@ Q_SIGNALS:
     void isNormal();
     void isMax();
     void showAboutDialog();
+    void isExit();
 };
 #endif // TITLEBAR_H

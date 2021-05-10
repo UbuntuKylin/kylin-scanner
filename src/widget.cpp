@@ -30,8 +30,6 @@ KYCWidget::KYCWidget(QWidget *parent)
     , style_settings (new QGSettings(ORG_UKUI_STYLE))
     , icon_theme_settings (new QGSettings(ORG_UKUI_STYLE))
     , pTitleBar (new KYCTitleBarDialog())
-    //, m_pAbout (new KYCAboutDialog(this))
-    //, m_pAbout (new KYCInterruptDialog(this))
     , line (new QFrame())
     , pFuncBar (new  KYCFunctionBarWidget())
     , pScanSet (new KYCScanSettingsWidget(this))
@@ -52,7 +50,7 @@ KYCWidget::KYCWidget(QWidget *parent)
 
 KYCWidget::~KYCWidget()
 {
-    thread.quit();
+    freeResources();
 }
 
 void KYCWidget::initWindow()
@@ -138,6 +136,9 @@ void KYCWidget::initConnect()
 
     // For showing About dialog
     connect(pTitleBar, &KYCTitleBarDialog::showAboutDialog, this, &KYCWidget::showAboutDialogCenter);
+
+    // For free resource before exit application
+    connect(pTitleBar, &KYCTitleBarDialog::isExit, this, &KYCWidget::freeResources);
 
     // For white and black style
     connect(style_settings, SIGNAL(changed(QString)), this, SLOT(style_changed(QString)));
@@ -597,6 +598,22 @@ void KYCWidget::sendMailPrepare()
 void KYCWidget::setUsbThreadQuit()
 {
     usbThread.quit();
+}
+
+/**
+ * @brief KYCWidget::freeResources
+ * Thread need to free correctly,
+ * otherwise, application will be exit abnormal.
+ */
+void KYCWidget::freeResources()
+{
+    qDebug() << "Begin to exit threads.";
+    if (thread.isRunning()) {
+        thread.quit();
+    }
+    if (usbThread.isRunning()) {
+        usbThread.quit();
+    }
 }
 
 void KYCWidget::setMaskClear()
