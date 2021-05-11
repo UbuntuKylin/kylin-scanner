@@ -72,19 +72,10 @@ void KYCAboutDialog::titlebar_style_changed(QString)
                               + "</p></body>");
     }
 
+    //setFontStyle();
 
-    QFont f = ui->labelTitle->font();
-    f.setPixelSize(14);
-    ui->labelTitle->setFont(f);
-    f.setPixelSize(18);
-    ui->labelName->setFont(f);
-    f.setPixelSize(14);
-    ui->labelVersion->setFont(f);
-    f.setFamily(font().family());
     ui->labelVersion->setPalette(pp);
-    ui->textEdit->setFont(f);
     ui->textEdit->setPalette(pp);
-    ui->labelSupport->setFont(f);
     ui->labelSupport->setPalette(pp);
 }
 
@@ -108,32 +99,25 @@ void KYCAboutDialog::initWindow()
 
 void KYCAboutDialog::initLayout()
 {
-    QFont f = ui->labelTitle->font();
-    f.setPixelSize(14);
-    ui->labelTitle->setText(tr("Scanner"));
-    f.setWeight(28);
-    f.setPixelSize(18);
-    ui->labelName->setFont(f);
-    ui->labelName->setText(tr("Scanner"));
-    f.setWeight(24);
-    f.setPixelSize(14);
-    ui->labelVersion->setFont(f);
-
     QString appVersion = QCoreApplication::applicationVersion();
     ui->labelVersion->setText(tr("Version: " ) + appVersion);
+
     //ui->labelVersion->setAlignment(Qt::AlignCenter);
-    f.setPixelSize(12);
-    f.setPixelSize(14);
+    //setFontStyle();
+
     ui->labelLogo->setPixmap(QIcon::fromTheme("kylin-scanner").pixmap(ui->labelLogo->size()));
     ui->labelIcon->setPixmap(QIcon::fromTheme("kylin-scanner").pixmap(96, 96));
 
+    ui->labelName->setText(tr("Scanner"));
     ui->labelTitle->setText(tr("Scanner"));
+
     ui->btnClose->setIcon(QIcon::fromTheme("window-close-symbolic"));
     ui->btnClose->setProperty("isWindowButton", 0x2);
     ui->btnClose->setProperty("useIconHighlightEffect", 0x8);
     ui->btnClose->setIconSize(QSize(16, 16));
     ui->btnClose->installEventFilter(this);
     ui->btnClose->setFlat(true);
+
     ui->labelSupport->setContextMenuPolicy(Qt::NoContextMenu); // no right click menu
 }
 
@@ -175,22 +159,11 @@ void KYCAboutDialog::initStyle()
                               + text
                               + "</p></body>");
     }
+    //setFontStyle();
 
-
-    QFont f = ui->labelTitle->font();
-    f.setPixelSize(14);
-    ui->labelTitle->setFont(f);
-    f.setPixelSize(18);
-    ui->labelName->setFont(f);
-    f.setPixelSize(14);
-    ui->labelVersion->setFont(f);
-    f.setFamily(font().family());
     ui->labelVersion->setPalette(pp);
-    ui->textEdit->setFont(f);
     ui->textEdit->setPalette(pp);
-    ui->labelSupport->setFont(f);
     ui->labelSupport->setPalette(pp);
-
 }
 
 void KYCAboutDialog::initConnect()
@@ -202,6 +175,23 @@ void KYCAboutDialog::initConnect()
     });
     connect(style_settings, SIGNAL(changed(QString)), this, SLOT(titlebar_style_changed(QString)));
     connect(icon_theme_settings, SIGNAL(changed(QString)), this, SLOT(titlebar_icon_theme_changed(QString)));
+}
+
+void KYCAboutDialog::setFontStyle()
+{
+    QFont f = ui->labelTitle->font();
+    f.setPixelSize(14);
+    ui->labelTitle->setFont(f);
+
+    f.setPixelSize(18);
+    ui->labelName->setFont(f);
+
+    f.setPixelSize(14);
+    f.setFamily(font().family());
+
+    ui->labelVersion->setFont(f);
+    ui->textEdit->setFont(f);
+    ui->labelSupport->setFont(f);
 }
 
 void KYCAboutDialog::setTextDarkStyle()

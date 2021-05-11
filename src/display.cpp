@@ -553,9 +553,11 @@ void KYCScanDisplayWidget::addWatermark()
     int ret = dialog->exec();// 以模态方式显示对话框，用户关闭对话框时返回 DialogCode值
     qDebug() << "ret = " << ret;
 
-    if (ret ==
-            QDialog::Accepted) { //OK键被按下,对话框关闭，若设置了setAttribute(Qt::WA_DeleteOnClose)，对话框被释放，无法获得返回值
-        //OK键被按下，获取对话框上的输入，设置行数和列数
+    /**
+     * OK键被按下,对话框关闭，若设置了setAttribute(Qt::WA_DeleteOnClose)，对话框被释放，无法获得返回值
+     * OK键被按下，获取对话框上的输入，设置行数和列数
+     */
+    if (ret == QDialog::Accepted) {
         QString text = dialog->getLineEdit();
         qDebug() << text;
 

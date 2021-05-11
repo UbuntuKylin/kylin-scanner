@@ -73,6 +73,7 @@ public:
     void initLayout();
     void initStyle();
     void initConnect();
+
 private:
     QStringList stylelist;
     QStringList iconthemelist;
@@ -88,9 +89,12 @@ private:
     QHBoxLayout *hBoxLayoutClose; // 关闭按钮水平布局
     QVBoxLayout *vBoxLayout;
 
+Q_SIGNALS:
+   void noMailWindowClose();
+
 private slots:
     void nomail_style_changed(QString); // 系统黑白主题样式变换
-
+    void closeNoMailWindow();
 };
 
 class KYCSendMailDialog : public QDialog
@@ -127,8 +131,12 @@ private:
     QList<QPushButton *> btnList;
     QList<QString> desktopName;
 
+Q_SIGNALS:
+    void sendMailWindowClose();
+
 public slots:
     void onBtnClicked();
+    void closeSendMailWindow();
     void sendmail_style_changed(QString); // 系统黑白主题样式变换
 };
 

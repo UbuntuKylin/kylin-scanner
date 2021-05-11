@@ -62,6 +62,8 @@ public:
     void setKylinHBoxLayoutAttributes(QHBoxLayout *layout, QLabel *labelFirst, QLabel *labelSecond);
     void setKylinHBoxLayoutAttributes(QHBoxLayout *layout, QLabel *labelFirst, KYCComboBox *combo);
     void setFontSize(QLabel *label, int n);
+    void setSendMailButtonStyle();
+    void setSendMailButtonStyleNormal();
     void setTextNameToolTip();
     void setBtnSaveText();
     void setOcrFlagInit();

@@ -42,7 +42,7 @@ typedef struct UsedUsernameAndPid{
 }UsedUsernameAndPid;
 UsedUsernameAndPid uuap;
 
-void verifyScannerDir()
+static void verifyScannerDir()
 {
     QString logPath(LOG_PATH);
     QDir configPath;
@@ -52,7 +52,7 @@ void verifyScannerDir()
     }
 }
 
-void KYCMessageOutput(QtMsgType type, const QMessageLogContext &context, const QString &msg)
+static void KYCMessageOutput(QtMsgType type, const QMessageLogContext &context, const QString &msg)
 {
     static QMutex mutex;
     mutex.lock();
@@ -108,7 +108,7 @@ void KYCMessageOutput(QtMsgType type, const QMessageLogContext &context, const Q
     mutex.unlock();
 }
 
-void customOutputMessage(QtMsgType type, const QMessageLogContext &context, const QString &msg)
+static void customOutputMessage(QtMsgType type, const QMessageLogContext &context, const QString &msg)
 {
     /**
      * This code incorrect whill result in current user cannot open `kylin-scanner` in `ukui-menu`,
@@ -161,7 +161,8 @@ void customOutputMessage(QtMsgType type, const QMessageLogContext &context, cons
 
     mutex.unlock();
 }
-QString getCurrentUserName()
+
+static QString getCurrentUserName()
 {
     QString cmd(BASH_TYPE);
     QStringList arglists;
@@ -179,7 +180,7 @@ QString getCurrentUserName()
     return userNow;
 }
 
-void doWrite(QString userNow, int pidNow)
+static void doWrite(QString userNow, int pidNow)
 {
     QFile file(EXIST_USERNAME_AND_PID_PATH);
     if (!file.open(QIODevice::ReadWrite | QIODevice::Truncate)) {
@@ -202,7 +203,7 @@ void doWrite(QString userNow, int pidNow)
     file.close();
 }
 
-void doRead()
+static void doRead()
 {
     QString line;
 
@@ -227,7 +228,7 @@ void doRead()
     file.close();
 }
 
-void writeCurrentAppUsernameAndPid(QString userNow, int pidNow)
+static void writeCurrentAppUsernameAndPid(QString userNow, int pidNow)
 {
     doWrite(userNow, pidNow);
 }
@@ -239,7 +240,7 @@ void writeCurrentAppUsernameAndPid(QString userNow, int pidNow)
  * Timeout: exitCode():0 	exitStatus():QProcess::NormalExit	error():QProcess::Timedout => so -1, do not timeout
  * Normal Password Input Correctly: exitCode():1 exitStatus():QProcess::NormalExit
  */
-int doKill()
+static int doKill()
 {
     QString cmd(BASH_TYPE);
     QStringList arglists;
@@ -266,7 +267,7 @@ int doKill()
     return FAIL;
 }
 
-bool pidIsNotExist()
+static bool pidIsNotExist()
 {
     QString cmd(BASH_TYPE);
     QStringList arglists;
@@ -289,7 +290,7 @@ bool pidIsNotExist()
  * 当前xx用户正在使用该软件，打开将会关闭xx用户正在进行的操作
  * @return
  */
-int singleWarnMsg()
+static int singleWarnMsg()
 {
     // normal user: cannot read by `ps -ef`
     //userUsed = getUsedUserName();
@@ -318,7 +319,7 @@ int singleWarnMsg()
         return 0;
 }
 
-int getScreenWidth()
+static int getScreenWidth()
 {
     Display *disp = XOpenDisplay(NULL);
     Screen *scrn = DefaultScreenOfDisplay(disp);
@@ -333,7 +334,7 @@ int getScreenWidth()
     return width;
 }
 
-bool checkStarted()
+static bool checkStarted()
 {
     QString comm;
     QDir dir("/proc/");
@@ -366,6 +367,15 @@ bool checkStarted()
     return false;
 }
 
+static QString getAppVersion()
+{
+    QProcess process;
+    process.start(QString("dpkg-parsechangelog -l %1 --show-field Version").arg(CHANGELOG_PATH));
+    process.waitForFinished();
+    QByteArray result = process.readAllStandardOutput();
+    result = result.left(result.length()-1);
+    return result;
+}
 
 int main(int argc, char *argv[])
 {
@@ -392,7 +402,8 @@ int main(int argc, char *argv[])
     QApplication app(argc, argv);
 
     app.setApplicationName(APP_NAME);
-    app.setApplicationVersion(QString(APP_VERSION));
+    //app.setApplicationVersion(QString(APP_VERSION));
+    app.setApplicationVersion(getAppVersion());
 
 #if 1
     QCommandLineParser parser;

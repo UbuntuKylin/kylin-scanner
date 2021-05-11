@@ -163,6 +163,7 @@ public:
     void onOcr();
     void onScan(bool ret);
 
+    void onSaveImageNow();
     void setNormalImage();
     void rectifyThreadQuit();
     void beautifyThreadQuit();
@@ -237,7 +238,6 @@ private:
     */
 
 public slots:
-    void onSaveImageNow();
     void onBtnRectifyBegin();
     void onBtnRectifyEnd();
     void onBtnBeautifyBegin();

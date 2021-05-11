@@ -70,8 +70,8 @@ void KYCTitleBarDialog::initLayout()
     m_logo->setPixmap(QIcon::fromTheme("kylin-scanner").pixmap(m_logo->size()));
 
     QFont fontLogoMsg;
-    fontLogoMsg.setPixelSize(14);
-    m_logoMsg->setFont(fontLogoMsg);
+    //fontLogoMsg.setPixelSize(14);
+    //m_logoMsg->setFont(fontLogoMsg);
     m_logoMsg->setText (tr("Scanner"));
     m_logoMsg->setScaledContents(true);
     m_logoMsg->setAlignment(Qt::AlignRight | Qt::AlignVCenter);

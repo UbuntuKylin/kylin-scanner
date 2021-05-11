@@ -163,7 +163,7 @@ void KYCWidget::initConnect()
     connect(pScanSet, SIGNAL(openDeviceStatusSignal(bool)), this, SLOT(switchScanDeviceResult(bool)));
 
     // For send mail: send present pictures
-    connect(pScanSet, &KYCScanSettingsWidget::sendMailSignal, pScandisplay, &KYCScanDisplayWidget::onSaveImageNow);
+    connect(pScanSet, &KYCScanSettingsWidget::sendMailSignal, this, &KYCWidget::saveImageNow);
 
     // For scanning
     connect(pFuncBar, &KYCFunctionBarWidget::clickBtnScanStart, this, &KYCWidget::setOcrFlags);
@@ -558,6 +558,12 @@ void KYCWidget::switchScanDeviceResult(bool ret)
         pScanSet->setKylinScanSetNotEnable();
     }
 #endif
+}
+
+void KYCWidget::saveImageNow()
+{
+    pScandisplay->onSaveImageNow();
+    pScanSet->setSendMailButtonStyleNormal();
 }
 
 void KYCWidget::scanningResultDetail(bool ret)
