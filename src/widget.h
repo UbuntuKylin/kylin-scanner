@@ -112,6 +112,7 @@ private slots:
     void setOcrBeginOperation();
     void setOcrEndOperation();
     void onBtnScanClickedEndNoDoc();
+    void onBtnScanClickedEndInval();
 };
 
 #endif // WIDGET_H

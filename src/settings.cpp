@@ -954,7 +954,7 @@ void KYCScanSettingsWidget::onBtnSaveClicked()
             if (textName->text().endsWith(".txt")) {
                 filename = textName->text();
             } else {
-                filename = textName->text() + "." + ".txt";
+                filename = textName->text() + ".txt";
             }
             titlename = tr("Store text dialog");
         } else {
@@ -1012,13 +1012,21 @@ void KYCScanSettingsWidget::onBtnSaveClicked()
 
             // While not endsWith (".jpg" | ".png" | "pdf" | "bmp"),
             // we neet add suffix behind.
-            if (!filename.endsWith(".jpg", Qt::CaseInsensitive)
-                    && !filename.endsWith(".png", Qt::CaseInsensitive)
-                    && !filename.endsWith(".pdf", Qt::CaseInsensitive)
-                    && !filename.endsWith(".bmp", Qt::CaseInsensitive)) {
+            if (flag == 1) {
+                if (!filename.endsWith(".txt", Qt::CaseInsensitive)) {
+                    // 进行OCR ，存储文本
+                    filetype = saveDialog->getFileType();
+                    filepath = filepath.append(filetype);
+                }
+            } else {
+                if (!filename.endsWith(".jpg", Qt::CaseInsensitive)
+                        && !filename.endsWith(".png", Qt::CaseInsensitive)
+                        && !filename.endsWith(".pdf", Qt::CaseInsensitive)
+                        && !filename.endsWith(".bmp", Qt::CaseInsensitive)) {
 
-                filetype = saveDialog->getFileType();
-                filepath = filepath.append(filetype);
+                    filetype = saveDialog->getFileType();
+                    filepath = filepath.append(filetype);
+                }
             }
             flagSave = true;
         } else {

@@ -550,12 +550,14 @@ void KYCFunctionBarWidget::scanResult(int ret)
     labMovieScan->resize(0, 0);
     labMovieScan->hide();
 
-    if (ret == 0) {
+    if (ret == SANE_STATUS_GOOD) {
         emit clickBtnScanEnd(true);
     } else {
-        // ret = noDoc: Document feeder out of documents
-        if (ret == 7) {
+        // ret = SANE_STATUS_NO_DOCS: Document feeder out of documents
+        if (ret == SANE_STATUS_NO_DOCS) {
             emit clickBtnScanEndNoDoc();
+        } else if (ret == SANE_STATUS_INVAL) {
+            emit clickBtnScanEndInval();
         } else {
             // other scan error
             emit clickBtnScanEnd(false);

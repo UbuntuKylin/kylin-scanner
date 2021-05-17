@@ -108,7 +108,7 @@ static void KYCMessageOutput(QtMsgType type, const QMessageLogContext &context, 
     mutex.unlock();
 }
 
-static void customOutputMessage(QtMsgType type, const QMessageLogContext &context, const QString &msg)
+void customOutputMessage(QtMsgType type, const QMessageLogContext &context, const QString &msg)
 {
     /**
      * This code incorrect whill result in current user cannot open `kylin-scanner` in `ukui-menu`,
@@ -228,7 +228,7 @@ static void doRead()
     file.close();
 }
 
-static void writeCurrentAppUsernameAndPid(QString userNow, int pidNow)
+void writeCurrentAppUsernameAndPid(QString userNow, int pidNow)
 {
     doWrite(userNow, pidNow);
 }
@@ -290,7 +290,7 @@ static bool pidIsNotExist()
  * 当前xx用户正在使用该软件，打开将会关闭xx用户正在进行的操作
  * @return
  */
-static int singleWarnMsg()
+int singleWarnMsg()
 {
     // normal user: cannot read by `ps -ef`
     //userUsed = getUsedUserName();
@@ -319,7 +319,7 @@ static int singleWarnMsg()
         return 0;
 }
 
-static int getScreenWidth()
+int getScreenWidth()
 {
     Display *disp = XOpenDisplay(NULL);
     Screen *scrn = DefaultScreenOfDisplay(disp);

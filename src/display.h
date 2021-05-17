@@ -130,6 +130,10 @@ public:
     QPushButton *btnSymmetry;
     QPushButton *btnWatermark;
     QVBoxLayout *vBoxEditBar;
+
+Q_SIGNALS:
+    void btnTailorClicked();
+
 private slots:
     void onBtnTailorClicked();
 };
@@ -246,7 +250,7 @@ public slots:
     void timerScanUpdate();
 
 private slots:
-    void tailor();
+    void onTailor();
     void rotating();
     void symmetry();
     void addWatermark();

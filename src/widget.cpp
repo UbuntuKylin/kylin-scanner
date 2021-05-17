@@ -169,6 +169,7 @@ void KYCWidget::initConnect()
     connect(pFuncBar, &KYCFunctionBarWidget::clickBtnScanStart, this, &KYCWidget::setOcrFlags);
     connect(pFuncBar, SIGNAL(clickBtnScanEnd(bool)), this, SLOT(setScanEndOperation(bool)));
     connect(pFuncBar, SIGNAL(clickBtnScanEndNoDoc()), this, SLOT(onBtnScanClickedEndNoDoc()));
+    connect(pFuncBar, SIGNAL(clickBtnScanEndInval()), this, SLOT(onBtnScanClickedEndInval()));
 
     // For rectify
     connect(pFuncBar, &KYCFunctionBarWidget::sendRectifyBegin, pScandisplay, &KYCScanDisplayWidget::onBtnRectifyBegin);
@@ -816,6 +817,13 @@ void KYCWidget::onBtnScanClickedEndNoDoc()
 {
     QString msg;
     msg = tr("Please load the paper and scan again.");
+    warnMsg(msg);
+}
+
+void KYCWidget::onBtnScanClickedEndInval()
+{
+    QString msg;
+    msg = tr("Scanner's parameters error, please change parameters and scanning again.");
     warnMsg(msg);
 }
 

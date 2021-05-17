@@ -132,6 +132,7 @@ Q_SIGNALS:
     void clickBtnScanStart();
     void clickBtnScanEnd(bool);
     void clickBtnScanEndNoDoc();
+    void clickBtnScanEndInval();
     void sendRectifyBegin();
     void sendRectifyEnd();
     void sendBeautifyBegin();

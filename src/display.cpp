@@ -18,6 +18,7 @@
 
 #include "display.h"
 #include "common.h"
+#include <QMetaType>
 
 QString outText;
 
@@ -120,6 +121,15 @@ void KYCScanDisplayWidget::keyPressEvent(QKeyEvent *e)
             setPixmapScaled(*imgNormal, labNormalLeft);
             vStackedLayout->setCurrentIndex(index);
         }
+
+    }
+    if (e->key() == Qt::Key_Escape && (vStackedLayout->currentWidget() == widgetTailor)) {
+        setPixmapScaled(*imgEditLayout, labEditLayout);
+        *imgNormal = imgEditLayout->copy();
+        setPixmapScaled(*imgNormal, labNormalLeft);
+        vStackedLayout->setCurrentIndex(index);
+        vStackedLayout->removeWidget(widgetTailor);
+        flagTailor = 0;
     }
 }
 
@@ -197,6 +207,7 @@ float KYCScanDisplayWidget::setPixmapScaled(QImage img, QLabel *lab)
     QPixmap fitpixmap = pixmap.scaled(width, height, Qt::KeepAspectRatioByExpanding,
                                       Qt::SmoothTransformation);  // 按比例缩放
     lab->setPixmap(fitpixmap);
+    lab->setFixedSize(QSize(fitpixmap.size()));
     lab->setAlignment(Qt::AlignCenter);
     return num;
 }
@@ -400,7 +411,8 @@ void KYCScanDisplayWidget::initConnect()
     connect(editLayout->btnRotate, SIGNAL(clicked()), this, SLOT(rotating()));
 
     // For tailor
-    connect(editLayout->btnTailor, SIGNAL(clicked()), this, SLOT(tailor()));
+    //connect(editLayout->btnTailor, SIGNAL(clicked()), this, SLOT(onTailor()));
+    connect(editLayout, &KYCEditBarWidget::btnTailorClicked, this, &KYCScanDisplayWidget::onTailor);
 
     // For symmetry
     connect(editLayout->btnSymmetry, SIGNAL(clicked()), this, SLOT(symmetry()));
@@ -472,12 +484,16 @@ void KYCScanDisplayWidget::initStyleOcr()
 
 void KYCScanDisplayWidget::initStyleTailor()
 {
-    if (flagTailor == 1) {
+    if (flagTailor == 0) {
+        // begin to tailor
+        flagTailor = 1;
         widgetTailor = new QWidget(); // 需重新初始化，否则底部有原先的裁切图片
 
         labTailor = new KYCTailorLabel();
-        labTailor->setMinimumSize(360, 490);
         labTailor->setParent(widgetTailor);
+        //labTailor->setFixedSize(100, 100);
+        labTailor->setFixedSize(QSize(labEditLayout->size()));
+        //labTailor->setMinimumSize(360, 490);
         labTailor->setAlignment(Qt::AlignCenter);
 
         hBoxTailor = new QHBoxLayout();
@@ -501,6 +517,43 @@ void KYCScanDisplayWidget::initStyleTailor()
         stack.push(*imgStack);
         scaledNum = setPixmapScaled(*imgTailor, labTailor);
         btnTailorLayout->setStyleSheet("QPushButton{border-image: url(:/icon/icon/editBar/shrink-editLayout.svg);border:none;background-color:#0f0801;border-radius:0px;}");
+    } else {
+        qDebug() << "11111111111";
+        //if (vStackedLayout->currentWidget() == widgetTailor) {
+            qDebug() << "click btnTailor again, so tailor end.";
+            QImage newimage;
+            int x1, y1, x2, y2;
+            if (labTailor->getStartX() <= labTailor->getEndX()) {
+                    x1 = labTailor->getStartX() - ((labTailor->width() - imgEditLayout->width() * scaledNum) / 2);
+                    x2 = labTailor->getEndX() - ((labTailor->width() - imgEditLayout->width() * scaledNum) / 2);
+            } else {
+                    x1 = labTailor->getEndX() - ((labTailor->width() - imgEditLayout->width() * scaledNum) / 2);
+                    x2 = labTailor->getStartX() - ((labTailor->width() - imgEditLayout->width() * scaledNum) / 2);
+            }
+
+            if (labTailor->getStartY() <= labTailor->getEndY()) {
+                    y1 = labTailor->getStartY() - ((labTailor->height() - imgEditLayout->height() * scaledNum) / 2);
+                    y2 = labTailor->getEndY() - ((labTailor->height() - imgEditLayout->height() * scaledNum) / 2);
+            } else {
+                    y1 = labTailor->getEndY() - ((labTailor->height() - imgEditLayout->height() * scaledNum) / 2);
+                    y2 = labTailor->getStartY() - ((labTailor->height() - imgEditLayout->height() * scaledNum) / 2);
+            }
+
+            newimage = imgEditLayout->copy(x1 / scaledNum, y1 / scaledNum, (x2 - x1) / scaledNum,
+                                           (y2 - y1) / scaledNum);
+            *imgEditLayout = newimage;
+            setPixmapScaled(*imgEditLayout, labEditLayout);
+            *imgNormal = imgEditLayout->copy();
+            setPixmapScaled(*imgNormal, labNormalLeft);
+            vStackedLayout->setCurrentIndex(index);
+            vStackedLayout->removeWidget(widgetTailor);
+
+            // 裁切完成后，btnTailor属性需要回到最开始的状态
+            editLayout->btnTailor->setStyleSheet("QPushButton{border-image: url(:/icon/icon/editBar/tailor.svg);border:none;background-color:rgb(232,232,232);border-radius:0px;}"
+                                                 "QPushButton:hover{border-image: url(:/icon/icon/editBar/tailor-click.svg);border:none;background-color:rgb(232,232,232);border-radius:0px;}"
+                                                 "QPushButton:checked{border-image: url(:/icon/icon/editBar/tailor-click.svg);border:none;background-color:rgb(232,232,232);border-radius:0px;}");
+            flagTailor = 0;
+        //}
     }
 }
 
@@ -550,6 +603,23 @@ void KYCScanDisplayWidget::addWatermark()
         *imgBackup = imgEditLayout->copy();
     }
     KYCWaterMarkDialog *dialog = new KYCWaterMarkDialog();
+
+    // center watermark dialog
+    QWidget *widget = nullptr;
+    QWidgetList widgetList = QApplication::allWidgets();
+    for (int i=0; i<widgetList.length(); ++i) {
+        if (widgetList.at(i)->objectName() == "MainWindow") {
+            widget = widgetList.at(i);
+        }
+    }
+    if (widget) {
+        QRect rect = widget->geometry();
+        int x = rect.x() + rect.width()/2 - msgBox->width()/2;
+        int y = rect.y() + rect.height()/2 - msgBox->height()/2;
+        qDebug() << "x = " << x << "y = " << y;
+        dialog->move(x,y);
+    }
+
     int ret = dialog->exec();// 以模态方式显示对话框，用户关闭对话框时返回 DialogCode值
     qDebug() << "ret = " << ret;
 
@@ -754,7 +824,6 @@ void KYCScanDisplayWidget::rectifyThreadQuit()
     if (rectifyThread.isRunning()) {
         qDebug() << "Quit rectifyThread";
         rectifyThread.quit();
-        rectifyThread.wait();
     }
 }
 
@@ -763,7 +832,6 @@ void KYCScanDisplayWidget::beautifyThreadQuit()
     if (beautyThread.isRunning()) {
         qDebug() << "Quit beautifyThread";
         beautyThread.quit();
-        rectifyThread.wait();
     }
 }
 
@@ -817,12 +885,14 @@ void KYCScanDisplayWidget::onBtnRectifyBegin()
 /**
  * @brief KYCScanDisplayWidget::onBtnRectifyEnd
  * Repeatedly click btnRectify, end to btnRectify
+ * Need to quit thread
  */
 void KYCScanDisplayWidget::onBtnRectifyEnd()
 {
     qDebug() << "flagRectify = " << flagRectify;
     // Mean user has repeatedly clicked btnRectify, so ought to carry out undo operation
     flagRectify = 0;
+    rectifyThreadQuit();
     if (vStackedLayout->currentWidget() == widgetNormal) {
         qDebug() << "currentWidget == widgetNormal";
         *imgNormal = imgRectify->copy();
@@ -994,7 +1064,7 @@ void KYCScanDisplayWidget::timerScanUpdate()
 /**
  * @brief scan_display::tailor 工具栏裁切、裁剪
  */
-void KYCScanDisplayWidget::tailor()
+void KYCScanDisplayWidget::onTailor()
 {
     qDebug() << "begin";
 
@@ -1005,7 +1075,6 @@ void KYCScanDisplayWidget::tailor()
     editLayoutTailor->setParent(widgetTailor); // 编辑工具栏布局
     editLayoutTailor->btnTailor->setIcon(QIcon(":/icon/icon/editBar/tailor-click.svg"));
     editLayoutTailor->btnTailor->setIconSize (QSize(30, 30));
-    flagTailor = 1;
 
     initStyleTailor ();
 }
@@ -1089,6 +1158,7 @@ void KYCEditBarWidget::setEditBarWindowBorderRadius()
 void KYCEditBarWidget::onBtnTailorClicked()
 {
     qDebug() << "clicked";
+    emit btnTailorClicked();
 }
 
 /**

@@ -55,12 +55,15 @@ void rotateImage(Mat src, Mat &img_rotate, double degree)
  */
 double CalcDegree(const Mat &srcImage, Mat &dst)
 {
-    Mat midImage, dstImage;
+    Mat midImage;
+    Mat dstImage;
+    int Threshold = 300;
+    int sizeLineBefore;
+    int sizeLineAfter;
 
     Canny(srcImage, midImage, 50, 200, 3);
     cvtColor(midImage, dstImage, COLOR_GRAY2BGR);
 
-    int Threshold = 300;
 
     //通过霍夫变换检测直线
     // 600 dpi: Threshold = 750
@@ -81,8 +84,19 @@ double CalcDegree(const Mat &srcImage, Mat &dst)
         else if (lines.size() < 10)
             Threshold -= 50;
 
+        sizeLineBefore = lines.size();
+
         qDebug() << "Threshold = " << Threshold << "lines.size = " << lines.size();
         HoughLines(midImage, lines, 1, CV_PI / 180, Threshold, 0, 0);
+
+        sizeLineAfter = lines.size();
+
+        if ((sizeLineBefore > 100) && (sizeLineAfter < 10)) {
+            // break this loop
+            Threshold += 50;
+            HoughLines(midImage, lines, 1, CV_PI / 180, Threshold, 0, 0);
+            break;
+        }
 
         if (Threshold <= 0) {
             qDebug() << "没有检测到直线！" ;
