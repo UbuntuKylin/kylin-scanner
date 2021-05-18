@@ -56,7 +56,6 @@ KYCWidget::~KYCWidget()
 void KYCWidget::initWindow()
 {
     setWindowTitle (tr("Scanner")); // For system tray text
-    setWindowIcon (QIcon::fromTheme("kylin-scanner"));
     resize(MAINWINDOW_WIDTH, MAINWINDOW_HEIGHT);
     setObjectName("MainWindow");
 }
@@ -328,43 +327,26 @@ void KYCWidget::warnMsg(QString msg)
 
     msgBox->setText(msg);
     msgBox->setIcon(QMessageBox::Warning);
-    msgBox->setWindowIcon(QIcon::fromTheme("kylin-scanner")); // This not work
-    msgBox->setWindowTitle(tr("Scanner")); // This not work
-    msgBox->setStandardButtons(QMessageBox::Yes); // Add buttons by `|`
+    msgBox->setWindowIcon(QIcon::fromTheme("kylin-scanner"));
+    msgBox->setWindowTitle(tr("Scanner"));
+    msgBox->setStandardButtons(QMessageBox::Yes);
     msgBox->setContextMenuPolicy(Qt::NoContextMenu);
-    msgBox->button(QMessageBox::Yes)->setText(tr("Yes")); // set buttonText
+    msgBox->button(QMessageBox::Yes)->setText(tr("Yes"));
 
-#if 0
-    QPoint globalPos = this->mapToGlobal(QPoint(0, 0));
-    int mainWindowWidth = this->width();
-    int mainWindowHeight = this->height();
-    int m_x = (mainWindowWidth - msgBox->width()) / 2;
-    int m_y = (mainWindowHeight - msgBox->height()) / 2;
-    qDebug() << "mainWindowWidth= " << mainWindowWidth
-             << "mainWindowHeight= " << mainWindowHeight
-             << "aboutWidth = " << msgBox->width()
-             << "aboutHeight = " << msgBox->height()
-             << "m_y = " << m_y
-             << "m_x = " << m_x
-             << "globalPox.x+m_x " << globalPos.x()+m_x
-             << "globalPox.y+m_y " << globalPos.y()+m_y;
-    msgBox->move(globalPos.x() + m_x, globalPos.y() + m_y);
-#endif
-        // center saveDialog in mainwindow
-        QWidget *widget = nullptr;
-        QWidgetList widgetList = QApplication::allWidgets();
-        for (int i=0; i<widgetList.length(); ++i) {
-            if (widgetList.at(i)->objectName() == "MainWindow") {
-                widget = widgetList.at(i);
-            }
+    QWidget *widget = nullptr;
+    QWidgetList widgetList = QApplication::allWidgets();
+    for (int i=0; i<widgetList.length(); ++i) {
+        if (widgetList.at(i)->objectName() == "MainWindow") {
+            widget = widgetList.at(i);
         }
-        if (widget) {
-            QRect rect = widget->geometry();
-            int x = rect.x() + rect.width()/2 - msgBox->width()/2;
-            int y = rect.y() + rect.height()/2 - msgBox->height()/2;
-            qDebug() << "x = " << x << "y = " << y;
-            msgBox->move(x,y);
-        }
+    }
+    if (widget) {
+        QRect rect = widget->geometry();
+        int x = rect.x() + rect.width()/2 - msgBox->width()/2;
+        int y = rect.y() + rect.height()/2 - msgBox->height()/2;
+        qDebug() << "x = " << x << "y = " << y;
+        msgBox->move(x,y);
+    }
 
     int result = msgBox->exec();
     qDebug() << "result = " << result;

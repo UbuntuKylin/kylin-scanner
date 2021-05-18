@@ -405,6 +405,8 @@ int main(int argc, char *argv[])
     //app.setApplicationVersion(QString(APP_VERSION));
     app.setApplicationVersion(getAppVersion());
 
+    app.setWindowIcon (QIcon::fromTheme("kylin-scanner"));
+
 #if 1
     QCommandLineParser parser;
     parser.setApplicationDescription("An interface-friendly scanner with OCR, Smart rectify and OneClickBeauty.");

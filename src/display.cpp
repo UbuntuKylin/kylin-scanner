@@ -614,8 +614,8 @@ void KYCScanDisplayWidget::addWatermark()
     }
     if (widget) {
         QRect rect = widget->geometry();
-        int x = rect.x() + rect.width()/2 - msgBox->width()/2;
-        int y = rect.y() + rect.height()/2 - msgBox->height()/2;
+        int x = rect.x() + rect.width()/2 - dialog->width()/2;
+        int y = rect.y() + rect.height()/2 - dialog->height()/2;
         qDebug() << "x = " << x << "y = " << y;
         dialog->move(x,y);
     }
