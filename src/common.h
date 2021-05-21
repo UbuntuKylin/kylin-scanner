@@ -23,6 +23,7 @@
 
 #define APP_NAME							"Scanner"
 #define CN_TRANSLATION_FILE_PATH			"/usr/share/kylin-scanner/translations/kylin-scanner."
+#define CHANGELOG_PATH                      "/usr/share/doc/kylin-scanner/changelog.Debian.gz"
 
 #define LOG_PATH 							"/tmp/scanner/"
 #define LOGFILE_PATH						"/tmp/scanner/kylin-scanner.log"

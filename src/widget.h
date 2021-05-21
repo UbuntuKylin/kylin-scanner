@@ -98,6 +98,7 @@ private slots:
     void saveImage(QString fileName);
     void scanResult(bool ret);
     void switchScanDeviceResult(bool ret);
+    void saveImageNow();
     void setMaskClear();
     void showAboutDialogCenter();
     void setWindowBorderRadius();
@@ -111,6 +112,7 @@ private slots:
     void setOcrBeginOperation();
     void setOcrEndOperation();
     void onBtnScanClickedEndNoDoc();
+    void onBtnScanClickedEndInval();
 };
 
 #endif // WIDGET_H

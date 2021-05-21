@@ -130,31 +130,34 @@ void KYCFunctionBarWidget::initLayout()
 
     labMovieScan->setFixedSize(56, 56);
     labMovieScan->hide();
-//    movieScan->setFileName(":/icon/icon/scanner.gif");
-//    movieScan->setCacheMode(QMovie::CacheAll);
-//    QSize size = labMovieScan->size();
-//    //movieScan->setScaledSize(size);
-    //labMovieScan->setMovie(movieScan);
+#if 0
+    movieScan->setFileName(":/icon/icon/scanner.gif");
+    movieScan->setCacheMode(QMovie::CacheAll);
+    QSize size = labMovieScan->size();
+    movieScan->setScaledSize(size);
+    labMovieScan->setMovie(movieScan);
+#endif
 
-    setFontSize(labNorScan, 10);
-    setFontSize(labBeautify, 10);
-    setFontSize(labRectify, 10);
-    setFontSize(labOcr, 10);
+   // setFontSize(labNorScan, 10);
+   // setFontSize(labBeautify, 10);
+   // setFontSize(labRectify, 10);
+   // setFontSize(labOcr, 10);
+
     labNorScan->setText(tr("Normal scanning"));
     labNorScan->setAlignment(Qt::AlignCenter);
-    labNorScan->setFixedSize(60, 16);
+    //labNorScan->setFixedSize(60, 16);
 
     labBeautify->setText(tr("Beauty"));
     labBeautify->setAlignment(Qt::AlignCenter);
-    labBeautify->setFixedSize(56, 16);
+    //labBeautify->setFixedSize(56, 16);
 
     labRectify->setText(tr("Rectify"));
     labRectify->setAlignment(Qt::AlignCenter);
-    labRectify->setFixedSize(56, 16);
+    //labRectify->setFixedSize(56, 16);
 
     labOcr->setText(tr("Text OCR"));
     labOcr->setAlignment(Qt::AlignCenter);
-    labOcr->setFixedSize(56, 16);
+    //labOcr->setFixedSize(56, 16);
 
     line1->setObjectName(QString::fromUtf8("line1"));
     line1->setMaximumWidth(1);
@@ -547,12 +550,14 @@ void KYCFunctionBarWidget::scanResult(int ret)
     labMovieScan->resize(0, 0);
     labMovieScan->hide();
 
-    if (ret == 0) {
+    if (ret == SANE_STATUS_GOOD) {
         emit clickBtnScanEnd(true);
     } else {
-        // ret = noDoc: Document feeder out of documents
-        if (ret == 7) {
+        // ret = SANE_STATUS_NO_DOCS: Document feeder out of documents
+        if (ret == SANE_STATUS_NO_DOCS) {
             emit clickBtnScanEndNoDoc();
+        } else if (ret == SANE_STATUS_INVAL) {
+            emit clickBtnScanEndInval();
         } else {
             // other scan error
             emit clickBtnScanEnd(false);

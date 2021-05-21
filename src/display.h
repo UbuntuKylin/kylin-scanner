@@ -130,6 +130,10 @@ public:
     QPushButton *btnSymmetry;
     QPushButton *btnWatermark;
     QVBoxLayout *vBoxEditBar;
+
+Q_SIGNALS:
+    void btnTailorClicked();
+
 private slots:
     void onBtnTailorClicked();
 };
@@ -163,6 +167,7 @@ public:
     void onOcr();
     void onScan(bool ret);
 
+    void onSaveImageNow();
     void setNormalImage();
     void rectifyThreadQuit();
     void beautifyThreadQuit();
@@ -237,7 +242,6 @@ private:
     */
 
 public slots:
-    void onSaveImageNow();
     void onBtnRectifyBegin();
     void onBtnRectifyEnd();
     void onBtnBeautifyBegin();
@@ -246,7 +250,7 @@ public slots:
     void timerScanUpdate();
 
 private slots:
-    void tailor();
+    void onTailor();
     void rotating();
     void symmetry();
     void addWatermark();

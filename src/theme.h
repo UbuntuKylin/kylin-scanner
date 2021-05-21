@@ -33,6 +33,9 @@
 #define STYLE_NAME_KEY_LIGHT      "ukui-light"
 #define STYLE_NAME_KEY_WHITE      "ukui-white"
 
+#define SYSTEM_FONT_KEY           "system-font-size"
+#define SYSTEM_NAME_KEY           "system-font"
+
 #define ICON_THEME_NAME           "iconThemeName"
 #define ICON_THEME_KEY_BASIC      "ukui-icon-theme-basic"
 #define ICON_THEME_KEY_CLASSICAL  "ukui-icon-theme-classical"

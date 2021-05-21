@@ -165,8 +165,8 @@ void KYCNoMailDialog::initStyle()
 void KYCNoMailDialog::initConnect()
 {
     connect(btnOk, SIGNAL(clicked()), this, SLOT(accept()));
-    connect(btnCancel, SIGNAL(clicked()), this, SLOT(reject()));
-    connect(btnClose, SIGNAL(clicked()), this, SLOT(reject()));
+    connect(btnCancel, SIGNAL(clicked()), this, SLOT(closeNoMailWindow()));
+    connect(btnClose, SIGNAL(clicked()), this, SLOT(closeNoMailWindow()));
     connect(style_settings, SIGNAL(changed(QString)), this, SLOT(nomail_style_changed(QString)));
 }
 
@@ -205,6 +205,11 @@ void KYCNoMailDialog::nomail_style_changed(QString)
     }
 }
 
+void KYCNoMailDialog::closeNoMailWindow()
+{
+    reject();
+    emit noMailWindowClose();
+}
 
 KYCSendMailDialog::KYCSendMailDialog(QWidget *parent) :
     QDialog(parent)
@@ -307,7 +312,7 @@ void KYCSendMailDialog::initStyle()
 
 void KYCSendMailDialog::initConnect()
 {
-    connect(btnClose, SIGNAL(clicked()), this, SLOT(reject()));
+    connect(btnClose, SIGNAL(clicked()), this, SLOT(closeSendMailWindow()));
     connect(style_settings, SIGNAL(changed(QString)), this, SLOT(sendmail_style_changed(QString)));
 }
 
@@ -497,6 +502,12 @@ void KYCSendMailDialog::onBtnClicked()
             break;
         }
     }
+}
+
+void KYCSendMailDialog::closeSendMailWindow()
+{
+    reject();
+    emit sendMailWindowClose();
 }
 
 void KYCSendMailDialog::sendmail_style_changed(QString)

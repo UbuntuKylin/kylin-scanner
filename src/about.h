@@ -38,6 +38,7 @@ public:
     void initLayout();
     void initStyle();
     void initConnect();
+    void setFontStyle();
     void setTextLightStyle();
     void setTextDarkStyle();
     void moveCenter();

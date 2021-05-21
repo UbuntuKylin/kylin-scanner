@@ -584,35 +584,35 @@ void KYCScanSettingsWidget::setKylinLable()
     device_status = instance.getKylinSaneStatus();
 
     labDevice->setText(tr("Device"));
-    setFontSize(labDevice, 10);
+    //setFontSize(labDevice, 10);
     setKylinLabelAttributes(labDevice);
 
     labType->setText(tr("Type"));
-    setFontSize(labType, 10);
+    //setFontSize(labType, 10);
     setKylinLabelAttributes(labType);
 
     labColor->setText(tr("Colour"));
-    setFontSize(labColor, 10);
+    //setFontSize(labColor, 10);
     setKylinLabelAttributes(labColor);
 
     labResolution->setText(tr("Resolution"));
-    setFontSize(labResolution, 10);
+    //setFontSize(labResolution, 10);
     setKylinLabelAttributes(labResolution);
 
     labSize->setText(tr("Size"));
-    setFontSize(labSize, 10);
+    //setFontSize(labSize, 10);
     setKylinLabelAttributes(labSize);
 
     labFormat->setText(tr("Format"));
-    setFontSize(labFormat, 10);
+    //setFontSize(labFormat, 10);
     setKylinLabelAttributes(labFormat);
 
     labName->setText(tr("Name"));
-    setFontSize(labName, 10);
+    //setFontSize(labName, 10);
     setKylinLabelAttributes(labName);
 
     labLocation->setText(tr("Scan to"));
-    setFontSize(labLocation, 10);
+    //setFontSize(labLocation, 10);
     setKylinLabelAttributes(labLocation);
 
     textType->setFixedSize(180, 32);
@@ -832,6 +832,34 @@ void KYCScanSettingsWidget::setFontSize(QLabel *label, int n)
     label->setFont(ft);
 }
 
+/**
+ * @brief KYCScanSettingsWidget::setSendMailButtonStyle
+ * Recover btnMail style while pressed it after first scanning
+ */
+void KYCScanSettingsWidget::setSendMailButtonStyle()
+{
+    qDebug() << "simple btnMail style.";
+    if (stylelist.contains(style_settings->get(STYLE_NAME).toString())) {
+        btnMail->setStyleSheet("QPushButton{background-color:rgb(32,30,29);border:1px solid #939393;color:rgb(232,232,232);border-radius:4px;}");
+    } else {
+        btnMail->setStyleSheet("QPushButton{background-color:#F9F9F9;border:1px solid #939393;color:#000000;border-radius:4px;}");
+    }
+}
+
+void KYCScanSettingsWidget::setSendMailButtonStyleNormal()
+{
+    qDebug() << "recover btnMail style.";
+    if (stylelist.contains(style_settings->get(STYLE_NAME).toString())) {
+        btnMail->setStyleSheet("QPushButton{background-color:rgb(32,30,29);border:1px solid #939393;color:rgb(232,232,232);border-radius:4px;}"
+                               "QPushButton:hover{border:none;background-color:#3D6BE5;border:rgb(147,147,147);color:rgb(232,232,232);border-radius:4px;}"
+                               "QPushButton:checked{border:none;background-color:#3D6BE5;border:rgb(147,147,147);color:rgb(232,232,232);border-radius:4px;}");
+    } else {
+        btnMail->setStyleSheet("QPushButton{background-color:#F9F9F9;border:1px solid #939393;color:#000000;border-radius:4px;}"
+                               "QPushButton:hover{border:none;background-color:#3D6BE5;border:rgb(147,147,147);color:#000000;border-radius:4px;}"
+                               "QPushButton:checked{border:none;background-color:#3D6BE5;border:rgb(147,147,147);color:#000000;border-radius:4px;}");
+    }
+}
+
 void KYCScanSettingsWidget::setTextNameToolTip()
 {
     int lenTextName = textName->text ().length ();
@@ -885,6 +913,8 @@ void KYCScanSettingsWidget::onBtnLocationClicked()
 
 void KYCScanSettingsWidget::onBtnMailClicked()
 {
+    setSendMailButtonStyle();
+
     AppList *maillist = getAppIdList(MAILTYPE);
     qDebug() << "Get Applist success.";
 
@@ -906,6 +936,7 @@ void KYCScanSettingsWidget::onBtnMailClicked()
         qDebug() << "after";
         dialog->exec();
     }
+
     emit sendMailSignal();
 }
 
@@ -923,7 +954,7 @@ void KYCScanSettingsWidget::onBtnSaveClicked()
             if (textName->text().endsWith(".txt")) {
                 filename = textName->text();
             } else {
-                filename = textName->text() + "." + ".txt";
+                filename = textName->text() + ".txt";
             }
             titlename = tr("Store text dialog");
         } else {
@@ -981,13 +1012,21 @@ void KYCScanSettingsWidget::onBtnSaveClicked()
 
             // While not endsWith (".jpg" | ".png" | "pdf" | "bmp"),
             // we neet add suffix behind.
-            if (!filename.endsWith(".jpg", Qt::CaseInsensitive)
-                    && !filename.endsWith(".png", Qt::CaseInsensitive)
-                    && !filename.endsWith(".pdf", Qt::CaseInsensitive)
-                    && !filename.endsWith(".bmp", Qt::CaseInsensitive)) {
+            if (flag == 1) {
+                if (!filename.endsWith(".txt", Qt::CaseInsensitive)) {
+                    // 进行OCR ，存储文本
+                    filetype = saveDialog->getFileType();
+                    filepath = filepath.append(filetype);
+                }
+            } else {
+                if (!filename.endsWith(".jpg", Qt::CaseInsensitive)
+                        && !filename.endsWith(".png", Qt::CaseInsensitive)
+                        && !filename.endsWith(".pdf", Qt::CaseInsensitive)
+                        && !filename.endsWith(".bmp", Qt::CaseInsensitive)) {
 
-                filetype = saveDialog->getFileType();
-                filepath = filepath.append(filetype);
+                    filetype = saveDialog->getFileType();
+                    filepath = filepath.append(filetype);
+                }
             }
             flagSave = true;
         } else {
