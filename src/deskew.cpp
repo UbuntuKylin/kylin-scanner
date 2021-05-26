@@ -64,7 +64,6 @@ double CalcDegree(const Mat &srcImage, Mat &dst)
     Canny(srcImage, midImage, 50, 200, 3);
     cvtColor(midImage, dstImage, COLOR_GRAY2BGR);
 
-
     //通过霍夫变换检测直线
     // 600 dpi: Threshold = 750
     vector<Vec2f> lines;
@@ -172,8 +171,14 @@ int ImageRectify(const char *pInFileName)
     double degree;
 
     Mat src = imread(pInFileName);
+    if (!src.data) {
+        // Avoid crash after click btnBeauty duplicately
+        qDebug() << "cannot read this image: " << pInFileName;
+        return -1;
+    }
     Mat dst;
     //倾斜角度矫正
+    qDebug() << "before calcDegree(): inFilename = " << pInFileName;
     degree = CalcDegree(src, dst);
     qDebug() << "degree = " << degree;
 
