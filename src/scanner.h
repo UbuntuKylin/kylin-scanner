@@ -35,6 +35,7 @@
 #include <QDebug>
 #include <QString>
 #include <QStringList>
+#include <QtMath>
 using namespace std;
 
 #ifndef PATH_MAX

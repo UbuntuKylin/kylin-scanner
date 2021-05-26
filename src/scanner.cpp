@@ -22,6 +22,7 @@ extern "C" {
 #endif
 
 #define STRIP_HEIGHT 256
+#define A4BRY 297 // Some scanner device will less than 297
 
 typedef struct _Image {
     uint8_t *data;
@@ -40,14 +41,13 @@ typedef struct _OptDescriptor {
 } OptDescriptor;
 static OptDescriptor g_optDesc = {2, 3, 6, 10, 11};
 
+static double g_saneSizeA4BrY = 297;
 static SANE_Handle g_device = nullptr;
 static int g_verbose;
 static SANE_Byte *g_buf;
 static size_t g_BufSize;
-const SANE_Device **g_deviceList = nullptr;
-
-
 static SANE_Device *g_saneDevice = nullptr;
+const SANE_Device **g_deviceList = nullptr;
 
 #define SET_1_BIT(n,i) ((1<<(i))|(n))
 #define SET_0_BIT(n,i) ((~(1<<(i)))&(n))
@@ -853,7 +853,7 @@ SANE_Status setOptionSizesAll(SANE_Handle sane_handle, int type)
         status = setOptionSizesReal(sane_handle, 297, 420);
         break;
     case A4:
-        status = setOptionSizesReal(sane_handle, 210, 297);
+        status = setOptionSizesReal(sane_handle, 210, g_saneSizeA4BrY);
         break;
     case A5:
         status = setOptionSizesReal(sane_handle, 148, 210);
@@ -1046,8 +1046,24 @@ static SANE_Status getOptionValue(SANE_Handle device, const char *option_name)
                         << "constraint_type = " << opt->constraint_type;
             } else if (!strcmp(option_name, SANE_NAME_SCAN_BR_Y)) {
                 g_optDesc.numSizeBrY = optnum;
+                // Need via br_y to decide scan sizes after br_x, in case of (215.9, 296.926) to A4, which should be A5
+                int size_range = static_cast<int>( SANE_UNFIX(opt->constraint.range->max) \
+                                                   - SANE_UNFIX(opt->constraint.range->min));
+                double min = SANE_UNFIX(opt->constraint.range->min);
+                double max = SANE_UNFIX(opt->constraint.range->max);
+                qInfo() << "min = " << min
+                        << "max = " << max
+                        << "size_range = " << size_range;
+                // Judge max(296.926) less than A4BRY(297)
+                if ((qCeil(max) == A4BRY) && (qFloor(max) == A4BRY - 1)) {
+                    qDebug() << "A4 br_y max = " << max;
+                    g_saneSizeA4BrY = max;
+                } else {
+                    g_saneSizeA4BrY = A4BRY;
+                }
                 qInfo() << "size optnum = " << g_optDesc.numSizeBrY
                         << "br_y" << val_size
+                        << "g_saneSizeA4Bry = " <<g_saneSizeA4BrY
                         << "constraint_type = " << opt->constraint_type;
             }
 
