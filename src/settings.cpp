@@ -925,7 +925,7 @@ void KYCScanSettingsWidget::onBtnMailClicked()
         qDebug() << "ret = " << ret;
         if (ret == QDialog::Accepted) {
             QProcess *process = new QProcess();
-            process->start("/usr/bin/ubuntu-kylin-software-center");
+            process->start("/usr/bin/kylin-software-center");
         }
         delete dialog; //删除对话框
     } else {
