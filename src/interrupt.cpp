@@ -71,17 +71,6 @@ void KYCInterruptDialog::setDialogAttrbutes()
     pal.setColor(QPalette::Background, QColor(47, 44, 43));
     setAutoFillBackground(true);
     setPalette(pal);
-
-    /*
-    QBitmap bitMap(width(),height()); // A bit map has the same size with current widget
-    bitMap.fill();
-    QPainter painter(&bitMap);
-    painter.setBrush(Qt::black);
-    painter.setPen(Qt::NoPen); // Any color that is not QRgb(0,0,0) is right
-    painter.setRenderHint(QPainter::Antialiasing);
-    painter.drawRoundedRect(bitMap.rect(),6,6); //设置圆角弧度
-    setMask(bitMap);
-    */
 }
 
 /**

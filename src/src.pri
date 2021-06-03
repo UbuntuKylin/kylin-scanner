@@ -29,17 +29,18 @@ SOURCES += \
     $$PWD/sendmail.cpp \
     $$PWD/settings.cpp \
     $$PWD/singleapplication.cpp \
+    $$PWD/svghandler.cpp \
     $$PWD/tailor.cpp \
     $$PWD/timewait.cpp \
     $$PWD/titlebar.cpp \
     $$PWD/usb.cpp \
     $$PWD/usbhotplug.cpp \
     $$PWD/watermark.cpp \
-    beauty.cpp \
-        main.cpp \
-    theme.cpp \
-        widget.cpp \
-    xatomhelper.cpp
+    $$PWD/beauty.cpp \
+    $$PWD/main.cpp \
+    $$PWD/theme.cpp \
+    $$PWD/widget.cpp \
+    $$PWD/xatomhelper.cpp
 
 HEADERS += \
     $$PWD/about.h \
@@ -55,16 +56,17 @@ HEADERS += \
     $$PWD/sendmail.h \
     $$PWD/settings.h \
     $$PWD/singleapplication.h \
+    $$PWD/svghandler.h \
     $$PWD/tailor.h \
     $$PWD/timewait.h \
     $$PWD/titlebar.h \
     $$PWD/usb.h \
     $$PWD/usbhotplug.h \
     $$PWD/watermark.h \
-    beauty.h \
-    theme.h \
-        widget.h \
-    xatomhelper.h
+    $$PWD/beauty.h \
+    $$PWD/theme.h \
+    $$PWD/widget.h \
+    $$PWD/xatomhelper.h
 
 FORMS += \
     $$PWD/about.ui
