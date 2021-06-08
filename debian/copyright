@@ -58,6 +58,8 @@ Files: Doxyfile
        src/sendmail.h
        src/svghandler.cpp
        src/svghandler.h
+       src/runningdialog.cpp
+       src/runningdialog.h
        src/theme.h
        src/theme.cpp
        src/usb.h

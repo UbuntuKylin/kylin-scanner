@@ -192,7 +192,7 @@ void KYCScanDisplayWidget::setInitDevice()
 
 void KYCScanDisplayWidget::setOcrThreadQuit()
 {
-    ocrThread.quit();
+    ocrThread.ocrThreadStop();
 }
 
 void KYCScanDisplayWidget::setPixmap(QImage img, QLabel *lab)
@@ -693,6 +693,11 @@ void KYCScanDisplayWidget::beautyEnd()
 {
     qDebug() << "beauty end";
     beautifyThreadQuit();
+
+    imgEditLayout->load(SCANNING_PICTURE_PATH);
+    setPixmapScaled(*imgEditLayout, labEditLayout);
+    *imgNormal = imgEditLayout->copy();
+    setPixmapScaled(*imgNormal, labNormalLeft);
 }
 
 void KYCScanDisplayWidget::scandisplay_theme_changed(QString)
@@ -715,14 +720,6 @@ void KYCScanDisplayWidget::onOcr()
         *imgBackup = imgEditLayout->copy();
 
         ocrThread.start();
-        /*
-        m_ocrThread = new QThread();
-        m_ocrThread->start();
-
-        m_ocrTask = new MKYCOcrThread();
-        m_ocrTask->moveToThread(m_ocrThread);
-        */
-
 
         *imgBackup = imgBackup->scaled(120, 166);
 
@@ -763,6 +760,8 @@ void KYCScanDisplayWidget::onOcr()
         flagOcrInit++;
     } else {
         flagOcr = 0;
+
+        ocrThread.ocrThreadStop();
         vStackedLayout->setCurrentIndex(widgetindex);
     }
 }
@@ -829,18 +828,12 @@ void KYCScanDisplayWidget::setNormalImage()
 
 void KYCScanDisplayWidget::rectifyThreadQuit()
 {
-    if (rectifyThread.isRunning()) {
-        qDebug() << "Quit rectifyThread";
-        rectifyThread.quit();
-    }
+    rectifyThread.rectifyThreadStop();
 }
 
 void KYCScanDisplayWidget::beautifyThreadQuit()
 {
-    if (beautyThread.isRunning()) {
-        qDebug() << "Quit beautifyThread";
-        beautyThread.quit();
-    }
+    beautyThread.beautyThreadStop();
 }
 
 /**
@@ -863,9 +856,12 @@ void KYCScanDisplayWidget::onSaveImageNow()
  */
 void KYCScanDisplayWidget::onBtnRectifyBegin()
 {
+        qDebug() << "begin to rectify!";
+#if 0
     if (flagRectify == 0) {
         // User has click btnRectify
         flagRectify = 1;
+#endif
         if (vStackedLayout->currentWidget() == widgetNormal) {
             qDebug() << "currentWidget == widgetNormal";
             imgNormal->save(SCANNING_PICTURE_PATH);
@@ -875,6 +871,34 @@ void KYCScanDisplayWidget::onBtnRectifyBegin()
 
             rectifyThread.start();
 
+            QString waitText = tr("Running rectify ...");
+            KYCRunningDialog *dialog = new KYCRunningDialog(this, waitText);
+
+            // center running dialog
+            QWidget *widget = nullptr;
+            QWidgetList widgetList = QApplication::allWidgets();
+            for (int i=0; i<widgetList.length(); ++i) {
+                if (widgetList.at(i)->objectName() == "MainWindow") {
+                    widget = widgetList.at(i);
+                }
+            }
+            if (widget) {
+                QRect rect = widget->geometry();
+                int x = rect.x() + rect.width()/2 - dialog->width()/2;
+                int y = rect.y() + rect.height()/2 - dialog->height()/2;
+                dialog->move(x,y);
+            }
+
+            int ret = dialog->exec();// 以模态方式显示对话框，用户关闭对话框时返回 DialogCode值
+
+            if (ret == QDialog::Accepted) {
+                qDebug() << "ret accepted = " << ret;
+                rectifyThread.rectifyThreadStop();
+                return;
+            }
+        }
+
+#if 0
         } else {
             imgEditLayout->save(SCANNING_PICTURE_PATH);
             *imgRectify = imgEditLayout->copy();
@@ -888,6 +912,7 @@ void KYCScanDisplayWidget::onBtnRectifyBegin()
             setPixmapScaled(*imgNormal, labNormalLeft);
         }
     }
+#endif
 }
 
 /**
@@ -899,11 +924,13 @@ void KYCScanDisplayWidget::onBtnRectifyEnd()
 {
     qDebug() << "flagRectify = " << flagRectify;
     // Mean user has repeatedly clicked btnRectify, so ought to carry out undo operation
+#if 0
     flagRectify = 0;
-    rectifyThreadQuit();
+#endif
     if (vStackedLayout->currentWidget() == widgetNormal) {
         qDebug() << "currentWidget == widgetNormal";
         *imgNormal = imgRectify->copy();
+#if 0
         /**
              * 2代表点击了先智能纠偏和后一键美化：
              * 有2种情况： 1）先撤销一键美化 2）先撤销智能纠偏
@@ -926,9 +953,12 @@ void KYCScanDisplayWidget::onBtnRectifyEnd()
             }
         } else
             list.clear();
+#endif
         setPixmapScaled(*imgNormal, labNormalLeft);
         *imgEditLayout = imgNormal->copy();
         setPixmapScaled(*imgEditLayout, labEditLayout);
+    }
+#if 0
     } else {
         *imgEditLayout = imgRectify->copy();
         qDebug() << "list.count = " << list.count();
@@ -951,6 +981,7 @@ void KYCScanDisplayWidget::onBtnRectifyEnd()
         *imgNormal = imgEditLayout->copy();
         setPixmapScaled(*imgNormal, labNormalLeft);
     }
+#endif
 }
 
 /**
@@ -960,8 +991,10 @@ void KYCScanDisplayWidget::onBtnRectifyEnd()
 void KYCScanDisplayWidget::onBtnBeautifyBegin()
 {
     qDebug() << "beauty()";
+#if 0
     if (flagBeautify == 0) {
         flagBeautify = 1;
+#endif
         if (vStackedLayout->currentWidget() == widgetNormal) {
             imgNormal->save(SCANNING_PICTURE_PATH);
             *imgBeautify = imgNormal->copy();
@@ -969,10 +1002,39 @@ void KYCScanDisplayWidget::onBtnBeautifyBegin()
 
             beautyThread.start();
 
+            QString waitText = tr("Running beauty ...");
+            KYCRunningDialog *dialog = new KYCRunningDialog(this, waitText);
+
+            // center running dialog
+            QWidget *widget = nullptr;
+            QWidgetList widgetList = QApplication::allWidgets();
+            for (int i=0; i<widgetList.length(); ++i) {
+                if (widgetList.at(i)->objectName() == "MainWindow") {
+                    widget = widgetList.at(i);
+                }
+            }
+            if (widget) {
+                QRect rect = widget->geometry();
+                int x = rect.x() + rect.width()/2 - dialog->width()/2;
+                int y = rect.y() + rect.height()/2 - dialog->height()/2;
+                qDebug() << "x = " << x << "y = " << y;
+                dialog->move(x,y);
+            }
+
+            int ret = dialog->exec();// 以模态方式显示对话框，用户关闭对话框时返回 DialogCode值
+
+            if (ret == QDialog::Accepted) {
+                qDebug() << "ret accepted = " << ret;
+                rectifyThread.rectifyThreadStop();
+                return;
+            }
+
             imgNormal->load(SCANNING_PICTURE_PATH);
             setPixmapScaled(*imgNormal, labNormalLeft);
             *imgEditLayout = imgNormal->copy();
             setPixmapScaled(*imgEditLayout, labEditLayout);
+        }
+#if 0
         } else {
             imgEditLayout->save(SCANNING_PICTURE_PATH);
             *imgBeautify = imgEditLayout->copy();
@@ -986,6 +1048,7 @@ void KYCScanDisplayWidget::onBtnBeautifyBegin()
             setPixmapScaled(*imgNormal, labNormalLeft);
         }
     }
+#endif
 }
 
 /**
@@ -994,9 +1057,12 @@ void KYCScanDisplayWidget::onBtnBeautifyBegin()
  */
 void KYCScanDisplayWidget::onBtnBeautifyEnd()
 {
+#if 0
     flagBeautify = 0;
+#endif
     if (vStackedLayout->currentWidget() == widgetNormal) {
         *imgNormal = imgBeautify->copy();
+#if 0
         if (list.count() == 2) {
             if (list[0] == "Beautify") {
                 list.clear();
@@ -1011,9 +1077,12 @@ void KYCScanDisplayWidget::onBtnBeautifyEnd()
                 list.removeLast();
         } else
             list.clear();
+#endif
         setPixmapScaled(*imgNormal, labNormalLeft);
         *imgEditLayout = imgNormal->copy();
         setPixmapScaled(*imgEditLayout, labEditLayout);
+    }
+#if 0
     } else {
         *imgEditLayout = imgBeautify->copy();
         if (list.count() == 2) {
@@ -1034,6 +1103,7 @@ void KYCScanDisplayWidget::onBtnBeautifyEnd()
         *imgNormal = imgEditLayout->copy();
         setPixmapScaled(*imgNormal, labNormalLeft);
     }
+#endif
 }
 
 /**
@@ -1284,60 +1354,131 @@ void KYCEditBarWidget::onEditBarThemeChanged(QString)
 /**
  * @brief myThread::run 文字识别线程
  */
+KYCOcrThread::KYCOcrThread(QObject *parent)
+    : QThread(parent)
+{
+    qDebug() << "Create OCR Thread.";
+}
+
+KYCOcrThread::~KYCOcrThread()
+{
+    // 请求终止
+    requestInterruption();
+    quit();
+    wait();
+}
+
 void KYCOcrThread::run()
 {
-    tesseract::TessBaseAPI *api = new tesseract::TessBaseAPI();
-    qDebug() << "ocr run!\n";
-    //使用中文初始化tesseract-ocr，而不指定tessdata路径。正在识别中
-    if (api->Init(NULL, "chi_sim")) {
-        qDebug() << "Could not initialize tesseract.\n";
-        outText = "Unable to read text";
-        // exit() will abort application imediately without install `tesseract-ocr-chi-sim` package
-        //exit(1);
-        emit ocrFinished();
-        api->End();
-        quit();
-        return;
-    }
-    // 使用leptonica库打开输入图像。
-    Pix *image = pixRead(SCANNING_PICTURE_PATH);
-    if (!image) {
-        qDebug() << "pixRead error!";
-        outText = "Unable to read text";
+    while(QThread::currentThread()->isInterruptionRequested()) {
+    //while(! isInterruptionRequested()) {
+        qDebug() << "begin to run ocr thread !\n";
+        tesseract::TessBaseAPI *api = new tesseract::TessBaseAPI();
+        //使用中文初始化tesseract-ocr，而不指定tessdata路径。正在识别中
+        if (api->Init(NULL, "chi_sim")) {
+            qDebug() << "Could not initialize tesseract.\n";
+            outText = "Unable to read text";
+            // exit() will abort application imediately without install `tesseract-ocr-chi-sim` package
+            //exit(1);
+            emit ocrFinished();
+            api->End();
+            quit();
+            return;
+        }
+        // 使用leptonica库打开输入图像。
+        Pix *image = pixRead(SCANNING_PICTURE_PATH);
+        if (!image) {
+            qDebug() << "pixRead error!";
+            outText = "Unable to read text";
+            emit ocrFinished();
+            // 销毁使用过的对象并释放内存。
+            api->End();
+            // pixDestroy(&image);
+            quit();
+        }
+        api->SetImage(image);
+        // 得到光学字符识别结果
+        outText = api->GetUTF8Text();
         emit ocrFinished();
         // 销毁使用过的对象并释放内存。
         api->End();
-        // pixDestroy(&image);
+        pixDestroy(&image);
         quit();
+
     }
-    api->SetImage(image);
-    // 得到光学字符识别结果
-    outText = api->GetUTF8Text();
-    emit ocrFinished();
-    // 销毁使用过的对象并释放内存。
-    api->End();
-    pixDestroy(&image);
+}
+
+void KYCOcrThread::ocrThreadStop()
+{
+    requestInterruption();
     quit();
+    wait();
+}
+
+KYCRectifyThread::KYCRectifyThread(QObject *parent)
+    : QThread(parent)
+{
+    qDebug() << "Create rectify thread.";
+}
+
+KYCRectifyThread::~KYCRectifyThread()
+{
+    // 请求终止
+    requestInterruption();
+    quit();
+    wait();
 }
 
 void KYCRectifyThread::run()
 {
-    qDebug() << "before ImageRectify()";
-    ImageRectify(SCANNING_PICTURE_PATH);
-    qDebug() << "end ImageRectify()";
+    while(QThread::currentThread()->isInterruptionRequested()) {
+    //while(! isInterruptionRequested()) {
+        qDebug() << "begin to run rectify thread.";
+        ImageRectify(SCANNING_PICTURE_PATH);
+        qDebug() << "end ImageRectify()";
 
-    emit rectifyFinished();
+        emit rectifyFinished();
+    }
+}
+
+void KYCRectifyThread::rectifyThreadStop()
+{
+    requestInterruption();
     quit();
+    wait();
+}
+
+KYCBeautyThread::KYCBeautyThread(QObject *parent)
+    : QThread(parent)
+{
+    qDebug() << "Create beauty thread.";
+}
+
+KYCBeautyThread::~KYCBeautyThread()
+{
+    // 请求终止
+    requestInterruption();
+    quit();
+    wait();
 }
 
 void KYCBeautyThread::run()
 {
-    qDebug() << "before oneClickBeauty()";
-    oneClickBeauty(SCANNING_PICTURE_PATH);
-    qDebug() << "before oneClickBeauty()";
+    while(QThread::currentThread()->isInterruptionRequested()) {
+    //while(! isInterruptionRequested()) {
+        qDebug() << "begin to run beauty thread.";
+        oneClickBeauty(SCANNING_PICTURE_PATH);
+        qDebug() << "end oneClickBeauty()";
 
-    emit beautyFinished();
+        emit beautyFinished();
+    }
+}
+
+void KYCBeautyThread::beautyThreadStop()
+{
+    requestInterruption();
     quit();
+    wait();
 }
 
 /*

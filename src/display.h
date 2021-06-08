@@ -40,6 +40,7 @@
 #include "interrupt.h"
 #include "theme.h"
 #include "svghandler.h"
+#include "runningdialog.h"
 
 /**
  * @brief The KYCOcrThread class
@@ -51,35 +52,16 @@ class KYCOcrThread : public QThread
 {
     Q_OBJECT
 public:
-    void run() Q_DECL_OVERRIDE;
+    explicit KYCOcrThread(QObject *parent = 0);
+    ~KYCOcrThread();
+
+    virtual void run() Q_DECL_OVERRIDE;
+
+    void ocrThreadStop();
 
 signals:
     void ocrFinished();
 };
-
-/*
-class MKYCOcrThread: public QWidget
-{
-    Q_OBJECT
-
-public:
-    explicit MKYCOcrThread(QObject *parent = 0)
-    {
-        ocrTimer.setInterval(5000);
-
-        connect(&ocrTimer, SIGNAL(timeout()), this, SLOT(ocrTask()));
-    }
-
-public slots:
-    void ocrTask();
-
-signals:
-    void ocrFinished();
-
-private:
-    QTimer ocrTimer;
-};
-*/
 
 /**
  * @brief The KYCRectifyThread class
@@ -90,7 +72,12 @@ class KYCRectifyThread : public QThread
 {
     Q_OBJECT
 public:
-    void run() Q_DECL_OVERRIDE;
+    explicit KYCRectifyThread(QObject *parent = 0);
+    ~KYCRectifyThread();
+
+    virtual void run() Q_DECL_OVERRIDE;
+
+    void rectifyThreadStop();
 
 signals:
     void rectifyFinished();
@@ -105,7 +92,12 @@ class KYCBeautyThread : public QThread
 {
     Q_OBJECT
 public:
-    void run() Q_DECL_OVERRIDE;
+    explicit KYCBeautyThread(QObject *parent = 0);
+    ~KYCBeautyThread();
+
+    virtual void run() Q_DECL_OVERRIDE;
+
+    void  beautyThreadStop();
 
 signals:
     void beautyFinished();
@@ -247,6 +239,7 @@ private:
     KYCOcrThread ocrThread;
     KYCRectifyThread rectifyThread;
     KYCBeautyThread beautyThread;
+
     /*
     QThread *m_ocrThread;
     MKYCOcrThread *m_ocrTask;

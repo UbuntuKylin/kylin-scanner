@@ -319,11 +319,11 @@ int KYCWidget::messageScanFinishedSave(QString pathName)
 void KYCWidget::warnMsg(QString msg)
 {
     QMessageBox *msgBox = new QMessageBox(this);
-    /*
+#if 0
     QWidget *parent = QApplication::activeWindow();
     if (!parent)
         parent = QApplication::activeWindow();
-        */
+#endif
 
     msgBox->setText(msg);
     msgBox->setIcon(QMessageBox::Warning);

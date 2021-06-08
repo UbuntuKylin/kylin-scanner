@@ -24,6 +24,7 @@ SOURCES += \
     $$PWD/display.cpp \
     $$PWD/functionbar.cpp \
     $$PWD/interrupt.cpp \
+    $$PWD/runningdialog.cpp \
     $$PWD/savefile.cpp \
     $$PWD/scanner.cpp \
     $$PWD/sendmail.cpp \
@@ -51,6 +52,7 @@ HEADERS += \
     $$PWD/display.h \
     $$PWD/functionbar.h \
     $$PWD/interrupt.h \
+    $$PWD/runningdialog.h \
     $$PWD/savefile.h \
     $$PWD/scanner.h \
     $$PWD/sendmail.h \
