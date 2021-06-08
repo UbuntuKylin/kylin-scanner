@@ -86,6 +86,7 @@ KYCRunningDialog::KYCRunningDialog(QWidget *parent)
 
     connect(time, SIGNAL(timeout()), this, SLOT(showPictures()));
     connect(btnCancel, SIGNAL(clicked()), this, SLOT(accept()));
+    connect(style_settings, SIGNAL(changed(QString)), this, SLOT(runningDialogStyleChanged(QString)));
 
 }
 
@@ -112,12 +113,12 @@ KYCRunningDialog::KYCRunningDialog(QWidget *parent, QString text)
     stylelist << STYLE_NAME_KEY_DARK << STYLE_NAME_KEY_BLACK;
     if (stylelist.contains(style_settings->get(STYLE_NAME).toString())) {
         QPalette pal(palette());
-        pal.setColor(QPalette::Background, QColor(0, 0, 0, 1));
+        pal.setColor(QPalette::Background, QColor(0, 0, 0));
         setAutoFillBackground(true);
         setPalette(pal);
     } else {
         QPalette pal(palette());
-        pal.setColor(QPalette::Background, QColor(255, 255, 255, 1));
+        pal.setColor(QPalette::Background, QColor(255, 255, 255));
         setAutoFillBackground(true);
         setPalette(pal);
     }
@@ -155,7 +156,7 @@ KYCRunningDialog::KYCRunningDialog(QWidget *parent, QString text)
 
     connect(time, SIGNAL(timeout()), this, SLOT(showPictures()));
     connect(btnCancel, SIGNAL(clicked()), this, SLOT(accept()));
-    //if (saveDialog->exec() == QFileDialog::Accepted) {
+    connect(style_settings, SIGNAL(changed(QString)), this, SLOT(runningDialogStyleChanged(QString)));
 }
 
 
@@ -185,16 +186,15 @@ void KYCRunningDialog::runningDialogStyleChanged(QString)
 {
     if (stylelist.contains(style_settings->get(STYLE_NAME).toString())) {
         QPalette pal(palette());
-        pal.setColor(QPalette::Background, QColor(0, 0, 0, 1));
+        pal.setColor(QPalette::Background, QColor(0, 0, 0));
         setAutoFillBackground(true);
         setPalette(pal);
 
     } else {
         QPalette pal(palette());
-        pal.setColor(QPalette::Background, QColor(255, 255, 255, 1));
+        pal.setColor(QPalette::Background, QColor(255, 255, 255));
         setAutoFillBackground(true);
         setPalette(pal);
-
     }
 }
 

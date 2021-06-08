@@ -96,22 +96,22 @@
 <context>
     <name>KYCEditBarWidget</name>
     <message>
-        <location filename="../display.cpp" line="1199"/>
+        <location filename="../display.cpp" line="1269"/>
         <source>rotate</source>
         <translation>旋转</translation>
     </message>
     <message>
-        <location filename="../display.cpp" line="1202"/>
+        <location filename="../display.cpp" line="1272"/>
         <source>tailor</source>
         <translation>裁切</translation>
     </message>
     <message>
-        <location filename="../display.cpp" line="1208"/>
+        <location filename="../display.cpp" line="1278"/>
         <source>watermark</source>
         <translation>水印</translation>
     </message>
     <message>
-        <location filename="../display.cpp" line="1205"/>
+        <location filename="../display.cpp" line="1275"/>
         <source>symmetry</source>
         <translation>对称翻转</translation>
     </message>
@@ -144,7 +144,7 @@
         <translation>文字识别</translation>
     </message>
     <message>
-        <location filename="../functionbar.cpp" line="427"/>
+        <location filename="../functionbar.cpp" line="435"/>
         <source>scan</source>
         <translation>扫描</translation>
     </message>
@@ -179,6 +179,15 @@
     </message>
 </context>
 <context>
+    <name>KYCRunningDialog</name>
+    <message>
+        <location filename="../runningdialog.cpp" line="65"/>
+        <location filename="../runningdialog.cpp" line="141"/>
+        <source>Cancel</source>
+        <translation>取消</translation>
+    </message>
+</context>
+<context>
     <name>KYCScanDisplayWidget</name>
     <message>
         <location filename="../display.cpp" line="344"/>
@@ -187,9 +196,19 @@
         <translation>请先连接扫描仪</translation>
     </message>
     <message>
-        <location filename="../display.cpp" line="732"/>
+        <location filename="../display.cpp" line="729"/>
         <source>Try to ocr ...</source>
         <translation>正在识别中...</translation>
+    </message>
+    <message>
+        <location filename="../display.cpp" line="874"/>
+        <source>Running rectify ...</source>
+        <translation>智能纠偏中……</translation>
+    </message>
+    <message>
+        <location filename="../display.cpp" line="1005"/>
+        <source>Running beauty ...</source>
+        <translation>一键美化……</translation>
     </message>
 </context>
 <context>
@@ -367,49 +386,49 @@
         <translation type="vanished">麒麟扫描</translation>
     </message>
     <message>
-        <location filename="../titlebar.cpp" line="75"/>
+        <location filename="../titlebar.cpp" line="73"/>
         <source>Scanner</source>
         <translation>扫描</translation>
     </message>
     <message>
-        <location filename="../titlebar.cpp" line="81"/>
+        <location filename="../titlebar.cpp" line="79"/>
         <source>Help</source>
         <translation>帮助</translation>
     </message>
     <message>
-        <location filename="../titlebar.cpp" line="90"/>
+        <location filename="../titlebar.cpp" line="88"/>
         <source>About</source>
         <translation>关于</translation>
     </message>
     <message>
-        <location filename="../titlebar.cpp" line="93"/>
+        <location filename="../titlebar.cpp" line="91"/>
         <source>Exit</source>
         <translation>退出</translation>
     </message>
     <message>
-        <location filename="../titlebar.cpp" line="99"/>
+        <location filename="../titlebar.cpp" line="97"/>
         <source>mainmenu</source>
         <translation>主菜单</translation>
     </message>
     <message>
-        <location filename="../titlebar.cpp" line="110"/>
+        <location filename="../titlebar.cpp" line="108"/>
         <source>Minimize</source>
         <translation>最小化</translation>
     </message>
     <message>
-        <location filename="../titlebar.cpp" line="119"/>
-        <location filename="../titlebar.cpp" line="192"/>
-        <location filename="../titlebar.cpp" line="282"/>
+        <location filename="../titlebar.cpp" line="117"/>
+        <location filename="../titlebar.cpp" line="190"/>
+        <location filename="../titlebar.cpp" line="280"/>
         <source>Maximize</source>
         <translation>最大化</translation>
     </message>
     <message>
-        <location filename="../titlebar.cpp" line="127"/>
+        <location filename="../titlebar.cpp" line="125"/>
         <source>Close</source>
         <translation>关闭</translation>
     </message>
     <message>
-        <location filename="../titlebar.cpp" line="275"/>
+        <location filename="../titlebar.cpp" line="273"/>
         <source>Restore</source>
         <translation>还原</translation>
     </message>
