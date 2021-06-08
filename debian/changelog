@@ -1,8 +1,9 @@
 kylin-scanner (1.0.0-27) v101; urgency=medium
 
   [ BUG 号 ] 
-  * Closes: #35169
+  * Closes: #35169, #34906
     - 解决编辑栏功能易用性不好的问题 (Closes: #35169) 
+    - 解决切换功能栏的按钮卡顿问题 (Closes: #34906)
   
   [ 任务号 ] 
   * Closes: #33372
