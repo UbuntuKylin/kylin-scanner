@@ -1,29 +1,34 @@
 #include "svghandler.h"
 #include <QApplication>
+#include <QDebug>
 
 #define THEME_SCHEMA "org.ukui.style"
 #define THEME_KEY "styleName"
 
-SVGHandler::SVGHandler(QObject *parent,bool highLight) : QObject(parent)
+SVGHandler::SVGHandler(QObject *parent,bool highLight)
+    : QObject(parent)
+    , themeSettings(new QGSettings(ORG_UKUI_STYLE))
 {
-    m_color = "default";
-    if (highLight) {
-        QByteArray id(THEME_SCHEMA);
-        themeSettings = new QGSettings(id,QByteArray(),this);
+    m_color = "black";
+    stylelist << STYLE_NAME_KEY_DARK << STYLE_NAME_KEY_BLACK;
 
-        if (themeSettings->get(THEME_KEY).toString() == "ukui-dark") {
+    if (highLight) {
+        if (stylelist.contains(themeSettings->get(STYLE_NAME).toString())) {
+            // 黑色主题
             m_color = "white";
         } else {
             m_color = "black";
         }
 
+        qDebug() << "m_color = " << m_color;
         connect(themeSettings,&QGSettings::changed,this,[=] (const QString &key) {
-           if (key == THEME_KEY) {
-               if (themeSettings->get(key).toString() == "ukui-dark") {
+           if (key == STYLE_NAME) {
+               if (stylelist.contains(themeSettings->get(STYLE_NAME).toString())) {
                    m_color = "white";
                } else {
-                   m_color = "default";
+                   m_color = "black";
                }
+               qDebug() << "m_color = " << m_color;
            }
         });
     }
@@ -71,11 +76,32 @@ const QPixmap SVGHandler::loadSvgColor(const QString &path, const QString &color
 
     pixmap.setDevicePixelRatio(ratio);
 
-    if (color != m_color && m_color != "default") {
-        return drawSymbolicColoredPixmap(pixmap, m_color);
+    return drawSymbolicColoredPixmap(pixmap, color);
+
+}
+
+const QPixmap SVGHandler::loadSvgColorXY(const QString &path, const QString &color, int sizeX, int sizeY)
+{
+    int origSize = sizeX;
+    const auto ratio = qApp->devicePixelRatio();
+    if ( 2 == ratio) {
+        sizeX += origSize;
+    } else if (3 == ratio) {
+        sizeX += origSize;
     }
+    QPixmap pixmap(sizeX, sizeY);
+    QSvgRenderer renderer(path);
+    pixmap.fill(Qt::transparent);
+
+    QPainter painter;
+    painter.begin(&pixmap);
+    renderer.render(&painter);
+    painter.end();
+
+    pixmap.setDevicePixelRatio(ratio);
 
     return drawSymbolicColoredPixmap(pixmap, color);
+
 }
 
 QPixmap SVGHandler::drawSymbolicColoredPixmap(const QPixmap &source, QString cgColor)

@@ -37,6 +37,7 @@
 #include <QFileInfo>
 #include <QFileInfoList>
 #include <QTimer>
+#include "svghandler.h"
 #include "scanner.h"
 #include "beauty.h"
 #include "theme.h"
@@ -93,6 +94,7 @@ private:
     QGSettings *style_settings;
     QGSettings *icon_theme_settings;
 
+    SVGHandler  *svghandler;
     QPushButton *btnNorScan ;
     QPushButton *btnBeautify;
     QPushButton *btnRectify;

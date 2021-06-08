@@ -138,12 +138,6 @@ void KYCNoMailDialog::initStyle()
         labTitle->setStyleSheet("color:#D9FFFFFF"); // 85% => D9, 255,255,255 => FFFFFF
         textEdit->setStyleSheet("QTextEdit{background-color:rgb(47,44,43);color:#D9FFFFFF;border:0px}");
         line->setStyleSheet("QFrame{color:rgb(32,30,29)}");
-        btnOk->setStyleSheet("QPushButton{background-color:rgb(32,30,29);border:1px solid #939393;color:rgb(232,232,232);border-radius:4px;}"
-                             "QPushButton:hover{border:none;background-color:#3D6BE5;border:rgb(147,147,147);color:rgb(232,232,232);border-radius:4px;}"
-                             "QPushButton:checked{border:none;background-color:#3D6BE5;border:rgb(147,147,147);color:rgb(232,232,232);border-radius:4px;}");
-        btnCancel->setStyleSheet("QPushButton{background-color:rgb(32,30,29);border:1px solid #939393;color:rgb(232,232,232);border-radius:4px;}"
-                                 "QPushButton:hover{border:none;background-color:#3D6BE5;color:rgb(232,232,232);border-radius:4px;}"
-                                 "QPushButton:checked{border:none;background-color:#3D6BE5;color:rgb(232,232,232)border-radius:4px;}");
     } else {
         QPalette pal(palette());
         pal.setColor(QPalette::Background, QColor(255, 255, 255));
@@ -153,12 +147,6 @@ void KYCNoMailDialog::initStyle()
         labTitle->setStyleSheet("color:#D9000000"); // 85% => D9, 255,255,255 => FFFFFF
         textEdit->setStyleSheet("QTextEdit{background-color:rgb(255,255,255);color:#D9000000;border:0px}");
         line->setStyleSheet("QFrame{color:rgb(32,30,29}");
-        btnOk->setStyleSheet("QPushButton{background-color:rgb(255,255,255);border:1px solid #CCCCCC;color:#D9000000;border-radius:4px;}"
-                             "QPushButton:hover{border:none;background-color:#3D6BE5;color:#F0F0F0;border-radius:4px;}"
-                             "QPushButton:checked{border:none;background-color:#D93D6BE5;color:#F0F0F0;border-radius:4px;}");
-        btnCancel->setStyleSheet("QPushButton{background-color:rgb(255,255,255);border:1px solid #CCCCCC;color:#D9000000;border-radius:4px;}"
-                                 "QPushButton:hover{border:none;background-color:#3D6BE5;color:#F0F0F0;border-radius:4px;}"
-                                 "QPushButton:checked{border:none;background-color:#D93D6BE5;color:#F0F0F0;border-radius:4px;}");
     }
 }
 
@@ -181,12 +169,6 @@ void KYCNoMailDialog::nomail_style_changed(QString)
         labTitle->setStyleSheet("color:#D9FFFFFF"); // 85% => D9, 255,255,255 => FFFFFF
         textEdit->setStyleSheet("QTextEdit{background-color:rgb(47,44,43);color:#D9FFFFFF;border:0px}");
         line->setStyleSheet("QFrame{color:rgb(32,30,29)}");
-        btnOk->setStyleSheet("QPushButton{background-color:rgb(32,30,29);border:1px solid #939393;color:rgb(232,232,232);border-radius:4px;}"
-                             "QPushButton:hover{border:none;background-color:#3D6BE5;border:rgb(147,147,147);color:rgb(232,232,232);border-radius:4px;}"
-                             "QPushButton:checked{border:none;background-color:#3D6BE5;border:rgb(147,147,147);color:rgb(232,232,232);border-radius:4px;}");
-        btnCancel->setStyleSheet("QPushButton{background-color:rgb(32,30,29);border:1px solid #939393;color:rgb(232,232,232);border-radius:4px;}"
-                                 "QPushButton:hover{border:none;background-color:#3D6BE5;color:rgb(232,232,232);border-radius:4px;}"
-                                 "QPushButton:checked{border:none;background-color:#3D6BE5;color:rgb(232,232,232)border-radius:4px;}");
     } else {
         QPalette pal(palette());
         pal.setColor(QPalette::Background, QColor(255, 255, 255));
@@ -196,12 +178,6 @@ void KYCNoMailDialog::nomail_style_changed(QString)
         labTitle->setStyleSheet("color:#D9000000"); // 85% => D9, 255,255,255 => FFFFFF
         textEdit->setStyleSheet("QTextEdit{background-color:rgb(255,255,255);color:#D9000000;border:0px}");
         line->setStyleSheet("QFrame{color:rgb(32,30,29}");
-        btnOk->setStyleSheet("QPushButton{background-color:rgb(255,255,255);border:1px solid #CCCCCC;color:#D9000000;border-radius:4px;}"
-                             "QPushButton:hover{border:none;background-color:#3D6BE5;color:#F0F0F0;border-radius:4px;}"
-                             "QPushButton:checked{border:none;background-color:#D93D6BE5;color:#F0F0F0;border-radius:4px;}");
-        btnCancel->setStyleSheet("QPushButton{background-color:rgb(255,255,255);border:1px solid #CCCCCC;color:#D9000000;border-radius:4px;}"
-                                 "QPushButton:hover{border:none;background-color:#3D6BE5;color:#F0F0F0;border-radius:4px;}"
-                                 "QPushButton:checked{border:none;background-color:#D93D6BE5;color:#F0F0F0;border-radius:4px;}");
     }
 }
 
@@ -374,12 +350,15 @@ AppList *getAppIdList(const char *contentType)
 }
 void KYCSendMailDialog::setBtnList()
 {
+    int i = 0;
+
     AppList *maillist = getAppIdList(MAILTYPE);
     if (maillist) {
         qDebug() << maillist;
         vBoxLayout1->setSpacing(0);
         vBoxLayout1->setContentsMargins(0, 0, 0, 0);
-        for (int i = 0; maillist[i].appid != NULL; ++i) {
+
+        for (i = 0; maillist[i].appid != NULL; ++i) {
             QString single(maillist[i].appid);
             desktopName.append(single);
             QByteArray ba = QString(DESKTOPPATH + single).toUtf8();
@@ -395,23 +374,18 @@ void KYCSendMailDialog::setBtnList()
             btn->setFont(ft);
             btn->setText(appname);
             btn->setFixedSize(256, 56);
-            if (stylelist.contains(style_settings->get(STYLE_NAME).toString())) {
-                btn->setStyleSheet("QPushButton{background-color:rgb(68,66,72);background-position:left;text-align:left;border:none;color:rgb(232,232,232);border-radius:4px;}"
-                                   "QPushButton:hover{border:none;background-color:#3D6BE5;color:#F0FFFFFF;border-radius:4px;}"
-                                   "QPushButton:checked{border:none;background-color:#3D6BE5;color:#F7FFFFFF;border-radius:4px;}");
-            } else {
-                btn->setStyleSheet("QPushButton{background-color:rgb(255,255,255);background-position:left;text-align:left;border:none;color:#000000;border-radius:4px;}"
-                                   "QPushButton:hover{border:none;background-color:#3D6BE5;color:#F0000000;border-radius:4px;}"
-                                   "QPushButton:checked{border:none;background-color:#3D6BE5;color:#F7000000;border-radius:4px;}");
-            }
             btn->setIcon(appicon);
             btn->setIconSize(QSize(40, 40)); // 应用图标尺寸
             btn->setCheckable(true);
+            btn->setStyleSheet("text-align:left");
+
             btnList.append(btn);
+
             QHBoxLayout *hBoxLayout1 = new QHBoxLayout();
             hBoxLayout1->addStretch();
             hBoxLayout1->addWidget(btnList[i]);
             hBoxLayout1->addStretch();
+
             if (i == 0) {
                 hBoxLayout1->setContentsMargins(0, 16, 0, 0);
             } else {
@@ -425,8 +399,15 @@ void KYCSendMailDialog::setBtnList()
         }
         vBoxLayout1->addStretch();
         widget->setLayout(vBoxLayout1);
+
         scrollArea->setWidget(widget);
         scrollArea->setFrameShape(QFrame::NoFrame);
+
+        if (i < 2) {
+            // Only 2 btnMail, so hide scrollbar
+            scrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff); // 隐藏横向滚动条
+            scrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff); // 隐藏竖向滚动条
+        }
         free(maillist);
     }
     vBoxLayout->addWidget(scrollArea);

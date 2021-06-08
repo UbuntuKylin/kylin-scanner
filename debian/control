@@ -4,6 +4,7 @@ Priority: optional
 Maintainer: Kylin Team <team+kylin@tracker.debian.org>
 Uploaders: handsome_feng <jianfengli@ubuntukylin.com>
 Build-Depends: debhelper-compat (=12),
+               libqt5svg5-dev,
                libglib2.0-dev,
                libx11-dev,
                libgsettings-qt-dev,

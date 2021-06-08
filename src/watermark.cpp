@@ -106,12 +106,6 @@ void KYCWaterMarkDialog::initStyle()
         label->setStyleSheet("color:rgb(232,232,232);");
         lineedit->setStyleSheet("QLineEdit{background-color:rgb(15,08,01);color:rgb(232,232,232);border-radius:6px;}");
         line->setStyleSheet("QFrame{color:rgb(32,30,29)}");
-        btnOk->setStyleSheet("QPushButton{background-color:rgb(32,30,29);border:1px solid #939393;color:rgb(232,232,232);border-radius:18px;}"
-                             "QPushButton:hover{border:none;background-color:rgb(39,208,127);border:rgb(147,147,147);color:rgb(232,232,232);border-radius:18px;}"
-                             "QPushButton:checked{border:none;background-color:rgb(39,208,127);border:rgb(147,147,147);color:rgb(232,232,232);border-radius:18px;}");
-        btnCancel->setStyleSheet("QPushButton{background-color:rgb(32,30,29);border:1px solid #939393;color:rgb(232,232,232);border-radius:18px;}"
-                                 "QPushButton:hover{border:none;background-color:rgb(39,208,127);color:rgb(232,232,232);border-radius:18px;}"
-                                 "QPushButton:checked{border:none;background-color:rgb(39,208,127);color:rgb(232,232,232)border-radius:18px;}");
     } else {
         QPalette pal(palette()); // 水印对话框背景
         pal.setColor(QPalette::Background, QColor(255, 255, 255));
@@ -122,12 +116,6 @@ void KYCWaterMarkDialog::initStyle()
         lineedit->setStyleSheet("QLineEdit{background-color:#E7E7E7;color:rgb(15,8,1);border-radius:6px;}");
         line->setStyleSheet("QFrame{color:#000000}");
         line->hide (); // 显示线条不好看
-        btnOk->setStyleSheet("QPushButton{background-color:#F9F9F9;border:1px solid #939393;color:#000000;border-radius:4px;}"
-                             "QPushButton:hover{border:none;background-color:#3D6BE5;border:rgb(147,147,147);color:#000000;border-radius:4px;}"
-                             "QPushButton:checked{border:none;background-color:#3D6BE5;border:rgb(147,147,147);color:#000000;border-radius:4px;}");
-        btnCancel->setStyleSheet("QPushButton{background-color:#F9F9F9;border:1px solid #939393;color:#000000;border-radius:4px;}"
-                                 "QPushButton:hover{border:none;background-color:#3D6BE5;border:rgb(147,147,147);color:#000000;border-radius:4px;}"
-                                 "QPushButton:checked{border:none;background-color:#3D6BE5;border:rgb(147,147,147);color:#000000;border-radius:4px;}");
     }
 }
 
@@ -166,12 +154,6 @@ void KYCWaterMarkDialog::watermarkdlg_style_changed(QString)
         label->setStyleSheet("color:rgb(232,232,232)");
         lineedit->setStyleSheet("QLineEdit{background-color:rgb(15,08,01);color:rgb(232,232,232);border-radius:6px;}");
         line->setStyleSheet("QFrame{color:rgb(32,30,29)}");
-        btnOk->setStyleSheet("QPushButton{background-color:rgb(32,30,29);border:1px solid #939393;color:rgb(232,232,232);border-radius:18px;}"
-                             "QPushButton:hover{border:none;background-color:rgb(39,208,127);border:rgb(147,147,147);color:rgb(232,232,232);border-radius:18px;}"
-                             "QPushButton:checked{border:none;background-color:rgb(39,208,127);border:rgb(147,147,147);color:rgb(232,232,232);border-radius:18px;}");
-        btnCancel->setStyleSheet("QPushButton{background-color:rgb(32,30,29);border:1px solid #939393;color:rgb(232,232,232);border-radius:18px;}"
-                                 "QPushButton:hover{border:none;background-color:rgb(39,208,127);color:rgb(232,232,232);border-radius:18px;}"
-                                 "QPushButton:checked{border:none;background-color:rgb(39,208,127);color:rgb(232,232,232)border-radius:18px;}");
     } else {
         QPalette pal(palette()); // 水印对话框背景
         pal.setColor(QPalette::Background, QColor(255, 255, 255));
@@ -182,13 +164,6 @@ void KYCWaterMarkDialog::watermarkdlg_style_changed(QString)
         lineedit->setStyleSheet("QLineEdit{background-color:#E7E7E7;color:rgb(15,8,1);border-radius:6px;}");
         line->setStyleSheet("QFrame{color:#000000}");
         line->hide ();
-
-        btnOk->setStyleSheet("QPushButton{background-color:#F9F9F9;border:1px solid #939393;color:#000000;border-radius:4px;}"
-                             "QPushButton:hover{border:none;background-color:#3D6BE5;border:rgb(147,147,147);color:#000000;border-radius:4px;}"
-                             "QPushButton:checked{border:none;background-color:#3D6BE5;border:rgb(147,147,147);color:#000000;border-radius:4px;}");
-        btnCancel->setStyleSheet("QPushButton{background-color:#F9F9F9;border:1px solid #939393;color:#000000;border-radius:4px;}"
-                                 "QPushButton:hover{border:none;background-color:#3D6BE5;border:rgb(147,147,147);color:#000000;border-radius:4px;}"
-                                 "QPushButton:checked{border:none;background-color:#3D6BE5;border:rgb(147,147,147);color:#000000;border-radius:4px;}");
     }
 }
 

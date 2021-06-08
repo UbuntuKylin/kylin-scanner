@@ -32,6 +32,7 @@
 #include "sendmail.h"
 #include "scanner.h"
 #include "theme.h"
+#include "svghandler.h"
 
 class KYCScanSettingsWidget  : public QWidget
 {
@@ -54,13 +55,13 @@ public:
     void setKylinScanSetBtnNotEnable();
     void setKylinScanSetBtnEnable();
     void setKylinScanSetEnable();
-    void setKylinComboBoxAttributes(KYCComboBox *combo, QStringList strList);
-    void setKylinComboBoxTextDeviceAttributes(KYCComboBox *combo, QStringList strList);
+    void setKylinComboBoxAttributes(QComboBox *combo, QStringList strList);
+    void setKylinComboBoxTextDeviceAttributes(QComboBox *combo, QStringList strList);
     void setKylinLable();
     void setKylinLabelAttributes(QLabel *label);
     void setKylinHBoxLayout();
     void setKylinHBoxLayoutAttributes(QHBoxLayout *layout, QLabel *labelFirst, QLabel *labelSecond);
-    void setKylinHBoxLayoutAttributes(QHBoxLayout *layout, QLabel *labelFirst, KYCComboBox *combo);
+    void setKylinHBoxLayoutAttributes(QHBoxLayout *layout, QLabel *labelFirst, QComboBox *combo);
     void setFontSize(QLabel *label, int n);
     void setSendMailButtonStyle();
     void setSendMailButtonStyleNormal();
@@ -83,6 +84,8 @@ private:
     int scanOpenFlag = 0;
     int scanExecFlag = 0;
 
+    SVGHandler  *svghandler;
+
     QStringList stylelist;
     QStringList iconthemelist;
     QGSettings *style_settings;
@@ -104,12 +107,12 @@ private:
     QPushButton *btnLocation;       /**< 扫描至 */
     QString curPath;
 
-    KYCComboBox *textDevice;      /**< 设备 */
-    QLabel *textType;               /**< 类型 */
-    KYCComboBox *textColor;       /**< 色彩 */
-    KYCComboBox *textResolution;  /**< 分辨率 */
-    KYCComboBox *textSize;        /**< 尺寸 */
-    KYCComboBox *textFormat;      /**< 格式 */
+    QComboBox *textDevice;      /**< 设备 */
+    QComboBox *textType;        /** < 类型 */
+    QComboBox *textColor;       /**< 色彩 */
+    QComboBox *textResolution;  /**< 分辨率 */
+    QComboBox *textSize;        /**< 尺寸 */
+    QComboBox *textFormat;      /**< 格式 */
     QLineEdit *textName;            /**< 名称 */
 
     QHBoxLayout *hBoxDevice;

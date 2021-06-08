@@ -39,6 +39,7 @@
 #include "timewait.h"
 #include "interrupt.h"
 #include "theme.h"
+#include "svghandler.h"
 
 /**
  * @brief The KYCOcrThread class
@@ -118,9 +119,16 @@ public:
     KYCEditBarWidget(QWidget *parent = nullptr);
 
     void setEditBarWindowBorderRadius();
+    bool getBtnTailorClickedStatus();
+    void setBtnTailorClickedStatus(bool clicked);
 //private:
+
+    bool m_clicked = false;
+
     QStringList stylelist;
     QStringList iconthemelist;
+
+    SVGHandler  *svghandler;
 
     QGSettings *style_settings;
     QGSettings *icon_theme_settings;
@@ -133,9 +141,11 @@ public:
 
 Q_SIGNALS:
     void btnTailorClicked();
+    void btnTailorClickedEnd();
 
 private slots:
     void onBtnTailorClicked();
+    void onEditBarThemeChanged(QString);
 };
 
 class KYCScanDisplayWidget  : public QWidget
@@ -188,6 +198,7 @@ private:
     QStack<QImage> stack;        //用于保存图片
     QList<QString> list;
 
+    SVGHandler *svghandler;
     QStringList stylelist;
     QStringList iconthemelist;
     QGSettings *style_settings;
@@ -228,8 +239,8 @@ private:
     QWidget *widgetTailor;
     QWidget *widgetOcr;
     QStackedLayout *vStackedLayout;
-    KYCEditBarWidget *editLayout;
-    KYCEditBarWidget *editLayoutTailor;
+    KYCEditBarWidget *editLayout; // 未点击裁切的工具栏界面
+    KYCEditBarWidget *editLayoutTailor; // 开始裁切时的工具栏界面
     QScrollArea *scrollArea;
 
     int widgetindex;
@@ -251,6 +262,7 @@ public slots:
 
 private slots:
     void onTailor();
+    void onTailorEnd();
     void rotating();
     void symmetry();
     void addWatermark();

@@ -24,6 +24,7 @@ QString outText;
 
 KYCScanDisplayWidget::KYCScanDisplayWidget(QWidget *parent)
     : QWidget(parent)
+    , svghandler (new SVGHandler(this, true))
     , style_settings (new QGSettings(ORG_UKUI_STYLE))
     , icon_theme_settings (new QGSettings(ORG_UKUI_STYLE))
     , timerScan (new QTimer())
@@ -61,6 +62,9 @@ KYCScanDisplayWidget::KYCScanDisplayWidget(QWidget *parent)
     , editLayoutTailor (new KYCEditBarWidget())
     , scrollArea (new QScrollArea())
 {
+    stylelist << STYLE_NAME_KEY_DARK << STYLE_NAME_KEY_BLACK;
+    iconthemelist << ICON_THEME_KEY_BASIC << ICON_THEME_KEY_CLASSICAL << ICON_THEME_KEY_DEFAULT;
+
     initWindow();
 
     initLayout();
@@ -108,20 +112,30 @@ void KYCScanDisplayWidget::keyPressEvent(QKeyEvent *e)
         vStackedLayout->removeWidget(widgetTailor);
 
         // 裁切完成后，btnTailor属性需要回到最开始的状态
+#if 0
         editLayout->btnTailor->setStyleSheet("QPushButton{border-image: url(:/icon/icon/editBar/tailor.svg);border:none;background-color:rgb(232,232,232);border-radius:0px;}"
                                              "QPushButton:hover{border-image: url(:/icon/icon/editBar/tailor-click.svg);border:none;background-color:rgb(232,232,232);border-radius:0px;}"
                                              "QPushButton:checked{border-image: url(:/icon/icon/editBar/tailor-click.svg);border:none;background-color:rgb(232,232,232);border-radius:0px;}");
+#endif
         flagTailor = 0;
+        editLayout->setBtnTailorClickedStatus(false);
+        editLayoutTailor->setBtnTailorClickedStatus(false);
     }
     if (e->key() == Qt::Key_Z && (e->modifiers() ==  Qt::ControlModifier)) {
         if (!stack.isEmpty()) {
+            if (vStackedLayout->currentWidget() == widgetTailor) {
+                flagTailor = 0;
+            }
+
             *imgEditLayout = stack.pop();
             setPixmapScaled(*imgEditLayout, labEditLayout);
             *imgNormal = imgEditLayout->copy();
             setPixmapScaled(*imgNormal, labNormalLeft);
             vStackedLayout->setCurrentIndex(index);
         }
-
+        flagTailor = 0;
+        editLayout->setBtnTailorClickedStatus(false);
+        editLayoutTailor->setBtnTailorClickedStatus(false);
     }
     if (e->key() == Qt::Key_Escape && (vStackedLayout->currentWidget() == widgetTailor)) {
         setPixmapScaled(*imgEditLayout, labEditLayout);
@@ -129,7 +143,10 @@ void KYCScanDisplayWidget::keyPressEvent(QKeyEvent *e)
         setPixmapScaled(*imgNormal, labNormalLeft);
         vStackedLayout->setCurrentIndex(index);
         vStackedLayout->removeWidget(widgetTailor);
+
         flagTailor = 0;
+        editLayout->setBtnTailorClickedStatus(false);
+        editLayoutTailor->setBtnTailorClickedStatus(false);
     }
 }
 
@@ -265,7 +282,7 @@ void KYCScanDisplayWidget::initLayout()
 
     labNormalRight->setParent(widgetNormal);
     btnNormal->setParent(widgetNormal);
-    btnNormal->setFixedSize(12, 30);
+    btnNormal->setFixedSize(12, 24);
 
     hBoxNormal->setSpacing(0);
     hBoxNormal->addSpacing(93);
@@ -283,7 +300,7 @@ void KYCScanDisplayWidget::initLayout()
     labEditLayout->setAlignment(Qt::AlignCenter);
 
     btnEditLayout->setParent(widgetEditLayout);
-    btnEditLayout->setFixedSize(12, 30);
+    btnEditLayout->setFixedSize(12, 24);
     editLayout->setParent(widgetEditLayout);
 
     hBoxEditLayout->setSpacing(0);
@@ -313,9 +330,6 @@ void KYCScanDisplayWidget::initLayout()
 
 void KYCScanDisplayWidget::initStyle()
 {
-    stylelist << STYLE_NAME_KEY_DARK << STYLE_NAME_KEY_BLACK;
-    iconthemelist << ICON_THEME_KEY_BASIC << ICON_THEME_KEY_CLASSICAL << ICON_THEME_KEY_DEFAULT;
-
     if (stylelist.contains(style_settings->get(STYLE_NAME).toString())) {
         QPalette init_pacolor_black;
         init_pacolor_black.setColor (QPalette::Background, QColor(15, 8, 1));
@@ -348,15 +362,9 @@ void KYCScanDisplayWidget::initStyle()
         setPalette(pal);
         setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
-        btnEditLayout->setStyleSheet("QPushButton{border-image: url(:/icon/icon/editBar/shrink-editLayout.svg);border:none;background-color:#0f0801;border-radius:0px;}" );
-        btnNormal->setStyleSheet("QPushButton{ "
-                                 "border-image: url(:/icon/icon/editBar/shrink-normal.svg);"
-                                 "border:none;"
-                                 "background-color:#0f0801;"
-                                 "border-radius:0px;"
-                                 "}");
+        btnEditLayout->setIcon(svghandler->loadSvgColorXY(":/icon/icon/editBar/shrink-editLayout.svg", "white", 12, 24));
+        btnNormal->setIcon(svghandler->loadSvgColorXY(":/icon/icon/editBar/shrink-normal.svg", "white", 12, 24));
         labNormalRight->setStyleSheet("QLabel{background-color:#0f0801;}");
-
     } else {
         QPalette connect_error_pacolor;
         QPalette init_pacolor;
@@ -389,14 +397,8 @@ void KYCScanDisplayWidget::initStyle()
         this->setPalette(pal);
         setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
-        btnEditLayout->setStyleSheet("QPushButton{border-image: url(:/icon/icon/editBar/shrink-editLayout.svg);"
-                                     "border:none;background-color:#E7E7E7;border-radius:0px;}" );
-        btnNormal->setStyleSheet("QPushButton{ "
-                                 "border-image: url(:/icon/icon/editBar/shrink-normal.svg);"
-                                 "border:none;"
-                                 "background-color:#E7E7E7;"
-                                 "border-radius:0px;"
-                                 "}");
+        btnEditLayout->setIcon(svghandler->loadSvgColorXY(":/icon/icon/editBar/shrink-editLayout.svg", "black", 12, 24));
+        btnNormal->setIcon(svghandler->loadSvgColorXY(":/icon/icon/editBar/shrink-normal.svg", "black", 12, 24));
         labNormalRight->setStyleSheet("QLabel{background-color:#E7E7E7;}");
     }
 }
@@ -413,6 +415,7 @@ void KYCScanDisplayWidget::initConnect()
     // For tailor
     //connect(editLayout->btnTailor, SIGNAL(clicked()), this, SLOT(onTailor()));
     connect(editLayout, &KYCEditBarWidget::btnTailorClicked, this, &KYCScanDisplayWidget::onTailor);
+    connect(editLayoutTailor, &KYCEditBarWidget::btnTailorClickedEnd, this, &KYCScanDisplayWidget::onTailorEnd);
 
     // For symmetry
     connect(editLayout->btnSymmetry, SIGNAL(clicked()), this, SLOT(symmetry()));
@@ -432,7 +435,7 @@ void KYCScanDisplayWidget::initConnect()
     // For timerScan
     //connect(timerScan, SIGNAL(timeout()), this, SLOT(timerScanUpdate()));
 
-    connect(icon_theme_settings, SIGNAL(changed(QString)), this,
+    connect(style_settings, SIGNAL(changed(QString)), this,
             SLOT(scandisplay_theme_changed(QString)));
 }
 
@@ -491,7 +494,6 @@ void KYCScanDisplayWidget::initStyleTailor()
 
         labTailor = new KYCTailorLabel();
         labTailor->setParent(widgetTailor);
-        //labTailor->setFixedSize(100, 100);
         labTailor->setFixedSize(QSize(labEditLayout->size()));
         //labTailor->setMinimumSize(360, 490);
         labTailor->setAlignment(Qt::AlignCenter);
@@ -516,9 +518,13 @@ void KYCScanDisplayWidget::initStyleTailor()
         *imgStack = imgEditLayout->copy();
         stack.push(*imgStack);
         scaledNum = setPixmapScaled(*imgTailor, labTailor);
-        btnTailorLayout->setStyleSheet("QPushButton{border-image: url(:/icon/icon/editBar/shrink-editLayout.svg);border:none;background-color:#0f0801;border-radius:0px;}");
+        if (stylelist.contains(style_settings->get(STYLE_NAME).toString())) {
+            btnTailorLayout->setIcon(svghandler->loadSvgColorXY(":/icon/icon/editBar/shrink-editLayout.svg", "white", 12, 24));
+        } else {
+            btnTailorLayout->setIcon(svghandler->loadSvgColorXY(":/icon/icon/editBar/shrink-editLayout.svg", "black", 12, 24));
+        }
+        //btnTailorLayout->setStyleSheet("QPushButton{border-image: url(:/icon/icon/editBar/shrink-editLayout.svg);border:none;background-color:#0f0801;border-radius:0px;}");
     } else {
-        qDebug() << "11111111111";
         //if (vStackedLayout->currentWidget() == widgetTailor) {
             qDebug() << "click btnTailor again, so tailor end.";
             QImage newimage;
@@ -549,9 +555,11 @@ void KYCScanDisplayWidget::initStyleTailor()
             vStackedLayout->removeWidget(widgetTailor);
 
             // 裁切完成后，btnTailor属性需要回到最开始的状态
+#if 0
             editLayout->btnTailor->setStyleSheet("QPushButton{border-image: url(:/icon/icon/editBar/tailor.svg);border:none;background-color:rgb(232,232,232);border-radius:0px;}"
                                                  "QPushButton:hover{border-image: url(:/icon/icon/editBar/tailor-click.svg);border:none;background-color:rgb(232,232,232);border-radius:0px;}"
                                                  "QPushButton:checked{border-image: url(:/icon/icon/editBar/tailor-click.svg);border:none;background-color:rgb(232,232,232);border-radius:0px;}");
+#endif
             flagTailor = 0;
         //}
     }
@@ -691,7 +699,7 @@ void KYCScanDisplayWidget::scandisplay_theme_changed(QString)
 {
     initStyle ();
     initStyleOcr ();
-    initStyleTailor ();
+    //initStyleTailor (); // 主题变化时，裁切功能不能再次刷新
 }
 
 void KYCScanDisplayWidget::onOcr()
@@ -1069,22 +1077,66 @@ void KYCScanDisplayWidget::onTailor()
     qDebug() << "begin";
 
     btnTailorLayout->setParent(widgetTailor);
-    btnTailorLayout->setFixedSize(12, 30);
+    btnTailorLayout->setFixedSize(12, 24);
 
     // 当点击裁切时，需要更换图片为点击时的状态，通过css不行，hover和clicked会冲突
     editLayoutTailor->setParent(widgetTailor); // 编辑工具栏布局
-    editLayoutTailor->btnTailor->setIcon(QIcon(":/icon/icon/editBar/tailor-click.svg"));
-    editLayoutTailor->btnTailor->setIconSize (QSize(30, 30));
+    editLayoutTailor->btnTailor->setIcon(svghandler->loadSvgColor(":/icon/icon/editBar/tailor-click.svg", "blue", 30));
+    editLayoutTailor->setBtnTailorClickedStatus(true);
 
     initStyleTailor ();
+}
+
+void KYCScanDisplayWidget::onTailorEnd()
+{
+    qDebug() << "onTailorEnd ";
+
+    QImage newimage;
+    int x1, y1, x2, y2;
+    if (labTailor->getStartX() <= labTailor->getEndX()) {
+        x1 = labTailor->getStartX() - ((labTailor->width() - imgEditLayout->width() * scaledNum) / 2);
+        x2 = labTailor->getEndX() - ((labTailor->width() - imgEditLayout->width() * scaledNum) / 2);
+    } else {
+        x1 = labTailor->getEndX() - ((labTailor->width() - imgEditLayout->width() * scaledNum) / 2);
+        x2 = labTailor->getStartX() - ((labTailor->width() - imgEditLayout->width() * scaledNum) / 2);
+    }
+
+    if (labTailor->getStartY() <= labTailor->getEndY()) {
+        y1 = labTailor->getStartY() - ((labTailor->height() - imgEditLayout->height() * scaledNum) / 2);
+        y2 = labTailor->getEndY() - ((labTailor->height() - imgEditLayout->height() * scaledNum) / 2);
+    } else {
+        y1 = labTailor->getEndY() - ((labTailor->height() - imgEditLayout->height() * scaledNum) / 2);
+        y2 = labTailor->getStartY() - ((labTailor->height() - imgEditLayout->height() * scaledNum) / 2);
+    }
+
+    newimage = imgEditLayout->copy(x1 / scaledNum, y1 / scaledNum, (x2 - x1) / scaledNum,
+                                   (y2 - y1) / scaledNum);
+    *imgEditLayout = newimage;
+    setPixmapScaled(*imgEditLayout, labEditLayout);
+    *imgNormal = imgEditLayout->copy();
+    setPixmapScaled(*imgNormal, labNormalLeft);
+    vStackedLayout->setCurrentIndex(index);
+    vStackedLayout->removeWidget(widgetTailor);
+
+    if (stylelist.contains(style_settings->get(STYLE_NAME).toString())) {
+        editLayoutTailor->btnTailor->setIcon(svghandler->loadSvgColor(":/icon/icon/editBar/tailor.svg", "white", 30));
+    } else {
+        editLayoutTailor->btnTailor->setIcon(svghandler->loadSvgColor(":/icon/icon/editBar/tailor.svg", "black", 30));
+    }
+
+    flagTailor = 0;
+    editLayout->setBtnTailorClickedStatus(false);
+    editLayoutTailor->setBtnTailorClickedStatus(false);
 }
 
 /**
  * @brief edit_bar::edit_bar 工具栏
  * @param parent
+ * 编辑工具栏按钮相关：水印、裁切、翻转、旋转
  */
 KYCEditBarWidget::KYCEditBarWidget(QWidget *parent)
     : QWidget(parent)
+    , svghandler (new SVGHandler(this, true))
     , style_settings (new QGSettings(ORG_UKUI_STYLE))
     , icon_theme_settings (new QGSettings(ORG_UKUI_STYLE))
     , btnTailor (new QPushButton())
@@ -1093,36 +1145,68 @@ KYCEditBarWidget::KYCEditBarWidget(QWidget *parent)
     , btnWatermark (new QPushButton())
     , vBoxEditBar (new QVBoxLayout())
 {
+    stylelist << STYLE_NAME_KEY_DARK << STYLE_NAME_KEY_BLACK;
+    iconthemelist << ICON_THEME_KEY_BASIC << ICON_THEME_KEY_CLASSICAL << ICON_THEME_KEY_DEFAULT;
+
     setFixedSize(40, 220);
 
     QPalette pal(palette());
-    pal.setColor(QPalette::Background, QColor(232, 232, 232));
+    QPalette palRotate = btnRotate->palette();
+    QPalette palTailor = btnRotate->palette();
+    QPalette palSymmetry = btnRotate->palette();
+    QPalette palWatermark = btnRotate->palette();
+
+    if (stylelist.contains(style_settings->get(STYLE_NAME).toString())) {
+        // 黑色主题图标反白
+        pal.setColor(QPalette::Window, QColor(38, 38, 38, 1));
+        palRotate.setColor(QPalette::Window, QColor(38, 38, 38, 1));
+        palTailor.setColor(QPalette::Window, QColor(38, 38, 38, 1));
+        palSymmetry.setColor(QPalette::Window, QColor(38, 38, 38, 1));
+        palWatermark.setColor(QPalette::Window, QColor(38, 38, 38, 1));
+
+        btnRotate->setIcon(svghandler->loadSvgColor(":/icon/icon/editBar/rotate.svg", "white", 30));
+        btnTailor->setIcon(svghandler->loadSvgColor(":/icon/icon/editBar/tailor.svg", "white", 30));
+        btnSymmetry->setIcon(svghandler->loadSvgColor(":/icon/icon/editBar/symmetry.svg", "white", 30));
+        btnWatermark->setIcon(svghandler->loadSvgColor(":/icon/icon/editBar/watermark.svg", "white", 30));
+    } else {
+        pal.setColor(QPalette::Window, QColor(255, 255, 255, 1));
+        palRotate.setColor(QPalette::Window, QColor(255, 255, 255, 1));
+        palTailor.setColor(QPalette::Window, QColor(255, 255, 255, 1));
+        palSymmetry.setColor(QPalette::Window, QColor(255, 255, 255, 1));
+        palWatermark.setColor(QPalette::Window, QColor(255, 255, 255, 1));
+
+        btnRotate->setIcon(svghandler->loadSvgColor(":/icon/icon/editBar/rotate.svg", "black", 30));
+        btnTailor->setIcon(svghandler->loadSvgColor(":/icon/icon/editBar/tailor.svg", "black", 30));
+        btnSymmetry->setIcon(svghandler->loadSvgColor(":/icon/icon/editBar/symmetry.svg", "black", 30));
+        btnWatermark->setIcon(svghandler->loadSvgColor(":/icon/icon/editBar/watermark.svg", "black", 30));
+    }
     setAutoFillBackground(true);
     setPalette(pal);
 
-    //setEditBarWindowBorderRadius();
+    btnRotate->setAutoFillBackground(true);
+    btnRotate->setPalette(palRotate);
+
+    btnTailor->setAutoFillBackground(true);
+    btnTailor->setPalette(palTailor);
+
+    btnSymmetry->setAutoFillBackground(true);
+    btnSymmetry->setPalette(palSymmetry);
+
+    btnWatermark->setAutoFillBackground(true);
+    btnWatermark->setPalette(palWatermark);
 
     btnRotate->setFixedSize(30, 30);
-    btnTailor->setFixedSize(30, 30);
-    btnSymmetry->setFixedSize(30, 30);
-    btnWatermark->setFixedSize(30, 30);
     btnRotate->setToolTip(tr("rotate")); // 旋转
+
+    btnTailor->setFixedSize(30, 30);
     btnTailor->setToolTip(tr("tailor")); // 裁切
-    btnWatermark->setToolTip(tr("watermark")); // 水印
+
+    btnSymmetry->setFixedSize(30, 30);
     btnSymmetry->setToolTip(tr("symmetry")); // 对称翻转
 
-    btnRotate->setStyleSheet("QPushButton{border-image: url(:/icon/icon/editBar/rotate.svg);border:none;background-color:rgb(232,232,232);border-radius:0px;}"
-                             "QPushButton:hover{border-image: url(:/icon/icon/editBar/rotate-click.svg);border:none;background-color:rgb(232,232,232);border-radius:0px;}"
-                             "QPushButton:checked{border-image: url(:/icon/icon/editBar/rotate-click.svg);border:none;background-color:rgb(232,232,232);border-radius:0px;}");
-    btnTailor->setStyleSheet("QPushButton{border-image: url(:/icon/icon/editBar/tailor.svg);border:none;background-color:rgb(232,232,232);border-radius:0px;}"
-                             "QPushButton:hover{border-image: url(:/icon/icon/editBar/tailor-click.svg);border:none;background-color:rgb(232,232,232);border-radius:0px;}"
-                             "QPushButton:checked{border-image: url(:/icon/icon/editBar/tailor-click.svg);border:none;background-color:rgb(232,232,232);border-radius:0px;}");
-    btnSymmetry->setStyleSheet("QPushButton{border-image: url(:/icon/icon/editBar/symmetry.svg);border:none;background-color:rgb(232,232,232);border-radius:0px;}"
-                               "QPushButton:hover{border-image: url(:/icon/icon/editBar/symmetry-click.svg);border:none;background-color:rgb(232,232,232);border-radius:0px;}"
-                               "QPushButton:checked{border-image: url(:/icon/icon/editBar/symmetry-click.svg);border:none;background-color:rgb(232,232,232);border-radius:0px;}");
-    btnWatermark->setStyleSheet("QPushButton{border-image: url(:/icon/icon/editBar/watermark.svg);border:none;background-color:rgb(232,232,232);border-radius:0px;}"
-                                "QPushButton:hover{border-image: url(:/icon/icon/editBar/watermark-click.svg);border:none;background-color:rgb(232,232,232);border-radius:0px;}"
-                                "QPushButton:checked{border-image: url(:/icon/icon/editBarwatermark-click.svg);border:none;background-color:rgb(232,232,232);border-radius:0px;}");
+    btnWatermark->setFixedSize(30, 30);
+    btnWatermark->setToolTip(tr("watermark")); // 水印
+
     vBoxEditBar->setSpacing(0);
     vBoxEditBar->addSpacing(17);
     vBoxEditBar->addWidget(btnTailor);
@@ -1137,7 +1221,7 @@ KYCEditBarWidget::KYCEditBarWidget(QWidget *parent)
     setLayout(vBoxEditBar);
 
     connect(btnTailor, SIGNAL(clicked()), this, SLOT(onBtnTailorClicked()));
-
+    //connect(style_settings, SIGNAL(changed(QString)), this, SLOT(onEditBarThemeChanged(QString)));
 }
 
 /**
@@ -1155,10 +1239,46 @@ void KYCEditBarWidget::setEditBarWindowBorderRadius()
     setMask(bitMap);
 }
 
+bool KYCEditBarWidget::getBtnTailorClickedStatus()
+{
+    return m_clicked;
+}
+
+void KYCEditBarWidget::setBtnTailorClickedStatus(bool clicked)
+{
+    m_clicked = clicked;
+}
+
 void KYCEditBarWidget::onBtnTailorClicked()
 {
-    qDebug() << "clicked";
-    emit btnTailorClicked();
+    qDebug() << "btnTailor clicked";
+    bool clicked = getBtnTailorClickedStatus();
+    qDebug() << "btnTailor clicked: " << clicked;
+
+    if (! clicked) {
+        qDebug() << "btnTailor first clicked, so tailor it.";
+        m_clicked = true;
+        emit btnTailorClicked();
+    } else {
+        qDebug() << "btnTailor second clicked, so cancel tailor.";
+        m_clicked = false;
+        emit btnTailorClickedEnd();
+    }
+}
+
+void KYCEditBarWidget::onEditBarThemeChanged(QString)
+{
+    if (stylelist.contains(style_settings->get(STYLE_NAME).toString())) {
+        btnRotate->setIcon(svghandler->loadSvgColor(":/icon/icon/editBar/rotate.svg", "white", 30));
+        btnTailor->setIcon(svghandler->loadSvgColor(":/icon/icon/editBar/tailor.svg", "white", 30));
+        btnSymmetry->setIcon(svghandler->loadSvgColor(":/icon/icon/editBar/symmetry.svg", "white", 30));
+        btnWatermark->setIcon(svghandler->loadSvgColor(":/icon/icon/editBar/watermark.svg", "white", 30));
+    } else {
+        btnRotate->setIcon(svghandler->loadSvgColor(":/icon/icon/editBar/rotate.svg", "black", 30));
+        btnTailor->setIcon(svghandler->loadSvgColor(":/icon/icon/editBar/tailor.svg", "black", 30));
+        btnSymmetry->setIcon(svghandler->loadSvgColor(":/icon/icon/editBar/symmetry.svg", "black", 30));
+        btnWatermark->setIcon(svghandler->loadSvgColor(":/icon/icon/editBar/watermark.svg", "black", 30));
+    }
 }
 
 /**
