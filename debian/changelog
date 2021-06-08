@@ -1,3 +1,22 @@
+kylin-scanner (1.0.0-27) v101; urgency=medium
+
+  [ BUG 号 ] 
+  * Closes: #35169
+    - 解决编辑栏功能易用性不好的问题 (Closes: #35169) 
+  
+  [ 任务号 ] 
+  * Closes: #33372
+    - 解决主界面控件未与主题统一的问题 (Closes: #33372)
+  
+  [ 需求号 ] 
+  * Closes: #6530 
+  
+  [ 其他改动说明 ] 
+  * 解决黑色图标未反白的问题
+  * 解决编辑界面的扫描类型控件未与UI对齐问题
+
+ -- yushuoqi <yushuoqi@kylinos.cn>  Tue, 08 Jun 2021 18:25:01 +0800
+
 kylin-scanner (1.0.0-26) v101; urgency=medium
 
   [ BUG 号 ]
