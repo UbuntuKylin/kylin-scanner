@@ -1,4 +1,4 @@
-kylin-scanner (1.0.0-28) v101; urgency=medium
+kylin-scanner (1.0.0-28) focal; urgency=medium
 
   [ BUG 号 ] 
   * Closes: #34906
