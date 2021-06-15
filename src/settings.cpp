@@ -243,15 +243,15 @@ void KYCScanSettingsWidget::initConnect()
  */
 void KYCScanSettingsWidget::setKylinComboBoxAttributes(QComboBox *combo, QStringList strList)
 {
-    QListView *listView = new QListView(this);
+    //QListView *listView = new QListView(this);
 
     combo->clear();
     combo->addItems(strList);
     combo->setFixedSize(180, 32);
     combo->setInsertPolicy(QComboBox::NoInsert);  //编辑框的内容不插入到列表项
     combo->setFocusPolicy(Qt::NoFocus); //获取焦点策略：无焦点，也就是不可编辑
-    combo->setModel(listView->model()); // avoid warning
-    combo->setView(listView);   //使下拉选项样式生效
+    //combo->setModel(listView->model()); // avoid warning
+    //combo->setView(listView);   //使下拉选项样式生效
 }
 
 void KYCScanSettingsWidget::setKylinComboBoxTextDeviceAttributes(QComboBox *combo, QStringList strList)
