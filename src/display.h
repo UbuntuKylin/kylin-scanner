@@ -55,9 +55,12 @@ public:
     explicit KYCOcrThread(QObject *parent = 0);
     ~KYCOcrThread();
 
-    virtual void run() Q_DECL_OVERRIDE;
+    void run() Q_DECL_OVERRIDE;
 
     void ocrThreadStop();
+
+private:
+    bool m_run;
 
 signals:
     void ocrFinished();
@@ -75,7 +78,7 @@ public:
     explicit KYCRectifyThread(QObject *parent = 0);
     ~KYCRectifyThread();
 
-    virtual void run() Q_DECL_OVERRIDE;
+    void run() Q_DECL_OVERRIDE;
 
     void rectifyThreadStop();
 
@@ -95,7 +98,7 @@ public:
     explicit KYCBeautyThread(QObject *parent = 0);
     ~KYCBeautyThread();
 
-    virtual void run() Q_DECL_OVERRIDE;
+    void run() Q_DECL_OVERRIDE;
 
     void  beautyThreadStop();
 

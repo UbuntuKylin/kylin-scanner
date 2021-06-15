@@ -451,6 +451,7 @@ void KYCScanDisplayWidget::initStyleOcr()
         hBoxOcr->addStretch();
         hBoxOcr->setContentsMargins(32, 32, 32, 32);
 
+        // warning: Attempting to set QLayout "" on QWidget "", which already has a layout
         widgetOcr->setLayout(hBoxOcr);
         vStackedLayout->addWidget(widgetOcr);
         vStackedLayout->setCurrentWidget(widgetOcr);
@@ -719,6 +720,7 @@ void KYCScanDisplayWidget::onOcr()
         imgEditLayout->save(SCANNING_PICTURE_PATH);
         *imgBackup = imgEditLayout->copy();
 
+        qDebug() << "ocrThread start!";
         ocrThread.start();
 
         *imgBackup = imgBackup->scaled(120, 166);
@@ -1362,58 +1364,67 @@ KYCOcrThread::KYCOcrThread(QObject *parent)
 
 KYCOcrThread::~KYCOcrThread()
 {
-    // 请求终止
-    requestInterruption();
-    quit();
-    wait();
 }
 
 void KYCOcrThread::run()
 {
-    while(QThread::currentThread()->isInterruptionRequested()) {
-    //while(! isInterruptionRequested()) {
+    m_run = true;
+    while(m_run)
+    {
         qDebug() << "begin to run ocr thread !\n";
-        tesseract::TessBaseAPI *api = new tesseract::TessBaseAPI();
+        tesseract::TessBaseAPI  *api = new tesseract::TessBaseAPI();
         //使用中文初始化tesseract-ocr，而不指定tessdata路径。正在识别中
         if (api->Init(NULL, "chi_sim")) {
             qDebug() << "Could not initialize tesseract.\n";
             outText = "Unable to read text";
-            // exit() will abort application imediately without install `tesseract-ocr-chi-sim` package
-            //exit(1);
-            emit ocrFinished();
-            api->End();
+
             quit();
+            emit ocrFinished();
             return;
         }
-        // 使用leptonica库打开输入图像。
+
+        /// 使用leptonica库打开输入图像。
+        /// 当quit()时，pixRead仍会运行，而调用wait等待结束时会导致界面卡顿，所以需要image和api都是局部变量，
+        /// 提示信息： Info in pixReadStreamPng: removing opaque cmap from 1 bpp
+        /// 每次都会重新进行ocr
         Pix *image = pixRead(SCANNING_PICTURE_PATH);
-        if (!image) {
+        if (! image) {
             qDebug() << "pixRead error!";
             outText = "Unable to read text";
-            emit ocrFinished();
-            // 销毁使用过的对象并释放内存。
-            api->End();
-            // pixDestroy(&image);
-            quit();
-        }
-        api->SetImage(image);
-        // 得到光学字符识别结果
-        outText = api->GetUTF8Text();
-        emit ocrFinished();
-        // 销毁使用过的对象并释放内存。
-        api->End();
-        pixDestroy(&image);
-        quit();
+            if (api)
+                api->End();
 
+            quit();
+            emit ocrFinished();
+            return;
+        }
+        if (image  && m_run) {
+            api->SetImage(image);
+            // 得到光学字符识别结果
+            outText = api->GetUTF8Text();
+        }
+
+        if (api) {
+            api->End();
+        }
+        if (image) {
+            pixDestroy(&image);
+        }
+        quit();
+        emit ocrFinished();
     }
 }
 
 void KYCOcrThread::ocrThreadStop()
 {
-    requestInterruption();
-    quit();
-    wait();
+    m_run = false;
+    if(isRunning())
+    {
+        quit();
+        //wait();  // 等待退出，这个会让界面卡顿，所以先屏蔽
+    }
 }
+
 
 KYCRectifyThread::KYCRectifyThread(QObject *parent)
     : QThread(parent)
@@ -1480,41 +1491,3 @@ void KYCBeautyThread::beautyThreadStop()
     quit();
     wait();
 }
-
-/*
-void MKYCOcrThread::ocrTask()
-{
-    tesseract::TessBaseAPI *api = new tesseract::TessBaseAPI();
-    qDebug() << "ocr run!\n";
-    //使用中文初始化tesseract-ocr，而不指定tessdata路径。正在识别中
-    if (api->Init(NULL, "chi_sim")) {
-        qDebug() << "Could not initialize tesseract.\n";
-        outText = "Unable to read text";
-        // exit() will abort application imediately without install `tesseract-ocr-chi-sim` package
-        //exit(1);
-        emit ocrFinished();
-        api->End();
-        return;
-    }
-    // 使用leptonica库打开输入图像。
-    Pix *image = pixRead(SCANNING_PICTURE_PATH);
-    if (!image) {
-        qDebug() << "pixRead error!";
-        outText = "Unable to read text";
-        emit ocrFinished();
-        // 销毁使用过的对象并释放内存。
-        api->End();
-        // pixDestroy(&image);
-        return;
-    }
-    api->SetImage(image);
-    // 得到光学字符识别结果
-    outText = api->GetUTF8Text();
-    emit ocrFinished();
-    // 销毁使用过的对象并释放内存。
-    api->End();
-    pixDestroy(&image);
-        return;
-}
-
-*/

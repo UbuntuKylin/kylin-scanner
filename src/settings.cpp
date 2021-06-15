@@ -953,11 +953,11 @@ void KYCScanSettingsWidget::modifyBtnSave()
     if (flag == 0) {
         // 进行OCR，存储文本
         flag = 1;
-        qDebug() << "btnSave text: " << btnSave;
+        qDebug() << "btnSave text: " << btnSave->text();
         btnSave->setText(tr("Store text"));
     } else { // 另存为
         flag = 0;
-        qDebug() << "btnSave text: " << btnSave;
+        qDebug() << "btnSave text: " << btnSave->text();
         btnSave->setText(tr("Save as"));
     }
 }
