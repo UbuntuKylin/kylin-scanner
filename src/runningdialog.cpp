@@ -41,53 +41,50 @@ KYCRunningDialog::KYCRunningDialog(QWidget *parent)
     stylelist << STYLE_NAME_KEY_DARK << STYLE_NAME_KEY_BLACK;
     if (stylelist.contains(style_settings->get(STYLE_NAME).toString())) {
         QPalette pal(palette());
-        pal.setColor(QPalette::Background, QColor(0, 0, 0, 1));
+        pal.setColor(QPalette::Background, QColor(0, 0, 0));
         setAutoFillBackground(true);
         setPalette(pal);
     } else {
         QPalette pal(palette());
-        pal.setColor(QPalette::Background, QColor(255, 255, 255, 1));
+        pal.setColor(QPalette::Background, QColor(255, 255, 255));
         setAutoFillBackground(true);
         setPalette(pal);
     }
 
+    getFileListNum();
+    waitImage->show();
+    time->start(200);
+    count = 0;
+
     waitImage->setFixedSize(30, 30);
-    waitText->setText("");
+    waitText->setText(waitMsgText);
     hLayoutInfo->setSpacing(0);
     hLayoutInfo->addWidget(waitImage);
     hLayoutInfo->addSpacing(2);
     hLayoutInfo->addWidget(waitText);
-    hLayoutInfo->addStretch();
-    hLayoutInfo->setAlignment(Qt::AlignCenter);
-    hLayoutInfo->setContentsMargins(32, 0, 0, 0); // 只对左边布局进行设置
+    hLayoutInfo->setAlignment(Qt::AlignLeft);
+    hLayoutInfo->setContentsMargins(32, 0, 0, 0);
 
     btnCancel->setFixedSize(100, 36);
     btnCancel->setText(tr("Cancel"));
     hLayoutCancel->setSpacing(0);
     hLayoutCancel->addStretch();
     hLayoutCancel->addWidget(btnCancel);
-    hLayoutCancel->addStretch();
     hLayoutCancel->setAlignment(Qt::AlignCenter);
-    hLayoutCancel->setContentsMargins(248, 0, 32, 0); // 对左右布局进行设置
+    hLayoutCancel->setContentsMargins(248, 0, 32, 0);
 
     vLayout->setSpacing(0);
-    vLayout->addSpacing(33); // 对上布局进行设置
+    vLayout->addSpacing(33);
     vLayout->addLayout(hLayoutInfo);
-    vLayout->addSpacing(28); // 对上布局进行设置
+    vLayout->addSpacing(28);
     vLayout->addLayout(hLayoutCancel);
-    vLayout->setContentsMargins(0, 0, 0, 25); // 对下布局进行设置
+    vLayout->setContentsMargins(0, 0, 0, 25);
 
     setLayout(vLayout);
-
-    getFileListNum();
-    time->start(50);
-    count = 0;
-    waitImage->show();
 
     connect(time, SIGNAL(timeout()), this, SLOT(showPictures()));
     connect(btnCancel, SIGNAL(clicked()), this, SLOT(accept()));
     connect(style_settings, SIGNAL(changed(QString)), this, SLOT(runningDialogStyleChanged(QString)));
-
 }
 
 KYCRunningDialog::KYCRunningDialog(QWidget *parent, QString text)
@@ -159,7 +156,6 @@ KYCRunningDialog::KYCRunningDialog(QWidget *parent, QString text)
     connect(style_settings, SIGNAL(changed(QString)), this, SLOT(runningDialogStyleChanged(QString)));
 }
 
-
 void KYCRunningDialog::getFileListNum()
 {
     path = ":/icon/icon/waiting/";
@@ -180,6 +176,11 @@ QFileInfoList KYCRunningDialog::GetFileList(QString path)
     }
 
     return file_list;
+}
+
+void KYCRunningDialog::setWaitText(QString text)
+{
+    waitText->setText(text);
 }
 
 void KYCRunningDialog::runningDialogStyleChanged(QString)

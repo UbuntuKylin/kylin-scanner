@@ -171,12 +171,16 @@ void KYCWidget::initConnect()
     connect(pFuncBar, SIGNAL(clickBtnScanEndInval()), this, SLOT(onBtnScanClickedEndInval()));
 
     // For rectify
-    connect(pFuncBar, &KYCFunctionBarWidget::sendRectifyBegin, pScandisplay, &KYCScanDisplayWidget::onBtnRectifyBegin);
+    //connect(pFuncBar, &KYCFunctionBarWidget::sendRectifyBegin, pScandisplay, &KYCScanDisplayWidget::onBtnRectifyBegin);
+    connect(pFuncBar, &KYCFunctionBarWidget::sendRectifyBegin, this, &KYCWidget::showRectifyWaitDialog);
     connect(pFuncBar, &KYCFunctionBarWidget::sendRectifyEnd, pScandisplay, &KYCScanDisplayWidget::onBtnRectifyEnd);
+    connect(pScandisplay, &KYCScanDisplayWidget::sendRectifyEnd, this, &KYCWidget::hideRectifyWaitDialog);
 
     // For beauty
-    connect(pFuncBar, &KYCFunctionBarWidget::sendBeautifyBegin, pScandisplay, &KYCScanDisplayWidget::onBtnBeautifyBegin);
+    //connect(pFuncBar, &KYCFunctionBarWidget::sendBeautifyBegin, pScandisplay, &KYCScanDisplayWidget::onBtnBeautifyBegin);
+    connect(pFuncBar, &KYCFunctionBarWidget::sendBeautifyBegin, this, &KYCWidget::showBeautifyWaitDialog);
     connect(pFuncBar, &KYCFunctionBarWidget::sendBeautifyEnd, pScandisplay, &KYCScanDisplayWidget::onBtnBeautifyEnd);
+    connect(pScandisplay, &KYCScanDisplayWidget::sendBeautifyEnd, this, &KYCWidget::hideBeautifyWaitDialog);
 
     // For OCR
     connect(pFuncBar, &KYCFunctionBarWidget::sendOcrBegin, this, &KYCWidget::setOcrBeginOperation);
@@ -622,16 +626,53 @@ void KYCWidget::showAboutDialogCenter()
     int mainWindowHeight = this->height();
     int m_x = (mainWindowWidth - m_pAbout->width()) / 2;
     int m_y = (mainWindowHeight - m_pAbout->height()) / 2;
-        qDebug() << "mainWindowWidth= " << mainWindowWidth
-                 << "mainWindowHeight= " << mainWindowHeight
-                 << "aboutWidth = " << m_pAbout->width()
-                 << "aboutHeight = " << m_pAbout->height()
-                 << "m_y = " << m_y
-                 << "m_x = " << m_x
-                 << "globalPox.x+m_x " << globalPos.x()+m_x
-                 << "globalPox.y+m_y " << globalPos.y()+m_y;
     m_pAbout->move(globalPos.x() + m_x, globalPos.y() + m_y);
+
     m_pAbout->show();
+}
+
+void KYCWidget::showBeautifyWaitDialog()
+{
+    rectifyDialog = new KYCRunningDialog(this, tr("Running beauty ..."));
+
+    QPoint globalPos = this->mapToGlobal(QPoint(0, 0));
+    int mainWindowWidth = this->width();
+    int mainWindowHeight = this->height();
+    int m_x = (mainWindowWidth - rectifyDialog->width()) / 2;
+    int m_y = (mainWindowHeight - rectifyDialog->height()) / 2;
+    rectifyDialog->move(globalPos.x() + m_x, globalPos.y() + m_y);
+
+    rectifyDialog->setModal(true);
+    rectifyDialog->show();
+
+    pScandisplay->onBtnBeautifyBegin();
+}
+
+void KYCWidget::hideBeautifyWaitDialog()
+{
+    rectifyDialog->hide();
+}
+
+void KYCWidget::showRectifyWaitDialog()
+{
+    beautifyDialog = new KYCRunningDialog(this, tr("Running rectify ..."));
+
+    QPoint globalPos = this->mapToGlobal(QPoint(0, 0));
+    int mainWindowWidth = this->width();
+    int mainWindowHeight = this->height();
+    int m_x = (mainWindowWidth - beautifyDialog->width()) / 2;
+    int m_y = (mainWindowHeight - beautifyDialog->height()) / 2;
+    beautifyDialog->move(globalPos.x() + m_x, globalPos.y() + m_y);
+
+    beautifyDialog->setModal(true);
+    beautifyDialog->show();
+
+    pScandisplay->onBtnRectifyBegin();
+}
+
+void KYCWidget::hideRectifyWaitDialog()
+{
+    beautifyDialog->hide();
 }
 
 /**

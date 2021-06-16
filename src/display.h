@@ -81,6 +81,10 @@ public:
     void run() Q_DECL_OVERRIDE;
 
     void rectifyThreadStop();
+    void waitDialog();
+
+private:
+    bool m_run;
 
 signals:
     void rectifyFinished();
@@ -101,6 +105,9 @@ public:
     void run() Q_DECL_OVERRIDE;
 
     void  beautyThreadStop();
+
+private:
+    bool m_run;
 
 signals:
     void beautyFinished();
@@ -243,11 +250,6 @@ private:
     KYCRectifyThread rectifyThread;
     KYCBeautyThread beautyThread;
 
-    /*
-    QThread *m_ocrThread;
-    MKYCOcrThread *m_ocrTask;
-    */
-
 public slots:
     void onBtnRectifyBegin();
     void onBtnRectifyEnd();
@@ -267,8 +269,11 @@ private slots:
     void beautyEnd();
     void scandisplay_theme_changed(QString);
 
-signals:
+//signals:
+Q_SIGNALS:
     void scanTimerFinished();
+    void sendRectifyEnd();
+    void sendBeautifyEnd();
 };
 
 #endif // DISPLAY_H

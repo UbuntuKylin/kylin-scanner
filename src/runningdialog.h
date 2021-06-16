@@ -45,10 +45,11 @@ class KYCRunningDialog : public QDialog
     Q_OBJECT
 public:
     explicit KYCRunningDialog(QWidget *parent = nullptr);
-    explicit KYCRunningDialog(QWidget *parent = nullptr, QString text=nullptr);
+    explicit KYCRunningDialog(QWidget *parent = nullptr, QString text="");
 
     void getFileListNum();
     QFileInfoList GetFileList(QString path);
+    void setWaitText(QString text);
 
 private:
     int num = 0;
@@ -59,6 +60,8 @@ private:
     QFileInfo fileinfo;
     QString path;
     QTimer *time;
+
+    QString waitMsgText;
 
     QStringList stylelist;
     QStringList iconthemelist;
@@ -71,7 +74,7 @@ private:
     QHBoxLayout *hLayoutCancel;
     QVBoxLayout *vLayout;
 
-private slots:
+public slots:
     void runningDialogStyleChanged(QString);
     void showPictures();
 

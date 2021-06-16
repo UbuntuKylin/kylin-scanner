@@ -96,22 +96,22 @@
 <context>
     <name>KYCEditBarWidget</name>
     <message>
-        <location filename="../display.cpp" line="1269"/>
+        <location filename="../display.cpp" line="1091"/>
         <source>rotate</source>
         <translation>旋转</translation>
     </message>
     <message>
-        <location filename="../display.cpp" line="1272"/>
+        <location filename="../display.cpp" line="1094"/>
         <source>tailor</source>
         <translation>裁切</translation>
     </message>
     <message>
-        <location filename="../display.cpp" line="1278"/>
+        <location filename="../display.cpp" line="1100"/>
         <source>watermark</source>
         <translation>水印</translation>
     </message>
     <message>
-        <location filename="../display.cpp" line="1275"/>
+        <location filename="../display.cpp" line="1097"/>
         <source>symmetry</source>
         <translation>对称翻转</translation>
     </message>
@@ -181,8 +181,8 @@
 <context>
     <name>KYCRunningDialog</name>
     <message>
-        <location filename="../runningdialog.cpp" line="65"/>
-        <location filename="../runningdialog.cpp" line="141"/>
+        <location filename="../runningdialog.cpp" line="69"/>
+        <location filename="../runningdialog.cpp" line="138"/>
         <source>Cancel</source>
         <translation>取消</translation>
     </message>
@@ -196,19 +196,17 @@
         <translation>请先连接扫描仪</translation>
     </message>
     <message>
-        <location filename="../display.cpp" line="729"/>
+        <location filename="../display.cpp" line="736"/>
         <source>Try to ocr ...</source>
         <translation>正在识别中...</translation>
     </message>
     <message>
-        <location filename="../display.cpp" line="874"/>
         <source>Running rectify ...</source>
-        <translation>智能纠偏中……</translation>
+        <translation type="vanished">智能纠偏中……</translation>
     </message>
     <message>
-        <location filename="../display.cpp" line="1005"/>
         <source>Running beauty ...</source>
-        <translation>一键美化……</translation>
+        <translation type="vanished">一键美化……</translation>
     </message>
 </context>
 <context>
@@ -459,59 +457,69 @@
     </message>
     <message>
         <location filename="../widget.cpp" line="58"/>
-        <location filename="../widget.cpp" line="331"/>
+        <location filename="../widget.cpp" line="335"/>
         <source>Scanner</source>
         <translation>扫描</translation>
     </message>
     <message>
-        <location filename="../widget.cpp" line="310"/>
+        <location filename="../widget.cpp" line="314"/>
         <source> already exist, do you want to overwrite it?</source>
         <translation>已经存在，你想覆盖它吗？</translation>
     </message>
     <message>
-        <location filename="../widget.cpp" line="311"/>
+        <location filename="../widget.cpp" line="315"/>
         <source>Question</source>
         <translation>询问对话框</translation>
     </message>
     <message>
-        <location filename="../widget.cpp" line="334"/>
+        <location filename="../widget.cpp" line="338"/>
         <source>Yes</source>
         <translation>是</translation>
     </message>
     <message>
-        <location filename="../widget.cpp" line="358"/>
+        <location filename="../widget.cpp" line="362"/>
         <source>cannot contain &apos;/&apos; character.</source>
         <translation>文件名不能包含‘/’字符。</translation>
     </message>
     <message>
-        <location filename="../widget.cpp" line="576"/>
+        <location filename="../widget.cpp" line="580"/>
         <source>scan process is failed, please check your scanner by connect it again.</source>
         <translation>扫描失败，请确认你的扫描仪连接情况。</translation>
     </message>
     <message>
-        <location filename="../widget.cpp" line="725"/>
+        <location filename="../widget.cpp" line="636"/>
+        <source>Running beauty ...</source>
+        <translation>一键美化中……</translation>
+    </message>
+    <message>
+        <location filename="../widget.cpp" line="658"/>
+        <source>Running rectify ...</source>
+        <translation>智能纠偏中……</translation>
+    </message>
+    <message>
+        <location filename="../widget.cpp" line="766"/>
         <source>No available device</source>
         <translation>无可用设备</translation>
     </message>
     <message>
-        <location filename="../widget.cpp" line="733"/>
-        <location filename="../widget.cpp" line="741"/>
+        <location filename="../widget.cpp" line="774"/>
+        <location filename="../widget.cpp" line="782"/>
         <source>device </source>
         <translation>设备 </translation>
     </message>
     <message>
-        <location filename="../widget.cpp" line="733"/>
-        <location filename="../widget.cpp" line="741"/>
+        <location filename="../widget.cpp" line="774"/>
+        <location filename="../widget.cpp" line="782"/>
         <source> has been disconnect.</source>
         <translation> 已经断开连接。</translation>
     </message>
     <message>
-        <location filename="../widget.cpp" line="801"/>
+        <location filename="../widget.cpp" line="842"/>
         <source>Please load the paper and scan again.</source>
         <translation>请放入纸张后再次进行扫描。</translation>
     </message>
     <message>
-        <location filename="../widget.cpp" line="808"/>
+        <location filename="../widget.cpp" line="849"/>
         <source>Scanner&apos;s parameters error, please change parameters and scanning again.</source>
         <translation>扫描参数错误，请更改参数后再次进行扫描。</translation>
     </message>

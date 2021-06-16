@@ -428,6 +428,7 @@ void KYCScanDisplayWidget::initConnect()
 
     // For rectify
     connect(&rectifyThread, SIGNAL(rectifyFinished()), this, SLOT(rectifyEnd()), Qt::QueuedConnection);
+    // connect(&rectifyThread, SIGNAL(finished()), thread, SLOT(deleteLater()));
 
     // For beauty
     connect(&beautyThread, SIGNAL(beautyFinished()), this, SLOT(beautyEnd()), Qt::QueuedConnection);
@@ -688,6 +689,8 @@ void KYCScanDisplayWidget::rectifyEnd()
     setPixmapScaled(*imgEditLayout, labEditLayout);
     *imgNormal = imgEditLayout->copy();
     setPixmapScaled(*imgNormal, labNormalLeft);
+
+    emit sendRectifyEnd();
 }
 
 void KYCScanDisplayWidget::beautyEnd()
@@ -699,6 +702,8 @@ void KYCScanDisplayWidget::beautyEnd()
     setPixmapScaled(*imgEditLayout, labEditLayout);
     *imgNormal = imgEditLayout->copy();
     setPixmapScaled(*imgNormal, labNormalLeft);
+
+    emit sendBeautifyEnd();
 }
 
 void KYCScanDisplayWidget::scandisplay_theme_changed(QString)
@@ -858,63 +863,17 @@ void KYCScanDisplayWidget::onSaveImageNow()
  */
 void KYCScanDisplayWidget::onBtnRectifyBegin()
 {
-        qDebug() << "begin to rectify!";
-#if 0
-    if (flagRectify == 0) {
-        // User has click btnRectify
-        flagRectify = 1;
-#endif
-        if (vStackedLayout->currentWidget() == widgetNormal) {
-            qDebug() << "currentWidget == widgetNormal";
-            imgNormal->save(SCANNING_PICTURE_PATH);
-            // For undo operation(ctrl+z)
-            *imgRectify = imgNormal->copy();
-            list.append("Rectify");
+    qDebug() << "begin to rectify!";
+    //if (vStackedLayout->currentWidget() == widgetNormal) {
+        qDebug() << "currentWidget == widgetNormal";
+        imgNormal->save(SCANNING_PICTURE_PATH);
+        // For undo operation(ctrl+z)
+        *imgRectify = imgNormal->copy();
+        list.append("Rectify");
 
-            rectifyThread.start();
+        rectifyThread.start();
 
-            QString waitText = tr("Running rectify ...");
-            KYCRunningDialog *dialog = new KYCRunningDialog(this, waitText);
-
-            // center running dialog
-            QWidget *widget = nullptr;
-            QWidgetList widgetList = QApplication::allWidgets();
-            for (int i=0; i<widgetList.length(); ++i) {
-                if (widgetList.at(i)->objectName() == "MainWindow") {
-                    widget = widgetList.at(i);
-                }
-            }
-            if (widget) {
-                QRect rect = widget->geometry();
-                int x = rect.x() + rect.width()/2 - dialog->width()/2;
-                int y = rect.y() + rect.height()/2 - dialog->height()/2;
-                dialog->move(x,y);
-            }
-
-            int ret = dialog->exec();// 以模态方式显示对话框，用户关闭对话框时返回 DialogCode值
-
-            if (ret == QDialog::Accepted) {
-                qDebug() << "ret accepted = " << ret;
-                rectifyThread.rectifyThreadStop();
-                return;
-            }
-        }
-
-#if 0
-        } else {
-            imgEditLayout->save(SCANNING_PICTURE_PATH);
-            *imgRectify = imgEditLayout->copy();
-            list.append("Rectify");
-
-            rectifyThread.start();
-
-            imgEditLayout->load(SCANNING_PICTURE_PATH);
-            setPixmapScaled(*imgEditLayout, labEditLayout);
-            *imgNormal = imgEditLayout->copy();
-            setPixmapScaled(*imgNormal, labNormalLeft);
-        }
-    }
-#endif
+    //}
 }
 
 /**
@@ -925,65 +884,13 @@ void KYCScanDisplayWidget::onBtnRectifyBegin()
 void KYCScanDisplayWidget::onBtnRectifyEnd()
 {
     qDebug() << "flagRectify = " << flagRectify;
-    // Mean user has repeatedly clicked btnRectify, so ought to carry out undo operation
-#if 0
-    flagRectify = 0;
-#endif
-    if (vStackedLayout->currentWidget() == widgetNormal) {
-        qDebug() << "currentWidget == widgetNormal";
+
+//    if (vStackedLayout->currentWidget() == widgetNormal) {
         *imgNormal = imgRectify->copy();
-#if 0
-        /**
-             * 2代表点击了先智能纠偏和后一键美化：
-             * 有2种情况： 1）先撤销一键美化 2）先撤销智能纠偏
-             */
-        qDebug() << "list.count = " << list.count();
-        if (list.count() == 2) {
-            // 撤销的是智能纠偏：先全部清空，后把一键美化的加上
-            if (list[0] == "Rectify") {
-                list.clear();
-                imgNormal->save(SCANNING_PICTURE_PATH);
-                *imgBeautify = imgNormal->copy();
-                list.append("Beautify");
-
-                beautyThread.start();
-
-                imgNormal->load(SCANNING_PICTURE_PATH);
-            } else {
-                // 撤销的是一键美化：撤销到之前一个就行
-                list.removeLast();
-            }
-        } else
-            list.clear();
-#endif
         setPixmapScaled(*imgNormal, labNormalLeft);
         *imgEditLayout = imgNormal->copy();
         setPixmapScaled(*imgEditLayout, labEditLayout);
-    }
-#if 0
-    } else {
-        *imgEditLayout = imgRectify->copy();
-        qDebug() << "list.count = " << list.count();
-        if (list.count() == 2) {
-            if (list[0] == "Rectify") {
-                qDebug() << "list[0] = " << list[0];
-                list.clear();
-                imgEditLayout->save(SCANNING_PICTURE_PATH);
-                *imgBeautify = imgEditLayout->copy();
-                list.append("Beautify");
-
-                beautyThread.start();
-
-                imgEditLayout->load(SCANNING_PICTURE_PATH);
-            } else
-                list.removeLast();
-        } else
-            list.clear();
-        setPixmapScaled(*imgEditLayout, labEditLayout);
-        *imgNormal = imgEditLayout->copy();
-        setPixmapScaled(*imgNormal, labNormalLeft);
-    }
-#endif
+ //   }
 }
 
 /**
@@ -993,64 +900,18 @@ void KYCScanDisplayWidget::onBtnRectifyEnd()
 void KYCScanDisplayWidget::onBtnBeautifyBegin()
 {
     qDebug() << "beauty()";
-#if 0
-    if (flagBeautify == 0) {
-        flagBeautify = 1;
-#endif
-        if (vStackedLayout->currentWidget() == widgetNormal) {
-            imgNormal->save(SCANNING_PICTURE_PATH);
-            *imgBeautify = imgNormal->copy();
-            list.append("Beautify");
+    //if (vStackedLayout->currentWidget() == widgetNormal) {
+        imgNormal->save(SCANNING_PICTURE_PATH);
+        *imgBeautify = imgNormal->copy();
+        list.append("Beautify");
 
-            beautyThread.start();
+        beautyThread.start();
 
-            QString waitText = tr("Running beauty ...");
-            KYCRunningDialog *dialog = new KYCRunningDialog(this, waitText);
-
-            // center running dialog
-            QWidget *widget = nullptr;
-            QWidgetList widgetList = QApplication::allWidgets();
-            for (int i=0; i<widgetList.length(); ++i) {
-                if (widgetList.at(i)->objectName() == "MainWindow") {
-                    widget = widgetList.at(i);
-                }
-            }
-            if (widget) {
-                QRect rect = widget->geometry();
-                int x = rect.x() + rect.width()/2 - dialog->width()/2;
-                int y = rect.y() + rect.height()/2 - dialog->height()/2;
-                qDebug() << "x = " << x << "y = " << y;
-                dialog->move(x,y);
-            }
-
-            int ret = dialog->exec();// 以模态方式显示对话框，用户关闭对话框时返回 DialogCode值
-
-            if (ret == QDialog::Accepted) {
-                qDebug() << "ret accepted = " << ret;
-                rectifyThread.rectifyThreadStop();
-                return;
-            }
-
-            imgNormal->load(SCANNING_PICTURE_PATH);
-            setPixmapScaled(*imgNormal, labNormalLeft);
-            *imgEditLayout = imgNormal->copy();
-            setPixmapScaled(*imgEditLayout, labEditLayout);
-        }
-#if 0
-        } else {
-            imgEditLayout->save(SCANNING_PICTURE_PATH);
-            *imgBeautify = imgEditLayout->copy();
-            list.append("Beautify");
-
-            beautyThread.start();
-
-            imgEditLayout->load(SCANNING_PICTURE_PATH);
-            setPixmapScaled(*imgEditLayout, labEditLayout);
-            *imgNormal = imgEditLayout->copy();
-            setPixmapScaled(*imgNormal, labNormalLeft);
-        }
-    }
-#endif
+        imgNormal->load(SCANNING_PICTURE_PATH);
+        setPixmapScaled(*imgNormal, labNormalLeft);
+        *imgEditLayout = imgNormal->copy();
+        setPixmapScaled(*imgEditLayout, labEditLayout);
+    //}
 }
 
 /**
@@ -1059,53 +920,12 @@ void KYCScanDisplayWidget::onBtnBeautifyBegin()
  */
 void KYCScanDisplayWidget::onBtnBeautifyEnd()
 {
-#if 0
-    flagBeautify = 0;
-#endif
-    if (vStackedLayout->currentWidget() == widgetNormal) {
+//    if (vStackedLayout->currentWidget() == widgetNormal) {
         *imgNormal = imgBeautify->copy();
-#if 0
-        if (list.count() == 2) {
-            if (list[0] == "Beautify") {
-                list.clear();
-                imgNormal->save(SCANNING_PICTURE_PATH);
-                *imgRectify = imgNormal->copy();
-                list.append("Rectify");
-
-                rectifyThread.start();
-
-                imgNormal->load(SCANNING_PICTURE_PATH);
-            } else
-                list.removeLast();
-        } else
-            list.clear();
-#endif
         setPixmapScaled(*imgNormal, labNormalLeft);
         *imgEditLayout = imgNormal->copy();
         setPixmapScaled(*imgEditLayout, labEditLayout);
-    }
-#if 0
-    } else {
-        *imgEditLayout = imgBeautify->copy();
-        if (list.count() == 2) {
-            if (list[0] == "Beautify") {
-                list.clear();
-                imgEditLayout->save(SCANNING_PICTURE_PATH);
-                *imgRectify = imgEditLayout->copy();
-                list.append("Rectify");
-
-                rectifyThread.start();
-
-                imgEditLayout->load(SCANNING_PICTURE_PATH);
-            } else
-                list.removeLast();
-        } else
-            list.clear();
-        setPixmapScaled(*imgEditLayout, labEditLayout);
-        *imgNormal = imgEditLayout->copy();
-        setPixmapScaled(*imgNormal, labNormalLeft);
-    }
-#endif
+ //   }
 }
 
 /**
@@ -1371,6 +1191,7 @@ void KYCOcrThread::run()
     m_run = true;
     while(m_run)
     {
+        m_run = false;
         qDebug() << "begin to run ocr thread !\n";
         tesseract::TessBaseAPI  *api = new tesseract::TessBaseAPI();
         //使用中文初始化tesseract-ocr，而不指定tessdata路径。正在识别中
@@ -1398,7 +1219,7 @@ void KYCOcrThread::run()
             emit ocrFinished();
             return;
         }
-        if (image  && m_run) {
+        if (image) {
             api->SetImage(image);
             // 得到光学字符识别结果
             outText = api->GetUTF8Text();
@@ -1434,60 +1255,65 @@ KYCRectifyThread::KYCRectifyThread(QObject *parent)
 
 KYCRectifyThread::~KYCRectifyThread()
 {
-    // 请求终止
-    requestInterruption();
-    quit();
-    wait();
 }
 
 void KYCRectifyThread::run()
 {
-    while(QThread::currentThread()->isInterruptionRequested()) {
-    //while(! isInterruptionRequested()) {
+    qDebug() << "begin to run rectify";
+    m_run = true;
+    if (m_run) {
         qDebug() << "begin to run rectify thread.";
         ImageRectify(SCANNING_PICTURE_PATH);
         qDebug() << "end ImageRectify()";
 
-        emit rectifyFinished();
+        m_run = false;
     }
+    emit rectifyFinished();
 }
 
 void KYCRectifyThread::rectifyThreadStop()
 {
-    requestInterruption();
-    quit();
-    wait();
+    m_run = false;
+    if(isRunning())
+    {
+        quit();
+        //wait();  // 等待退出，这个会让界面卡顿，所以先屏蔽
+    }
 }
 
 KYCBeautyThread::KYCBeautyThread(QObject *parent)
     : QThread(parent)
 {
     qDebug() << "Create beauty thread.";
+
 }
 
 KYCBeautyThread::~KYCBeautyThread()
 {
-    // 请求终止
-    requestInterruption();
-    quit();
-    wait();
 }
 
 void KYCBeautyThread::run()
 {
-    while(QThread::currentThread()->isInterruptionRequested()) {
-    //while(! isInterruptionRequested()) {
+    qDebug() << "run";
+    m_run = true;
+    while (m_run) {
         qDebug() << "begin to run beauty thread.";
         oneClickBeauty(SCANNING_PICTURE_PATH);
         qDebug() << "end oneClickBeauty()";
 
-        emit beautyFinished();
+        // avoid repeat run many times
+        m_run = false;
     }
+    emit beautyFinished();
 }
 
 void KYCBeautyThread::beautyThreadStop()
 {
-    requestInterruption();
-    quit();
-    wait();
+    qDebug() << "beauty thread stop";
+    m_run = false;
+    if(isRunning())
+    {
+        quit();
+        //wait();  // 等待退出，这个会让界面卡顿，所以先屏蔽
+    }
 }

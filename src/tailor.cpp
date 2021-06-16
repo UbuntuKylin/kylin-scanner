@@ -98,8 +98,18 @@ void KYCTailorLabel::mouseMoveEvent(QMouseEvent *event)
 
 int KYCTailorLabel::judgePosition(int origin, int min, int max)
 {
-    if ((origin < min) || (origin > max))
+    qDebug() << "origin = " << origin
+             << "min = " << min
+             << "max = " << max;
+
+    if (origin < min) {
+        // left border
         return min;
+    }
+    if (origin > max) {
+        // right border: In order to show green border, so need max-1
+        return max-1;
+    }
 
     return origin;
 }

@@ -32,6 +32,7 @@
 #include "common.h"
 #include "about.h"
 #include "interrupt.h"
+#include "runningdialog.h"
 
 class KYCCommonScanThread : public QThread
 {
@@ -80,6 +81,8 @@ private:
     QStringList iconthemelist;
     KYCTitleBarDialog *pTitleBar;
     KYCAboutDialog *m_pAbout;
+    KYCRunningDialog *beautifyDialog;
+    KYCRunningDialog *rectifyDialog;
     QFrame *line;
     KYCFunctionBarWidget *pFuncBar;
     KYCScanSettingsWidget *pScanSet;
@@ -101,6 +104,10 @@ private slots:
     void saveImageNow();
     void setMaskClear();
     void showAboutDialogCenter();
+    void showBeautifyWaitDialog();
+    void hideBeautifyWaitDialog();
+    void showRectifyWaitDialog();
+    void hideRectifyWaitDialog();
     void setWindowBorderRadius();
     void style_changed(QString); // 系统主题风格变化
     void icon_theme_changed(QString); // 系统图标主题风格变化
