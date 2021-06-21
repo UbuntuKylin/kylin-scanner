@@ -765,6 +765,14 @@ void KYCScanSettingsWidget::onBtnLocationClicked()
             curPath = selectedDir;
             btnLocation->setText(elideFont.elidedText(selectedDir, Qt::ElideRight, 150));
         } else {
+            if (file.isWritable()) {
+                qDebug() << "The user can read and write " << selectedDir;
+                QFontMetrics elideFont(btnLocation->font());
+                curPath = selectedDir;
+                btnLocation->setText(elideFont.elidedText(selectedDir, Qt::ElideRight, 150));
+
+                return;
+            }
             qDebug() << "The user can't read and write " << selectedDir;
 
             QString msg = tr("Currently user has no permission to modify directory ") + selectedDir;
