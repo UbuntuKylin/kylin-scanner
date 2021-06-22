@@ -1,4 +1,25 @@
-kylin-scanner (1.0.0-28) focal; urgency=medium
+kylin-scanner (1.0.0-29) v101; urgency=medium
+
+  [ BUG 号 ] 
+  * Closes: #62291, #62272, #62270, #62461
+    - 解决一键美化失败 (Closes: #62291)
+    - 解决智能纠偏失败 (Closes: #62272)
+    - 解决文字识别失败 (Closes: #62270)
+    - 解决家目录提示没有权限问题 (Closes: 62461)
+  
+  [ 任务号 ] 
+  * 无 
+  
+  [ 需求号 ] 
+  * 无 
+  
+  [ 其他改动说明 ] 
+  * 解决裁切时选择框最大化右边区域不可见问题
+  
+
+ -- yushuoqi <yushuoqi@kylinos.cn>  Tue, 22 Jun 2021 15:49:48 +0800
+
+kylin-scanner (1.0.0-28) v101; urgency=medium
 
   [ BUG 号 ] 
   * Closes: #34906
