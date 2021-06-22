@@ -1387,7 +1387,7 @@ void kylinNorScanOpenDevice(int index)
              * Thus, should `sane_close` the open handle before next `sane_open`
              */
             qDebug() << "begin to sane_close()";;
-            sane_close(instance.handle);
+            //sane_close(instance.handle);
         }
 
         for (int i = 0; g_deviceList[i]; ++i) {
@@ -1450,13 +1450,18 @@ void kylinNorScanOpenDevice(int index)
             if (sane_status == SANE_STATUS_DEVICE_BUSY) {
                 qInfo() << "SANE_STATUS_DEVICE_BUSY";
                 /* If device is busy don't interrupt, but keep waiting for scanner */
-                saneCancel(sane_handle);
-                sane_status = openSaneDevice(saneDevice, &sane_handle);
+                //saneCancel(sane_handle);
+                saneCancel(instance.handle);
+                qInfo() << "SANE_STATUS_DEVICE_BUSY";
+
+                sane_status = openSaneDevice(g_saneDevice, &sane_handle);
+                qInfo() << "SANE_STATUS_DEVICE_BUSY";
                 if (sane_status) {
                     qInfo() << "Second open a device failed!";
                     instance.setKylinSaneStatus(false);
                     break;
                 }
+                qInfo() << "SANE_STATUS_DEVICE_BUSY";
             } else {
                 instance.setKylinSaneStatus(false);
                 break;

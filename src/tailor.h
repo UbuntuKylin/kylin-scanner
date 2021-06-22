@@ -48,20 +48,20 @@ public:
     void mouseMoveEvent(QMouseEvent *event);
 
     int judgePosition(int origin, int min, int max);
-    int getStartX()
-    {
+
+    inline int getStartX() const {
         return startX;
     }
-    int getStartY()
-    {
+
+    inline int getStartY() const {
         return startY;
     }
-    int getEndX()
-    {
+
+    inline int getEndX() const {
         return endX;
     }
-    int getEndY()
-    {
+
+    inline int getEndY() const {
         return endY;
     }
 
