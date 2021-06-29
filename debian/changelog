@@ -1,3 +1,22 @@
+kylin-scanner (1.0.0-30) v101; urgency=medium
+
+  [ BUG 号 ] 
+  * Closes: #63549, #52226
+    - 解决系统主题更新后，关于界面的邮件链接没法看清问题 (Closes: #63549)
+    - 解决发送至evolution邮箱，扫描文件未出现问题 (Closes: #52226)
+  
+  [ 任务号 ] 
+  * 无 
+  
+  [ 需求号 ] 
+  * 无 
+  
+  [ 其他改动说明 ] 
+  * 无 
+  
+
+ -- yushuoqi <yushuoqi@kylinos.cn>  Fri, 25 Jun 2021 20:08:48 +0800
+
 kylin-scanner (1.0.0-29) v101; urgency=medium
 
   [ BUG 号 ] 
