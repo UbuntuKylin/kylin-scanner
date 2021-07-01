@@ -371,7 +371,7 @@ void KYCFunctionBarWidget::onBtnScanClicked()
 {
     qDebug() << "clicked!";
     KYCSaneWidget &instance = KYCSaneWidget::getInstance();
-    if (instance.getKylinSaneStatus() == true) {
+    //if (instance.getKylinSaneStatus() == true) {
         thread.start();
         qDebug() << "btnScan: " << btnScan->size() << btnScan->pos() << btnScan->geometry();
         emit clickBtnScanStart();
@@ -385,7 +385,7 @@ void KYCFunctionBarWidget::onBtnScanClicked()
         //movieScan->start();
 
         qDebug() << "scan()";
-    }
+    //}
 
 }
 
@@ -447,6 +447,7 @@ void KYCFunctionBarWidget::scanResult(int ret)
         if (ret == SANE_STATUS_NO_DOCS) {
             emit clickBtnScanEndNoDoc();
         } else if (ret == SANE_STATUS_INVAL) {
+            // 网络扫描如果参数错误，允许再次更换参数进行扫描
             emit clickBtnScanEndInval();
         } else {
             // other scan error
@@ -501,11 +502,12 @@ void KYCFuctionBarThread::run()
     emit scanFinishedFuncBar(ret);
     quit();
 #else
-    if (instance.getKylinSaneStatus() == true) {
+    // 每次可以点击扫描按钮，都应该可以进行扫描操作才行
+    //if (instance.getKylinSaneStatus() == true) {
         ret = instance.startScanning(instance.userInfo);
         qDebug() << "start_scanning end, status = " << ret;
         emit scanFinishedFuncBar(ret);
-    }
+    //}
     quit();
 #endif
 }

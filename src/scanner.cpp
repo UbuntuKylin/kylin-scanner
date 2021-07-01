@@ -1420,6 +1420,10 @@ void kylinNorScanOpenDevice(int index)
         }
 
         // For devices name
+        if (names.isEmpty()) {
+            qInfo() << "No scan devices !";
+
+        }
         qInfo() << names;
         instance.setKylinSaneNames(names);
 

@@ -811,6 +811,7 @@ void KYCWidget::scanListResult(int ret)
  */
 void KYCWidget::setScanEndOperation(bool retScan)
 {
+    qDebug() << "retScan = " << retScan;
     pScandisplay->onScan(retScan);
     setScanSetBtnEnable(retScan);
     saveScanFile(retScan);

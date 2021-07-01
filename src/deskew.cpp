@@ -105,6 +105,23 @@ double CalcDegree(const Mat &srcImage, Mat &dst)
     qDebug() << "after while, Threshold = " << Threshold
              << "lines.size() = " << lines.size();
 
+    // 由于上述的判断可能会导致获取的线条为0，此时需要重新进行定位阈值范围
+    if (lines.size() == 0 || lines.size() < 50) {
+        qDebug() << "Threshold = 300 " << "lines = " << lines.size();
+        HoughLines(midImage, lines, 1, CV_PI / 180, 300, 0, 0);
+
+        if (lines.size() == 0) {
+            qDebug() << "Threshold = 200 " << "lines = " << lines.size();
+            HoughLines(midImage, lines, 1, CV_PI / 180, 200, 0, 0);
+
+            if (lines.size() == 0) {
+                qDebug() << "Threshold = 100 " << "lines = " << lines.size();
+                HoughLines(midImage, lines, 1, CV_PI / 180, 100, 0, 0);
+            }
+        }
+
+    }
+
     float sum = 0;
     int n = 0;
     //依次画出每条线段
