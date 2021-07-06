@@ -1,3 +1,12 @@
+kylin-scanner (1.0.0-30hw1) v101.hw; urgency=medium
+
+  [ BUG 号 ] 
+  * Closes: #64570, #62518
+    - 解决连接canon扫描仪后切换设备，扫描闪退问题 (Closes: #64570 990)
+    - 解决使用网络打印机扫描文件切换设备应用闪退问题 (Closes: #62518 9A0)
+
+ -- yushuoqi <yushuoqi@kylinos.cn>  Tue, 06 Jul 2021 14:40:28 +0800
+
 kylin-scanner (1.0.0-30) v101; urgency=medium
 
   [ BUG 号 ] 
