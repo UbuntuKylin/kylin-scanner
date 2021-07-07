@@ -1,3 +1,21 @@
+kylin-scanner (1.0.0-31) v101; urgency=medium
+
+  [ BUG 号 ] 
+  * Closes: #58686
+    - 解决扫描中切换设备的闪退问题 (Closes: #58686 sp1)
+  
+  [ 任务号 ] 
+  * 无 
+  
+  [ 需求号 ] 
+  * 无 
+  
+  [ 其他改动说明 ] 
+  * 无 
+  
+
+ -- yushuoqi <yushuoqi@kylinos.cn>  Tue, 06 Jul 2021 15:12:13 +0800
+
 kylin-scanner (1.0.0-30hw1) v101.hw; urgency=medium
 
   [ BUG 号 ] 
