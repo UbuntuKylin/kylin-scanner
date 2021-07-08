@@ -1266,12 +1266,22 @@ static SANE_Status startSaneScan(SANE_Handle sane_handle, SANE_String_Const file
 
 /**
  * @brief sane_cancel 结束扫描
+ * 用于结束当前扫描的sane_handle句柄，避免下一次扫描出现BUSY的情况
  * @param sane_handle 扫描句柄
  */
 static void saneCancel(SANE_Handle sane_handle)
 {
-    qDebug() << "sane_cancel after get parameters.";
-    sane_cancel(sane_handle);
+    qDebug() << "saneCancel()";
+    KYCSaneWidget &instance = KYCSaneWidget::getInstance();
+
+    if (instance.getKylinSaneHaveHandle()) {
+        qDebug() << "sane_cancel()";
+        sane_cancel(sane_handle);
+
+        qDebug() << "sane_close()";
+        sane_close(sane_handle);
+        instance.setKylinSaneHaveHandle(false);
+    }
 }
 
 /**
@@ -1381,14 +1391,18 @@ void kylinNorScanOpenDevice(int index)
     char name[512] = {0};
 
     do {
-        if (instance.handle) {
-            /**
-             * Deal with open same scanner device again meeting `SANE_STATUS_DEVICE_BUSY`,
-             * Thus, should `sane_close` the open handle before next `sane_open`
-             */
+        /**
+         * Deal with open same scanner device again meeting `SANE_STATUS_DEVICE_BUSY`,
+         * Thus, should `sane_close` the open handle before next `sane_open`
+         */
+        if (instance.getKylinSaneHaveHandle()) {
+            /// 每次打开扫描设备，都会验证是否已有sane_handle句柄，如果存在句柄则取消句柄，
+            /// 让 openSaneDevice 可以重新获取sane_handle句柄，用于后续的扫描操作，可以避免BUSY状态
             qDebug() << "begin to sane_close()";;
-            //sane_close(instance.handle);
+            sane_close(instance.handle);
+            instance.setKylinSaneHaveHandle(false);
         }
+        instance.setKylinSaneHaveHandle(false);
 
         for (int i = 0; g_deviceList[i]; ++i) {
             qInfo() << "deviceName = " << g_deviceList[i]->name
@@ -1416,7 +1430,6 @@ void kylinNorScanOpenDevice(int index)
                 }
                 instance.setKylinSaneType(type);
             }
-            //break;
         }
 
         // For devices name
@@ -1449,30 +1462,13 @@ void kylinNorScanOpenDevice(int index)
         if (sane_status) {
             qInfo() << "First open a device failed!";
             instance.setKylinSaneStatus(false);
-            break;
-#if 0
-            if (sane_status == SANE_STATUS_DEVICE_BUSY) {
-                qInfo() << "SANE_STATUS_DEVICE_BUSY";
-                /* If device is busy don't interrupt, but keep waiting for scanner */
-                //saneCancel(sane_handle);
-                saneCancel(instance.handle);
-                qInfo() << "SANE_STATUS_DEVICE_BUSY";
 
-                sane_status = openSaneDevice(g_saneDevice, &sane_handle);
-                qInfo() << "SANE_STATUS_DEVICE_BUSY";
-                if (sane_status) {
-                    qInfo() << "Second open a device failed!";
-                    instance.setKylinSaneStatus(false);
-                    break;
-                }
-                qInfo() << "SANE_STATUS_DEVICE_BUSY";
-            } else {
-                instance.setKylinSaneStatus(false);
-                break;
-            }
-#endif
+            // have_handle = false, 代表此时不可以sane_close
+            instance.setKylinSaneHaveHandle(false);
+            break;
         }
         instance.handle = sane_handle;
+        instance.setKylinSaneHaveHandle(true);
 
         // 4. start scanning
         qInfo() << "Start scanning, please waiting ...";
@@ -1496,6 +1492,7 @@ void kylinNorScanOpenDevice(int index)
 
 KYCSaneWidget::KYCSaneWidget(QWidget *parent) : QWidget(parent)
 {
+    devicesInfo.have_handle = false;
     devicesInfo.status = false;
     devicesInfo.name << "";
     devicesInfo.type = "";
@@ -1512,6 +1509,11 @@ KYCSaneWidget::~KYCSaneWidget()
 bool KYCSaneWidget::getKylinSaneStatus()
 {
     return devicesInfo.status;
+}
+
+bool KYCSaneWidget::getKylinSaneHaveHandle()
+{
+    return devicesInfo.have_handle;
 }
 
 QStringList KYCSaneWidget::getKylinSaneNames()
@@ -1542,6 +1544,11 @@ QStringList KYCSaneWidget::getKylinSaneColors()
 QString KYCSaneWidget::getKylinSaneOpenName()
 {
     return openDeviceInfo.openName;
+}
+
+void KYCSaneWidget::setKylinSaneHaveHandle(bool have_handle)
+{
+    devicesInfo.have_handle = have_handle;
 }
 
 void KYCSaneWidget::setKylinSaneStatus(bool status)
@@ -1622,6 +1629,7 @@ int KYCSaneWidget::startScanning(UserSelectedInfo info)
 {
     qInfo() << "startScanning";
     KYCSaneWidget &instance = KYCSaneWidget::getInstance();
+
     int ret = 0;
     SANE_Status status = SANE_STATUS_GOOD;
     string strColor, strResolution, strSize;
@@ -1630,6 +1638,24 @@ int KYCSaneWidget::startScanning(UserSelectedInfo info)
     strColor = info.color.toStdString();
     strResolution = info.resolution.toStdString();
     strSize = info.size.toStdString();
+
+    int index = instance.userInfo.deviceNameIndex;
+
+#if 1
+    instance.openScanDevice(index);
+    bool retStatus = instance.getKylinSaneStatus();
+    if (retStatus) {
+        qDebug() << "open_device true";
+    } else {
+        status = SANE_STATUS_COVER_OPEN;
+        qDebug() << "open_device false";
+        if (instance.getKylinSaneHaveHandle()) {
+            saneCancel(instance.handle);
+        }
+        return status;
+    }
+#endif
+
 
     // For colors
     s_color = const_cast<SANE_String>(strColor.c_str());
@@ -1677,7 +1703,9 @@ int KYCSaneWidget::startScanning(UserSelectedInfo info)
     qInfo() << "Start scanning, please waiting ...";
     ret = startSaneScan(instance.handle, "scan");
 
-    saneCancel(instance.handle);
+    if (instance.getKylinSaneHaveHandle()) {
+        saneCancel(instance.handle);
+    }
 
     return ret;
 }
@@ -1686,15 +1714,4 @@ bool KYCSaneWidget::testScannerIsAlive(QString deviceName)
 {
     qDebug() << "deviceName= " << deviceName;
     return true;
-}
-
-void freeScanResource()
-{
-    KYCSaneWidget &instance = KYCSaneWidget::getInstance();
-    // finish scan
-    sane_cancel(instance.handle);
-    // close scan device
-    sane_close(instance.handle);
-    // release resource
-    sane_exit();
 }

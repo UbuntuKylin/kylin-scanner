@@ -1,3 +1,11 @@
+kylin-scanner (1.0.0-32) v101; urgency=medium
+
+  [ BUG 号 ] 
+  * Closes: #54621
+    - 解决网络链接/USB链接扫描仪，扫描文档失败的问题 (Closes: #54621 3A5000)
+
+ -- yushuoqi <yushuoqi@kylinos.cn>  Thu, 08 Jul 2021 14:46:30 +0800
+
 kylin-scanner (1.0.0-31) v101; urgency=medium
 
   [ BUG 号 ] 

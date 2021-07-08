@@ -176,6 +176,8 @@ void KYCScanSettingsWidget::initSettings()
     KYCSaneWidget &instance = KYCSaneWidget::getInstance();
     QString curDeviceName, curSize, curColor, curResolution;
 
+    instance.userInfo.deviceNameIndex = 0;
+
     curDeviceName = textDevice->currentText();
     instance.userInfo.name = curDeviceName;
 
@@ -492,6 +494,29 @@ void KYCScanSettingsWidget::setKylinScanSetEnable()
         textName->setEnabled(true);
         btnLocation->setEnabled(true);
     }
+}
+
+void KYCScanSettingsWidget::setKylinScanSetEnableSwitchDevice()
+{
+    KYCSaneWidget &instance = KYCSaneWidget::getInstance();
+    bool device_status = true;
+
+    device_status = instance.getKylinSaneStatus();
+
+    if (device_status) {
+        textDevice->setEnabled(true);
+        textType->setEnabled(true);
+        textColor->setEnabled(true);
+        textSize->setEnabled(true);
+        textResolution->setEnabled(true);
+        textFormat->setEnabled(true);
+        textName->setEnabled(true);
+        btnLocation->setEnabled(true);
+
+        // 发送邮件和另存为按钮不可用
+        setKylinScanSetBtnNotEnable();
+    }
+
 }
 
 /**
@@ -939,9 +964,13 @@ void KYCScanSettingsWidget::onTextDeviceCurrentTextChanged(QString device)
     if (index == -1)
         index = 0;
 
-    qDebug() << "device index: " << index;
+    instance.userInfo.deviceNameIndex = index;
 
-    //int index = 1;
+    qDebug() << "device index: " << index
+             << "deviceNameIndex = " << instance.userInfo.deviceNameIndex;
+
+#if 1
+    // 每次切换扫描设备时，都应该重新进行打开扫描设备，查看当前扫描仪是否可以正确打开支持扫描
     instance.openScanDevice(index);
 
     status = instance.getKylinSaneStatus();
@@ -954,6 +983,7 @@ void KYCScanSettingsWidget::onTextDeviceCurrentTextChanged(QString device)
         scanOpenFlag = 0;
         emit openDeviceStatusSignal(false);
     }
+#endif
 }
 
 void KYCScanSettingsWidget::modifyBtnSave()

@@ -302,6 +302,24 @@ void KYCFunctionBarWidget::setKylinScanSetEnable()
     }
 }
 
+void KYCFunctionBarWidget::setKylinScanSetEnableSwitchDevice()
+{
+    KYCSaneWidget &instance = KYCSaneWidget::getInstance();
+    bool device_status = true;
+
+    device_status = instance.getKylinSaneStatus();
+
+    if (device_status) {
+        btnNorScan->setEnabled(false);
+        btnBeautify->setEnabled(false);
+        btnRectify->setEnabled(false);
+        btnOcr->setEnabled(false);
+
+        btnScan->setEnabled(true);
+    }
+
+}
+
 void KYCFunctionBarWidget::setBtnScanEnable()
 {
     KYCSaneWidget &instance = KYCSaneWidget::getInstance();

@@ -71,6 +71,7 @@ public:
     void getFileListNum();
     void setKylinScanSetNotEnable();
     void setKylinScanSetEnable();
+    void setKylinScanSetEnableSwitchDevice();
     void setBtnScanEnable();
     void setFontSize(QLabel *label, int n);
     void setStackClear();
