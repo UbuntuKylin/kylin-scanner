@@ -610,6 +610,11 @@ void KYCWidget::freeResources()
     if (usbThread.isRunning()) {
         usbThread.quit();
     }
+
+    qDebug() << "saneCancel()";
+    KYCSaneWidget &instance = KYCSaneWidget::getInstance();
+    instance.saneExit();
+
 }
 
 void KYCWidget::setMaskClear()

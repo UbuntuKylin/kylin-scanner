@@ -1275,12 +1275,13 @@ static void saneCancel(SANE_Handle sane_handle)
     KYCSaneWidget &instance = KYCSaneWidget::getInstance();
 
     if (instance.getKylinSaneHaveHandle()) {
+        instance.setKylinSaneHaveHandle(false);
         qDebug() << "sane_cancel()";
         sane_cancel(sane_handle);
 
         qDebug() << "sane_close()";
         sane_close(sane_handle);
-        instance.setKylinSaneHaveHandle(false);
+        //instance.setKylinSaneHaveHandle(false);
     }
 }
 
@@ -1591,6 +1592,11 @@ void KYCSaneWidget::setKylinSaneOpenName(QString name)
  */
 void KYCSaneWidget::saneExit()
 {
+    KYCSaneWidget &instance = KYCSaneWidget::getInstance();
+    if (instance.getKylinSaneHaveHandle()) {
+        saneCancel(instance.handle);
+    }
+
     sane_exit();
 }
 

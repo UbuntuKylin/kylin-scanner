@@ -58,6 +58,7 @@ public:
     void setKylinScanSetEnableSwitchDevice();
     void setKylinComboBoxAttributes(QComboBox *combo, QStringList strList);
     void setKylinComboBoxTextDeviceAttributes(QComboBox *combo, QStringList strList);
+    QString setElideText(QFont font, int width, QString strInfo);
     void setKylinLable();
     void setKylinLabelAttributes(QLabel *label);
     void setKylinHBoxLayout();

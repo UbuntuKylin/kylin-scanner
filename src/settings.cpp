@@ -282,6 +282,17 @@ void KYCScanSettingsWidget::setKylinComboBoxTextDeviceAttributes(QComboBox *comb
     combo->setView(listView);   //使下拉选项样式生效
 }
 
+QString KYCScanSettingsWidget::setElideText(QFont font, int width, QString strInfo)
+{
+    QFontMetrics fontMetrics(font);
+    //如果当前字体下，字符串长度大于指定宽度
+    if(fontMetrics.width(strInfo) > width)
+    {
+        strInfo= QFontMetrics(font).elidedText(strInfo, Qt::ElideRight, width);
+    }
+    return strInfo;
+}
+
 /**
  * @brief setKylinComboBox 统一设置麒麟扫描组合框ComboBox
  */
@@ -562,15 +573,29 @@ void KYCScanSettingsWidget::setKylinLable()
  */
 void KYCScanSettingsWidget::setKylinLabelAttributes(QLabel *label)
 {
-    label->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
+
+    label->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
     if (stylelist.contains(style_settings->get(STYLE_NAME).toString())) {
         label->setStyleSheet("color:rgb(232,232,232)");
     } else {
         label->setStyleSheet("color:#000000");
     }
-    //label->setFixedSize(68,32);
+    label->setIndent(8);
+    label->setFixedSize(68,32);
     label->setFixedHeight(32);
-    label->adjustSize();
+
+    //要显示的超长字符串
+    QString strDes = label->text();
+    QFontMetrics fontMetrics(label->font());
+    //如果当前字体下，字符串长度大于label宽度
+    if(fontMetrics.width(strDes) > label->width())
+    {
+        label->setToolTip(strDes);
+        strDes = QFontMetrics(label->font()).elidedText(strDes, Qt::ElideRight, label->width());
+    }
+    label->setText(strDes);
+
+    //label->adjustSize();
 }
 
 
