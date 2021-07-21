@@ -1,3 +1,21 @@
+kylin-scanner (1.0.0-33) v101; urgency=medium
+
+  [ BUG 号 ]
+  * Closes: #62458
+    - 解决遍历修改格式后扫描失败的问题 (Closes: #62458 sp1)
+  
+  [ 任务号 ] 
+  * 无 
+  
+  [ 需求号 ] 
+  * 无 
+  
+  [ 其他改动说明 ] 
+  * 无 
+  
+
+ -- yushuoqi <yushuoqi@kylinos.cn>  Wed, 21 Jul 2021 11:23:56 +0800
+
 kylin-scanner (1.0.0-32) v101; urgency=medium
 
   [ BUG 号 ] 

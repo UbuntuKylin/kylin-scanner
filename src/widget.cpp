@@ -823,6 +823,7 @@ void KYCWidget::setScanEndOperation(bool retScan)
     pScandisplay->onScan(retScan);
     setScanSetBtnEnable(retScan);
     saveScanFile(retScan);
+    pScanSet->setKylinScanSetBtnDeviceEnable();
     scanningResultDetail(retScan);
     sendMailPrepare();
 }
@@ -831,6 +832,9 @@ void KYCWidget::setOcrFlags()
 {
     pScandisplay->setOcrFlagStatus();
     pScanSet->setOcrFlagInit();
+
+    // 点击扫描时，其他设置都不可用
+    pScanSet->setKylinScanSetNotEnableAll();
 }
 
 void KYCWidget::setOcrBeginOperation()
@@ -847,6 +851,8 @@ void KYCWidget::setOcrEndOperation()
 
 void KYCWidget::onBtnScanClickedEndNoDoc()
 {
+    pScanSet->setKylinScanSetBtnDeviceEnable();
+
     QString msg;
     msg = tr("Please load the paper and scan again.");
     warnMsg(msg);
@@ -854,6 +860,8 @@ void KYCWidget::onBtnScanClickedEndNoDoc()
 
 void KYCWidget::onBtnScanClickedEndInval()
 {
+    pScanSet->setKylinScanSetBtnDeviceEnable();
+
     QString msg;
     msg = tr("Scanner's parameters error, please change parameters and scanning again.");
     warnMsg(msg);

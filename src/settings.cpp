@@ -444,7 +444,36 @@ void KYCScanSettingsWidget::setkylinScanStatus(bool status)
 //    QStringList strListDevice;
 //    // update textDevice will emit signal
 //    strListDevice << tr("No available device");
-//    setKylinComboBoxTextDeviceAttributes(textDevice, strListDevice);
+    //    setKylinComboBoxTextDeviceAttributes(textDevice, strListDevice);
+}
+
+/**
+ * @brief KYCScanSettingsWidget::setKylinScanSetBtnDeviceEnable
+ * 扫描失败时，使扫描列表可用
+ */
+void KYCScanSettingsWidget::setKylinScanSetBtnDeviceEnable()
+{
+    textDevice->setEnabled(true);
+}
+
+void KYCScanSettingsWidget::setKylinScanSetBtnDeviceNotEnable()
+{
+    textDevice->setEnabled(false);
+}
+
+void KYCScanSettingsWidget::setKylinScanSetNotEnableAll()
+{
+    textDevice->setEnabled(false);
+    textColor->setEnabled(false);
+    textSize->setEnabled(false);
+    textResolution->setEnabled(false);
+    textFormat->setEnabled(false);
+    textName->setEnabled(false);
+
+    btnLocation->setEnabled(false);
+    btnMail->setEnabled(false);
+    btnSave->setEnabled(false);
+    textType->setEnabled(false);
 }
 
 /**
@@ -486,6 +515,18 @@ void KYCScanSettingsWidget::setKylinScanSetBtnEnable()
 {
     btnMail->setEnabled(true);
     btnSave->setEnabled(true);
+}
+
+void KYCScanSettingsWidget::setKylinScanSetEnableAll()
+{
+    textDevice->setEnabled(true);
+    textType->setEnabled(true);
+    textColor->setEnabled(true);
+    textSize->setEnabled(true);
+    textResolution->setEnabled(true);
+    textFormat->setEnabled(true);
+    textName->setEnabled(true);
+    btnLocation->setEnabled(true);
 }
 
 void KYCScanSettingsWidget::setKylinScanSetEnable()

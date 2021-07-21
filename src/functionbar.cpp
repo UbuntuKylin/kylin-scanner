@@ -390,9 +390,9 @@ void KYCFunctionBarWidget::onBtnScanClicked()
     qDebug() << "clicked!";
     KYCSaneWidget &instance = KYCSaneWidget::getInstance();
     //if (instance.getKylinSaneStatus() == true) {
+        emit clickBtnScanStart();
         thread.start();
         qDebug() << "btnScan: " << btnScan->size() << btnScan->pos() << btnScan->geometry();
-        emit clickBtnScanStart();
 
         btnScan->hide();
         btnScan->resize(0, 0);
