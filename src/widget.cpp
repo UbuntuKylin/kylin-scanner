@@ -494,6 +494,8 @@ void KYCWidget::scanResult(bool ret)
         g_device = true;
 
         pScanSet->setKylinComboBoxScanDeviceName();
+
+        // 初次化情况下，应该进行打开第一个扫描设备，查看当前扫描仪是否可以正确打开支持扫描
         instance.openScanDevice(0);
 
         bool retStatus = instance.getKylinSaneStatus();
@@ -519,7 +521,7 @@ void KYCWidget::scanResult(bool ret)
  */
 void KYCWidget::switchScanDeviceResult(bool ret)
 {
-    qDebug() << "ret = " << ret;
+    qDebug() << "switch scan device ret = " << ret;
 
 #ifdef DEBUG_EDIT
     {
@@ -532,12 +534,13 @@ void KYCWidget::switchScanDeviceResult(bool ret)
     }
 #else
     if (ret) {
+        // 切换设备都是进入到初始界面，没有对当前页面进行保存提示
         g_device = true;
         pScandisplay->setInitDevice();
         pScanSet->setKylinComboBox(true);
         pScanSet->setKylinLable();
-        pFuncBar->setBtnScanEnable();
-        pScanSet->setKylinScanSetEnable();
+        pFuncBar->setKylinScanSetEnableSwitchDevice();
+        pScanSet->setKylinScanSetEnableSwitchDevice();
     } else {
         g_device = false;
         pScandisplay->setNoDevice();
@@ -607,6 +610,11 @@ void KYCWidget::freeResources()
     if (usbThread.isRunning()) {
         usbThread.quit();
     }
+
+    qDebug() << "saneCancel()";
+    KYCSaneWidget &instance = KYCSaneWidget::getInstance();
+    instance.saneExit();
+
 }
 
 void KYCWidget::setMaskClear()
@@ -811,9 +819,11 @@ void KYCWidget::scanListResult(int ret)
  */
 void KYCWidget::setScanEndOperation(bool retScan)
 {
+    qDebug() << "retScan = " << retScan;
     pScandisplay->onScan(retScan);
     setScanSetBtnEnable(retScan);
     saveScanFile(retScan);
+    pScanSet->setKylinScanSetBtnDeviceEnable();
     scanningResultDetail(retScan);
     sendMailPrepare();
 }
@@ -822,6 +832,9 @@ void KYCWidget::setOcrFlags()
 {
     pScandisplay->setOcrFlagStatus();
     pScanSet->setOcrFlagInit();
+
+    // 点击扫描时，其他设置都不可用
+    pScanSet->setKylinScanSetNotEnableAll();
 }
 
 void KYCWidget::setOcrBeginOperation()
@@ -838,6 +851,8 @@ void KYCWidget::setOcrEndOperation()
 
 void KYCWidget::onBtnScanClickedEndNoDoc()
 {
+    pScanSet->setKylinScanSetBtnDeviceEnable();
+
     QString msg;
     msg = tr("Please load the paper and scan again.");
     warnMsg(msg);
@@ -845,6 +860,8 @@ void KYCWidget::onBtnScanClickedEndNoDoc()
 
 void KYCWidget::onBtnScanClickedEndInval()
 {
+    pScanSet->setKylinScanSetBtnDeviceEnable();
+
     QString msg;
     msg = tr("Scanner's parameters error, please change parameters and scanning again.");
     warnMsg(msg);

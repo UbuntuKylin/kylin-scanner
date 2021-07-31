@@ -114,7 +114,7 @@ private slots:
     void usbDeviceAdded(QString recvData);
     void usbDeviceRemoved(QString recvData);
     void scanListResult(int ret);
-    void setScanEndOperation(bool ret);
+    void setScanEndOperation(bool retScan);
     void setOcrFlags();
     void setOcrBeginOperation();
     void setOcrEndOperation();

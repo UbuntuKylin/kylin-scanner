@@ -176,6 +176,8 @@ void KYCScanSettingsWidget::initSettings()
     KYCSaneWidget &instance = KYCSaneWidget::getInstance();
     QString curDeviceName, curSize, curColor, curResolution;
 
+    instance.userInfo.deviceNameIndex = 0;
+
     curDeviceName = textDevice->currentText();
     instance.userInfo.name = curDeviceName;
 
@@ -278,6 +280,17 @@ void KYCScanSettingsWidget::setKylinComboBoxTextDeviceAttributes(QComboBox *comb
     combo->setInsertPolicy(QComboBox::NoInsert);  //编辑框的内容不插入到列表项
     combo->setFocusPolicy(Qt::NoFocus); //获取焦点策略：无焦点，也就是不可编辑
     combo->setView(listView);   //使下拉选项样式生效
+}
+
+QString KYCScanSettingsWidget::setElideText(QFont font, int width, QString strInfo)
+{
+    QFontMetrics fontMetrics(font);
+    //如果当前字体下，字符串长度大于指定宽度
+    if(fontMetrics.width(strInfo) > width)
+    {
+        strInfo= QFontMetrics(font).elidedText(strInfo, Qt::ElideRight, width);
+    }
+    return strInfo;
 }
 
 /**
@@ -431,7 +444,36 @@ void KYCScanSettingsWidget::setkylinScanStatus(bool status)
 //    QStringList strListDevice;
 //    // update textDevice will emit signal
 //    strListDevice << tr("No available device");
-//    setKylinComboBoxTextDeviceAttributes(textDevice, strListDevice);
+    //    setKylinComboBoxTextDeviceAttributes(textDevice, strListDevice);
+}
+
+/**
+ * @brief KYCScanSettingsWidget::setKylinScanSetBtnDeviceEnable
+ * 扫描失败时，使扫描列表可用
+ */
+void KYCScanSettingsWidget::setKylinScanSetBtnDeviceEnable()
+{
+    textDevice->setEnabled(true);
+}
+
+void KYCScanSettingsWidget::setKylinScanSetBtnDeviceNotEnable()
+{
+    textDevice->setEnabled(false);
+}
+
+void KYCScanSettingsWidget::setKylinScanSetNotEnableAll()
+{
+    textDevice->setEnabled(false);
+    textColor->setEnabled(false);
+    textSize->setEnabled(false);
+    textResolution->setEnabled(false);
+    textFormat->setEnabled(false);
+    textName->setEnabled(false);
+
+    btnLocation->setEnabled(false);
+    btnMail->setEnabled(false);
+    btnSave->setEnabled(false);
+    textType->setEnabled(false);
 }
 
 /**
@@ -475,6 +517,18 @@ void KYCScanSettingsWidget::setKylinScanSetBtnEnable()
     btnSave->setEnabled(true);
 }
 
+void KYCScanSettingsWidget::setKylinScanSetEnableAll()
+{
+    textDevice->setEnabled(true);
+    textType->setEnabled(true);
+    textColor->setEnabled(true);
+    textSize->setEnabled(true);
+    textResolution->setEnabled(true);
+    textFormat->setEnabled(true);
+    textName->setEnabled(true);
+    btnLocation->setEnabled(true);
+}
+
 void KYCScanSettingsWidget::setKylinScanSetEnable()
 {
     KYCSaneWidget &instance = KYCSaneWidget::getInstance();
@@ -492,6 +546,29 @@ void KYCScanSettingsWidget::setKylinScanSetEnable()
         textName->setEnabled(true);
         btnLocation->setEnabled(true);
     }
+}
+
+void KYCScanSettingsWidget::setKylinScanSetEnableSwitchDevice()
+{
+    KYCSaneWidget &instance = KYCSaneWidget::getInstance();
+    bool device_status = true;
+
+    device_status = instance.getKylinSaneStatus();
+
+    if (device_status) {
+        textDevice->setEnabled(true);
+        textType->setEnabled(true);
+        textColor->setEnabled(true);
+        textSize->setEnabled(true);
+        textResolution->setEnabled(true);
+        textFormat->setEnabled(true);
+        textName->setEnabled(true);
+        btnLocation->setEnabled(true);
+
+        // 发送邮件和另存为按钮不可用
+        setKylinScanSetBtnNotEnable();
+    }
+
 }
 
 /**
@@ -537,15 +614,29 @@ void KYCScanSettingsWidget::setKylinLable()
  */
 void KYCScanSettingsWidget::setKylinLabelAttributes(QLabel *label)
 {
-    label->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
+
+    label->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
     if (stylelist.contains(style_settings->get(STYLE_NAME).toString())) {
         label->setStyleSheet("color:rgb(232,232,232)");
     } else {
         label->setStyleSheet("color:#000000");
     }
-    //label->setFixedSize(68,32);
+    label->setIndent(8);
+    label->setFixedSize(68,32);
     label->setFixedHeight(32);
-    label->adjustSize();
+
+    //要显示的超长字符串
+    QString strDes = label->text();
+    QFontMetrics fontMetrics(label->font());
+    //如果当前字体下，字符串长度大于label宽度
+    if(fontMetrics.width(strDes) > label->width())
+    {
+        label->setToolTip(strDes);
+        strDes = QFontMetrics(label->font()).elidedText(strDes, Qt::ElideRight, label->width());
+    }
+    label->setText(strDes);
+
+    //label->adjustSize();
 }
 
 
@@ -765,6 +856,14 @@ void KYCScanSettingsWidget::onBtnLocationClicked()
             curPath = selectedDir;
             btnLocation->setText(elideFont.elidedText(selectedDir, Qt::ElideRight, 150));
         } else {
+            if (file.isWritable()) {
+                qDebug() << "The user can read and write " << selectedDir;
+                QFontMetrics elideFont(btnLocation->font());
+                curPath = selectedDir;
+                btnLocation->setText(elideFont.elidedText(selectedDir, Qt::ElideRight, 150));
+
+                return;
+            }
             qDebug() << "The user can't read and write " << selectedDir;
 
             QString msg = tr("Currently user has no permission to modify directory ") + selectedDir;
@@ -931,9 +1030,13 @@ void KYCScanSettingsWidget::onTextDeviceCurrentTextChanged(QString device)
     if (index == -1)
         index = 0;
 
-    qDebug() << "device index: " << index;
+    instance.userInfo.deviceNameIndex = index;
 
-    //int index = 1;
+    qDebug() << "device index: " << index
+             << "deviceNameIndex = " << instance.userInfo.deviceNameIndex;
+
+#if 1
+    // 每次切换扫描设备时，都应该重新进行打开扫描设备，查看当前扫描仪是否可以正确打开支持扫描
     instance.openScanDevice(index);
 
     status = instance.getKylinSaneStatus();
@@ -946,6 +1049,7 @@ void KYCScanSettingsWidget::onTextDeviceCurrentTextChanged(QString device)
         scanOpenFlag = 0;
         emit openDeviceStatusSignal(false);
     }
+#endif
 }
 
 void KYCScanSettingsWidget::modifyBtnSave()

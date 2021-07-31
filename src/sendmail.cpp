@@ -441,16 +441,25 @@ void KYCSendMailDialog::openMail(QString name)
 
     arglists << "-c";
     arglists << str;
+    qDebug() << "str = " << str;
     if (str == "thunderbird") {
         arglists << "-compose" << "attachment='/tmp/scanner/present_image.jpg'";
     } else if (str == "claws-mail") {
         arglists << "--attach" << mailPicture;
     } else if (str == "mutt") {
         arglists << "-a" << mailPicture;
+    } else if (str == "evolution") {
+        QString attach = QString("mailto:?attach=") + mailPicture;
+        arglists << "--component=mail" << attach;
     } else {
         arglists << " ";
     }
+    qDebug() << "cmd = " << cmd << arglists;
 
+    if (str == "evolution") {
+        process->start("evolution", arglists);
+        return;
+    }
     process->start(cmd, arglists);
 }
 

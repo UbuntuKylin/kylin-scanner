@@ -47,7 +47,11 @@ void KYCAboutDialog::titlebar_style_changed(QString)
     c.setRed(231);
     c.setBlue(231);
     c.setGreen(231);
-    if (c == pal.background().color()) {
+    int redBackground = pal.background().color().red();
+    int blueBackground = pal.background().color().blue();
+    int greenBackground = pal.background().color().green();
+    //if (c == pal.background().color()) {
+    if ((redBackground == blueBackground) && (redBackground == greenBackground) && redBackground > 200) {
         // light theme
         pal.setColor(QPalette::Background, QColor("#FFFFFF"));
         ui->labelSupport->setText(tr("Service & Support : ")
@@ -132,14 +136,23 @@ void KYCAboutDialog::initStyle()
     QString text =
         tr("Scanner is an interface-friendly scanner, which could be also used as one-click beautification, intelligent correction and text recognition tools.");
 
-    c.setRed(231);
-    c.setBlue(231);
-    c.setGreen(231);
-    if (c == pal.background().color()) {
+    c.setRed(245);
+    c.setBlue(245);
+    c.setGreen(245);
+    // (245, 245, 245)
+    qDebug() << "red = " << pal.background().color().red()
+             << "blue = " << pal.background().color().blue()
+             << "green = " << pal.background().color().green();
+
+    int redBackground = pal.background().color().red();
+    int blueBackground = pal.background().color().blue();
+    int greenBackground = pal.background().color().green();
+    //if (c == pal.background().color()) {
+    if ((redBackground == blueBackground) && (redBackground == greenBackground) && redBackground > 200) {
         // light theme
         pal.setColor(QPalette::Background, QColor("#FFFFFF"));
         ui->labelSupport->setText(tr("Service & Support : ")
-                                  + "<a href=\"mailto://support@kylinos.cn\" style=\"color:rgba(0,0,0,1)\">"
+                                  + QString("<a href=\"mailto://support@kylinos.cn\" style=\"color:%1\">").arg(pal.windowText().color().name(QColor::HexRgb))
                                   + "support@kylinos.cn</a>");
 
         ui->textEdit->setText("<body style=\"background:#FFFFFF;\">"
@@ -151,7 +164,8 @@ void KYCAboutDialog::initStyle()
         // dark theme
         setPalette(pal);
         ui->labelSupport->setText(tr("Service & Support : ")
-                                  + "<a href=\"mailto://support@kylinos.cn\" style=\"color:rgba(255,255,255,1)\">"
+                                  //+ "<a href=\"mailto://support@kylinos.cn\" style=\"color:rgb(255,255,255)\">"
+                                  + QString("<a href=\"mailto://support@kylinos.cn\" style=\"color:%1\">").arg(pal.windowText().color().name(QColor::HexRgb))
                                   + "support@kylinos.cn</a>");
         ui->textEdit->setText(QString("<body style=\"background:%1;\">") .arg(pal.background().color().name(
                                                                                   QColor::HexRgb))

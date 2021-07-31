@@ -51,12 +51,18 @@ public:
     void setKylinComboBox(bool curIndexChanged);
     void setKylinComboBoxScanDeviceName();
     void setkylinScanStatus(bool status);
+    void setKylinScanSetBtnDeviceEnable();
+    void setKylinScanSetBtnDeviceNotEnable();
+    void setKylinScanSetNotEnableAll();
     void setKylinScanSetNotEnable();
     void setKylinScanSetBtnNotEnable();
     void setKylinScanSetBtnEnable();
+    void setKylinScanSetEnableAll();
     void setKylinScanSetEnable();
+    void setKylinScanSetEnableSwitchDevice();
     void setKylinComboBoxAttributes(QComboBox *combo, QStringList strList);
     void setKylinComboBoxTextDeviceAttributes(QComboBox *combo, QStringList strList);
+    QString setElideText(QFont font, int width, QString strInfo);
     void setKylinLable();
     void setKylinLabelAttributes(QLabel *label);
     void setKylinHBoxLayout();

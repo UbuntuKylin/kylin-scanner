@@ -44,6 +44,7 @@ using namespace std;
 
 struct ScanDeviceInfo {
     bool status;            // 是否存在设备，存在status值为true，否则为false
+    bool have_handle;       // 当前handle是否可以sane_close
     QStringList name;       // 设备名
     QString type;           // 设备类型
     QStringList color;      // 设备支持的色彩
@@ -52,6 +53,7 @@ struct ScanDeviceInfo {
 };
 
 struct UserSelectedInfo {
+    int deviceNameIndex;    // 用户选择设备名的index号
     QString name;           // 用户选择设备名
     QString color;          // 用户选择色彩
     QString resolution;     // 用户选择分辨率
@@ -90,6 +92,7 @@ public:
     }
 
     bool getKylinSaneStatus();
+    bool getKylinSaneHaveHandle();
     QStringList getKylinSaneNames();
     QString getKylinSaneType();
     QStringList getKylinSaneResolutions();
@@ -97,6 +100,7 @@ public:
     QStringList getKylinSaneColors();
     QString getKylinSaneOpenName();
 
+    void setKylinSaneHaveHandle(bool have_handle);
     void setKylinSaneStatus(bool status);
     void setKylinSaneNames(QStringList name);
     void setKylinSaneType(QString type);
@@ -127,7 +131,6 @@ extern "C" {
 #endif
 
 void kylinNorScanFindDevice(); // open scan device
-void freeScanResource();
 
 #ifdef __cplusplus
 }

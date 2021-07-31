@@ -357,8 +357,10 @@ static bool checkStarted()
             if (in.is_open()) {
                 getline(in, s);
                 comm = QString::fromStdString(s);
-                if (comm == "kylin-scanner")
+                if (comm == "kylin-scanner") {
+                    qDebug() << "exist pid = " << f.baseName();
                     return true;
+                }
             }
             in.close();
         }

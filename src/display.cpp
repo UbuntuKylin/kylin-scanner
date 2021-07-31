@@ -1208,6 +1208,7 @@ void KYCOcrThread::run()
         /// 当quit()时，pixRead仍会运行，而调用wait等待结束时会导致界面卡顿，所以需要image和api都是局部变量，
         /// 提示信息： Info in pixReadStreamPng: removing opaque cmap from 1 bpp
         /// 每次都会重新进行ocr
+        qDebug() << "before pixRead.";
         Pix *image = pixRead(SCANNING_PICTURE_PATH);
         if (! image) {
             qDebug() << "pixRead error!";
@@ -1220,11 +1221,13 @@ void KYCOcrThread::run()
             return;
         }
         if (image) {
+            qDebug() << "before setImage.";
             api->SetImage(image);
             // 得到光学字符识别结果
             outText = api->GetUTF8Text();
         }
 
+        qDebug() << "before destroy image.";
         if (api) {
             api->End();
         }
